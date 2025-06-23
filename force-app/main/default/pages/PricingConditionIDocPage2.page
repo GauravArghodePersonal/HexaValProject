@@ -1,0 +1,28 @@
+<apex:page standardController="Pricing_Condition__c"
+           extensions="PricingConditionIDocController"
+           showHeader="false" sidebar="false">
+    <apex:pageMessages />
+    <apex:form id="theForm">
+        <apex:pageBlock rendered="{!panelNum = 1}">
+            <br/><br/>
+            &nbsp;&nbsp;&nbsp;
+            <h1>You are not authorized to set IDoc to Export.</h1>
+            <br/><br/><br/>
+        </apex:pageBlock>
+        <apex:pageBlock rendered="{!panelNum = 2}">
+            <br/><br/>
+            &nbsp;&nbsp;&nbsp;
+            <h1>Are you sure to set IDoc to Export?</h1>
+            &nbsp;&nbsp;&nbsp;
+            <apex:commandButton action="{!createIDoc}"
+                                value="Yes"/>
+            <br/><br/><br/>
+        </apex:pageBlock>
+        <apex:pageBlock rendered="{!panelNum = 3}">
+            <br/><br/>
+            &nbsp;&nbsp;&nbsp;
+            <h1>IDoc has been set to Export.</h1>
+            <br/><br/><br/>
+        </apex:pageBlock>
+    </apex:form>           
+</apex:page>

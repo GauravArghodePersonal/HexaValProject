@@ -1,0 +1,26 @@
+<apex:page controller="MobileApproveRejectController" ShowHeader="false" sidebar="false">
+<apex:form >
+<table border="0">
+<tr>
+Comments:
+</tr>
+<tr>
+<td><apex:inputtextarea value="{!comments}"/></td>
+</tr>
+<tr>
+<td><apex:commandbutton value="Approve" action="{!approveworkitem}"/>
+<apex:commandbutton value="Reject" action="{!rejectworkitem}"/></td>
+</tr>
+<tr>
+<td>Status: {!RESPONSE}</td>
+</tr>
+<tr>
+<td>
+<apex:outputLink value="{!$Page.BlackBerryApprovalList}">
+<apex:outputText value="Go To: Items to Approve"/>
+</apex:outputLink>
+</td>                
+</tr>
+</table> 
+</apex:form>
+</apex:page>

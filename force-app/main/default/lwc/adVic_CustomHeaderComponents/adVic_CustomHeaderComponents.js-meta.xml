@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>58.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>AdVic Custom Header Components</masterLabel>
+    <description>Used to display Custom Header Components</description>
+    <targets>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default">
+            <property 
+                type="String"
+                name="contactUsText"
+                label="Contact Us Text"
+                default="Questions? Call us +41 71 969 22 00"
+            />
+            <property 
+                type="String"
+                name="site"
+                label="Site Name"
+                default="{!Site.basePath}"
+            />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

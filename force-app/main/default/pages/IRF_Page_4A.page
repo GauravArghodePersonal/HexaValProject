@@ -1,0 +1,40 @@
+<apex:page id="thePage" sidebar="false" standardController="IRF_Monthly_Data__c"
+           extensions="IRF_Controller"  action="{!initAction4}"
+           title="IRF Monthly Data - Approval History">
+
+    <apex:form id="irf-form1">
+        <apex:pageBlock mode="edit">
+             <apex:facet name="header"><apex:outputPanel ><table class="tbl1">
+                <tr><td class="td1">{!irfNm} : {!imdNm}</td>
+                    <td class="td2"> <!--
+                    <apex:actionStatus id="topBtns">
+                        <apex:facet name="start">
+                            <apex:outputText styleClass="bold" value=" Please wait ...">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop">
+                            <apex:outputPanel styleClass="nowrap">
+                                <apex:commandButton action="{!gotoRetUrl}" value="Cancel" immediate="true"
+                                                    rerender="irf-form1" status="topBtns"/>
+                            </apex:outputPanel>
+                        </apex:facet>
+                    </apex:actionStatus> -->
+                    </td><td class="td3">&nbsp;</td>
+                </tr></table>
+             </apex:outputPanel></apex:facet>
+        </apex:pageBlock>
+    </apex:form>
+             
+    <apex:relatedList list="ProcessSteps"/>
+
+    <c:Related_List_History_Component EnterObjectName="{!IRF_Monthly_Data__c}"/>
+
+    <style>
+        .tbl1        {width: 100%;}
+        .tbl1 td     {font-weight: bold; padding: 5px; white-space: nowrap;}
+        .tbl1 td.td1 {width: 30%; font-size: 110%;}
+        .tbl1 td.td2 {width: 60%; font-size:  91%;}
+        .tbl1 td.td3 {width: 10%;}
+    </style>
+</apex:page>

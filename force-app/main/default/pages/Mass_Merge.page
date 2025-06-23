@@ -1,0 +1,11 @@
+<apex:page standardController="Account" 
+                           id="thePage" 
+                      sidebar="true"
+                     tabStyle="Account" 
+                        title="Mass Merge">
+
+  <apex:form >
+  	<c:App_MassMergeWizard_WebApp />
+  </apex:form>	  
+
+</apex:page>

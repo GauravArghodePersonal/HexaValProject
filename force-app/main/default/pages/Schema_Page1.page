@@ -1,0 +1,268 @@
+<apex:page controller="Schema_Controller" action="{!initAction}" sidebar="false">
+    <apex:includeScript value="{!URLFOR($Resource.tablesorter, 'jquery.1.7.1.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.tablesorter, 'jquery.tablesorter.min.js')}"/>
+
+    <apex:outputPanel layout="block" styleClass="pblock">
+    <apex:pageBlock mode="edit" id="pblock">
+        <apex:facet name="header">
+            <apex:outputPanel layout="block" styleClass="pbhdr"><br/>
+            <apex:form id="theForm">
+            <apex:actionStatus id="objStatus">
+                <apex:facet name="start">
+                    <apex:outputText styleClass="bold" value=" Please wait ... ">
+                        <apex:image value="{!$Resource.spinner}"/>
+                    </apex:outputText>
+                </apex:facet>
+                <apex:facet name="stop">
+                    <apex:outputPanel ><table><tr>
+                    <td align="center"><b>Object Name : </b>{!objName}&nbsp;&nbsp;
+                    <apex:selectList value="{!objName}" size="1" styleClass="slist">
+                        <apex:selectOptions value="{!objNames}"/>
+                        <apex:actionSupport action="{!getObjectInfo}" event="onchange"
+                                            rerender="pblock" status="objStatus"
+                                            oncomplete="init();"/>
+                    </apex:selectList>
+                    <apex:commandButton action="{!getObjectInfo}" value="Go"
+                                        rerender="pblock" status="objStatus"
+                                        oncomplete="init();"/></td></tr>
+                    </table></apex:outputPanel>
+                </apex:facet>
+            </apex:actionStatus>
+            </apex:form>
+            </apex:outputPanel>
+        </apex:facet><br/>
+
+    <div class="fixed-table-container sort-decoration">
+      <div class="header-background"> </div>
+      <div class="fixed-table-container-inner">
+
+        <apex:pageBlockTable id="ftable" styleClass="fldsTable"
+                             value="{!flds}" var="f">
+            <apex:column value="{!f.num}" headerClass="fnum" styleClass="fnum">
+                <apex:facet name="header">
+                    <div class="th-inner">#<span class="sortIcon"></span></div>
+                </apex:facet>
+            </apex:column>
+
+            <apex:column value="{!f.dfr.Name}" headerClass="ftext" styleClass="ftext">
+                <apex:facet name="header">
+                    <div class="th-inner">Name<span class="sortIcon"></span></div>
+                </apex:facet>
+            </apex:column>
+
+            <apex:column value="{!f.dfr.RelationshipName}" headerClass="ftext" styleClass="ftext">
+                <apex:facet name="header">
+                    <div class="th-inner">Relationship Name<span class="sortIcon"></span></div>
+                </apex:facet>
+            </apex:column>
+
+            <apex:column value="{!f.dfr.Type}" headerClass="ftype" styleClass="ftype">
+                <apex:facet name="header">
+                    <div class="th-inner">Type<span class="sortIcon"></span></div>
+                </apex:facet>
+            </apex:column>
+
+            <apex:column value="{!f.dfr.SoapType}" headerClass="stype" styleClass="stype">
+                <apex:facet name="header">
+                    <div class="th-inner">SoapType<span class="sortIcon"></span></div>
+                </apex:facet>
+            </apex:column>
+
+            <apex:column value="{!f.dfr.Length}">
+                <apex:facet name="header">
+                    <div class="th-inner">Length<span class="sortIcon"></span></div>
+                </apex:facet>
+            </apex:column>
+
+            <apex:column value="{!f.dfr.Precision}">
+                <apex:facet name="header">
+                    <div class="th-inner">Precsn<span class="sortIcon"></span></div>
+                </apex:facet>
+            </apex:column>
+
+            <apex:column value="{!f.dfr.Scale}">
+                <apex:facet name="header">
+                    <div class="th-inner">Scale<span class="sortIcon"></span></div>
+                </apex:facet>
+            </apex:column>
+
+            <apex:column value="{!f.isExternalId}">
+                <apex:facet name="header">
+                    <div class="th-inner">Ext.Id<span class="sortIcon"></span></div>
+                </apex:facet>
+            </apex:column>
+
+            <apex:column value="{!f.isCustom}">
+                <apex:facet name="header">
+                    <div class="th-inner">Custom<span class="sortIcon"></span></div>
+                </apex:facet>
+            </apex:column>
+
+            <apex:column value="{!f.dfr.CalculatedFormula}" headerClass="ftext" styleClass="ftext">
+                <apex:facet name="header">
+                    <div class="th-inner">Formula<span class="sortIcon"></span></div>
+                </apex:facet>
+            </apex:column>
+
+            <apex:column value="{!f.dfr.InlineHelpText}" headerClass="ftext" styleClass="ftext">
+                <apex:facet name="header">
+                    <div class="th-inner">HelpText<span class="sortIcon"></span></div>
+                </apex:facet>
+            </apex:column>
+
+        </apex:pageBlockTable>
+
+      </div>
+    </div>
+<!--
+        <apex:outputPanel layout="block" id="pbftr" styleClass="pbhdr">
+            <br/>Object :&nbsp;{!objName}
+        </apex:outputPanel>
+-->
+    </apex:pageBlock></apex:outputPanel>
+
+    <script type="text/javascript">
+        var $j = jQuery.noConflict();
+
+        $j(function() {init();});
+
+        function init() {
+            $j(".fldsTable").tablesorter({
+                debug: false
+            });
+        }
+    </script>
+
+    <style>
+        .noSidebarCell {padding: 0;}
+        .apexp .bPageBlock.apexDefaultPageBlock .pbBody {margin: 0;}
+        .pblock {font-size: 120%; font-family: monospace;}
+        body .pbBody table.list tr.dataRow th,
+        body .pbBody table.list tr.dataRow td {
+            border-width: 1px; border-collapse: collapse;
+            vertical-align: top;
+        }
+        .bold {font-weight: bold;}
+        .center {text-align: center;}
+        .right {text-align: right;}
+        .nowrap {white-space: nowrap;}
+
+        .pbhdr {text-align: center; font-family: monospace;}
+        .slist {font-weight: bold; font-family: monospace;}
+
+        table.fldsTable {
+            width: 100%; table-layout: fixed;
+            overflow-x: hidden; overflow-y: auto;
+        }
+
+        table.fldsTable tr.headerRow th {padding: 0px 3px 0px 3px !important;}
+
+        table.fldsTable .th-inner {
+            position: absolute;
+            top: 0;
+            line-height: 30px; /* height of header */
+            text-align: left;
+            border: 1px solid #EDEDED;
+            padding-left: 5px;
+            margin-left: -5px;
+            color: #FF00FF; font-weight: bold; text-decoration: underline;
+        }
+
+        table.fldsTable .fnum .th-inner {
+            /* border-left: none; */
+            padding-left: 15px;
+        }
+
+        table.fldsTable th,
+        table.fldsTable td {
+            width: 50px; word-wrap: break-word;
+            font-size: 0.8em; font-family: monospace;
+        }
+
+        table.fldsTable th.fnum,
+        table.fldsTable td.fnum {
+            width: 30px; text-align: right;
+        }
+
+        table.fldsTable th.ftype,
+        table.fldsTable td.ftype {
+            width: 80px;
+        }
+
+        table.fldsTable th.stype,
+        table.fldsTable td.stype {
+            width: 60px;
+        }
+
+        table.fldsTable th.ftext,
+        table.fldsTable td.ftext {
+            width: 140px;
+        }
+
+        th.header {
+            /* background-image: url("{!URLFOR($Resource.tablesorter, 'bg.gif')}") !important;
+            background-repeat: no-repeat !important;
+            background-position: center top !important;
+            cursor: pointer; height: 5px; vertical-align: top;*/
+            cursor: pointer; line-height: 0px;
+        }
+
+        .fixed-table-container {
+          height: 260px;
+          /* width: 100%;
+          border: 1px solid black;
+          margin: 10px auto;
+          background-color: white;
+          above is decorative or flexible */
+          position: relative; /* could be absolute or relative */
+          padding-top: 30px; /* height of header */
+        }
+
+        .fixed-table-container-inner {
+          overflow-x: hidden;
+          overflow-y: auto;
+          height: 100%;
+        }
+
+        .header-background {
+          background-color: #F2F3F3;
+          height: 30px; /* height of header */
+          position: absolute;
+          top: 0;
+          right: 0;
+          left: 0;
+        }
+
+        .fixed-table-container.sort-decoration {
+          overflow-x: hidden;
+          /* min-width: 100%;  enough width to show arrows */
+        }
+
+        .sort-decoration .th-inner {
+          width: 100%;
+        }
+
+        .header .th-inner {
+          background-color: #F2F3F3;
+        }
+
+        .headerSortUp .th-inner,
+        .headerSortDown .th-inner {
+          /* background-color: #5DDFFD; */
+        }
+
+        span.sortIcon {
+          /* background: url("{!URLFOR($Resource.tablesorter, 'bg.gif')}") no-repeat right bottom; */
+          padding: 7px; margin: 4px;
+        }
+
+        th.headerSortUp span.sortIcon {
+          background: url("{!URLFOR($Resource.tablesorter, 'asc.gif')}") no-repeat right;
+        }
+
+        th.headerSortDown span.sortIcon {
+          background: url("{!URLFOR($Resource.tablesorter, 'desc.gif')}") no-repeat right;
+        }
+
+    </style>
+</apex:page>

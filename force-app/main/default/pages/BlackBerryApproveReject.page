@@ -1,0 +1,38 @@
+<!-- 
+  Developed by Timba Software Corp. www.timbasoftware.com admin@timbasoftware.com
+-->
+
+<apex:page standardStylesheets="false" controller="BlackBerryApproveRejectController" sidebar="false" showHeader="false" cache="true">
+    
+    <apex:include pageName="BlackBerryApprovalStyles" />
+
+    <!-- Approval Title -->
+    <div class="approvalHeader {!ObjDetail.objType}">
+        <div class="title">
+            Approval Request<br />
+            <span class="objTitle">{!ObjDetail.Name}</span>
+        </div>
+    </div>
+    
+    <table width="100%"><tr><td colspan="2" class="subTitle {!ObjDetail.objType}BgColor">
+       <apex:outputText value="Approve / Reject Approval Request" styleClass="titleText" />
+    </td></tr></table>
+
+
+    <!-- Approval Object Detail     -->
+
+    <table cellpadding="0" cellspacing="0" border="0">
+        <apex:outputText escape="false" value="{!formattedObjectDetail}" />     
+    </table>
+
+               <br/>
+               <apex:outputLink value="{!$Page.approveitem}">
+                    <apex:param name="id" value="{!objDetail.id}"/>
+                    <apex:outputText value="Go To: Approve/Reject"/>
+                </apex:outputLink> 
+                <br/> 
+               <apex:outputLink value="{!$Page.BlackBerryApprovalList}">
+                    <apex:outputText value="Go To: Items to Approve"/>
+                </apex:outputLink>
+                
+</apex:page>

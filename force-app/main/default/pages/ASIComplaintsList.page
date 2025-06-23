@@ -1,0 +1,4 @@
+<apex:page standardController="Internal_Complaint__c" recordSetVar="complaints" showHeader="false" sidebar="false">
+    <apex:listViews type="Internal_Complaint__c"/>
+  
+</apex:page>

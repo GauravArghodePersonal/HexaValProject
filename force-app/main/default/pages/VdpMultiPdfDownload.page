@@ -1,0 +1,7 @@
+<apex:page id="MainPage"
+           showHeader="false" 
+           cache="true"
+           Controller="vdpCustomerFacingPDfController"
+           contentType="application/x-pdf#Solenis_ValueAdvantageResults_{!Now()}.pdf">
+    <apex:include pageName="VdpMultiPdf"/>
+</apex:page>

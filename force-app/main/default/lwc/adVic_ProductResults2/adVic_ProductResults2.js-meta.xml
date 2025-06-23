@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>58.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>DO NOT USE</masterLabel>
+    <description>Takes an array of products and displays them.</description>
+    <targets>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default">
+            <property type="String" label="Category Id" name="categoryId" editor="c/categoryCPE"/>
+            <property type="Boolean" label="Show inventory?" name="doShowInventory" default="true"/>
+            <property type="Boolean" label="Do SAP Callout for ship date?" name="doSapCalloutShipdate" default="false"/>
+            <property type="String" label="Results" name="results" default="{!Search.Results}"/>
+            <property type="String" label="Current Page" name="currentPage" default="{!Search.Pagination.currentPage}"/>
+            <property type="Integer" label="Number of products per page" name="productsPerPage" description="How many products should be shown per page?" default="10"/>
+            <property type="String" label="Field to use as product name" name="customNameFieldApiName" editor="c/singleProductFieldPicklistCPE"/>
+            <property type="String" label="Custom Fields" name="customFields" editor="c/productFieldsPicklistCPE"/>
+            <property type="color" name="addToCartButtonColor" label="Add to Cart Button Color" default="#10069F" description="Color of the Add to Cart button."/>
+            <property type="color" name="quantityButtonColor" label="Quantity Button Color" default="#10069F" description="Color of the Quantity buttons."/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

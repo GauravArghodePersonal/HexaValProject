@@ -1,0 +1,13 @@
+<template>
+  <template if:true={contactusPhone}>
+      <br/>
+    <center>
+   <h1> Please Contact Customer Service</h1>
+   <br/>
+<ul>
+<li><lightning-formatted-email value={contactusEmail} ></lightning-formatted-email></li>
+<li>Phone: <lightning-formatted-phone value={contactusPhone} ></lightning-formatted-phone></li>
+</ul>
+    </center>
+  </template>
+</template>

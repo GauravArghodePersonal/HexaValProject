@@ -1,0 +1,180 @@
+<apex:component controller="Pricing_Rebate_EmailController" access="global">
+    <apex:attribute name="Pricing_Rebate_Id" access="global" description="Pricing Rebate Id" 
+                    type="String" assignTo="{!pricing_Rebate_Id}"/>
+  
+    <style type="text/css"> 
+       .TableStyleClass {
+               border:1px solid #000;
+               border-collapse:collapse;
+               /* font-family: 'Arial', 'Helvetica', sans-serif; */
+               font-family: 'Verdana', 'Geneva', sans-serif;           
+               font-size:80%;
+               text-align:left;
+               background:#999;
+               padding:3px;    
+               }
+                   
+       .TableHeaderClass {
+               border:1px solid #000;
+               border-collapse:collapse;
+               padding:5px;
+               background:#319431;
+               text-align:center;
+               font-size:80%;
+               vertical-align: bottom;
+               color:white;
+               }
+       
+       .TableRowClasses_odd {background:#f3f3ec;}
+       .TableRowClasses_even {background:#eeecd1;}
+       
+       .CellFormat_Bold_RightAligned {font-weight:bold;text-align:right;}
+       .CellFormat_Bold_Centered {font-weight:bold;text-align:center;}
+       .CellFormat_Bold_LeftAligned {font-weight:bold;text-align:left;}               
+
+       .CellFormat_Normal_RightAligned {text-align:right;}
+       .CellFormat_Normal_Centered {text-align:center;}
+       .CellFormat_Normal_LeftAligned {text-align:left;}               
+       
+       .CustomTH {font-size: 14px; font-face: arial;background: #CCCCCC; 
+                  border-width: 1;  text-align: center; border-collapse:collapse }
+       .CustomTD {font-size: 14px; font-face: arial}
+       .CustomTR {border: solid #CCCCCC; border-width: 1}
+    </style>
+    
+    <p>Rebate Header Information:</p>
+
+    <apex:variable var="hdr" value="{!header}"/>
+    
+    <table border="0" border-width="0">
+        <tr style="CustomTR">
+          <td style="CustomTD">  <b>Rebate Agreement Number</b> </td> 
+          <td style="CustomTD">  {!hdr.Name} </td>
+        </tr>
+        <tr style="CustomTR">
+            <td style="CustomTD">  <b>SAP Rebate Agreement Number</b> </td> 
+            <td style="CustomTD">  {!hdr.SAP_Rebate_Agreement_Number__c} </td>
+        </tr>
+        <tr style="CustomTR">
+            <td style="CustomTD">  <b>Rebate Recipient</b> </td> 
+            <td style="CustomTD">  {!hdr.Rebate_Recipient_account_number__c} - {!hdr.Rebate_Recipient__r.Name} </td>
+        </tr>
+        <tr style="CustomTR">
+            <td style="CustomTD">  <b>Currency</b> </td> 
+            <td style="CustomTD">  {!hdr.Rebate_Recipient__r.SAP_Currency__c}</td>
+        </tr>
+        <tr style="CustomTR">
+            <td style="CustomTD">  <b>Sales Org</b> </td> 
+            <td style="CustomTD">  {!hdr.Sales_Org__c} - {!hdr.Sales_Org_Description__c}</td>
+        </tr>
+        <tr style="CustomTR">
+            <td style="CustomTD">  <b>Dist Channel</b> </td> 
+            <td style="CustomTD">  {!hdr.Dist_Channel__c} - {!hdr.Dist_Channel_Description__c}</td>
+        </tr>
+        <tr style="CustomTR">
+            <td style="CustomTD">  <b>Division</b> </td> 
+            <td style="CustomTD">  {!hdr.Division__c} - {!hdr.Division_Description__c}</td>
+        </tr>   
+        <tr style="CustomTR">
+            <td style="CustomTD">  <b>Rebate Start Date</b> </td>
+            <td style="CustomTD"><apex:outputField value="{!hdr.Rebate_Start_Date__c}"/></td>
+        </tr>   
+        <tr style="CustomTR">
+            <td style="CustomTD">  <b>Rebate End Date</b> </td> 
+            <td style="CustomTD"><apex:outputField value="{!hdr.Rebate_End_Date__c}"/></td>
+        </tr>   
+        <tr style="CustomTR">
+            <td style="CustomTD">  <b>Rebate Agreement Type</b> </td> 
+            <td style="CustomTD">{!hdr.Rebate_Agreement_Type__c}</td>
+        </tr>   
+        <tr style="CustomTR">
+            <td style="CustomTD">  <b>Condition Type</b> </td> 
+            <td style="CustomTD">{!hdr.Condition_Type__c}</td>
+        </tr>   
+        <tr style="CustomTR">
+            <td style="CustomTD">  <b>Created By</b> </td> 
+            <td style="CustomTD"> {!hdr.CreatedBy.Full_Name__c}</td>
+        </tr>   
+        <tr style="CustomTR">
+            <td style="CustomTD">  <b>Last Modified By</b> </td> 
+            <td style="CustomTD">{!hdr.LastModifiedBy.Full_Name__c}</td>
+        </tr>   
+        <tr style="CustomTR">        
+            <td style="CustomTD">  <b>Account Owner</b> </td> 
+            <td style="CustomTD">  {!hdr.Rebate_Recipient__r.Owner.Name}</td>
+        </tr>  
+        <tr style="CustomTR">        
+            <td style="CustomTD">  <b>Status</b> </td> 
+            <td style="CustomTD">  {!hdr.Status__c}</td>
+        </tr>  
+    </table>
+                  
+    <p>Below are the details related to this rebate:</p>
+        
+    <apex:dataTable value="{!Detail}" var="cx" styleClass="TableStyleClass" 
+                    headerClass="TableHeaderClass" rowClasses="TableRowClasses_odd,TableRowClasses_even" 
+                    cellpadding="4">
+        <apex:column value="{!cx.Account__r.AccountNumber}" styleClass="CellFormat_Normal_Centered">
+            <apex:facet name="header">Account Number</apex:facet>
+        </apex:column>
+        
+        <apex:column value="{!cx.Account__r.Name}">
+            <apex:facet name="header">Account Name</apex:facet>
+        </apex:column>
+
+        <apex:column value="{!cx.Material_Sales_Data2__r.Material_Number__c}">
+            <apex:facet name="header">Material Number</apex:facet>
+        </apex:column>
+        
+        <apex:column value="{!cx.Material_Sales_Data2__r.Material_Desc__c}">
+            <apex:facet name="header">Material Description</apex:facet>
+        </apex:column>
+        
+        <apex:column value="{!cx.Table__c}">
+            <apex:facet name="header">Table</apex:facet>
+        </apex:column>
+
+        <apex:column value="{!cx.Amount__c}">
+            <apex:facet name="header">Amount</apex:facet>
+        </apex:column>
+
+        <apex:column value="{!cx.Unit__c}">
+            <apex:facet name="header">Unit</apex:facet>
+        </apex:column>
+        
+        <apex:column value="{!cx.Per__c}">
+            <apex:facet name="header">Per</apex:facet>
+       </apex:column>
+
+        <apex:column value="{!cx.UoM__c}">
+            <apex:facet name="header">UoM</apex:facet>
+        </apex:column>
+        
+        <apex:column value="{!cx.Accrual__c}">
+            <apex:facet name="header">Accrual</apex:facet>
+        </apex:column>
+            
+        <apex:column value="{!cx.Change_Tracker__c}">
+            <apex:facet name="header">Change Tracker</apex:facet>
+        </apex:column>
+        
+        <apex:column value="{!cx.MFD_Text__c}" styleClass="CellFormat_Normal_Centered">
+            <apex:facet name="header">MFD</apex:facet>
+        </apex:column>
+        
+    </apex:dataTable>
+
+    <p />
+
+    <table border="0">
+      <tr>
+          <td>  <b>Internal Comments</b> </td> 
+          <td>{!hdr.Internal_Comments__c}</td>
+      </tr>
+    </table>
+
+    <p />
+            
+    <c:CustomLink linkLabel="Link to Rebate" linkParam="{!hdr.Id}"/>
+    
+</apex:component>

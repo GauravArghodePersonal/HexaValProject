@@ -1,0 +1,429 @@
+<apex:page controller="FlintSiteHomeController" 
+    tabStyle="VI_AVI_Form__c" title="AVI Registration Form">
+    
+    <!--
+    <style type="text/css">
+    
+    .legend {
+        margin-left: 5px;
+        padding-bottom: 8px;
+        text-align: left;
+    }
+    
+    .formspacer {
+        height: 20px;
+    }
+    
+    .checkboxes .checkbox {
+        padding: 8px 2px 0 4px;
+        text-align: center;
+        vertical-align: top;
+        width: 1%;
+    }
+    
+    .checkboxes .label {
+        padding: 11px 0 2px 2px;
+        text-align: left;
+        vertical-align: top;
+        width: 99%;
+    }
+    
+    .agreement {
+        font-family: Arial, sans-serif;
+        font-size: 1em;
+    }
+    
+    </style>
+    
+    <apex:includeScript value="{!URLFOR($Resource.VIResources, 'js/jquery-1.4.2.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.VIResources, 'js/utils.js')}" />
+    <script type="text/javascript">
+    
+    jQuery.noConflict();
+    
+    jQuery(function() {
+        jQuery("#dummyInput").focus();
+        disableButtonsOnSubmit("{!$Component.theForm}");
+    });
+    
+    </script>
+    
+    <apex:outputPanel layout="none" rendered="{!ISBLANK(facilityId)}">
+        <apex:pageMessage severity="Error" strength="2" summary="Facility could not be found." />
+    </apex:outputPanel>
+    
+    <apex:sectionHeader title="Authorized Valvoline Installer" subtitle="Registration Form" />
+    
+    <apex:form id="theForm">
+        <input id="dummyInput" type="text" style="position: absolute; left: -200px; top: -200px; width: 1px; height: 1px;" tabindex="-1" />
+        
+        <apex:pageBlock title="AVI Registration" mode="edit">
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Submit" action="{!submit}" />
+                <apex:commandButton value="Cancel" action="{!cancel}" immediate="true" />
+            </apex:pageBlockButtons>
+            
+            <apex:pageMessages />
+            
+            <apex:pageBlockSection title="Installer Information" columns="1">
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Installer Name" />
+                    <apex:outputText value="{!facilityName}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Installer Channel" />
+                    <apex:outputText value="{!facilityChannel}" />
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection title="Location Information" columns="1">
+                <apex:pageBlockSectionItem >
+                    <apex:outputPanel layout="block" styleClass="legend">
+                        <p>The Valvoline Store Locator will show this address information and use it to direct customers to your store.</p>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Location Name" />
+                    <apex:outputText value="{!location.Name}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel for="street" value="Address" />
+                    <apex:outputPanel layout="block" styleClass="requiredInput">
+                        <div class="requiredBlock"></div>
+                        <apex:inputTextArea id="street" value="{!street.value}" styleClass="{!IF(NOT(ISBLANK(street.error)), 'error', '')}" cols="50" rows="2" />
+                        <apex:outputPanel styleClass="errorMsg" layout="block" rendered="{!NOT(ISBLANK(street.error))}">
+                            <strong>Error:</strong>&nbsp;
+                            <apex:outputText value="{!street.error}" />
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel for="city" value="City" />
+                    <apex:outputPanel layout="block" styleClass="requiredInput">
+                        <div class="requiredBlock"></div>
+                        <apex:inputText id="city" value="{!city.value}" styleClass="{!IF(NOT(ISBLANK(city.error)), 'error', '')}" size="40" maxlength="40" />
+                        <apex:outputPanel styleClass="errorMsg" layout="block" rendered="{!NOT(ISBLANK(city.error))}">
+                            <strong>Error:</strong>&nbsp;
+                            <apex:outputText value="{!city.error}" />
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel for="state" value="State" />
+                    <apex:outputPanel layout="block" styleClass="requiredInput">
+                        <div class="requiredBlock"></div>
+                        <apex:inputText id="state" value="{!state.value}" styleClass="{!IF(NOT(ISBLANK(state.error)), 'error', '')}" size="40" maxlength="20" />
+                        <apex:outputPanel styleClass="errorMsg" layout="block" rendered="{!NOT(ISBLANK(state.error))}">
+                            <strong>Error:</strong>&nbsp;
+                            <apex:outputText value="{!state.error}" />
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel for="postalCode" value="Zip Code" />
+                    <apex:outputPanel layout="block" styleClass="requiredInput">
+                        <div class="requiredBlock"></div>
+                        <apex:inputText id="postalCode" value="{!postalCode.value}" styleClass="{!IF(NOT(ISBLANK(postalCode.error)), 'error', '')}" size="10" maxlength="20" />
+                        <apex:outputPanel styleClass="errorMsg" layout="block" rendered="{!NOT(ISBLANK(postalCode.error))}">
+                            <strong>Error:</strong>&nbsp;
+                            <apex:outputText value="{!postalCode.error}" />
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel for="phone" value="Phone Number" />
+                    <apex:outputPanel layout="block" styleClass="requiredInput">
+                        <div class="requiredBlock"></div>
+                        <apex:inputText id="phone" value="{!phone.value}" styleClass="{!IF(NOT(ISBLANK(phone.error)), 'error', '')}" size="40" maxlength="40" onblur="formatPhone(this);" onkeydown="formatPhoneOnEnter(this, event);" />
+                        <apex:outputPanel styleClass="errorMsg" layout="block" rendered="{!NOT(ISBLANK(phone.error))}">
+                            <strong>Error:</strong>&nbsp;
+                            <apex:outputText value="{!phone.error}" />
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel for="fax" value="Fax Number" />
+                    <apex:outputPanel layout="none">
+                        <apex:inputText id="fax" value="{!fax.value}" styleClass="{!IF(NOT(ISBLANK(fax.error)), 'error', '')}" size="40" maxlength="40" onblur="formatPhone(this);" onkeydown="formatPhoneOnEnter(this, event);" />
+                        <apex:outputPanel styleClass="errorMsg" layout="block" rendered="{!NOT(ISBLANK(fax.error))}">
+                            <strong>Error:</strong>&nbsp;
+                            <apex:outputText value="{!fax.error}" />
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel for="website" value="Website" />
+                    <apex:outputPanel layout="none">
+                        <apex:inputText id="website" value="{!website.value}" styleClass="{!IF(NOT(ISBLANK(website.error)), 'error', '')}" size="40" maxlength="255" />
+                        <apex:outputPanel styleClass="errorMsg" layout="block" rendered="{!NOT(ISBLANK(website.error))}">
+                            <strong>Error:</strong>&nbsp;
+                            <apex:outputText value="{!website.error}" />
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection title="Requirements" columns="1">
+                <apex:outputPanel layout="none">
+                    <div class="legend">
+                        <p>Please confirm that you meet the following requirements.</p>
+                    </div>
+                    
+                    <table class="checkboxes" border="0" cellspacing="0" cellpadding="0">
+                        <tbody>
+                            <tr>
+                                <td class="checkbox"><apex:inputField id="req1" value="{!application.Purchase_Lubricants_in_Bulk__c}" /></td>
+                                <td class="label"><apex:outputLabel for="req1">Purchase one or more Lubricants in Bulk, either: Conventional, Synthetic Blend or Synthetic.</apex:outputLabel></td>
+                            </tr>
+                            <tr><td colspan="2">
+                                <table style="margin-left: 30px;" border="0" cellspacing="0" cellpadding="0">
+                                    <tbody>
+                                        <tr>
+                                            <td>&nbsp;</td>
+                                            <td class="label"><apex:outputLabel style="border-bottom: 1px solid; padding-bottom: 1px;">Select appropriate bulk product(s):<br/></apex:outputLabel></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkbox"><apex:inputField id="req2" value="{!application.Purchase_Premium_Conventional_5W_20__c}" /></td>
+                                            <td class="label"><apex:outputLabel for="req2">Premium Conventional 5W-20</apex:outputLabel></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkbox"><apex:inputField id="req3" value="{!application.Purchase_Premium_Conventional_5W_30__c}" /></td>
+                                            <td class="label"><apex:outputLabel for="req3">Premium Conventional 5W-30</apex:outputLabel></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkbox"><apex:inputField id="req4" value="{!application.Purchase_DuraBlend_5W_20__c}" /></td>
+                                            <td class="label"><apex:outputLabel for="req4">DuraBlend 5W-20</apex:outputLabel></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkbox"><apex:inputField id="req5" value="{!application.Purchase_DuraBlend_5W_30__c}" /></td>
+                                            <td class="label"><apex:outputLabel for="req5">DuraBlend 5W-30</apex:outputLabel></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkbox"><apex:inputField id="req6" value="{!application.Purchase_MaxLife_5W_20__c}" /></td>
+                                            <td class="label"><apex:outputLabel for="req6">MaxLife 5W-20</apex:outputLabel></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkbox"><apex:inputField id="req7" value="{!application.Purchase_MaxLife_5W_30__c}" /></td>
+                                            <td class="label"><apex:outputLabel for="req7">MaxLife 5W-30</apex:outputLabel></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkbox"><apex:inputField id="req8" value="{!application.Purchase_SynPower_5W_20__c}" /></td>
+                                            <td class="label"><apex:outputLabel for="req8">SynPower 5W-20</apex:outputLabel></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkbox"><apex:inputField id="req9" value="{!application.Purchase_SynPower_5W_30__c}" /></td>
+                                            <td class="label"><apex:outputLabel for="req9">SynPower 5W-30</apex:outputLabel></td>
+                                        </tr>
+                                    </tbody>
+                                </table></td>
+                            </tr>
+                            <tr>
+                                <td class="checkbox"><apex:inputField id="req10" value="{!application.X85_Purchased_Lubricants_are_Valvoline__c}" /></td>
+                                <td class="label"><apex:outputLabel for="req10">85% or more of all Lubricants purchased are Valvoline</apex:outputLabel></td>
+                            </tr>
+                            <tr>
+                                <td class="checkbox"><apex:inputField id="req12" value="{!application.Receipt_shows_Valvoline__c}" /></td>
+                                <td class="label"><apex:outputLabel for="req12">Receipt shows &quot;Valvoline&quot; in some form, and the Lubricant Product purchased</apex:outputLabel></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection title="Goals" columns="1">
+                <apex:pageBlockSectionItem >
+                    <apex:outputPanel layout="block" styleClass="legend">
+                        <p>Please rank your business needs:</p>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                
+<!--                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel for="businessNeed1" value="1" />
+                    <apex:outputPanel layout="block" styleClass="requiredInput">
+                        <div class="requiredBlock"></div>
+                        <apex:inputField id="businessNeed1" value="{!application.Business_Need_1__c}" required="true" />
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel for="businessNeed2" value="2" />
+                    <apex:outputPanel layout="block" styleClass="requiredInput">
+                        <div class="requiredBlock"></div>
+                        <apex:inputField id="businessNeed2" value="{!application.Business_Need_2__c}" required="true" />
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel for="businessNeed3" value="3" />
+                    <apex:outputPanel layout="block" styleClass="requiredInput">
+                        <div class="requiredBlock"></div>
+                        <apex:inputField id="businessNeed3" value="{!application.Business_Need_3__c}" required="true" />
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+           
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel for="businessNeed1" value="1" />
+                    <apex:inputField id="businessNeed1" value="{!application.Business_Need_1__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel for="businessNeed2" value="2" />
+                    <apex:inputField id="businessNeed2" value="{!application.Business_Need_2__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel for="businessNeed3" value="3" />
+                    <apex:inputField id="businessNeed3" value="{!application.Business_Need_3__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel for="businessNeed4" value="4" />
+                    <apex:inputField id="businessNeed4" value="{!application.Business_Need_4__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel for="businessNeed5" value="5" />
+                    <apex:inputField id="businessNeed5" value="{!application.Business_Need_5__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel for="businessNeed6" value="6" />
+                    <apex:inputField id="businessNeed6" value="{!application.Business_Need_6__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel for="businessNeed7" value="7" />
+                    <apex:inputField id="businessNeed7" value="{!application.Business_Need_7__c}" />
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputPanel layout="block" styleClass="formspacer" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputPanel layout="block" styleClass="legend">
+                        <p>On which other Valvoline products would you be interested in getting additional information?</p>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputPanel layout="none">
+                        <table class="checkboxes" border="0" cellspacing="0" cellpadding="0">
+                            <tbody>
+                                <tr>
+                                    <td class="checkbox"><apex:inputField id="interest1" value="{!application.Filters__c}" /></td>
+                                    <td class="label"><apex:outputLabel for="interest1">Filters</apex:outputLabel></td>
+                                </tr>
+                                <tr>
+                                    <td class="checkbox"><apex:inputField id="interest2" value="{!application.Car_Brite_Express_Detailing_Service__c}" /></td>
+                                    <td class="label"><apex:outputLabel for="interest2">Car Brite Express Detailing Service</apex:outputLabel></td>
+                                </tr>
+                                <tr>
+                                    <td class="checkbox"><apex:inputField id="interest3" value="{!application.Car_Brite_Select__c}" /></td>
+                                    <td class="label"><apex:outputLabel for="interest3">Car Brite Select</apex:outputLabel></td>
+                                </tr>
+                                <tr>
+                                    <td class="checkbox"><apex:inputField id="interest4" value="{!application.VPS_Automatic_Transmission_Service__c}" /></td>
+                                    <td class="label"><apex:outputLabel for="interest4">VPS Automatic Transmission Service</apex:outputLabel></td>
+                                </tr>
+                                <tr>
+                                    <td class="checkbox"><apex:inputField id="interest5" value="{!application.VPS_Cooling_System_Service__c}" /></td>
+                                    <td class="label"><apex:outputLabel for="interest5">VPS Cooling System Service</apex:outputLabel></td>
+                                </tr>
+                                <tr>
+                                    <td class="checkbox"><apex:inputField id="interest6" value="{!application.VPS_Power_Steering_Service__c}" /></td>
+                                    <td class="label"><apex:outputLabel for="interest6">VPS Power Steering Service</apex:outputLabel></td>
+                                </tr>
+                                <tr>
+                                    <td class="checkbox"><apex:inputField id="interest7" value="{!application.VPS_Brake_Fluid_Exchange_Service__c}" /></td>
+                                    <td class="label"><apex:outputLabel for="interest7">VPS Brake Fluid Exchange Service</apex:outputLabel></td>
+                                </tr>
+                                <tr>
+                                    <td class="checkbox"><apex:inputField id="interest8" value="{!application.VPS_AC_Oder_Eliminator_Service__c}" /></td>
+                                    <td class="label"><apex:outputLabel for="interest8">VPS AC Oder Eliminator Service</apex:outputLabel></td>
+                                </tr>
+                                <tr>
+                                    <td class="checkbox"><apex:inputField id="interest9" value="{!application.VPS_Engine_Cleaning_Service__c}" /></td>
+                                    <td class="label"><apex:outputLabel for="interest9">VPS Engine Cleaning Service</apex:outputLabel></td>
+                                </tr>
+                                <tr>
+                                    <td class="checkbox"><apex:inputField id="interest10" value="{!application.VPS_Fuel_System_Service__c}" /></td>
+                                    <td class="label"><apex:outputLabel for="interest10">VPS Fuel System Service</apex:outputLabel></td>
+                                </tr>
+                                <tr>
+                                    <td class="checkbox"><apex:inputField id="interest11" value="{!application.VPS_Complete_Fuel_System__c}" /></td>
+                                    <td class="label"><apex:outputLabel for="interest11">VPS Complete Fuel System</apex:outputLabel></td>
+                                </tr>
+                                <tr>
+                                    <td class="checkbox"><apex:inputField id="interest12" value="{!application.VPS_Fuel_Injector_Cleaner__c}" /></td>
+                                    <td class="label"><apex:outputLabel for="interest12">VPS Fuel Injector Cleaner</apex:outputLabel></td>
+                                </tr>
+                                <tr>
+                                    <td class="checkbox"><apex:inputField id="interest13" value="{!application.Roush_Premium_Lubricants__c}" /></td>
+                                    <td class="label"><apex:outputLabel for="interest13">Roush Premium Lubricants</apex:outputLabel></td>
+                                </tr>
+                                <tr>
+                                    <td class="checkbox"><apex:inputField id="interest14" value="{!application.Valvoline_Lubricants__c}" /></td>
+                                    <td class="label"><apex:outputLabel for="interest14">Valvoline Lubricants</apex:outputLabel></td>
+                                </tr>
+                                <tr>
+                                    <td class="checkbox"><apex:inputField id="interest15" value="{!application.Zerex_Coolants__c}" /></td>
+                                    <td class="label"><apex:outputLabel for="interest15">Zerex Coolants</apex:outputLabel></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection title="Electronic Signature" columns="1">
+                <apex:outputPanel layout="none">
+                    <p>Submitted By: <apex:outputText value="{!$User.FirstName} {!$User.LastName}" /></p>
+                    
+                    <p>
+                        <apex:inputCheckbox id="accepted" value="{!userAccepted}" />
+                        <apex:outputLabel for="accepted">By checking the box you are agreeing to the terms and conditions of this program.</apex:outputLabel>
+                    </p>
+                    
+<textarea class="agreement" readonly="readonly" cols="100" rows="8">
+Authorized Valvoline Installer Participation Agreement
+
+Ashland Inc., through its Valvoline brand ("Valvoline") is designating certain locations as preferred providers of oil change services.  These preferred provides are designated as "Authorized Valvoline Installers."  To be classified as an "Authorized Valvoline Installer" or "AVI" you must apply to become an AVI, meet the eligibility requirements, and agree to the AVI terms and conditions outlined below.  When you apply to become an AVI, you agree to be bound by all of the terms and conditions of this participation agreement in the event that your application is approved.
+
+AVI Eligibility Requirements
+
+You must meet all of the following requirements to be an AVI.
+1.  At least 85% of all motor oil used in your business must be Valvoline brand motor oil.
+2.  You must carry at least one of Valvoline's conventional, synthetic blend, or full synthetic motor oil product lines in bulk.
+3.  You must have a point of sale system that generates printed receipts (receipts may not be handwritten).  The point of sale system must also be able to specify that Valvoline motor oil was used (including whether it is conventional, synthetic blend or full synthetic)
+4.  You must accurately register your store location through www.ValvolineInstaller.com and agree to the terms of this participation agreement.
+5.  Eligibility is determined on a yearly basis on January 1 of each year.  Upon confirmation to the satisfaction of Valvoline that you have complied with the eligibility requirements, your status as an AVI will be extended.  
+6.  Valvoline may change the eligibility requirements at any time.  You will be given an opportunity to reject the changes and cease participation in the AVI program.  If you fail to reject the changes as specified in the notice, you will be deemed to have agreed to the new eligibility requirements as specified in the notice.  Notice will be provided by email to the address specified at registration.
+
+AVI Participation Benefits
+
+AVI Installers will receive the following benefits in exchange for their participation and compliance with the AVI program:
+1.  Marketing Support.  Marketing support may include specially designed point of sale materials ( posters, banners, counter-mats, etc.), exclusive AVI promotions, preferred promotion enrollment opportunities.
+2.  On-Line Locator.  Valvoline may provide an on-line locator tool that will allow customers to identify nearby AVI service providers.  This tool will show AVI service providers and may include point-to-point directions.
+3.  Valvoline may add, remove, or modify any of these benefits in its discretion without notice.
+
+Valvoline Compliance Program
+1.  As part of the testing program you hereby authorize Valvoline to perform audits confirming your compliance with the AVI Program standards, purchase requirements or other obligations and to inspect your premises, sample, monitor or test any motor oil, offered for sale, and to inspect or test any tank, line, pump, dispenser, or other operating equipment, including without limitation equipment you own or use at your premises represented to contain the Products, as Valvoline deems appropriate in its sole discretion.
+2.  In the event that any AVI is determined by Valvoline to be out of compliance with its obligations, eligibility requirements, or otherwise does not comply with AVI participation requirements, Valvoline may remove your AVI designation.   In that event, you must cease representing yourself as an AVI, and cease using all associated trademarks.  In addition, Valvoline will remove you from the AVI locator and other lists of approve installers and take such other action as it deems appropriate to protect its registered customers.
+
+
+Use of Trademarks and Confidential Information
+1.  Use of Trademarks.  
+  A.  Upon agreement to the terms of this participation agreement and subject to Valvoline's acceptance of you into the AVI program, Valvoline will grant you a non-exclusive, non-transferrable license, for so long as you remain are an AVI, to use and display the AVI trademarks (the "Trademarks"), in connection with the retail sale of Valvoline products. You may not sublicense the Trademarks.  This license only applies to registered AVI locations you own and operate.  You shall not bring or cause to be brought any proceedings, either administrative or judicial, contesting the validity or ownership of Valvoline's rights to, or registrations of the Trademarks.
+  B.  You will display the Trademarks as required by Valvoline and will not use the Trademarks so as to negatively affect their goodwill.  All goodwill (current and future) associated with the Trademarks belongs exclusively to Valvoline.  Buyer may display the Trademarks on the Premises, invoices, and statements presented to your customers.  But you must disclose your identity and must not imply that you own the Trademarks or that Valvoline owns the Premises.  You may not adopt, use or register any trade, business or domain name, style or design that includes, or is similar to, any of Valvoline's trademarks, service marks, trade names, logos, insignia, slogans, emblems, symbols, designs or other identifying characteristics or any other designation of origin or the like.
+  C.  All rights granted to you are subject to your strict compliance with all obligations set forth in this Agreement and all other agreements between Valvoline and you.  You must immediately cease using the Trademarks and all other intellectual property of Valvoline or its affiliates upon notification from Valvoline. This agreement applies to all trademarks, service marks and other commercial symbols that Valvoline authorizes you to use.
+
+2.  Confidential Information.  As a participant in the AVI Program, you may be given access to confidential and proprietary information from time to time.  Confidential Information, as defined in this section is subject to all conditions and restrictions specified below.  
+  A.  "Confidential Information" includes all information (current and future) relating to the AVI Program, including, among other things, all: (1) Manuals, training, techniques, processes, policies, procedures, systems, data and know how regarding the development, marketing, and operation of the program; (2) designs, specifications and information about products and services; (3) all information regarding customers who register or otherwise participate in aspects of the AVI Program, including the AVI Consumer Promotions, and suppliers, including any statistical and/or financial information, all lists, and customer or other information that is entered into the registration system; (4) marketing programs; (5) specifications for, and suppliers of, certain materials, equipment, and otherwise for the AVI Program.  
+  B.  "Confidential Information" is not intended to include any information that (1) is or subsequently becomes publicly available other than by breach of any legal obligation; (2) was known by you prior to becoming an AVI (including materials provided and presentations are hereby included in the definition of Confidential Information regardless of when they were provided), or (3) became known to Licensee other than through a breach by you of a legal obligation.
+  C.  You agree that Valvoline owns and controls all information, lists and data collected from AVI Consumer Promotions and that you have no right to access, sell, assign, transfer, use or control any of that information.  You acknowledge and agree that Valvoline has and will continue to expend substantial time, effort and money to identify customers and potential customers with particular needs and characteristics uniquely related to the AVI Program.  You further acknowledge and agree that those lists and related information are difficult, costly and time-consuming to obtain.  You have the burden of proof going forward in any dispute between you and Valvoline involving the proprietary or confidential nature of any information. 
+  D.  Both during the time that you are an AVI and for 5 years after the date you are no longer an AVI (except for trade secrets, which are subject to your permanent obligation), you agree not to disclose the Confidential Information to any other party without the express written consent of Valvoline, which consent must be signed by an officer that is least the equivalent of a Vice President.  However, notwithstanding the foregoing, if an item is not merely Confidential Information but constitutes a trade secret under applicable law, the above obligations will apply without any time limit.
+
+GOVERNING LAW.  This agreement has been delivered and accepted and shall be deemed to have been made at Lexington, Kentucky.  The terms and provisions of this agreement shall be interpreted in accordance with and governed by the laws of the Commonwealth of Kentucky without regard to principles of conflicts of law.
+
+</textarea>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+    -->
+</apex:page>

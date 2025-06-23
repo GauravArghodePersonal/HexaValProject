@@ -1,0 +1,46 @@
+<apex:page controller="CF_ChildFilesController" lightningStylesheets="true">
+
+    <apex:slds />
+    <apex:includeLightning />
+
+    <div class="slds-scope">
+
+        <div class="slds-p-around_large">
+
+            <nav role="navigation" aria-label="Breadcrumbs">
+                <ol class="slds-breadcrumb slds-list_horizontal slds-wrap">
+                    <li class="slds-breadcrumb__item">
+                        <a href="/{!recordId}">{!record[nameField]}</a>
+                    </li>
+                </ol>
+            </nav>
+
+            <div id="container" class="slds-p-vertical_small"></div>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        let namespace = '{!orgNamespace}' || 'c';
+
+        $Lightning.use( namespace + ':CF_ChildFilesOutApp', function() {
+            $Lightning.createComponent(
+                namespace + ':CF_ChildFilesCmp',
+                {
+                    'recordId' : '{!recordId}',
+                    'sObjectName' : '{!sObjectName}',
+                    'childRelationshipNames' : '{!$CurrentPage.parameters.r}',
+                    'filesAndNotesFilter' : '{!$CurrentPage.parameters.f}'
+                },
+                'container',
+                function( newCmp ) {
+
+                }
+            );
+        });
+
+    </script>
+
+</apex:page>

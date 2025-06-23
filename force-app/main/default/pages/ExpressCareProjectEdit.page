@@ -1,0 +1,4 @@
+<apex:page standardController="Express_Care_Project__c" 
+           extensions="RecordLockController" action="{!lockRecord}">
+    <apex:include pageName="RecordLockedMessage"/>
+</apex:page>

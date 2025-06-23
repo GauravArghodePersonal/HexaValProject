@@ -1,0 +1,124 @@
+<template>
+    <lightning-card title="Opportunities Summary" class="slds-p-left_medium">
+        <div class="scrollable-table">
+         <div class="exampleHolder" if:true={showspinner}>
+        <lightning-spinner alternative-text="Loading" size="xx-small"></lightning-spinner>
+        </div>
+        <template if:false={showText}>
+            <article class="slds-card">
+                <div class="slds-card__body">
+                    <table class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered slds-table_fixed-layout" role="grid" aria-label="Example table in a Card">
+                        <thead if:true={shouldShowHeader}>
+                            <tr class="slds-line-height_reset">
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Name">Name</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Stage">Stage</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Created Date">Created Date</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Close Date">Close Date</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Opportunity Age">Opportunity Age</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Amount">Amount</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Record Type">Record Type</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Primary Competitor">Primary Competitor</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Probability">Probability</div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={accounts} for:item="account">
+                                <template for:each={account.Opportunities} for:item="opp">
+                                    <template if:true={opp}>
+                                        <tr class="slds-hint-parent" key={opp.Id}>
+                                            <td>
+                                                <div class="slds-truncate" title={opp.Name}>
+                                                    <a href="#" onclick={navigateToOpportunity} tabindex="-1" data-record-id={opp.Id}>{opp.Name}</a>
+                                                </div>
+                                            </td>
+                                            <td role="gridcell">
+                                                <div class="slds-truncate" title={opp.StageName}>
+                                                    {opp.StageName}
+                                                </div>
+                                            </td>
+                                            <td role="gridcell">
+                                                <div class="slds-truncate" title={opp.CreatedDate}>
+                                                  <!--  <lightning-formatted-date-time value={opp.CreatedDate} year="2-digit" month="2-digit" day="2-digit"></lightning-formatted-date-time> -->
+                                                    <lightning-formatted-date-time value={opp.CreatedDate}></lightning-formatted-date-time> 
+                                                </div>
+                                            </td>
+                                            <td role="gridcell">
+                                                <div class="slds-truncate" title={opp.CloseDate}>
+                                                    <lightning-formatted-date-time value={opp.CloseDate}></lightning-formatted-date-time>  
+                                                </div>
+                                            </td>
+                                            <td role="gridcell">
+                                                <div class="slds-truncate" title={opp.Oppage__c}>
+                                                    {opp.Oppage__c}
+                                                </div>
+                                            </td>
+                                            <td role="gridcell">
+                                                <div class="slds-truncate" title={opp.Amount}>
+                                                    {opp.Amount}
+                                                </div>
+                                            </td>
+                                            <td role="gridcell">
+                                                <div class="slds-truncate" title={opp.RecordType.Name}>
+                                                    {opp.RecordType.Name}
+                                                </div>
+                                            </td>
+                                            <td role="gridcell">
+                                                <div class="slds-truncate" title={opp.Primary_Competitor__r.Name}>
+                                                    {opp.Primary_Competitor__r.Name}
+                                                </div>
+                                            </td>
+                                            <td role="gridcell">
+                                                <div class="slds-truncate" title={opp.Probability}>
+                                                    {opp.Probability}%
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                </template>
+                            </template>
+                        </tbody>
+                        <tfoot>
+                            <tr class="slds-line-height_reset slds-theme_shade">
+                                <td role="gridcell">
+                                    <div class="slds-truncate" title="Total Amount"><b>Total Amount</b></div>
+                                </td>
+                                <td role="gridcell"></td> <!-- Blank Column -->
+                                <td role="gridcell"></td>
+                                <td role="gridcell"></td>
+                                <td role="gridcell"></td>
+                                <td role="gridcell">
+                                    <div class="slds-truncate" title="Total Amount Value"><b>{totalValue}</b></div>
+                                </td>
+                                <td role="gridcell"></td>
+                                <td role="gridcell"></td> <!-- Blank Column -->
+                                <td role="gridcell"></td> <!-- Blank Column -->
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </article>
+        </template>
+        </div>
+        <template if:true={showText}>
+            No data found.
+        </template>
+    </lightning-card>
+</template>

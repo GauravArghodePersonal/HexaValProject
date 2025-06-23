@@ -1,0 +1,124 @@
+<apex:page showHeader="false" sidebar="false">
+<style>
+#hor-zebra
+{
+    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+    font-size: 12px;
+    margin: 45px;
+    width: 480px;
+    text-align: left;
+    border-collapse: collapse;
+}
+#hor-zebra th
+{
+    font-size: 14px;
+    font-weight: normal;
+    padding: 10px 8px;
+    color: #039;
+}
+#hor-zebra td
+{
+    padding: 8px;
+    color: #669;
+}
+#hor-zebra .odd
+{
+    background: #e8edff; 
+}
+</style>
+    <table id="hor-zebra">
+    <tr>
+        <th>Code</th>
+        <th>Description</th>
+        <th>Definition</th>
+    </tr>
+    <tr class="odd" >
+        <td>501</td>
+        <td>Direct Sales</td>
+        <td>AWT sells Ashland branded products to the end user</td>
+    </tr>
+    <tr>
+        <td>502</td>
+        <td>Distributor</td>
+        <td>Buy and resell Ashland branded products<br/>
+            Carry inventory<br/>
+            Generate Margin (buy/resell)</td>
+    </tr>
+    <tr class="odd">
+        <td>509</td>
+        <td>Reseller</td>
+        <td>Buy AWT products, resell relabeled products under their own trade name<br/>
+            Generate margin (buy/resell)<br/>
+            May carry inventory</td>
+    </tr>
+    <tr>
+        <td>504</td>
+        <td>Trader</td>
+        <td>Buy and resell Ashland branded products<br/>
+            Generate margin (buy/resell)<br/>
+            May carry inventory</td>
+    </tr>
+    <tr class="odd">
+        <td>139</td>
+        <td>Tier 1 Supplier</td>
+        <td>Buy AWT branded products for specific end users which have implemented<br/>
+            a tier supply structure (Automotive, Petroleum, etc.)</td>
+    </tr>
+    <tr>
+        <td>510</td>
+        <td>Third party producer</td>
+        <td>Third party buying AWT finished goods or raws to be used in its own<br/>
+            production process to produce its own finished goods</td>
+    </tr>
+    <tr class="odd">
+        <td>503</td>
+        <td>Direct sales through agent</td>
+        <td>AWT sells Ashland branded products to end user</td>
+    </tr>
+    <tr>
+        <td>512</td>
+        <td>Distributor through agent</td>
+        <td>Buy and resell Ashland branded products<br/>
+            Carry inventory<br/>
+            Generate margin (buy/resell)</td>
+    </tr>
+    <tr class="odd">
+        <td>517</td>
+        <td>Reseller through agent</td>
+        <td>Buy AWT products, resell relabeled products under their own trade name<br/>
+            Generate margin (buy/resell)<br/>
+            May carry inventory</td>
+    </tr>
+    <tr>
+        <td>514</td>
+        <td>Trader through agent</td>
+        <td>Buy and resell Ashland branded products<br/>
+            Generate margin (buy/resell)<br/>
+            May carry inventory</td>
+    </tr>
+    <tr class="odd">
+        <td>140</td>
+        <td>Tier 1 supplier through agent</td>
+        <td>Buy AWT branded products for specific end users which have implemented<br/>
+            a tier supply structure (automotive, petroleum, etc.)</td>
+    </tr>
+    <tr>
+        <td>518</td>
+        <td>Third party producer through agent</td>
+        <td>Third party buying AWT finished goods or raws to be used in its own<br/>
+            production process to produce its own finished goods</td>
+    </tr>
+    <tr class="odd">
+        <td>505</td>
+        <td>Other</td>
+        <td>Other customers (dummy codes)</td>
+    </tr>
+    <tr>
+        <td>506</td>
+        <td>Intercompany</td>
+        <td>Intercompany partners (Inter and Intra business)</td>
+    </tr>
+        
+</table>
+
+</apex:page>

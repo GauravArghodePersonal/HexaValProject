@@ -1,0 +1,956 @@
+<apex:page controller="AccountRollupStrategicPlanController"
+	showHeader="false" sidebar="false">
+
+	<apex:includeScript value="{!URLFOR($Resource.jQuery1x,'jQuery/jquery-1.8.0.min.js')}" />
+	<apex:includeScript value="{!URLFOR($Resource.jQuery1x,'jQuery/jquery-ui-1.8.20.custom.min.js')}" />
+	<apex:includeScript value="{!URLFOR($Resource.jQuery1x,'jQueryPlugins/blockUI/jquery.blockUI.js')}" />
+	<apex:includeScript value="{!URLFOR($Resource.AccountRollupResources,'js/general.js')}" />
+	<apex:stylesheet value="{!URLFOR($Resource.AccountRollupResources,'css/style.css')}" />
+
+	<style type="text/css">body{background:#F8F8F8;}</style>
+
+	<script>
+		if (!window.console) window.console = {};	
+		if (!window.console.log) window.console.log = function () { };
+	</script>
+
+	<script language="javascript">
+	    var j$= jQuery.noConflict();
+	    j$.fn.exists = function(){return this.length>0;}
+	    
+        j$(document).ready(function(){
+            applyJQueryStyling();
+        });
+        
+        //-------------------
+		// PAGE INIT METHODS
+		//-------------------
+        
+        function applyJQueryStyling() {
+            j$(window).resize(function() {resizeIframe();});
+            j$('.pbSubheader').css('background-color','#1797C0');
+            
+            j$.unblockUI();
+
+            resizeIframe();
+            parent.AdvancedTabbar_IframeResizeRequest();
+            
+//            fixMinWidthForIE();
+        }
+
+		//---------------------------------
+		// STRATEGIC PLAN SPECIFIC METHODS
+		//---------------------------------
+        
+		function deleteStrategicPlanPrompt() {
+      		var isConfirmed = confirm("Are you sure you wish to Delete this Strategic Plan?");
+      		if (isConfirmed) {
+      			showBlockUIMessage('Deleting Strategic Plan');
+      			deleteStrategicPlan(); 
+      		}
+  		}  
+        
+		function renameStrategicPlanPrompt(oldName) {
+			var answer = prompt("Enter a new name for this Strategic Plan:",oldName);
+			if (answer != null && answer != "") {
+      			showBlockUIMessage('Renaming Strategic Plan');
+				renameStrategicPlan(answer);
+			}
+  		}  
+        
+		function newStrategicPlanPrompt(oldName) {
+			var answer = prompt("Enter a name for the New Strategic Plan:",oldName);
+			if (answer != null && answer != "") {
+      			showBlockUIMessage('Creating New Strategic Plan');
+				createNewStrategicPlan(answer);
+			}
+  		}  
+        
+		function cloneStrategicPlanPrompt(oldName) {
+			var answer = prompt("Enter a new name for the Cloned Strategic Plan:",oldName);
+			if (answer != null && answer != "") {
+      			showBlockUIMessage('Cloning Strategic Plan');
+				cloneStrategicPlan(answer);
+			}
+  		}  
+
+		//-----------------------
+		// GOAL SPECIFIC METHODS
+		//-----------------------
+
+        function CreateItem(objectType,tablePointer) {
+        
+    		showBlockUIMessage('Creating New Item');
+        
+        	switch(objectType) { 
+        	
+        	case 'Goal__c' :
+	        	//-------------------
+	        	// Add an Empty Goal
+	        	//-------------------
+				newGoal();
+				break;
+
+        	case 'Strategy__c' :
+	        	//-------------------
+	        	// Add an Empty Strategy__c
+	        	//-------------------
+				newStrategy();
+				break;
+
+        	case 'Strength_and_Weaknesses__c' :
+	        	//-------------------
+	        	// Add an Empty Strength_and_Weaknesses__c
+	        	//-------------------
+				newStrengthandWeakness();
+				break;
+
+        	case 'Action_Plan__c' :
+	        	//-------------------
+	        	// Add an Empty Action_Plan__c
+	        	//-------------------
+				newActionPlan();
+				break;
+			}
+        }
+        
+        function CheckForRecordNeedingEditing(objectType,tablePointer) {
+        
+        	console.log('CheckForRecordNeedingEditing - objectType = ' + objectType);
+//			console.log('CheckForRecordNeedingEditing - tablePointer = ' + tablePointer.html());
+        
+			if (tablePointer.find('.editMode').exists()) {
+				console.log('CheckForRecordNeedingEditing - found editMode!!');
+				EditTable(objectType,tablePointer);
+			}
+			else {
+	     		//------------------------------------
+	       		// Locate the new Row and set to Edit
+	     		//------------------------------------
+	     		var newItemCount = 0;
+	     		
+	        	tablePointer.find('.newItem').each(function() {
+	      			j$(this).parent().parent().find('.nonEdit').addClass('hideMe');
+		       		j$(this).parent().parent().find('.edit').removeClass('hideMe');
+		       		newItemCount++; 
+	        	});
+	        	
+	        	if (newItemCount > 0) {
+		     		//---------------------------------
+		       		// Change the Buttons to Edit Mode
+		     		//---------------------------------
+		       		tablePointer.find('.hideWhenEditing').addClass('hideMe');
+		       		tablePointer.find('.showWhenEditing').removeClass('hideMe');
+		       	}
+		    }
+        	
+        	applyJQueryStyling(); 
+        }
+        
+        function EditTable(objectType,tablePointer) {
+
+	       	switch(objectType) { 
+	        	case 'Goal__c' : beginEditingGoals();break;
+	        	case 'Strategy__c' : beginEditingStrategies();break;
+	        	case 'Strength_and_Weaknesses__c' : beginEditingStrengthandWeaknesses();break;
+	        	case 'Action_Plan__c' : beginEditingActionPlans();break;
+			}
+        
+     		//--------------------------------------
+        	// Change the Table Fields to Edit Mode
+     		//--------------------------------------
+        	tablePointer.find('.nonEdit').addClass('hideMe');
+       		tablePointer.find('.edit').removeClass('hideMe');
+       		
+     		//---------------------------------
+       		// Change the Buttons to Edit Mode
+     		//---------------------------------
+       		tablePointer.find('.hideWhenEditing').addClass('hideMe');
+       		tablePointer.find('.showWhenEditing').removeClass('hideMe');
+
+        	applyJQueryStyling(); 
+        }
+
+        function DeleteItem(objectType,item,id) {
+            var isConfirmed = confirm("Are you sure you wish to Delete this?");
+      		if (isConfirmed) {
+	        	//-----------------
+	        	// Turn on Spinner
+	        	//-----------------
+				j$(item).next().removeClass('hideMe');
+				j$(item).addClass('hideMe');
+	        
+	            showBlockUIMessage('Deleting Record');
+	        
+	        	switch(objectType) { 
+	        	
+	        	case 'Goal__c' :
+		        	//--------------------------
+		        	// Remove the Selected Goal
+		        	//--------------------------
+		        	deleteGoalBasedOnId(id);
+		        	break;
+
+	        	case 'Strategy__c' :
+		        	//--------------------------
+		        	// Remove the Selected Strategy__c
+		        	//--------------------------
+		        	deleteStrategyBasedOnId(id);
+		        	break;
+
+	        	case 'Strength_and_Weaknesses__c' :
+		        	//--------------------------
+		        	// Remove the Selected Strength_and_Weaknesses__c
+		        	//--------------------------
+		        	deleteStrengthandWeaknessBasedOnId(id);
+		        	break;
+ 
+	        	case 'Action_Plan__c' :  
+		        	//--------------------------
+		        	// Remove the Selected Action_Plan__c
+		        	//--------------------------
+		        	deleteActionPlanBasedOnId(id);
+		        	break;
+		        }
+      		}
+        }
+
+		function showBlockUIMessage(message) {
+        	j$.blockUI({ message: '<BR/><h1><img src="{!URLFOR($Resource.AccountRollupResources, 'images/busy.gif')}" /> ' + message + '...</h1><BR/><BR/>'});
+		}
+
+		/*
+		author: Rob Eberhardt
+		desc: fix MinWidth for IE6 & IE7
+		params: none
+		returns: nothing
+		notes: cannot yet fix childless elements like INPUT or SELECT
+		history:
+		   2006-11-20 revised for standards-mode compatibility
+		   2006-11-17 first version
+		*/
+		function fixMinWidthForIE(){
+		   try{
+		      if(!document.body.currentStyle){return} //IE only
+		   }catch(e){return}
+		   var elems=document.getElementsByTagName("*");
+		   for(e=0; e<elems.length; e++){
+		      var eCurStyle = elems[e].currentStyle;
+			  var l_minWidth = (eCurStyle.minWidth) ? eCurStyle.minWidth : eCurStyle.getAttribute("min-width"); //IE7 : IE6
+		      if(l_minWidth && l_minWidth != 'auto'){
+		         var shim = document.createElement("DIV");
+		         shim.style.cssText = 'margin:0 !important; padding:0 !important; border:0 !important; line-height:0 !important; height:0 !important; BACKGROUND:RED;';
+		         shim.style.width = l_minWidth;
+		         
+		         if (j$.browser.msie) {
+			         if (j$.browser.version == '7.0') {
+			         	shim.appendChild(document.createElement("&nbsp;"));
+			         }
+			     }
+		         if(elems[e].canHaveChildren){
+		            elems[e].appendChild(shim);
+		         }else{
+		            //??
+		         }
+		      }
+		   }
+		}
+
+	</script>
+
+	<style>
+.headerText {
+	color: #000000;
+	font-size: 1.3em;
+	margin: 0;
+	font-family: Arial, Helvetica, sans-serif;
+	/* font-weight:bold; */
+}
+
+.hideIt {
+	visibility: hidden;
+}
+
+.hideMe {
+	display: none;
+}
+
+.TextCenterAlign {
+	text-align: center;
+}
+</style>
+
+	<apex:outputPanel id="mainform">
+		<apex:form id="strategicPlanForm">
+
+			<apex:pageMessages id="pageMessages" />
+
+			<apex:actionRegion >
+
+				<apex:actionFunction name="deleteStrategicPlan"
+					action="{!deleteStrategicPlan}" status="strategicPlanToolbarStatus"
+					rerender="strategicPlanPageBlockPanel,RelatedItemsPanel,pageMessages"
+					oncomplete="applyJQueryStyling();">
+				</apex:actionFunction>
+
+				<apex:actionFunction name="createNewStrategicPlan"
+					action="{!createNewStrategicPlan}" status="strategicPlanToolbarStatus"
+					rerender="strategicPlanPageBlockPanel,RelatedItemsPanel,pageMessages"
+					oncomplete="applyJQueryStyling();">
+					<apex:param name="newStrategicPlanName" assignTo="{!newStrategicPlanName}"
+						value="" />
+				</apex:actionFunction>
+
+				<apex:actionFunction name="cloneStrategicPlan" action="{!cloneStrategicPlan}"
+					status="strategicPlanToolbarStatus"
+					rerender="strategicPlanPageBlockPanel,RelatedItemsPanel,pageMessages"
+					oncomplete="applyJQueryStyling();">
+					<apex:param name="newStrategicPlanName" assignTo="{!newStrategicPlanName}"
+						value="" />
+				</apex:actionFunction>
+
+				<apex:actionFunction name="renameStrategicPlan"
+					action="{!renameStrategicPlan}" status="strategicPlanToolbarStatus"
+					rerender="strategicPlanPageBlockPanel,RelatedItemsPanel,pageMessages"
+					oncomplete="applyJQueryStyling();">
+					<apex:param name="newStrategicPlanName" assignTo="{!newStrategicPlanName}"
+						value="" />
+				</apex:actionFunction>
+
+				<apex:outputPanel id="strategicPlanPageBlockPanel">
+
+					<apex:pageBlock id="NoStrategicPlansExist"
+						rendered="{!NOT(StrategicPlansExist)}">
+						<apex:pageBlockSection columns="1">
+
+							<BR />
+
+							<apex:pageMessage title="No Strategic Plans Exist on this Account!<BR/><BR/>" summary="To Create a Strategic Plan for this account, click the Button Below."
+								severity="warning" strength="3" escape="false">
+								<apex:outputPanel layout="block" styleClass="TextCenterAlign">
+									<BR />
+									<input type="button" value="Create a Strategic Plan for this Account"
+										class="btn"
+										onclick="newStrategicPlanPrompt('{!currentStrategicPlan.Strategic_Plan_Name__c}')" />
+									<BR />
+								</apex:outputPanel>
+							</apex:pageMessage>
+
+						</apex:pageBlockSection>
+
+					</apex:pageBlock>
+
+					<apex:outputPanel id="completeStrategicPlanPanel"
+						rendered="{!StrategicPlansExist}">
+
+						<apex:pageBlock id="strategicPlanPageBlock">
+							<apex:facet name="header"> 
+								<apex:outputPanel layout="block" id="availableStrategicPlansPanel"
+									rendered="{!showAvailableStrategicPlansPanel}"
+									styleClass="TextCenterAlign" style="padding: 5px 12px;">
+									<apex:outputText value="Strategic Plan : " styleClass="headerText" />
+									<apex:selectList id="availableStrategicPlansList"
+										value="{!availableStrategicPlanListSelection}" size="1"
+										title="Available StrategicPlans" styleClass="headerText">
+										<apex:selectOptions value="{!strategicPlanOptions}" />
+										<apex:actionSupport event="onchange"
+											action="{!handleNewStrategicPlanSelected}"
+											status="newStrategicPlanSelectedStatus"
+											rerender="strategicPlanPageBlock,RelatedItemsPanel,pageMessages"
+											oncomplete="applyJQueryStyling()" />
+									</apex:selectList>
+									<apex:outputPanel id="strategicPlanManagementSection"
+										styleClass="TextCenterAlign">
+										<apex:outputPanel id="strategicPlanManagementPanel"
+											styleClass="TextCenterAlign">
+											<input type="button" value="New" class="btn"
+												onclick="newStrategicPlanPrompt('{!currentStrategicPlan.Strategic_Plan_Name__c}')" />
+											<input type="button" value="Clone" class="btn"
+												onclick="cloneStrategicPlanPrompt('{!currentStrategicPlan.Strategic_Plan_Name__c}')" />
+											<input type="button" value="Delete" class="btn"
+												onclick="deleteStrategicPlanPrompt('{!currentStrategicPlan.Strategic_Plan_Name__c}')" />
+											<input type="button" value="Rename" class="btn"
+												onclick="renameStrategicPlanPrompt('{!currentStrategicPlan.Strategic_Plan_Name__c}')" />
+										</apex:outputPanel>
+									</apex:outputPanel>
+
+									<apex:actionStatus id="strategicPlanToolbarStatus">
+										<apex:facet name="start">
+											<apex:outputText escape="false" value=" Please wait ... "
+												styleClass="headerText" style="padding-left:10px;">
+												<apex:image value="{!$Resource.spinner}" />
+											</apex:outputText>
+										</apex:facet>
+										<apex:facet name="stop">
+											<!-- 
+										<apex:outputText value="{!toolbarStatusMessage}"/>
+			 						-->
+										</apex:facet>
+									</apex:actionStatus>
+								</apex:outputPanel>
+							</apex:facet>
+
+							<apex:pageBlockSection title="{!currentStrategicPlan.Strategic_Plan_Name__c}"
+								collapsible="false">
+								<apex:outputField value="{!currentStrategicPlan.Name}" />
+								<apex:pageBlockSectionItem >
+									<apex:outputLabel value="Active Strategic Plan" />
+									<apex:outputPanel >
+										<apex:outputField value="{!currentStrategicPlan.Active_Strategic_Plan__c}" />
+										<apex:commandButton value="Make Active"
+											action="{!makeStrategicPlanActiveStrategicPlan}" immediate="true"
+											rerender="strategicPlanPageBlockPanel,RelatedItemsPanel,pageMessages"
+											rendered="{!NOT(CurrentStrategicPlan.Active_Strategic_Plan__c)}"></apex:commandButton>
+									</apex:outputPanel>
+								</apex:pageBlockSectionItem>
+<!-- 								
+								<apex:pageBlockSectionItem >
+									<apex:outputLabel value="Created By" />
+									<apex:outputLink value="/{!currentStrategicPlan.CreatedById}"
+										target="_top">{!currentStrategicPlan.CreatedBy.Name}</apex:outputLink>
+								</apex:pageBlockSectionItem>
+								<apex:pageBlockSectionItem >
+									<apex:outputLabel value="Last Modified By" />
+									<apex:outputLink value="/{!currentStrategicPlan.LastModifiedById}"
+										target="_top">{!currentStrategicPlan.LastModifiedBy.Name}</apex:outputLink>
+								</apex:pageBlockSectionItem>
+								<apex:outputField value="{!currentStrategicPlan.CreatedDate}" />
+								<apex:outputField value="{!currentStrategicPlan.LastModifiedDate}" />
+ -->								
+							</apex:pageBlockSection>
+						</apex:pageBlock>
+					</apex:outputPanel>
+				</apex:outputPanel>
+			</apex:actionRegion>
+
+			<apex:outputPanel layout="block" id="RelatedItemsPanel">
+				<apex:pageBlock id="RelatedItemsPageBlock"
+					rendered="{!StrategicPlansExist}">
+					<apex:actionRegion >
+						<apex:actionFunction name="newGoal" action="{!newGoal}"
+							status="strategicPlanToolbarStatus"
+							rerender="goalsTable,pageMessages"
+							oncomplete="applyJQueryStyling();CheckForRecordNeedingEditing('Goal__c',j$('[id*=goalsTable]'));">
+						</apex:actionFunction>
+
+						<apex:actionFunction name="deleteGoalBasedOnId"
+							action="{!deleteGoalBasedOnId}"
+							rerender="goalsTable,pageMessages"
+							oncomplete="applyJQueryStyling();">
+							<apex:param name="idToDelete" assignTo="{!idToDelete}" value="" />
+						</apex:actionFunction>
+
+						<apex:actionFunction name="beginEditingGoals"
+							action="{!beginEditingGoals}" rerender="">
+						</apex:actionFunction>
+						
+						<apex:outputPanel id="goalsTable">
+							<apex:pageBlockSection title="{!$ObjectType.Goal__c.LabelPlural}" columns="1"
+								collapsible="false">
+								<apex:outputPanel styleClass="{!IF(editingGoals,'editMode','')}">
+									<apex:pageBlockTable value="{!goals}" var="item">
+										<apex:facet name="header">
+											<apex:outputPanel layout="block" styleClass="TextCenterAlign">
+												<input type="button"
+													value="Create New {!$ObjectType.Goal__c.Label}"
+													class="btn newBtn hideWhenEditing"
+													onclick="CreateItem('Goal__c',j$('[id*=goalsTable]'));"
+													/>
+												<input type="button"
+													value="Edit {!$ObjectType.Goal__c.LabelPlural}"
+													class="btn editBtn hideWhenEditing"
+													onclick="EditTable('Goal__c',j$('[id*=goalsTable]'));" 
+													/>
+												<apex:commandButton value="Save"
+													styleClass="saveBtn showWhenEditing hideMe"
+													action="{!updateGoals}"
+													onclick="showBlockUIMessage('Saving');"
+													oncomplete="applyJQueryStyling();CheckForRecordNeedingEditing('Goal__c',j$('[id*=goalsTable]'));"
+													rerender="goalsTable,pageMessages" />
+												<apex:commandButton value="Cancel"
+													styleClass="cancelBtn showWhenEditing hideMe"
+													action="{!cancelEditOfGoals}"
+													onclick="showBlockUIMessage('Cancelling');"
+													oncomplete="applyJQueryStyling();"
+													rerender="goalsTable,pageMessages" immediate="true" />
+											</apex:outputPanel>
+										</apex:facet>
+
+										<apex:column headerValue="Action"
+											headerClass="actionColumnHeader hideWhenEditing"
+											styleClass="actionColumn hideWhenEditing"
+											style="width: 1%;white-space: nowrap;">
+											<apex:outputPanel layout="block"
+												styleClass="actionLinks TextCenterAlign hideWhenEditing">
+												<input type="button" value="Delete"
+													class="btn deleteBtn hideWhenEditing"
+													onclick="DeleteItem('Goal__c',j$(this),'{!item.Id}');" />
+												<apex:image id="loadingImage" styleClass="hideMe"
+													value="{!URLFOR($Resource.AccountRollupResources, 'images/spin_24x24_loading.gif')}"
+													width="24" height="24" />
+											</apex:outputPanel>
+										</apex:column>
+
+										<apex:column headerValue="{!$ObjectType.Goal__c.fields.Goals__c.label}">
+											<apex:outputPanel layout="block" styleClass="nonEdit itemName {!IF(item.Id == '','newItem','')}">
+												<apex:outputField value="{!item.Goals__c}" />
+											</apex:outputPanel>
+											<apex:outputPanel layout="block"
+												styleClass="edit required hideMe itemName {!IF(item.Id == '','newItem','')}">
+												<apex:inputField value="{!item.Goals__c}" style="width:95%;" 
+												                 required="true" 
+												                 />
+											</apex:outputPanel>
+										</apex:column>
+
+										<apex:column headerValue="{!$ObjectType.Goal__c.fields.Progress_Measure__c.label}">
+											<apex:outputPanel layout="block" styleClass="nonEdit">
+												<apex:outputField value="{!item.Progress_Measure__c}" />
+											</apex:outputPanel>
+											<apex:outputPanel layout="block" styleClass="edit hideMe">
+												<apex:inputField value="{!item.Progress_Measure__c}" style="width:95%;" 
+												                 />
+											</apex:outputPanel>
+										</apex:column>
+
+										<apex:column headerValue="{!$ObjectType.Goal__c.fields.Result__c.label}">
+											<apex:outputPanel layout="block" styleClass="nonEdit">
+												<apex:outputField value="{!item.Result__c}" />
+											</apex:outputPanel>
+											<apex:outputPanel layout="block" styleClass="edit hideMe">
+												<apex:inputField value="{!item.Result__c}" 
+												                 /> 
+											</apex:outputPanel>
+										</apex:column>
+
+										<apex:column headerValue="{!$ObjectType.Goal__c.fields.LastModifiedDate.label}">
+											<apex:outputPanel layout="block">
+												<apex:outputField value="{!item.LastModifiedDate}" />
+											</apex:outputPanel>
+										</apex:column>
+									</apex:pageBlockTable>
+								</apex:outputPanel>
+							</apex:pageBlockSection>
+						</apex:outputPanel>
+					</apex:actionRegion>
+
+					<apex:actionRegion >
+						<apex:actionFunction name="newStrategy" action="{!newStrategy}"
+							status="strategicPlanToolbarStatus"
+							rerender="strategiesTable,pageMessages"
+							oncomplete="applyJQueryStyling();CheckForRecordNeedingEditing('Strategy__c',j$('[id*=strategiesTable]'));">
+						</apex:actionFunction>
+
+						<apex:actionFunction name="deleteStrategyBasedOnId"
+							action="{!deleteStrategyBasedOnId}"
+							rerender="strategiesTable,pageMessages"
+							oncomplete="applyJQueryStyling();">
+							<apex:param name="idToDelete" assignTo="{!idToDelete}" value="" />
+						</apex:actionFunction>
+
+						<apex:actionFunction name="beginEditingStrategies"
+							action="{!beginEditingStrategies}" rerender="">
+						</apex:actionFunction>
+
+						<apex:outputPanel id="strategiesTable">
+
+							<apex:pageBlockSection title="Strategies" columns="1"
+								collapsible="false">
+
+
+								<apex:outputPanel styleClass="{!IF(editingStrategies,'editMode','')}">
+									<apex:pageBlockTable value="{!strategies}" var="item">
+										<apex:facet name="header">
+											<apex:outputPanel layout="block" styleClass="TextCenterAlign">
+												<input type="button"
+													value="Create New {!$ObjectType.Strategy__c.Label}"
+													class="btn newBtn hideWhenEditing"
+													onclick="CreateItem('Strategy__c',j$('[id*=strategiesTable]'));" 
+													/>
+												<input type="button"
+													value="Edit {!$ObjectType.Strategy__c.LabelPlural}"
+													class="btn editBtn hideWhenEditing"
+													onclick="EditTable('Strategy__c',j$('[id*=strategiesTable]'));" 
+													/>
+												<apex:commandButton value="Save"
+													styleClass="saveBtn showWhenEditing hideMe"
+													action="{!updateStrategies}"
+													onclick="showBlockUIMessage('Saving');"
+													oncomplete="applyJQueryStyling();CheckForRecordNeedingEditing('Strategy__c',j$('[id*=strategiesTable]'));"
+													rerender="strategiesTable,pageMessages" />
+												<apex:commandButton value="Cancel"
+													styleClass="cancelBtn showWhenEditing hideMe"
+													action="{!cancelEditOfStrategies}"
+													onclick="showBlockUIMessage('Cancelling');"
+													oncomplete="applyJQueryStyling();"
+													rerender="strategiesTable,pageMessages" immediate="true" />
+											</apex:outputPanel>
+										</apex:facet>
+
+										<apex:column headerValue="Action"
+											headerClass="actionColumnHeader hideWhenEditing"
+											styleClass="actionColumn hideWhenEditing"
+											style="width: 1%;white-space: nowrap;">
+											<apex:outputPanel layout="block"
+												styleClass="actionLinks TextCenterAlign hideWhenEditing">
+												<input type="button" value="Delete"
+													class="btn deleteBtn hideWhenEditing"
+													onclick="DeleteItem('Strategy__c',j$(this),'{!item.Id}');" />
+												<apex:image id="loadingImage" styleClass="hideMe"
+													value="{!URLFOR($Resource.AccountRollupResources, 'images/spin_24x24_loading.gif')}"
+													width="24" height="24" />
+											</apex:outputPanel>
+										</apex:column>
+
+										<apex:column headerValue="Name">
+											<apex:outputPanel layout="block"
+												styleClass="nonEdit itemName {!IF(item.Id == '','newItem','')}"
+												html-data-name="{!item.Name}" html-data-id="{!item.Id}">
+												<apex:outputLink value="/{!item.Id}" target="_top">{!item.Name}</apex:outputLink>
+											</apex:outputPanel>
+											<apex:outputPanel layout="block"
+												styleClass="edit required hideMe itemName {!IF(item.Id == '','newItem','')}"
+												html-data-name="{!item.Name}" html-data-id="{!item.Id}">
+												<apex:inputField value="{!item.Name}" style="width:95%;"
+													required="true" />
+											</apex:outputPanel>
+										</apex:column>
+
+										<apex:column headerValue="{!$ObjectType.Strategy__c.fields.Category__c.label}">
+											<apex:outputPanel layout="block" styleClass="nonEdit">
+												<apex:outputField value="{!item.Category__c}" />
+											</apex:outputPanel>
+											<apex:outputPanel layout="block"
+												styleClass="edit required hideMe">
+												<apex:inputField value="{!item.Category__c}"
+													style="width:95%;" required="true" />
+											</apex:outputPanel>
+										</apex:column>
+
+										<apex:column headerValue="{!$ObjectType.Strategy__c.fields.Strategy_Description__c.label}">
+											<apex:outputPanel layout="block" styleClass="nonEdit">
+												<apex:outputField value="{!item.Strategy_Description__c}" />
+											</apex:outputPanel>
+											<apex:outputPanel layout="block" styleClass="edit hideMe">
+												<apex:inputField value="{!item.Strategy_Description__c}"
+													style="width:95%;" />
+											</apex:outputPanel>
+										</apex:column>
+
+										<apex:column headerValue="{!$ObjectType.Strategy__c.fields.LastModifiedDate.label}">
+											<apex:outputPanel layout="block">
+												<apex:outputField value="{!item.LastModifiedDate}" />
+											</apex:outputPanel>
+										</apex:column>
+
+										<apex:column headerValue="Created By">
+											<apex:outputPanel layout="block">
+												<apex:outputLink value="/{!item.CreatedById}" target="_top">{!item.CreatedBy.Name}</apex:outputLink>
+											</apex:outputPanel>
+										</apex:column>
+
+									</apex:pageBlockTable>
+
+								</apex:outputPanel>
+							</apex:pageBlockSection>
+						</apex:outputPanel>
+					</apex:actionRegion>
+
+					<apex:actionRegion >
+						<apex:actionFunction name="newStrengthandWeakness"
+							action="{!newStrengthandWeakness}"
+							status="strategicPlanToolbarStatus"
+							rerender="strengthAndWeaknessesTable,pageMessages"
+							oncomplete="applyJQueryStyling();CheckForRecordNeedingEditing('Strength_and_Weaknesses__c',j$('[id*=strengthAndWeaknessesTable]'));">
+						</apex:actionFunction>
+
+						<apex:actionFunction name="deleteStrengthandWeaknessBasedOnId"
+							action="{!deleteStrengthandWeaknessBasedOnId}"
+							rerender="strengthAndWeaknessesTable,pageMessages"
+							oncomplete="applyJQueryStyling();">
+							<apex:param name="idToDelete" assignTo="{!idToDelete}" value="" />
+						</apex:actionFunction>
+
+						<apex:actionFunction name="beginEditingStrengthandWeaknesses"
+							action="{!beginEditingStrengthandWeaknesses}" rerender="">
+						</apex:actionFunction>
+
+						<apex:outputPanel id="strengthAndWeaknessesTable">
+
+							<apex:pageBlockSection title="{!$ObjectType.Strength_and_Weaknesses__c.LabelPlural}" columns="1"
+								collapsible="false">
+
+								<apex:outputPanel styleClass="{!IF(editingStrengthandWeaknesses,'editMode','')}">
+									<apex:pageBlockTable value="{!strengthAndWeaknesses}"
+										var="item">
+										<apex:facet name="header">
+											<apex:outputPanel layout="block" styleClass="TextCenterAlign">
+												<input type="button"
+													value="Create New {!$ObjectType.Strength_and_Weaknesses__c.Label}"
+													class="btn newBtn hideWhenEditing"
+													onclick="CreateItem('Strength_and_Weaknesses__c',j$('[id*=strengthAndWeaknessesTable]'));" 
+													/>
+												<input type="button"
+													value="Edit {!$ObjectType.Strength_and_Weaknesses__c.LabelPlural}"
+													class="btn editBtn hideWhenEditing"
+													onclick="EditTable('Strength_and_Weaknesses__c',j$('[id*=strengthAndWeaknessesTable]'));" 
+													/>
+												<apex:commandButton value="Save"
+													styleClass="saveBtn showWhenEditing hideMe"
+													action="{!updateStrengthAndWeaknesses}"
+													onclick="showBlockUIMessage('Saving');"
+													oncomplete="applyJQueryStyling();CheckForRecordNeedingEditing('Strength_and_Weaknesses__c',j$('[id*=strengthAndWeaknessesTable]'));"
+													rerender="strengthAndWeaknessesTable,pageMessages" />
+												<apex:commandButton value="Cancel"
+													styleClass="cancelBtn showWhenEditing hideMe"
+													action="{!cancelEditOfStrengthAndWeaknesses}"
+													onclick="showBlockUIMessage('Cancelling');"
+													oncomplete="applyJQueryStyling();"
+													rerender="strengthAndWeaknessesTable,pageMessages"
+													immediate="true" />
+											</apex:outputPanel>
+										</apex:facet>
+
+										<apex:column headerValue="Action"
+											headerClass="actionColumnHeader hideWhenEditing"
+											styleClass="actionColumn hideWhenEditing"
+											style="width: 1%;white-space: nowrap;">
+											<apex:outputPanel layout="block"
+												styleClass="actionLinks TextCenterAlign hideWhenEditing">
+												<input type="button" value="Delete"
+													class="btn deleteBtn hideWhenEditing"
+													onclick="DeleteItem('Strength_and_Weaknesses__c',j$(this),'{!item.Id}');" />
+												<apex:image id="loadingImage" styleClass="hideMe"
+													value="{!URLFOR($Resource.AccountRollupResources, 'images/spin_24x24_loading.gif')}"
+													width="24" height="24" />
+											</apex:outputPanel>
+										</apex:column>
+
+										<apex:column headerValue="{!$ObjectType.Strength_and_Weaknesses__c.fields.Type__c.label}">
+											<apex:outputPanel layout="block" styleClass="nonEdit">
+												<apex:outputField value="{!item.Type__c}" />
+											</apex:outputPanel>
+											<apex:outputPanel layout="block"
+												styleClass="edit required hideMe">
+												<apex:inputField value="{!item.Type__c}" style="width:95%;"
+													required="true" />
+											</apex:outputPanel>
+										</apex:column>
+
+										<apex:column headerValue="{!$ObjectType.Strength_and_Weaknesses__c.fields.Name.label}">
+											<apex:outputPanel layout="block"
+												styleClass="nonEdit itemName {!IF(item.Id == '','newItem','')}"
+												html-data-name="{!item.Name}" html-data-id="{!item.Id}">
+												<apex:outputLink value="/{!item.Id}" target="_top">{!item.Name}</apex:outputLink>
+											</apex:outputPanel>
+											<apex:outputPanel layout="block"
+												styleClass="edit required hideMe itemName {!IF(item.Id == '','newItem','')}"
+												html-data-name="{!item.Name}" html-data-id="{!item.Id}">
+												<apex:inputField value="{!item.Name}" style="width:95%;"
+													required="true" />
+											</apex:outputPanel>
+										</apex:column>
+
+<!-- 
+										<apex:column headerValue="{!$ObjectType.Strength_and_Weaknesses__c.fields.Title__c.label}">
+											<apex:outputPanel layout="block" styleClass="nonEdit">
+												<apex:outputField value="{!item.Title__c}" />
+											</apex:outputPanel>
+											<apex:outputPanel layout="block"
+												styleClass="edit required hideMe">
+												<apex:inputField value="{!item.Title__c}" style="width:95%;"
+													required="true" />
+											</apex:outputPanel>
+										</apex:column>
+ -->
+										<apex:column headerValue="{!$ObjectType.Strength_and_Weaknesses__c.fields.Description__c.label}">
+											<apex:outputPanel layout="block" styleClass="nonEdit">
+												<apex:outputField value="{!item.Description__c}" />
+											</apex:outputPanel>
+											<apex:outputPanel layout="block" styleClass="edit hideMe">
+												<apex:inputField value="{!item.Description__c}"
+													style="width:95%;" />
+											</apex:outputPanel>
+										</apex:column>
+
+										<apex:column headerValue="{!$ObjectType.Strength_and_Weaknesses__c.fields.Level_of_Control__c.label}">
+											<apex:outputPanel layout="block" styleClass="nonEdit">
+												<apex:outputField value="{!item.Level_of_Control__c}" />
+											</apex:outputPanel>
+											<apex:outputPanel layout="block"
+												styleClass="edit required hideMe">
+												<apex:inputField value="{!item.Level_of_Control__c}"
+													required="true" />
+											</apex:outputPanel>
+										</apex:column>
+
+										<apex:column headerValue="{!$ObjectType.Strength_and_Weaknesses__c.fields.LastModifiedDate.label}">
+											<apex:outputPanel layout="block">
+												<apex:outputField value="{!item.LastModifiedDate}" />
+											</apex:outputPanel>
+										</apex:column>
+
+									</apex:pageBlockTable>
+								</apex:outputPanel>
+							</apex:pageBlockSection>
+						</apex:outputPanel>
+					</apex:actionRegion>
+
+					<apex:actionRegion >
+						<apex:actionFunction name="newActionPlan"
+							action="{!newActionPlan}" status="strategicPlanToolbarStatus"
+							rerender="actionPlansTable,pageMessages"
+							oncomplete="applyJQueryStyling();CheckForRecordNeedingEditing('Action_Plan__c',j$('[id*=actionPlansTable]'));">
+						</apex:actionFunction>
+
+						<apex:actionFunction name="deleteActionPlanBasedOnId"
+							action="{!deleteActionPlanBasedOnId}"
+							rerender="actionPlansTable,pageMessages"
+							oncomplete="applyJQueryStyling();">
+							<apex:param name="idToDelete" assignTo="{!idToDelete}" value="" />
+						</apex:actionFunction>
+
+						<apex:actionFunction name="beginEditingActionPlans"
+							action="{!beginEditingActionPlans}" rerender="">
+						</apex:actionFunction>
+
+						<apex:outputPanel id="actionPlansTable">
+
+							<apex:pageBlockSection title="{!$ObjectType.Action_Plan__c.LabelPlural}" columns="1"
+								collapsible="false">
+
+								<apex:outputPanel styleClass="{!IF(editingActionPlans,'editMode','')}">
+									<apex:pageBlockTable value="{!actionPlans}" var="item">
+										<apex:facet name="header">
+											<apex:outputPanel layout="block" styleClass="TextCenterAlign">
+												<input type="button"
+													value="Create New {!$ObjectType.Action_Plan__c.Label}"
+													class="btn newBtn hideWhenEditing"
+													onclick="CreateItem('Action_Plan__c',j$('[id*=actionPlansTable]'));" 
+													/>
+												<input type="button"
+													value="Edit {!$ObjectType.Action_Plan__c.LabelPlural}"
+													class="btn editBtn hideWhenEditing"
+													onclick="EditTable('Action_Plan__c',j$('[id*=actionPlansTable]'));" 
+													/>
+												<apex:commandButton value="Save"
+													styleClass="saveBtn showWhenEditing hideMe"
+													action="{!updateActionPlans}"
+													onclick="showBlockUIMessage('Saving');"
+													oncomplete="applyJQueryStyling();CheckForRecordNeedingEditing('Action_Plan__c',j$('[id*=actionPlansTable]'));"
+													rerender="actionPlansTable,pageMessages" />
+												<apex:commandButton value="Cancel"
+													styleClass="cancelBtn showWhenEditing hideMe"
+													action="{!cancelEditOfActionPlans}"
+													onclick="showBlockUIMessage('Cancelling');"
+													oncomplete="applyJQueryStyling();"
+													rerender="actionPlansTable,pageMessages" immediate="true" />
+											</apex:outputPanel>
+										</apex:facet>
+
+										<apex:column headerValue="Action"
+											headerClass="actionColumnHeader hideWhenEditing"
+											styleClass="actionColumn hideWhenEditing"
+											style="width: 1%;white-space: nowrap;">
+											<apex:outputPanel layout="block"
+												styleClass="actionLinks TextCenterAlign hideWhenEditing">
+												<input type="button" value="Delete"
+													class="btn deleteBtn hideWhenEditing"
+													onclick="DeleteItem('Action_Plan__c',j$(this),'{!item.Id}');" />
+												<apex:image id="loadingImage" styleClass="hideMe"
+													value="{!URLFOR($Resource.AccountRollupResources, 'images/spin_24x24_loading.gif')}"
+													width="24" height="24" />
+											</apex:outputPanel>
+										</apex:column>
+
+										<apex:column headerValue="Name" style="min-width:200px;">
+											<apex:outputPanel layout="block"
+												styleClass="nonEdit itemName {!IF(item.Id == '','newItem','')}"
+												html-data-name="{!item.Name}" html-data-id="{!item.Id}">
+												<apex:outputLink value="/{!item.Id}" target="_top">{!item.Name}</apex:outputLink>
+											</apex:outputPanel>
+											<apex:outputPanel layout="block"
+												styleClass="edit required hideMe itemName {!IF(item.Id == '','newItem','')}"
+												html-data-name="{!item.Name}" html-data-id="{!item.Id}">
+												<apex:inputField value="{!item.Name}" style="width:95%;min-width:200px;"
+													required="true" />
+											</apex:outputPanel>
+										</apex:column>
+
+										<apex:column headerValue="{!$ObjectType.Action_Plan__c.fields.Action__c.label}" style="min-width:200px;">
+											<apex:outputPanel layout="block" styleClass="nonEdit">
+												<apex:outputField value="{!item.Action__c}" />
+											</apex:outputPanel>
+											<apex:outputPanel layout="block"
+												styleClass="edit required hideMe">
+												<apex:inputField value="{!item.Action__c}"
+													style="width:95%;min-width:200px;" required="true" />
+											</apex:outputPanel>
+										</apex:column>
+
+										<apex:column headerValue="{!$ObjectType.Action_Plan__c.fields.Action_Owner__c.label}">
+											<apex:outputPanel layout="block" styleClass="nonEdit">
+												<apex:outputLink value="/{!item.Action_Owner__c}"
+													target="_top">{!item.Action_Owner__r.Name}</apex:outputLink>
+											</apex:outputPanel>
+											<apex:outputPanel layout="block"
+												styleClass="edit required hideMe">
+												<apex:inputField value="{!item.Action_Owner__c}"
+													required="true" />
+											</apex:outputPanel>
+										</apex:column>
+
+										<apex:column headerValue="{!$ObjectType.Action_Plan__c.fields.Due_Date__c.label}">
+											<apex:outputPanel layout="block" styleClass="nonEdit">
+												<apex:outputField value="{!item.Due_Date__c}" />
+											</apex:outputPanel>
+											<apex:outputPanel layout="block" styleClass="edit hideMe">
+												<apex:inputField value="{!item.Due_Date__c}" />
+											</apex:outputPanel>
+										</apex:column>
+
+										<apex:column headerValue="{!$ObjectType.Action_Plan__c.fields.Activity__c.label}" style="min-width:200px;" >
+											<apex:outputPanel layout="block" styleClass="nonEdit">
+												<apex:outputField value="{!item.Activity__c}" />
+											</apex:outputPanel>
+											<apex:outputPanel layout="block" styleClass="edit hideMe">
+												<apex:inputField value="{!item.Activity__c}"
+													style="width:95%;min-width:200px;" />
+											</apex:outputPanel>
+										</apex:column>
+
+										<apex:column headerValue="{!$ObjectType.Action_Plan__c.fields.Date_Completed__c.label}" style="min-width:250px;">
+											<apex:outputPanel layout="block" styleClass="nonEdit">
+												<apex:outputField value="{!item.Date_Completed__c}" style="min-width:150px;"/>
+											</apex:outputPanel>
+											<apex:outputPanel layout="block" styleClass="edit hideMe">
+												<apex:inputField value="{!item.Date_Completed__c}" style="min-width:150px;"/>
+											</apex:outputPanel>
+										</apex:column>
+									</apex:pageBlockTable>
+								</apex:outputPanel>
+							</apex:pageBlockSection>
+						</apex:outputPanel>
+					</apex:actionRegion>
+				</apex:pageBlock>
+				
+				<apex:pageBlock >
+					<apex:pageBlockSection showHeader="false" collapsible="false">
+						<apex:pageBlockSectionItem >
+							<apex:outputLabel value="Created By" />
+							<apex:outputLink value="/{!currentStrategicPlan.CreatedById}"
+								target="_top">{!currentStrategicPlan.CreatedBy.Name}</apex:outputLink>
+						</apex:pageBlockSectionItem>
+						<apex:pageBlockSectionItem >
+							<apex:outputLabel value="Last Modified By" />
+							<apex:outputLink value="/{!currentStrategicPlan.LastModifiedById}"
+								target="_top">{!currentStrategicPlan.LastModifiedBy.Name}</apex:outputLink>
+						</apex:pageBlockSectionItem>
+						<apex:outputField value="{!currentStrategicPlan.CreatedDate}" />
+						<apex:outputField value="{!currentStrategicPlan.LastModifiedDate}" />
+					</apex:pageBlockSection>
+				</apex:pageBlock>
+			</apex:outputPanel>
+		</apex:form>
+	</apex:outputPanel>
+</apex:page>

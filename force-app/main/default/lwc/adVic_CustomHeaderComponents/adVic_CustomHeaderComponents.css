@@ -1,0 +1,161 @@
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative; /* Ensuring position is set for top offset to work */
+    transition: top 0.3s; /* Smooth transition for the top property */
+    width: 100%;
+    background-color: white;
+}
+
+/* Other styles remain the same */
+.mobile {
+    top: 0px;
+    position: fixed;
+    justify-content: space-evenly;
+}
+/* Add the corrected hide class */
+.hide {
+    top: -75px;
+    position: fixed; /* Use fixed position to hide it on mobile */
+}
+
+.contact-text {
+    white-space: nowrap; 
+    font-size: 15px; /* Default font size */
+    color: black; /* Text color */
+}
+
+.standard-button svg {
+    height: 20px; /* Set the SVG height to 20px */
+    width: auto; /* Width will be automatically adjusted according to the aspect ratio */
+}
+
+
+.buttons-container {
+    display: flex;
+    gap: 10px; /* Adjust the space between buttons */
+}
+
+.standard-button {
+    background-color: rgb(16, 6, 159); /* Button background color */
+    color: white; /* Button text color */
+    border: none; /* Remove border */
+    padding: 5px 15px; /* Reduced padding for buttons */
+    cursor: pointer; /* Mouse cursor on hover */
+    border-radius: 15px;
+    font-size: 15px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.language-selector {
+    /* Remove absolute positioning */
+    background-color: rgb(16, 6, 159);
+    color: white;
+    align-self: flex-end;
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+    padding: 5px 10px;
+    justify-content: space-between;
+}
+
+.language-button svg {
+    /* Set the SVG height and ensure width is adjusted according to aspect ratio */
+    height: 16px; /* Adjust the height as necessary */
+    width: 16px; /* Adjust the width as necessary */
+    margin-right: 8px; /* Right margin to separate SVG from the text, adjust as necessary */
+    margin-top: 3px;
+}
+
+/* For smaller screens, apply the following styles */
+@media screen and (max-width: 480px) {
+    .header-container {
+        position: fixed; /* Fixed position to remain consistent on mobile */
+        width: 100%; /* Full width to cover the screen */
+        z-index: 10; /* Ensure it stays on top of other content */
+    }
+
+    .hide {
+        top: -100px; /* Adjust as necessary for your header size */
+    }
+
+    .contact-text {
+        display: none; /* Hide the contact text */
+    }
+
+    .standard-button {
+        padding: 4px 12px; /* Reduced padding for buttons */
+        font-size: 13px; /* Smaller font size for button text */
+    }
+
+    .language-button svg {
+        margin-top: 2px;
+    }
+}
+
+.modal {
+    display: block; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 100; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+}
+
+.language-buttons-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two columns */
+    gap: 10px;
+}
+
+.language-button-row {
+    display: flex;
+    justify-content: center;
+}
+
+.language-button-row button {
+    background-color: rgb(16, 6, 159);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 15px;
+    margin: 5px; /* Spacing between buttons */
+}
+
+.modal-title {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.close {
+    position: absolute; /* Absolute position within the modal */
+    top: 10px; /* Distance from the top of the modal */
+    right: 15px; /* Distance from the right of the modal */
+    color: #000000; /* Color of the close button (choose a contrasting color) */
+    font-size: 24px; /* Size of the close button */
+    z-index: 101; /* Ensure it's above other modal content */
+}
+
+.close:hover,
+.close:focus {
+    color: rgb(105, 105, 105); /* Color change on hover for visibility */
+    text-decoration: none;
+    cursor: pointer;
+}

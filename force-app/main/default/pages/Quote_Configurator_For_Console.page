@@ -1,0 +1,33 @@
+<apex:page > 
+    <apex:includeScript value="/support/console/48.0/integration.js"/>
+    <style>
+        .m-iframe{
+            width: 100%;
+            border: 0px;
+            height: 95vh;
+        }  
+    </style>
+    <script>  
+        sforce.console.setTabTitle('Quote Configurator');
+        function testOpenSubtab() {
+            //First find the ID of the primary tab to put the new subtab in
+            sforce.console.getEnclosingPrimaryTabId(openSubtab);
+        }        
+        var openSubtab = function openSubtab(result) {
+            //Now that we have the primary tab ID, we can open a new subtab in it
+            var primaryTabId = result.id;
+            sforce.console.openSubtab(primaryTabId , '#', false, 
+                'salesforce', null, openSuccess, 'salesforceSubtab');
+        };        
+        var openSuccess = function openSuccess(result) {
+            //Report whether we succeeded in opening the subtab
+            if (result.success == true) {
+                console.log('subtab successfully opened');
+            } else {
+                console.log('subtab cannot be opened');
+            }
+        };
+        window.onload = testOpenSubtab();
+    </script> 
+    <iframe class="m-iframe" src="/apex/Solenis_Quote_Configurator?Id={!$CurrentPage.parameters.aId}"/>
+</apex:page>

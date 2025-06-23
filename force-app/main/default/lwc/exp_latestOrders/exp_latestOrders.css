@@ -1,0 +1,53 @@
+/*@font-face {
+	font-family: "urw_din_custom_font";
+	src: url('/SolenisExperienceCloud/s/sfsites/c/resource/EXP_Fonts/EXP_Fonts/URWDIN_Bold.otf') format('opentype');
+}*/
+.article.slds-card.slds-card_narrow{
+	border-style: hidden !important;
+}
+.hide_border{
+	border-style: hidden !important;
+}
+.exp_border{
+	border: 1px solid #007BFF;
+}
+.exp_heading{
+	font-family: URWDIN-Regular !important;
+	font-style: normal;
+	font-weight: 600;
+	font-size: 22px;
+	line-height: 45px;
+	color: #17344C;
+}
+.exp_dateFont{
+	font-family: URWDIN-Regular;
+	font-style: normal;
+	font-weight: 500;
+	font-size: 14px;
+	line-height: 19px;
+	/* or 136% */
+	color: #17344C;
+}
+.exp_myText{
+	font-family: URWDIN-Regular;
+	font-style: normal;
+	font-weight: 500;
+	font-size: 16px;
+	line-height: 19px;
+	/* or 119% */
+	color: #687886;
+}
+.exp_myURL{
+	font-family: URWDIN-Regular;
+	font-style: normal;
+	font-weight: 500;
+	font-size: 16px;
+	line-height: 19px;
+	/* or 119% */
+	color: #007BFF;
+}
+lightning-button.button {
+	--sds-c-button-neutral-color-border:#007BFF;
+	--sds-c-button-neutral-color-background:white;
+    --sds-c-button-text-color:#007BFF;
+}

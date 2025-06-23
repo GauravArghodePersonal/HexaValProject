@@ -1,0 +1,251 @@
+<apex:page controller="Internal_Complaint_Controller"
+           action="{!initAction1}" sidebar="false" 
+           tabStyle="Internal_Complaint__c">
+
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-1.6.2.min.js')}" />
+
+    <apex:form id="form1">
+    <apex:pageMessages />
+    <apex:pageBlock Title="Internal Complaints" mode="edit">
+    
+    <apex:pageBlockSection columns="1">
+
+        <apex:pageBlockSectionItem >
+            <apex:outputPanel layout="block">
+                <table class="tbl1">
+                    <tr><td class="center" width="20%">
+                        <apex:outputText value="Records: {!pc1.recordFrom} - {!pc1.recordTo} of {!pc1.resultSize}" 
+                                         styleClass="nowrap"/></td>
+
+                    <td class="center" width="60%">
+                        <apex:actionStatus id="pageControls">
+                            <apex:facet name="start">
+                                <apex:outputText styleClass="bold" value=" Please wait ...">
+                                    <apex:image value="{!$Resource.spinner}"/>
+                                </apex:outputText>
+                            </apex:facet>
+                            <apex:facet name="stop">
+                            <apex:outputPanel >
+                            <apex:outputText value="Rows Per Page:"/>&nbsp;
+                            <apex:selectList id="pageSize" value="{!pc1.pageSize}" size="1" title="Rows Per Page:">
+                                <apex:actionSupport event="onchange" action="{!pc1Size}" 
+                                                rerender="form1" status="pageControls"/>
+                                <apex:selectOption itemLabel="50" itemValue="50"/>
+                                <apex:selectOption itemLabel="100" itemValue="100"/>
+                                <apex:selectOption itemLabel="200" itemValue="200"/>
+                            </apex:selectList>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <apex:commandButton action="{!pc1Frst}" disabled="{!NOT(pc1.hasPrevious)}" 
+                                                rerender="form1" status="pageControls"
+                                                title="First Page" value="<<"/>&nbsp;&nbsp;
+                            <apex:commandButton action="{!pc1Prev}" disabled="{!NOT(pc1.hasPrevious)}" 
+                                                rerender="form1" status="pageControls"
+                                                title="Prev Page" value="<"/>
+                                                
+                            Previous&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Next&nbsp;
+                            
+                            <apex:commandButton action="{!pc1Next}" disabled="{!NOT(pc1.hasNext)}" 
+                                                rerender="form1" status="pageControls"
+                                                title="Next Page" value=">"/>&nbsp;&nbsp;
+                            <apex:commandButton action="{!pc1Last}" disabled="{!NOT(pc1.hasNext)}" 
+                                                rerender="form1" status="pageControls"
+                                                title="Last Page" value=">>"/>
+                            </apex:outputPanel>
+                        </apex:facet></apex:actionStatus></td>
+
+                    <td class="center" width="20%">
+                        <apex:outputText value="Page: {!pc1.pageNumber} of {!pc1.lastPageNumber}"/></td>
+                    </tr>
+            </table>
+            </apex:outputPanel>
+        </apex:pageBlockSectionItem>
+
+        <apex:pageBlockSectionItem >
+            <apex:outputPanel layout="block">
+                <table class="tbl1"><tr><td>
+                <apex:actionStatus id="searchStatus">
+                    <apex:facet name="start">
+                        <apex:outputText styleClass="bold" value=" Please wait ...">
+                            <apex:image value="{!$Resource.spinner}"/>
+                        </apex:outputText>
+                    </apex:facet>
+                    <apex:facet name="stop">
+                        <apex:outputPanel >
+                            <apex:outputText value="Status:"/>&nbsp;
+                            <apex:selectList value="{!status}" size="1" title="Status:">
+                                <apex:actionSupport event="onchange" action="{!init1}" 
+                                                rerender="form1" status="searchStatus"/>
+                                <apex:selectOptions value="{!statOpts}"/>
+                            </apex:selectList>
+                        </apex:outputPanel>
+                    </apex:facet>
+                </apex:actionStatus>
+                </td></tr></table>
+            </apex:outputPanel>
+        </apex:pageBlockSectionItem>
+
+        <apex:pageBlockSectionItem > 
+            <apex:pageBlockTable value="{!recs}" var="r" styleClass="tbl2" id="tbl2">
+                <apex:column headerClass="right" styleClass="right" width="20px">
+                    <apex:facet name="header">#</apex:facet>
+                    <apex:outputText value="{!r.recNum}"/></apex:column>
+
+                <apex:column width="100px">
+                    <apex:facet name="header"><apex:actionStatus id="sortByRecName">
+                        <apex:facet name="start"><apex:image value="{!$Resource.spinner}"/></apex:facet>
+                        <apex:facet name="stop"><apex:outputPanel >
+                            <apex:commandLink value="Record #" action="{!sortByRecName}" 
+                                status="sortByRecName" styleClass="hdr2" rerender="tbl2"/>
+                            <apex:outputText escape="false" value="{!sortIconRecName}"/>
+                        </apex:outputPanel></apex:facet></apex:actionStatus></apex:facet>
+                        
+                    <apex:outputLink value="/{!r.recId}" target="_blank"> 
+                        <apex:outputText value="{!r.recName}"/>
+                    </apex:outputLink></apex:column>
+                
+                <apex:column width="100px">
+                    <apex:facet name="header"><apex:actionStatus id="sortByTopic">
+                        <apex:facet name="start"><apex:image value="{!$Resource.spinner}"/></apex:facet>
+                        <apex:facet name="stop"><apex:outputPanel >
+                            <apex:commandLink value="Topic" action="{!sortByTopic}" 
+                                status="sortByTopic" styleClass="hdr2" rerender="tbl2"/>
+                            <apex:outputText escape="false" value="{!sortIconTopic}"/>
+                        </apex:outputPanel></apex:facet></apex:actionStatus></apex:facet>
+                        
+                    <apex:outputText value="{!r.topic}"/></apex:column>
+
+                <apex:column width="100px">
+                    <apex:facet name="header"><apex:actionStatus id="sortByConcern">
+                        <apex:facet name="start"><apex:image value="{!$Resource.spinner}"/></apex:facet>
+                        <apex:facet name="stop"><apex:outputPanel >
+                            <apex:commandLink value="Concern/Issue" action="{!sortByConcern}" 
+                                status="sortByConcern" styleClass="hdr2" rerender="tbl2"/>
+                            <apex:outputText escape="false" value="{!sortIconConcern}"/>
+                        </apex:outputPanel></apex:facet></apex:actionStatus></apex:facet>
+                        
+                    <apex:outputText value="{!r.concern}"/></apex:column>
+
+                <apex:column width="100px">
+                    <apex:facet name="header"><apex:actionStatus id="sortByIssue">
+                        <apex:facet name="start"><apex:image value="{!$Resource.spinner}"/></apex:facet>
+                        <apex:facet name="stop"><apex:outputPanel >
+                            <apex:commandLink value="Issue" action="{!sortByIssue}" 
+                                status="sortByIssue" styleClass="hdr2" rerender="tbl2"/>
+                            <apex:outputText escape="false" value="{!sortIconIssue}"/>
+                        </apex:outputPanel></apex:facet></apex:actionStatus></apex:facet>
+                        
+                    <apex:outputText value="{!r.issue}"/></apex:column>
+
+                <apex:column width="100px">
+                    <apex:facet name="header"><apex:actionStatus id="sortByStatus">
+                        <apex:facet name="start"><apex:image value="{!$Resource.spinner}"/></apex:facet>
+                        <apex:facet name="stop"><apex:outputPanel >
+                            <apex:commandLink value="Status" action="{!sortByStatus}" 
+                                status="sortByStatus" styleClass="hdr2" rerender="tbl2"/>
+                            <apex:outputText escape="false" value="{!sortIconStatus}"/>
+                        </apex:outputPanel></apex:facet></apex:actionStatus></apex:facet>
+                        
+                    <apex:outputText value="{!r.status}"/></apex:column>
+
+                <apex:column width="100px">
+                    <apex:facet name="header"><apex:actionStatus id="sortByCrtDate">
+                        <apex:facet name="start"><apex:image value="{!$Resource.spinner}"/></apex:facet>
+                        <apex:facet name="stop"><apex:outputPanel >
+                            <apex:commandLink value="Created On" action="{!sortByCrtDate}" 
+                                status="sortByCrtDate" styleClass="hdr2" rerender="tbl2"/>
+                            <apex:outputText escape="false" value="{!sortIconCrtDate}"/>
+                        </apex:outputPanel></apex:facet></apex:actionStatus></apex:facet>
+                        
+                    <apex:outputText value="{!r.crtDate}"/></apex:column>
+
+                <apex:column width="100px">
+                    <apex:facet name="header"><apex:actionStatus id="sortByCrtBy">
+                        <apex:facet name="start"><apex:image value="{!$Resource.spinner}"/></apex:facet>
+                        <apex:facet name="stop"><apex:outputPanel >
+                            <apex:commandLink value="Created By" action="{!sortByCrtBy}" 
+                                status="sortByCrtBy" styleClass="hdr2" rerender="tbl2"/>
+                            <apex:outputText escape="false" value="{!sortIconCrtBy}"/>
+                        </apex:outputPanel></apex:facet></apex:actionStatus></apex:facet>
+                        
+                    <apex:outputText value="{!r.crtBy}"/></apex:column>
+
+                <apex:column width="100px">
+                    <apex:facet name="header"><apex:actionStatus id="sortByOwner">
+                        <apex:facet name="start"><apex:image value="{!$Resource.spinner}"/></apex:facet>
+                        <apex:facet name="stop"><apex:outputPanel >
+                            <apex:commandLink value="Owner Name" action="{!sortByOwner}" 
+                                status="sortByOwner" styleClass="hdr2" rerender="tbl2"/>
+                            <apex:outputText escape="false" value="{!sortIconOwner}"/>
+                        </apex:outputPanel></apex:facet></apex:actionStatus></apex:facet>
+                        
+                    <apex:outputText value="{!r.owner}"/></apex:column>
+
+                <apex:column width="100px">
+                    <apex:facet name="header"><apex:actionStatus id="sortByStDays1">
+                        <apex:facet name="start"><apex:image value="{!$Resource.spinner}"/></apex:facet>
+                        <apex:facet name="stop"><apex:outputPanel >
+                            <apex:commandLink action="{!sortByStDays1}" 
+                                status="sortByStDays1" styleClass="hdr2" rerender="tbl2">
+                                Days in<br/>Under<br/>Investigation 
+                            </apex:commandLink>
+                            <apex:outputText escape="false" value="{!sortIconStDays1}"/>
+                        </apex:outputPanel></apex:facet></apex:actionStatus></apex:facet>
+                        
+                    <apex:outputText value="{!r.statDays1}"/></apex:column>
+
+                <apex:column width="100px">
+                    <apex:facet name="header"><apex:actionStatus id="sortByStDays2">
+                        <apex:facet name="start"><apex:image value="{!$Resource.spinner}"/></apex:facet>
+                        <apex:facet name="stop"><apex:outputPanel >
+                            <apex:commandLink action="{!sortByStDays2}" 
+                                status="sortByStDays2" styleClass="hdr2" rerender="tbl2">
+                                Days in<br/>Final<br/>Review 
+                            </apex:commandLink>
+                            <apex:outputText escape="false" value="{!sortIconStDays2}"/>
+                        </apex:outputPanel></apex:facet></apex:actionStatus></apex:facet>
+                        
+                    <apex:outputText value="{!r.statDays2}"/></apex:column>
+
+            </apex:pageBlockTable>
+
+        </apex:pageBlockSectionItem>
+    </apex:pageBlockSection>
+    </apex:pageBlock>
+    </apex:form>
+
+    <script type="text/javascript">
+        var $j = jQuery.noConflict();
+        
+        function onClick_AllChkbox(rowCbClass, allChkbox) {
+            $j("."+rowCbClass).each(function() {
+                if (this.disabled == false) {
+                    this.checked = allChkbox.checked;
+                }
+            });
+        }
+
+        function onClick_RowChkbox(rowCbClass, allCbClass) {
+            var allChkbox = $j("."+allCbClass).get(0);
+            allChkbox.checked = true;
+            $j("."+rowCbClass).each(function() {
+                if (!this.checked) {
+                    allChkbox.checked = false;
+                    return false;
+                }
+            });
+        }
+
+    </script>
+
+    <style>
+        .bold {font-weight: bold;}
+        .center {text-align: center;}
+        .right {text-align: right;}
+        .note1 {font-size: 100% !important; font-style: italic; font-weight: normal;}
+        .tbl1 {background-color: #f8f8f8; font-weight: bold; width: 100%;}
+        .tbl1 td {color: #4a4a56; font-size: 91%; 
+                  text-align: center; white-space: nowrap;}
+        .tbl2 .hdr2 {text-decoration: underline !important;}
+        .tbl2 .chkbx {margin-left: 0px !important;}
+        .txta1 {height: 30px; width: 98%; resize: none; overflow: auto;}
+    </style>
+</apex:page>

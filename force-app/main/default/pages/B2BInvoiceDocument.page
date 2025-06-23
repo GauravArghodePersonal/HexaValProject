@@ -1,0 +1,22 @@
+<apex:page cache="true" sidebar="false" showHeader="false" standardController="Account" extensions="B2BInvoiceDocument">
+     <apex:slds />
+	<!--<iframe src="data:{!att.ContentType};base64,{!pdf}" ></iframe>
+    <html> renderAs="pdf"
+        <p>
+            test:{!currentRecordId}
+            <iframe src="{!currentRecordId}" ></iframe>
+             
+          
+        </p>
+    </html>
+ <iframe src="data:{!currentRecordId};base64" ></iframe>
+-->
+    <p>
+       <iframe src="data:application/pdf;base64,{!currentRecordId}" style="width: 100%; height: 100vh; display: inline-block" ></iframe>
+        <!-- <iframe src="data:application/pdf;base64,{!currentRecordId}" style="width: 100%; height: 100vh; display: inline-block"></iframe>-->
+    </p>
+     <!--<embed type="application/pdf" src="data:application/pdf;base64,{!currentRecordId}" style="width: 100%; height: 100vh; display: inline-block" /> -->
+     <!-- <iframe src="data:application/pdf;base64,{!currentRecordId}" style="width: 100%; height: 100vh; display: inline-block"></iframe>-->
+    <!--<iframe height="600px" id="theIframe" name="theIframe" src="data:application/pdf;base64,{!currentRecordId}" width="100%"></iframe> -->
+
+</apex:page>

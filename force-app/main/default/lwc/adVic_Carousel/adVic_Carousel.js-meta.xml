@@ -1,0 +1,593 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>58.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>AdVic Carousel</masterLabel>
+    <description>Used to display CMS Content in a carousel</description>
+    <targets>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default">
+            <property 
+                type="Integer"
+                name="switchInterval"
+                label="Image Switch Interval (ms)"
+                default="10000"
+            />
+            <property
+                type="Integer"
+                name="componentHeight"
+                label="Component Height"
+                description="Height in pixels of the hero carousel"
+                default="600"
+            />
+            <!-- Content 1 properties -->
+            <property
+                type="ContentReference"
+                name="contentId1"
+                label="Content ID 1"
+                description="Reference to the CMS content for Image 1."
+            />
+            <property
+                type="color"
+                name="color1"
+                label="Color 1"
+                description="Color for text 1."
+            />
+            <property
+                type="boolean"
+                name="shadow1"
+                label="Show Shadow 1?"
+                description="So Shadow on Text 1?"
+            />
+            <property 
+                type="String"
+                name="text1"
+                label="Custom Text 1"
+                description="Custom text to display for Image 1."
+            />
+            <property 
+                type="String"
+                name="h1Style1"
+                label="Custom Style for Custom Text 1"
+                description="CSS Styles for text 1"
+                default="font-size: 6rem; margin-left: -10px; margin-top: -20px;"
+            />
+            <property 
+                type="String"
+                name="subText1"
+                label="Custom Sub Text 1"
+                description="Custom Sub text to display for Image 1."
+            />
+            <property 
+                type="String"
+                name="h2Style1"
+                label="Custom Style for Sub Custom Text 1"
+                description="CSS Styles for sub text 1"
+                default="font-size: 3rem; line-height: 1px; margin-bottom: 40px;"
+            />
+            <property 
+                type="String"
+                name="textAlign1"
+                label="Align text (left, center, right)"
+                description="Align the text using left center or right"
+                default = "center"
+            />
+            <property 
+                type="String"
+                name="contentAlign1"
+                label="Align content (top-left, top-center, etc.)"
+                description="custom width of content section"
+                default = "center-center"
+            />
+            <property 
+                type="String"
+                name="buttonText1"
+                label="Button Text 1"
+                description="Button text associated with Image 1."
+            />
+            <property 
+                type="String"
+                name="buttonLink1"
+                label="Button Link 1"
+                default="Home"
+                description="API Name of Page (example: Login, Home)"
+            />
+            <property 
+                type="String"
+                name="buttonStyle1"
+                label="Button Style 1"
+                default="width: 205px; padding: 5px; font-size: 1rem; background-color: green; border: none;"
+                description="CSS Styles for the button"
+            />
+
+            <!-- Content 2 properties -->
+            <property
+                type="ContentReference"
+                name="contentId2"
+                label="Content ID 2"
+                filter="cms_image"
+                description="Reference to the CMS content for Image 2."
+            />
+            <property
+                type="color"
+                name="color2"
+                label="Color 2"
+                description="Color for text 2."
+            />
+            <property
+                type="boolean"
+                name="shadow2"
+                label="Show Shadow 2?"
+                description="So Shadow on Text 2?"
+            />
+            <property 
+                type="String"
+                name="text2"
+                label="Custom Text 2"
+                description="Custom text to display for Image 2."
+            />
+            <property 
+                type="String"
+                name="h1Style2"
+                label="Custom Style for Custom Text 2"
+                description="CSS Styles for text 2"
+                default="font-size: 6rem; margin-left: -10px; margin-top: -20px;"
+            />
+            <property 
+                type="String"
+                name="subText2"
+                label="Custom Sub Text 2"
+                description="Custom Sub text to display for Image 2."
+            />
+            <property 
+                type="String"
+                name="h2Style2"
+                label="Custom Style for Sub Custom Text 2"
+                description="CSS Styles for sub text 2"
+                default="font-size: 3rem; line-height: 1px; margin-bottom: 40px;"
+            />
+            <property 
+                type="String"
+                name="textAlign2"
+                label="Align text (left, center, right)"
+                description="Align the text using left center or right"
+                default = "center"
+            />
+            <property 
+                type="String"
+                name="contentAlign2"
+                label="Align content (top-left, top-center, etc.)"
+                description="custom width of content section"
+                default = "center-center"
+            />
+            <property 
+                type="String"
+                name="buttonText2"
+                label="Button Text 2"
+                description="Button text associated with Image 2."
+            />
+            <property 
+                type="String"
+                name="buttonLink2"
+                label="Button Link 2"
+                default="Home"
+                description="API Name of Page (example: Login, Home)"
+            />
+            <property 
+                type="String"
+                name="buttonStyle2"
+                label="Button Style 2"
+                default="width: 205px; padding: 5px; font-size: 1rem; background-color: green; border: none;"
+                description="CSS Styles for the button"
+            />
+
+            <!-- Content 3 properties -->
+            <property
+                type="ContentReference"
+                name="contentId3"
+                label="Content ID 3"
+                filter="cms_image"
+                description="Reference to the CMS content for Image 3."
+            />
+            <property
+                type="color"
+                name="color3"
+                label="Color 3"
+                description="Color for text 3."
+            />
+            <property
+                type="boolean"
+                name="shadow3"
+                label="Show Shadow 3?"
+                description="So Shadow on Text 3?"
+            />
+            <property 
+                type="String"
+                name="text3"
+                label="Custom Text 3"
+                description="Custom text to display for Image 3."
+            />
+            <property 
+                type="String"
+                name="h1Style3"
+                label="Custom Style for Custom Text 3"
+                description="CSS Styles for text 3"
+                default="font-size: 6rem; margin-left: -10px; margin-top: -20px;"
+            />
+            <property 
+                type="String"
+                name="subText3"
+                label="Custom Sub Text 3"
+                description="Custom Sub text to display for Image 3."
+            />
+            <property 
+                type="String"
+                name="h2Style3"
+                label="Custom Style for Sub Custom Text 3"
+                description="CSS Styles for sub text 3"
+                default="font-size: 3rem; line-height: 1px; margin-bottom: 40px;"
+            />
+            <property 
+                type="String"
+                name="textAlign3"
+                label="Align text (left, center, right)"
+                description="Align the text using left center or right"
+                default = "center"
+            />
+            <property 
+                type="String"
+                name="contentAlign3"
+                label="Align content (top-left, top-center, etc.)"
+                description="custom width of content section"
+                default = "center-center"
+            />
+            <property 
+                type="String"
+                name="buttonText3"
+                label="Button Text 3"
+                description="Button text associated with Image 3."
+            />
+            <property 
+                type="String"
+                name="buttonLink3"
+                label="Button Link 3"
+                default="Home"
+                description="API Name of Page (example: Login, Home)"
+            />
+            <property 
+                type="String"
+                name="buttonStyle3"
+                label="Button Style 3"
+                default="width: 205px; padding: 5px; font-size: 1rem; background-color: green; border: none;"
+                description="CSS Styles for the button"
+            />
+
+            <!-- Content 4 properties -->
+            <property
+                type="ContentReference"
+                name="contentId4"
+                label="Content ID 4"
+                filter="cms_image"
+                description="Reference to the CMS content for Image 4."
+            />
+            <property
+                type="color"
+                name="color4"
+                label="Color 4"
+                description="Color for text 4."
+            />
+            <property
+                type="boolean"
+                name="shadow4"
+                label="Show Shadow 4?"
+                description="So Shadow on Text 4?"
+            />
+            <property 
+                type="String"
+                name="text4"
+                label="Custom Text 4"
+                description="Custom text to display for Image 4."
+            />
+            <property 
+                type="String"
+                name="h1Style4"
+                label="Custom Style for Custom Text 4"
+                description="CSS Styles for text 4"
+                default="font-size: 6rem; margin-left: -10px; margin-top: -20px;"
+            />
+            <property 
+                type="String"
+                name="subText4"
+                label="Custom Sub Text 4"
+                description="Custom Sub text to display for Image 4."
+            />
+            <property 
+                type="String"
+                name="h2Style4"
+                label="Custom Style for Sub Custom Text 4"
+                description="CSS Styles for sub text 4"
+                default="font-size: 3rem; line-height: 1px; margin-bottom: 40px;"
+            />
+            <property 
+                type="String"
+                name="textAlign4"
+                label="Align text (left, center, right)"
+                description="Align the text using left center or right"
+                default = "center"
+            />
+            <property 
+                type="String"
+                name="contentAlign4"
+                label="Align content (top-left, top-center, etc.)"
+                description="custom width of content section"
+                default = "center-center"
+            />
+            <property 
+                type="String"
+                name="buttonText4"
+                label="Button Text 4"
+                description="Button text associated with Image 4."
+            />
+            <property 
+                type="String"
+                name="buttonLink4"
+                label="Button Link 4"
+                default="Home"
+                description="API Name of Page (example: Login, Home)"
+            />
+            <property 
+                type="String"
+                name="buttonStyle4"
+                label="Button Style 4"
+                default="width: 205px; padding: 5px; font-size: 1rem; background-color: green; border: none;"
+                description="CSS Styles for the button"
+            />
+
+            <!-- Content 5 properties -->
+            <property
+                type="ContentReference"
+                name="contentId5"
+                label="Content ID 5"
+                filter="cms_image"
+                description="Reference to the CMS content for Image 5."
+            />
+            <property
+                type="color"
+                name="color5"
+                label="Color 5"
+                description="Color for text 5."
+            />
+            <property
+                type="boolean"
+                name="shadow5"
+                label="Show Shadow 5?"
+                description="So Shadow on Text 5?"
+            />
+            <property 
+                type="String"
+                name="text5"
+                label="Custom Text 5"
+                description="Custom text to display for Image 5."
+            />
+            <property 
+                type="String"
+                name="h1Style5"
+                label="Custom Style for Custom Text 5"
+                description="CSS Styles for text 5"
+                default="font-size: 6rem; margin-left: -10px; margin-top: -20px;"
+            />
+            <property 
+                type="String"
+                name="subText5"
+                label="Custom Sub Text 5"
+                description="Custom Sub text to display for Image 5."
+            />
+            <property 
+                type="String"
+                name="h2Style5"
+                label="Custom Style for Sub Custom Text 5"
+                description="CSS Styles for sub text 5"
+                default="font-size: 3rem; line-height: 1px; margin-bottom: 40px;"
+            />
+            <property 
+                type="String"
+                name="textAlign5"
+                label="Align text (left, center, right)"
+                description="Align the text using left center or right"
+                default = "center"
+            />
+            <property 
+                type="String"
+                name="contentAlign5"
+                label="Align content (top-left, top-center, etc.)"
+                description="custom width of content section"
+                default = "center-center"
+            />
+            <property 
+                type="String"
+                name="buttonText5"
+                label="Button Text 5"
+                description="Button text associated with Image 5."
+            />
+            <property 
+                type="String"
+                name="buttonLink5"
+                label="Button Link 5"
+                default="Home"
+                description="API Name of Page (example: Login, Home)"
+            />
+            <property 
+                type="String"
+                name="buttonStyle5"
+                label="Button Style 5"
+                default="width: 205px; padding: 5px; font-size: 1rem; background-color: green; border: none;"
+                description="CSS Styles for the button"
+            />
+
+            <!-- Content 6 properties -->
+            <property
+                type="ContentReference"
+                name="contentId6"
+                label="Content ID 6"
+                filter="cms_image"
+                description="Reference to the CMS content for Image 6."
+            />
+            <property
+                type="color"
+                name="color6"
+                label="Color 6"
+                description="Color for text 6."
+            />
+            <property
+                type="boolean"
+                name="shadow6"
+                label="Show Shadow 6?"
+                description="So Shadow on Text 6?"
+            />
+            <property 
+                type="String"
+                name="text6"
+                label="Custom Text 6"
+                description="Custom text to display for Image 6."
+            />
+            <property 
+                type="String"
+                name="h1Style6"
+                label="Custom Style for Custom Text 6"
+                description="CSS Styles for text 6"
+                default="font-size: 6rem; margin-left: -10px; margin-top: -20px;"
+            />
+            <property 
+                type="String"
+                name="subText6"
+                label="Custom Sub Text 6"
+                description="Custom Sub text to display for Image 6."
+            />
+            <property 
+                type="String"
+                name="h2Style6"
+                label="Custom Style for Sub Custom Text 6"
+                description="CSS Styles for sub text 6"
+                default="font-size: 3rem; line-height: 1px; margin-bottom: 40px;"
+            />
+            <property 
+                type="String"
+                name="textAlign6"
+                label="Align text (left, center, right)"
+                description="Align the text using left center or right"
+                default = "center"
+            />
+            <property 
+                type="String"
+                name="contentAlign6"
+                label="Align content (top-left, top-center, etc.)"
+                description="custom width of content section"
+                default = "center-center"
+            />
+            <property 
+                type="String"
+                name="buttonText6"
+                label="Button Text 6"
+                description="Button text associated with Image 6."
+            />
+            <property 
+                type="String"
+                name="buttonLink6"
+                label="Button Link 6"
+                default="Home"
+                description="API Name of Page (example: Login, Home)"
+            />
+            <property 
+                type="String"
+                name="buttonStyle6"
+                label="Button Style 6"
+                default="width: 205px; padding: 5px; font-size: 1rem; background-color: green; border: none;"
+                description="CSS Styles for the button"
+            />
+
+            <!-- Content 7 properties -->
+            <property
+                type="ContentReference"
+                name="contentId7"
+                label="Content ID 7"
+                filter="cms_image"
+                description="Reference to the CMS content for Image 7."
+            />
+            <property
+                type="color"
+                name="color7"
+                label="Color 7"
+                description="Color for text 7."
+            />
+            <property
+                type="boolean"
+                name="shadow7"
+                label="Show Shadow 7?"
+                description="So Shadow on Text 7?"
+            />
+            <property 
+                type="String"
+                name="text7"
+                label="Custom Text 7"
+                description="Custom text to display for Image 7."
+            />
+            <property 
+                type="String"
+                name="h1Style7"
+                label="Custom Style for Custom Text 7"
+                description="CSS Styles for text 7"
+                default="font-size: 6rem; margin-left: -10px; margin-top: -20px;"
+            />
+            <property 
+                type="String"
+                name="subText7"
+                label="Custom Sub Text 7"
+                description="Custom Sub text to display for Image 7."
+            />
+            <property 
+                type="String"
+                name="textAlign7"
+                label="Align text (left, center, right)"
+                description="Align the text using left center or right"
+                default = "center"
+            />
+            <property 
+                type="String"
+                name="h2Style7"
+                label="Custom Style for Sub Custom Text 7"
+                description="CSS Styles for sub text 7"
+                default="font-size: 3rem; line-height: 1px; margin-bottom: 40px;"
+            />
+            <property 
+                type="String"
+                name="contentAlign7"
+                label="Align content (top-left, top-center, etc.)"
+                description="custom width of content section"
+                default = "center-center"
+            />
+            <property 
+                type="String"
+                name="buttonText7"
+                label="Button Text 7"
+                description="Button text associated with Image 7."
+            />
+            <property 
+                type="String"
+                name="buttonLink7"
+                label="Button Link 7"
+                default="Home"
+                description="API Name of Page (example: Login, Home)"
+            />
+            <property 
+                type="String"
+                name="buttonStyle7"
+                label="Button Style 7"
+                default="width: 205px; padding: 5px; font-size: 1rem; background-color: green; border: none;"
+                description="CSS Styles for the button"
+            />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

@@ -1,0 +1,16 @@
+<template>
+    <lightning-card title="My Solenis Reports" icon-name="doctype:link">
+        <div class="Main">
+            <lightning-formatted-url value={MyAccounts} label="My Accounts"></lightning-formatted-url><br/>
+            <!--<lightning-formatted-url value={MyActivePricing} label="My Active Pricing"></lightning-formatted-url><br/>-->
+            <lightning-formatted-url value={Contacts} label="Contacts"></lightning-formatted-url><br/>
+            <lightning-formatted-url value={MyOpenOpportunities} label="My OpenOpportunities"></lightning-formatted-url><br/>
+            <lightning-formatted-url value={OpenOrdersNext90Days} label="Open Orders Next 90 Days"></lightning-formatted-url><br/>
+            <lightning-formatted-url value={OpenSamples} label="Open Samples"></lightning-formatted-url><br/>
+            <lightning-formatted-url value={OrdersLast90Days} label="Orders Last 90 Days"></lightning-formatted-url><br/>
+            <lightning-formatted-url value="/lightning/r/Report/00O50000004cUsf/view" label="FYTD Sales"></lightning-formatted-url><br/>
+            <lightning-formatted-url value="/lightning/r/Report/00O50000003o6Wv/view" label="PYTD Sales"></lightning-formatted-url><br/>
+            <!--<lightning-formatted-url value={ActivePricingExpiringNext90Days} label="Active Pricing - Expiring Next 90 Days"></lightning-formatted-url><br/>-->
+        </div>
+    </lightning-card>
+</template>

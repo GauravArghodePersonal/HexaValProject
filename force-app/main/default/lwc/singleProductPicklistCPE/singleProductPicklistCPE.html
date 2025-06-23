@@ -1,0 +1,32 @@
+<template>
+    <div class="slds-form-element">
+        <div class="slds-form-element__control">
+            <lightning-input label="Select Parent Product" type="search" onchange={handleSearchChange} value={selectedValue}></lightning-input>
+            <template if:true={isLoading}>
+                <div class="slds-spinner_container">
+                    <div role="status" class="slds-spinner slds-spinner_brand slds-spinner_small">
+                        <span class="slds-assistive-text">Loading</span>
+                        <div class="slds-spinner__dot-a"></div>
+                        <div class="slds-spinner__dot-b"></div>
+                    </div>
+                </div>
+            </template>
+            <div if:true={searchResults} class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid" role="listbox">
+                <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                    <template for:each={searchResults} for:item="product">
+                        <li key={product.value} data-value={product.value} role="presentation"
+                            onclick={selectSearchResult} class="slds-listbox__item">
+                            <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small" role="option">
+                                <span class="slds-media__body">
+                                    <span class="slds-truncate" title={product.label}>
+                                        {product.label}
+                                    </span>
+                                </span>
+                            </div>
+                        </li>
+                    </template>
+                </ul>
+            </div>
+        </div>
+    </div>
+</template>

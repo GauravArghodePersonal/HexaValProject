@@ -1,0 +1,106 @@
+<template>
+    <div class="body1">
+        <!-- <div class=" "> -->
+        <h2 class=" cart_title slds-text-heading_medium">QUICK ORDERS</h2>
+            
+        <!-- </div> -->
+        <section class="header slds-size_6-of-12" style="width: 100%;">
+            <div style="width: 45%;display:flex;">
+                <div class=" slds-input-has-icon slds-input-has-icon_left slds-size_6-of-12" data-record={searchValue} style=" width: 90%; box-shadow: 0px 0px 10px rgb(0 0 0 / 20%); border-radius: 4px; border: none;height: fit-content;" >
+                    <lightning-icon size="x-small" class="slds-icon slds-input__icon slds-input__icon_right slds-icon-text-default" icon-name="utility:search"></lightning-icon>
+                    <input type="text" id="text-input-id-1" min="0" onchange={updateMessge} placeholder="Enter Product Code Here.."  class="inputClass slds-input" value={searchValue} name="inputClass" style="background: transparent;"/>
+                    <!-- <lightning-input-field field-name=""   data-value={searchValue}  style="background: transparent;"> </lightning-input-field>    -->
+                    <!-- <lightning-input class="input" value={searchValue} name="inputClass" type="number"  placeholder="Enter Product Code Here.."></lightning-input> -->
+                    
+                </div>
+                <div style="margin-left:-5%; ">
+                    <lightning-layout-item size="12" padding="around-small" small-device-size="12" medium-device-size="12" large-device-size="6">
+                        <button type="submit" class="slds-button slds-button_brand" onclick={searchProduct} style=" background: #0e203b !important; margin-left: 15%; height:-webkit-fill-available; width:100px">Search</button>
+                        <!-- <button type="submit" class="slds-button slds-button_brand" onclick={addToCart} style="background: #0e203b !important; margin-left: 15%">Add to Cart</button> -->
+                    </lightning-layout-item>
+                </div> 
+                
+                <div style="width: 10%; margin-left:5%">
+                    <div style="width:100%;height:100%;display:flex;justify-content:center;align-items:center">
+                        <a href="##" style="color: #17b;" onclick={clearSearchValue}>Reset</a>
+                    </div>
+                </div>
+
+                <div style="margin-left:66%">
+                    <lightning-layout-item size="12" padding="around-small" small-device-size="12" medium-device-size="12" large-device-size="6">
+                        <button type="submit" class="slds-button slds-button_brand" onclick={addToCartMethod} style="height:-webkit-fill-available; width:max-content; background: #0e203b !important; ">Add to Cart</button>
+                    </lightning-layout-item>
+                </div> 
+            </div>
+            
+           
+        </section>
+        <section class="cart_wrapper">
+            <template if:true={MessagetoDisplay}>
+                <p style="color: RED;"> {MessagetoDisplay}</p>
+            </template>
+            <template if:true={showLoader}>
+                <lightning-spinner alternative-text="Loading" variant="brand" size="large"></lightning-spinner>
+            </template>
+            <template if:true={productShowList}>
+                
+                <template if:true={productShowList.length}>
+                
+                    <div class="cart_lists">
+                        <div class="cart_list_wrap">
+                            <div class="cart_responsive">
+                                <template for:each={productShowList} for:item="product">
+                                    <div key={product.productId} >
+                                        
+                                        <c-b2b-quick-order-product-card
+                                            product={product}
+                                            effective-account-id={effectiveAccountId} onremove={removeProduct} onquanchange={fetchQuantity_1}>
+                                        </c-b2b-quick-order-product-card>
+                                    
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+
+                <!--<template if:false={productShowList.length}>
+                    <p>{defaultMessage}</p>
+                </template>-->
+            </template>
+            
+        
+        </section>
+        <!-- <section class="cart_wrapper">
+            <template if:true={productShowList}>
+                <template if:true={productShowList.length}>
+                
+                    <div class="cart_lists">
+                        <div class="cart_list_wrap">
+                            <div class="cart_responsive">
+                                {productShowList}
+                                    <template for:each={productShowList} for:item="product">
+                                        {product.productName}
+                                        <div key={product.productId} >
+                                        
+                                            <c-b2b-quick-order-product-card
+                                                product={product}
+                                                effective-account-id={effectiveAccountId}></c-b2b-quick-order-product-card>
+                                             
+                                        
+                                        </div>
+                                    </template>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+                <template if:false={productShowList.length}>
+                    <p>No products matching your selection</p>
+                </template>
+            </template>
+            
+        
+        </section> -->
+    </div>
+    
+</template>

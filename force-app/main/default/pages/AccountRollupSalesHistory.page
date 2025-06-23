@@ -1,0 +1,49 @@
+<apex:page standardController="Account" tabStyle="Account" extensions="Account_Show_Rolling_Product_Extension" id="thePage" showHeader="false" sidebar="false">
+
+	<apex:includeScript value="{!URLFOR($Resource.jQuery1x,'jQuery/jquery-1.8.0.min.js')}" />
+	<apex:includeScript value="{!URLFOR($Resource.AccountRollupsStyling,'js/accountRollupsJS.js')}" />
+	<apex:stylesheet value="{!URLFOR($Resource.AccountRollupsStyling,'css/accountRollupsCSS.css')}" />
+
+	<script>
+		if (!window.console) window.console = {};	
+		if (!window.console.log) window.console.log = function () { };
+	</script>
+
+	<style type="text/css">body{background:#F8F8F8;}</style>
+
+	<script language="javascript">
+	    var j$= jQuery.noConflict();
+	    
+        j$(document).ready(function(){
+            accountRollupsSalesHistory_applyJQueryStyling();
+        });
+        
+        function accountRollupsSalesHistory_applyJQueryStyling() {
+			console.log('accountRollupsSalesHistory: jquery window.height before = ' + j$(window).height());
+			console.log('accountRollupsSalesHistory: jquery document.height before = ' + j$(document).height());
+
+			var newHeight = (j$(document).height() + 20) + 'px';
+			console.log('accountRollupsSalesHistory: newHeight = ' + newHeight);
+
+			j$(window).height(newHeight + 'px');
+
+	        var thisWindow = window.name;
+			var iframes = parent.document.getElementsByName(thisWindow);
+			if (iframes) {
+                iframes[0].style.height = newHeight;
+                iframes[0].scrolling="auto";
+			}
+
+			console.log('accountRollupsSalesHistory: jquery window.height after = ' + j$(window).height());
+			console.log('accountRollupsSalesHistory: jquery document.height after = ' + j$(document).height());
+
+            parent.AdvancedTabbar_IframeResizeRequest();
+        }
+	</script>
+
+	<c:Account_Sales_Info_Comp1 p_accId="{!id}"/>
+
+	<script language="javascript">
+		accountRollupsSalesHistory_applyJQueryStyling();
+	</script>
+</apex:page>

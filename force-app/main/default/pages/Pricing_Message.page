@@ -1,0 +1,7 @@
+<apex:page standardController="Pricing__c">
+    <apex:form >
+  
+      <font color="red">Please attach Pricing documents before submitting for approval</font>
+  
+    </apex:form>
+</apex:page>

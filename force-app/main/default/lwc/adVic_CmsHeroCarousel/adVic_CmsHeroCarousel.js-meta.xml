@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>58.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>AdVic Custom Hero Carousel</masterLabel>
+    <description>Used to display CMS Content in a carousel</description>
+    <targets>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default">
+            <!-- Content 1 properties -->
+            <property
+                type="ContentReference"
+                name="contentId1"
+                label="Content ID 1"
+                description="Reference to the CMS content for Image 1."
+            />
+            <property 
+                type="string"
+                name="richText1"
+                label="Custom Text 1"
+                default="{!Label.c.AdVic_Hero_Carousel_Header_Text_1}"
+                description="Custom text to display for Image 1."
+            />
+            <property 
+                type="lightning__richTextType"
+                name="text1"
+                label="Custom Text 1"
+                default="{!Label.c.AdVic_Hero_Carousel_Header_Text_1}"
+                description="Custom text to display for Image 1."
+            />
+            <property 
+                type="String"
+                name="buttonText1"
+                label="Button Text 1"
+                default="{!Label.c.AdVic_Hero_Carousel_Button_Text_1}"
+                description="Button text associated with Image 1."
+            />
+            <property 
+                type="String"
+                name="buttonLink1"
+                label="Button Link 1"
+                default="Home"
+                description="API Name of Page (example: Login, Home)"
+            />
+            <!-- Custom Sub-Text 1 for Content 1 -->
+            <property 
+                type="String"
+                name="subText1"
+                label="Custom Sub-Text 1"
+                description="Custom sub text to display for Image 1."
+            />
+
+            <!-- Content 2 properties -->
+            <property
+                type="ContentReference"
+                name="contentId2"
+                label="Content ID 2"
+                filter="cms_image"
+                description="Reference to the CMS content for Image 2."
+            />
+            <property 
+                type="String"
+                name="text2"
+                label="Custom Text 2"
+                default="{!Label.c.AdVic_Hero_Carousel_Header_Text_2}"
+                description="Custom text to display for Image 2."
+            />
+            <property 
+                type="String"
+                name="buttonText2"
+                label="Button Text 2"
+                default="{!Label.c.AdVic_Hero_Carousel_Button_Text_2}"
+                description="Button text associated with Image 2."
+            />
+            <property 
+                type="String"
+                name="buttonLink2"
+                label="Button Link 2"
+                default="Home"
+                description="API Name of Page (example: Login, Home)"
+            />
+            <!-- Custom Sub-Text 1 for Content 2 -->
+            <property 
+                type="String"
+                name="subText2"
+                label="Custom Sub-Text 2"
+                description="Custom sub text to display for Image 2."
+            />
+
+            <!-- Content 3 properties -->
+            <property
+                type="ContentReference"
+                name="contentId3"
+                label="Content ID 3"
+                filter="cms_image"
+                description="Reference to the CMS content for Image 3."
+            />
+            <property 
+                type="String"
+                name="text3"
+                label="Custom Text 3"
+                default="{!Label.c.AdVic_Hero_Carousel_Header_Text_3}"
+                description="Custom text to display for Image 3."
+            />
+            <property 
+                type="String"
+                name="buttonText3"
+                label="Button Text 3"
+                default="{!Label.c.AdVic_Hero_Carousel_Button_Text_3}"
+                description="Button text associated with Image 3."
+            />
+            <property 
+                type="String"
+                name="buttonLink3"
+                label="Button Link 3"
+                default="Home"
+                description="API Name of Page (example: Login, Home)"
+            />
+            <!-- Custom Sub-Text 1 for Content 3 -->
+            <property 
+                type="String"
+                name="subText3"
+                label="Custom Sub-Text 3"
+                description="Custom sub text to display for Image 3."
+            />
+
+            <!-- Content 4 properties -->
+            <property
+                type="ContentReference"
+                name="contentId4"
+                label="Content ID 4"
+                filter="cms_image"
+                description="Reference to the CMS content for Image 4."
+            />
+            <property 
+                type="String"
+                name="text4"
+                label="Custom Text 4"
+                default="{!Label.c.AdVic_Hero_Carousel_Header_Text_4}"
+                description="Custom text to display for Image 4."
+            />
+            <property 
+                type="String"
+                name="buttonText4"
+                label="Button Text 4"
+                default="{!Label.c.AdVic_Hero_Carousel_Button_Text_4}"
+                description="Button text associated with Image 4."
+            />
+            <property 
+                type="String"
+                name="buttonLink4"
+                label="Button Link 4"
+                default="Home"
+                description="API Name of Page (example: Login, Home)"
+            />
+            <!-- Custom Sub-Text 1 for Content 4 -->
+            <property 
+                type="String"
+                name="subText4"
+                label="Custom Sub-Text 4"
+                description="Custom sub text to display for Image 4."
+            />
+
+            <!-- Content 5 properties -->
+            <property
+                type="ContentReference"
+                name="contentId5"
+                label="Content ID 5"
+                filter="cms_image"
+                description="Reference to the CMS content for Image 5."
+            />
+            <property 
+                type="String"
+                name="text5"
+                label="Custom Text 5"
+                default="{!Label.c.AdVic_Hero_Carousel_Header_Text_5}"
+                description="Custom text to display for Image 5."
+            />
+            <property 
+                type="String"
+                name="buttonText5"
+                label="Button Text 5"
+                default="{!Label.c.AdVic_Hero_Carousel_Button_Text_5}"
+                description="Button text associated with Image 5."
+            />
+            <property 
+                type="String"
+                name="buttonLink5"
+                label="Button Link 5"
+                default="Home"
+                description="API Name of Page (example: Login, Home)"
+            />
+            <!-- Custom Sub-Text 1 for Content 5 -->
+            <property 
+                type="String"
+                name="subText5"
+                label="Custom Sub-Text 5"
+                description="Custom sub text to display for Image 5."
+            />
+
+            <!-- Content 6 properties -->
+            <property
+                type="ContentReference"
+                name="contentId6"
+                label="Content ID 6"
+                filter="cms_image"
+                description="Reference to the CMS content for Image 6."
+            />
+            <property 
+                type="String"
+                name="text6"
+                label="Custom Text 6"
+                default="{!Label.c.AdVic_Hero_Carousel_Header_Text_6}"
+                description="Custom text to display for Image 6."
+            />
+            <property 
+                type="String"
+                name="buttonText6"
+                label="Button Text 6"
+                default="{!Label.c.AdVic_Hero_Carousel_Button_Text_6}"
+                description="Button text associated with Image 6."
+            />
+            <property 
+                type="String"
+                name="buttonLink6"
+                label="Button Link 6"
+                default="Home"
+                description="API Name of Page (example: Login, Home)"
+            />
+            <!-- Custom Sub-Text 1 for Content 6 -->
+            <property 
+                type="String"
+                name="subText6"
+                label="Custom Sub-Text 6"
+                description="Custom sub text to display for Image 6."
+            />
+
+            <!-- Content 7 properties -->
+            <property
+                type="ContentReference"
+                name="contentId7"
+                label="Content ID 7"
+                filter="cms_image"
+                description="Reference to the CMS content for Image 7."
+            />
+            <property 
+                type="String"
+                name="text7"
+                label="Custom Text 7"
+                default="{!Label.c.AdVic_Hero_Carousel_Header_Text_7}"
+                description="Custom text to display for Image 7."
+            />
+            <property 
+                type="String"
+                name="buttonText7"
+                label="Button Text 7"
+                default="{!Label.c.AdVic_Hero_Carousel_Button_Text_7}"
+                description="Button text associated with Image 7."
+            />
+            <property 
+                type="String"
+                name="buttonLink7"
+                label="Button Link 7"
+                default="Home"
+                description="API Name of Page (example: Login, Home)"
+            />
+            <!-- Custom Sub-Text 1 for Content 7 -->
+            <property 
+                type="String"
+                name="subText7"
+                label="Custom Sub-Text 7"
+                description="Custom sub text to display for Image 7."
+            />
+
+            <!-- General properties -->
+            <property 
+                type="Integer"
+                name="switchInterval"
+                label="Image Switch Interval (ms)"
+                default="10000"
+                description="Duration in milliseconds to switch images. Default is 10000ms (10 seconds)."
+                min="1000" 
+                max="60000"
+            />
+            <property
+                type="ContentReference"
+                name="collectionId"
+                label="Collection Id"
+                description="Select the collection."
+            />
+            <property 
+                type="String"
+                name="channelId"
+                label="Channel Id"
+                description="Id of the channel!"
+            />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

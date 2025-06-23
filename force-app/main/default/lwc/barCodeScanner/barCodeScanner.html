@@ -1,0 +1,154 @@
+<template>
+    <div class="slds-card slds-is-relative">
+        <template if:true={displayScannerForm}>
+            <!-- After a barcode is successfully scanned, its value is displayed here -->
+            <div class="slds-var-m-vertical_large slds-var-p-vertical_medium slds-text-align_center slds-border_top slds-border_bottom">
+                Scanned barcode value is: <span class="slds-text-heading_small">{scannedBarcode}</span>
+            </div>
+            <!-- This is static help text -->
+            <div class="slds-align_absolute-center slds-text-align_center slds-text-color_weak">
+                Click Scan Barcode to open a barcode scanner camera view. Position a barcode in the scanner view to
+                scan
+                it.
+            </div>
+
+            <!-- The click-to-scan button; Disabled if BarcodeScanner isn't available -->
+            <div class="slds-text-align_center">
+                <lightning-button
+                        variant="brand"
+                        class="slds-var-m-left_x-small"
+                        disabled={scanButtonDisabled}
+                        icon-name="utility:cases"
+                        label="Scan Barcode"
+                        title="Open a camera view and look for a barcode to scan"
+                        onclick={handleBarcodeClick}>
+                </lightning-button>
+            </div>
+        </template>
+
+        <template if:true={displaySpinner}>
+            <lightning-spinner alternative-text="Loading" variant="brand"></lightning-spinner>
+        </template>
+
+        <!-- Record form start -->
+        <template if:true={displayEditForm}>
+            <!-- Lightning Spinner -->
+            <lightning-card>
+                <h3 slot="title">
+                    <lightning-icon icon-name={editFormConfiguration.tabIcon} size="small"></lightning-icon>
+                    <span class="slds-p-left_small">{editFormConfiguration.objectLabel} Details</span>
+                </h3>
+                <template if:true={editFormConfiguration.layoutType}>
+                    <div slot="footer">
+                        <lightning-button
+                                class="slds-p-around_small"
+                                label="Back to Scanner"
+                                onclick={handleCancel}
+                        >
+                        </lightning-button>
+                    </div>
+                </template>
+                <p class="slds-p-horizontal_small">
+                    <template if:true={editFormConfiguration.layoutType}>
+                        <lightning-record-form
+                                record-id={sobjRecordId}
+                                object-api-name={editFormConfiguration.objectName}
+                                layout-type={editFormConfiguration.layoutType}
+                                columns="1"
+                                mode={editFormConfiguration.mode}
+                                onload={handleLoad}
+                                onsubmit={handleSubmit}
+                                onerror={handleError}
+                        >
+                        </lightning-record-form>
+                    </template>
+                    <template if:false={editFormConfiguration.layoutType}>
+                        <lightning-record-edit-form
+                                record-id={sobjRecordId}
+                                object-api-name={editFormConfiguration.objectName}
+                                record-type-id={editFormConfiguration.recordTypeId}
+                                onload={handleLoad}
+                                onsubmit={handleSubmit}
+                                onerror={handleError}
+                                onsuccess={handleSuccess}
+                        >
+                            <lightning-messages></lightning-messages>
+                            <template if:true={editFormConfiguration.fields}>
+                                <template for:each={editFormConfiguration.fields} for:item="field">
+                                    <template if:true={field.isDisplayOnUI}>
+                                        <template if:true={field.isEditable}>
+                                            <lightning-input-field field-name={field.fieldName}
+                                                                   key={field.fieldName}></lightning-input-field>
+                                        </template>
+                                        <template if:false={field.isEditable}>
+                                            <lightning-output-field field-name={field.fieldName}
+                                                                    key={field.fieldName}></lightning-output-field>
+                                        </template>
+                                    </template>
+                                </template>
+                <footer class="slds-card__footer">
+                    <lightning-button
+                            class="slds-p-around_small"
+                            variant="brand"
+                            type="submit"
+                            name="save"
+                            label="Save"
+                    >
+                    </lightning-button>
+                    <lightning-button
+                            class="slds-p-around_small"
+                            label="Cancel"
+                            onclick={handleCancel}
+                    >
+                    </lightning-button>
+                </footer>
+        </template>
+        </lightning-record-edit-form>
+</template>
+</p>
+</lightning-card>
+</template>
+<!-- Record form end -->
+<template if:true={displaySearchForm}>
+    <lightning-card >
+        <h3 slot="title">
+            <lightning-icon icon-name="standard:search" size="small"></lightning-icon>
+            <span class="slds-p-left_small">Search</span>
+        </h3>
+        <div slot="footer">
+            <lightning-button label="Search"
+                              variant="brand"
+                              class="slds-p-around_small"
+                              onclick={handleSearch}></lightning-button>
+            <lightning-button label="Back to Scanner"
+                              class="slds-p-around_small"
+                              onclick={handleCancel}></lightning-button>
+        </div>
+        <p class="slds-p-horizontal_small">
+            <lightning-input type="text"
+                             placeholder="Search by Equipment Number/ Account Number"
+                             onchange={handleSearchStrChange}
+            ></lightning-input>
+        </p>
+    </lightning-card>
+</template>
+<!-- Search Results -->
+<template if:true={displaySearchResults}>
+    <template for:each={configurations} for:item="configuration">
+        <div class="slds-box slds-p-bottom_x-small" key={configuration.sobjId} >            
+            <lightning-record-edit-form object-api-name={configuration.sobjName} record-id={configuration.sobjId} onload={handleLoad}>
+                <template for:each={configuration.fields} for:item="field">
+                    <template if:true={field.isDisplayOnSearchTableUI}> 
+                        <lightning-input-field field-name={field.fieldName} key={field.fieldName} disabled></lightning-input-field>
+                    </template>
+                </template>
+                <template if:true={configuration.sobjId}>
+                    <lightning-button variant="base" label="Edit Details" value={configuration.sobjId} title="Edit Details" onclick={handleEditDetails} class="slds-m-left_x-small"></lightning-button>
+                </template>
+            </lightning-record-edit-form>
+        </div> 
+    </template>
+</template>
+
+</div>
+</template>

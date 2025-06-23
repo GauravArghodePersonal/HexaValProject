@@ -1,0 +1,12 @@
+<apex:page standardController="ART_Project__c" extensions="ARTProjectAddContentButtonController">
+    <apex:pageBlock title="Add Content">
+        <apex:pageMessages />
+        
+        <apex:form >
+            <apex:inputFile value="{!newContent.VersionData}" filename="{!newContent.PathOnClient}"/>
+            <br />
+            <apex:commandButton action="{!upload}" value="Upload"/>
+            <apex:commandButton action="{!cancel}" value="Cancel"/>
+        </apex:form>
+    </apex:pageBlock>
+</apex:page>

@@ -1,0 +1,583 @@
+<apex:page controller="PricingConditionApprovalController"
+           action="{!initAction}" sidebar="false" 
+           tabStyle="Pricing_Condition__c">
+    <apex:includeScript value="{!$Resource.PendingApprovalFunctions}" />
+    <apex:form id="actionForm">
+        <apex:variable var="decimals" value="4"/>
+        <apex:variable var="locale" value="{!userLocale}"/>
+        <apex:pageMessages />
+        <apex:pageBlock Title="{!title}">
+            <apex:pageBlockButtons location="top">
+                <apex:actionStatus id="pbbStatus">
+                    <apex:facet name="start">
+                        <apex:outputText escape="false" style="font-weight: bold;" 
+                                         value="&nbsp;{!$Label.Please_Wait}...">
+                            <apex:image value="{!$Resource.spinner}"/>
+                        </apex:outputText>
+                    </apex:facet>
+                    <apex:facet name="stop">
+                        <apex:outputPanel >
+                        <apex:commandButton value="{!$Label.Approve_Selected_Rows}"
+                            rendered="{!renderApproveButton}"
+                            rerender="actionForm" status="pbbStatus"
+                            action="{!approveSelectedList}" />
+                        <apex:commandButton value="{!$Label.Reject_Selected_Rows}"
+                            rendered="{!renderRejectButton}"
+                            rerender="actionForm" status="pbbStatus"
+                            action="{!rejectSelectedList}" />
+                        <apex:commandButton value="Edit Selected Rows"
+                            rendered="{!renderEditButton}"
+                            rerender="actionForm" status="pbbStatus"
+                            action="{!editPricingConditions}" />
+                        <apex:commandButton value="Save Changes"
+                            rendered="{!renderSaveButton}"
+                            rerender="actionForm" status="pbbStatus"
+                            action="{!saveChanges}" />
+                        <apex:commandButton value="Save Changes and Approve"
+                            rendered="{!renderSaveButton}"
+                            rerender="actionForm" status="pbbStatus"
+                            action="{!saveChangesAndApprove}" />
+                        <apex:commandButton value="Cancel" 
+                            rendered="{!renderCancelButton}"
+                            rerender="actionForm" status="pbbStatus"
+                            action="{!cancel}" />
+                        </apex:outputPanel>
+                    </apex:facet>
+                </apex:actionStatus>
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection columns="1">
+
+                <apex:pageBlockSectionItem rendered="{!renderAccountOptions}">
+                    <apex:outputLabel value="{!$Label.Account_Name} {!$Label.and_Number}:"
+                                     style="font-weight: bold;"/>
+                                     
+                    <apex:actionStatus id="accStatusMsg">
+                        <apex:facet name="start">
+                            <apex:outputText escape="false" style="font-weight: bold;" 
+                                             value="&nbsp;{!$Label.Please_Wait}...">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop">
+                            <apex:selectList value="{!accountId}" size="1">
+                                <apex:selectOptions value="{!accSelOpts}" />
+                                <apex:actionSupport event="onchange"
+                                                    action="{!init2}"
+                                                    rerender="actionForm" 
+                                                    status="accStatusMsg" />
+                            </apex:selectList>
+                        </apex:facet>
+                    </apex:actionStatus>
+                </apex:pageBlockSectionItem>
+                    
+                <apex:pageBlockSectionItem rendered="{!renderReviewComments}">
+                    <apex:outputLabel value="{!$Label.Approve_Reject_Comments}:"
+                                      style="font-weight: bold;"/>
+
+                    <apex:inputTextArea title="{!$Label.Approve_Reject_Comments}" 
+                                        id="userComments" value="{!userComments}" 
+                                        rows="3" cols="100"/>
+
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem rendered="{!renderSortOptions}">
+                    <apex:outputLabel value="Sort the list by:"
+                                      style="font-weight: bold;"/>
+
+                    <apex:actionStatus id="srtStatusMsg">
+                        <apex:facet name="start">
+                            <apex:outputText escape="false" style="font-weight: bold;" 
+                                             value="&nbsp;{!$Label.Please_Wait}...">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop">
+                            <apex:selectList value="{!orderByVal}" size="1">
+                                <apex:actionSupport event="onchange"
+                                                    action="{!init2}"
+                                                    rerender="actionForm" 
+                                                    status="srtStatusMsg" />
+                                <apex:selectOption itemLabel="{!orderByLbl1}" 
+                                                   itemValue="{!orderByVal1}"/>
+                                <apex:selectOption itemLabel="{!orderByLbl2}" 
+                                                   itemValue="{!orderByVal2}"/>
+                                <apex:selectOption itemLabel="{!orderByLbl3}" 
+                                                   itemValue="{!orderByVal3}"
+                                                   rendered="{!isAhwtLayout}"/>
+                            </apex:selectList>
+                        </apex:facet>
+                    </apex:actionStatus>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem rendered="{!renderPaginationBtns}">
+                    <apex:outputPanel layout="block">
+                    <table bgcolor="#f8f8f8" class="bold" width="100%">
+                    <tr>
+                        <td class="lh2em" width="15%" nowrap="nowrap">
+                            <apex:outputText value="{!$Label.Records}: {!pgntr.recordFrom} - {!pgntr.recordTo} {!$Label.of} {!pgntr.resultSize}"/>
+                        </td>
+    
+                        <td class="lh2em" width="85%" nowrap="nowrap">
+                                <apex:actionStatus id="pageControls">
+                                    <apex:facet name="start">
+                                        <apex:outputText escape="false" style="font-weight: bold;" 
+                                                         value="&nbsp;{!$Label.Please_Wait}...">
+                                            <apex:image value="{!$Resource.spinner}"/>
+                                        </apex:outputText>
+                                    </apex:facet>
+                                    <apex:facet name="stop">
+                                    <apex:outputPanel styleClass="lh1em">
+                                    <apex:outputText value="{!$Label.Records_Per_Page}:"/>&nbsp;
+                                    <apex:selectList id="pageSize" styleClass="lh1em" value="{!pageSize}" 
+                                                     size="1" title="{!$Label.Records_Per_Page}">
+                                        <apex:actionSupport event="onchange" action="{!changePageSize}"
+                                                        rerender="actionForm" status="pageControls"/>
+                                        <apex:selectOption itemLabel="10" itemValue="10"/>
+                                        <apex:selectOption itemLabel="20" itemValue="20"/>
+                                        <apex:selectOption itemLabel="30" itemValue="30"/>
+                                        <apex:selectOption itemLabel="40" itemValue="40"/>
+                                        <apex:selectOption itemLabel="50" itemValue="50"/>
+                                    </apex:selectList>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <apex:commandButton action="{!gotoFirstPage}" disabled="{!NOT(pgntr.hasPrevious)}" 
+                                                        rerender="actionForm" status="pageControls"
+                                                        styleClass="lh1em"
+                                                        title="{!$Label.First_Page}" value="<<"/>&nbsp;&nbsp;
+                                    <apex:commandButton action="{!gotoPrevPage}" disabled="{!NOT(pgntr.hasPrevious)}" 
+                                                        rerender="actionForm" status="pageControls"
+                                                        styleClass="lh1em"
+                                                        title="{!$Label.Prev_Page}" value="<"/>
+                                                        
+                                    {!$label.Previous}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{!$label.Next}&nbsp;
+                                    
+                                    <apex:commandButton action="{!gotoNextPage}" disabled="{!NOT(pgntr.hasNext)}" 
+                                                        rerender="actionForm" status="pageControls"
+                                                        styleClass="lh1em"
+                                                        title="{!$Label.Next_Page}" value=">"/>&nbsp;&nbsp;
+                                    <apex:commandButton action="{!gotoLastPage}" disabled="{!NOT(pgntr.hasNext)}" 
+                                                        rerender="actionForm" status="pageControls"
+                                                        styleClass="lh1em"
+                                                        title="{!$Label.Last_Page}" value=">>"/>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <apex:outputLabel for="pageNumber" value="Page:"/>&nbsp;
+                                    <apex:inputText id="pageNumber" style="width: 24px;" maxlength="3" 
+                                                    value="{!pageNumber}"/>&nbsp;
+                                    <apex:outputText value="{!$Label.of} {!pgntr.lastPageNumber}"/>&nbsp;
+                                    <apex:commandButton action="{!gotoPage}" disabled="{!NOT(OR(pgntr.hasNext,pgntr.hasPrevious))}" 
+                                                        rerender="actionForm" status="pageControls"
+                                                        styleClass="lh1em" value="Go"/>&nbsp;
+                                    </apex:outputPanel>
+                                </apex:facet>
+                            </apex:actionStatus>
+                        </td>
+                    </tr>
+                    <tr><td style="background-color: #f8f8f8; font-style: italic; font-weight: normal;" colspan="99">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    Note : Any records selected in this page will be deselected on changing to another page 
+                    </td></tr>
+                    </table>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem rendered="{!isDefaultLayout}"> 
+                    <apex:pageBlockTable value="{!pricingConditions}" var="p">
+                        <apex:column headerClass="right" styleClass="right" width="20px">
+                            <apex:facet name="header">#</apex:facet>
+                            <apex:outputText value="{!p.recordNumber}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">
+                                <apex:inputCheckbox id="allcb" value="{!allSelected}"
+                                    onclick="paf_checkAll(this.form, this, 'rowcb')" />
+                            </apex:facet>
+                            <apex:inputCheckbox id="rowcb" value="{!p.selected}"
+                                onclick="paf_toggleAllCheckbox(this.form, this);" />
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$Label.Account_Name}<br/>{!$Label.and_Number}<br/>{!$Label.Customer_Group}</apex:facet>
+                            <apex:outputLink value="/{!p.pricingCondition.Account__r.Id}"> 
+                                <apex:outputText value="{!p.pricingCondition.Account__r.Name}"/>
+                            </apex:outputLink>
+                            <br/><apex:outputText value="{!p.accountNumber}"/>
+                            <br/><apex:outputText value="{!p.pricingCondition.Account__r.SAP_Customer_Group_1_Desc__c}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$Label.Material_Name}<br/>{!$Label.and_Number}</apex:facet>
+                            <apex:outputLink value="/{!p.pricingCondition.Material2__r.Id}"> 
+                                <apex:outputText value="{!p.pricingCondition.Material2__r.Material_Desc__c}"/>
+                            </apex:outputLink>
+                            <br/><apex:outputText value="{!p.materialNumber}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$Label.Invoice}<br/>{!$Label.Price}</apex:facet>
+                            <apex:outputLink value="/{!p.pricingCondition.Id}">
+                                <c:Currency value="{!p.pricingCondition.Invoice_Price__c}"
+                                            code="{!p.pricingCondition.CurrencyIsoCode}"
+                                            decimals="{!decimals}" locale="{!locale}"/>
+                            </apex:outputLink>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$Label.Previous} - {!$Label.Invoice}<br/>{!$Label.Price}</apex:facet>
+                            <apex:outputLink value="/{!p.pricingCondition.Id}">
+                                <c:Currency value="{!p.pricingCondition.Prev_Invoice_Price__c}"
+                                            code="{!p.pricingCondition.CurrencyIsoCode}"
+                                            decimals="{!decimals}" locale="{!locale}"/>
+                            </apex:outputLink>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$Label.INCO}<br/>{!$Label.Term}</apex:facet>
+                            <apex:outputText value="{!p.pricingCondition.INCO_Term_Name__c}"/><br/>
+                            <apex:outputField value="{!p.pricingCondition.INCO_Term_Code__c}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$Label.Valid_From}<br/>{!$Label.and_To}</apex:facet>
+                            <apex:outputField value="{!p.pricingCondition.Valid_From_Date__c}"/><br/>
+                            <apex:outputField value="{!p.pricingCondition.Valid_To_Date__c}"/>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:pageBlockSectionItem>
+<!--
+        **********************************************************************************
+                                         AAFI - LAYOUT
+        **********************************************************************************
+-->            
+                <apex:pageBlockSectionItem rendered="{!isAafiLayout}">
+                    <apex:pageBlockTable value="{!pricingConditions}" var="p"
+                                         rowClasses="row1,row2">
+                        <apex:column headerClass="right" styleClass="right" width="20px">
+                            <apex:facet name="header">#</apex:facet>
+                            <apex:outputText value="{!p.recordNumber}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">
+                                <apex:inputCheckbox id="allcb" value="{!allSelected}"
+                                    onclick="paf_checkAll(this.form, this, 'rowcb')" />
+                            </apex:facet>
+                            <apex:inputCheckbox id="rowcb" value="{!p.selected}"
+                                onclick="paf_toggleAllCheckbox(this.form, this);" />
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$Label.Account_Name}<br/>{!$Label.and_Number}<br/>{!$Label.Customer_Group}</apex:facet>
+                            <apex:outputLink value="/{!p.pricingCondition.Account__r.Id}"> 
+                                <apex:outputText value="{!p.pricingCondition.Account__r.Name}"/>
+                            </apex:outputLink>
+                            <br/><apex:outputText value="{!p.accountNumber}"/>
+                            <br/><apex:outputText value="{!p.pricingCondition.Account__r.SAP_Customer_Group_1_Desc__c}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$Label.Material_Name}<br/>{!$Label.and_Number}</apex:facet>
+                            <apex:outputLink value="/{!p.pricingCondition.Material2__r.Id}"> 
+                                <apex:outputText value="{!p.pricingCondition.Material2__r.Material_Desc__c}"/>
+                            </apex:outputLink>
+                            <br/><apex:outputText value="{!p.materialNumber}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">
+                                {!$Label.Invoice}&nbsp;{!$Label.Price}&nbsp;&nbsp;<br/>
+                                <span id="invPriceHdr-_help" class="helpButton">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <img class="helpOrb" title="" alt="" src="/s.gif"/>
+                                    <script type="text/javascript">
+                                        sfdcPage.setHelp('invPriceHdr', 'Click on Price to view the Pricing Condition');
+                                    </script>
+                                </span>                                
+                            </apex:facet>
+                            <apex:outputLink value="/{!p.pricingCondition.Id}" title="Click to view the Pricing Condition">
+                                <c:Currency value="{!p.pricingCondition.Invoice_Price__c}"
+                                            code="{!p.pricingCondition.CurrencyIsoCode}"
+                                            decimals="{!decimals}" locale="{!locale}"/>
+                            </apex:outputLink>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">
+                                Previous Price<br/>
+                                <span id="prvPriceHdr-_help" class="helpButton">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <img class="helpOrb" title="" alt="" src="/s.gif"/>
+                                    <script type="text/javascript">
+                                        sfdcPage.setHelp('prvPriceHdr', 'Click on Price to view the Pricing Condition');
+                                    </script>
+                                </span>                                
+                            </apex:facet>
+                            <apex:outputPanel rendered="{!ISBLANK(p.pricingCondition.Cloned_From__c)}">&nbsp;
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!NOT(ISBLANK(p.pricingCondition.Cloned_From__c))}">
+                            <apex:outputLink value="/{!p.pricingCondition.Cloned_From__c}" 
+                                             title="Click to view the Pricing Condition" target="_blank">
+                                <c:Currency value="{!p.pricingCondition.Prev_Invoice_Price__c}"
+                                            code="{!p.pricingCondition.CurrencyIsoCode}"
+                                            decimals="{!decimals}" locale="{!locale}"/>
+                            </apex:outputLink>
+                            </apex:outputPanel>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Rebate Amount</apex:facet>
+                            <c:Currency value="{!p.pricingCondition.Rebate_Amount__c}"
+                                        code="{!p.pricingCondition.CurrencyIsoCode}"
+                                        decimals="{!decimals}" locale="{!locale}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$Label.Selling}<br/>UoM</apex:facet>
+                            <apex:outputField value="{!p.pricingCondition.Selling_UOM__c}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$Label.INCO}<br/>{!$Label.Term}</apex:facet>
+                            <apex:outputText value="{!p.pricingCondition.INCO_Term_Name__c}"/><br/>
+                            <apex:outputField value="{!p.pricingCondition.INCO_Term_Code__c}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">PAC Industry<br/>Segment</apex:facet>
+                            <apex:outputText value="{!p.pricingCondition.PAC_Industry_Segment_Name__c}"/><br/>
+                            <apex:outputField value="{!p.pricingCondition.PAC_Industry_Segment__c}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$Label.Valid_From}<br/>{!$Label.and_To}</apex:facet>
+                            <apex:outputField value="{!p.pricingCondition.Valid_From_Date__c}"/><br/>
+                            <apex:outputField value="{!p.pricingCondition.Valid_To_Date__c}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$Label.Annual}<br/>{!$Label.Volume}</apex:facet>
+                            <c:Number p_value="{!p.pricingCondition.Forecasted_Annual_Volume__c}"
+                                      p_decimals="0" p_locale="{!locale}"/><br/>
+                            <apex:outputField value="{!p.pricingCondition.Volume_UOM__c}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:outputText value="{!p.sellerName}"/><br/>
+                            <apex:facet name="header">{!$Label.Sales_Rep_Name}</apex:facet>
+                        </apex:column>
+                        <apex:column value="{!p.pricingCondition.Payment_Terms__c}">
+                            <apex:facet name="header">{!$Label.Payment}<br/>{!$Label.Terms}</apex:facet>
+                        </apex:column>
+                        <apex:column value="{!p.pricingCondition.SAP_Pricing_Table__c}">
+                            <apex:facet name="header">{!$Label.Pricing}<br/>{!$Label.table}</apex:facet>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$Label.Pricing_Scales}<br/>
+                                                      {!$Label.Volume} {!$Label.Min} | {!$Label.Max} | {!$Label.UOM} | {!$Label.Selling} {!$Label.Price} | {!$Label.UOM} | {!$Label.Surcharge} | {!$Label.Total}
+                            </apex:facet>
+                            <apex:outputText escape="false" value="{!p.pricingScales}"/>
+                        </apex:column>
+                        <apex:column breakBefore="true" colspan="99">
+                            <apex:outputPanel rendered="{!NOT(ISBLANK(p.pricingCondition.Request_Reason_Desc__c))}">          
+                            <apex:outputText styleClass="bold" value="Request Reason : "/>
+                            <apex:outputText value="{!p.pricingCondition.Request_Reason_Desc__c}"/>
+                            <apex:outputPanel rendered="{!NOT(ISBLANK(p.pricingCondition.Comments__c))}"><br/>
+                            </apex:outputPanel>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!NOT(ISBLANK(p.pricingCondition.Comments__c))}">
+                            <apex:outputText styleClass="bold" value="{!$Label.Comments} : "/>
+                            <apex:outputText value="{!p.pricingCondition.Comments__c}"/>
+                            </apex:outputPanel>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:pageBlockSectionItem>
+<!--
+        **********************************************************************************
+                                         AHWT - LAYOUT
+        **********************************************************************************
+-->            
+                <apex:pageBlockSectionItem rendered="{!isAhwtLayout}">
+                    <apex:pageBlockTable value="{!pricingConditions}" var="p" 
+                                         rowClasses="row1,row2">
+                        <apex:column headerClass="right" styleClass="right" width="20px">
+                            <apex:facet name="header">#</apex:facet>
+                            <apex:outputText value="{!p.recordNumber}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">
+                                <apex:inputCheckbox id="allcb" value="{!allSelected}"
+                                    onclick="paf_checkAll(this.form, this, 'rowcb')" />
+                            </apex:facet>
+                            <apex:inputCheckbox id="rowcb" value="{!p.selected}"
+                                onclick="paf_toggleAllCheckbox(this.form, this);" />
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$Label.Account_Name}<br/>City, State<br/>{!$Label.Number_and_Owner}</apex:facet>
+                            <apex:outputLink value="/{!p.pricingCondition.Account__r.Id}"> 
+                                <apex:outputText value="{!p.pricingCondition.Account__r.Name}"/>
+                            </apex:outputLink>
+                            <br/><apex:outputText value="{!p.pricingCondition.Account_Address__c}"/>
+                            <br/><apex:outputText value="{!p.accountNumber} - {!p.pricingCondition.Account_Level_Condition_Applies_To__c}"/>
+                            <br/><apex:outputText value="{!p.sellerName}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Material Name<br/>{!$Label.and_Number}</apex:facet>
+                            <apex:outputLink value="/{!p.pricingCondition.Material2__r.Id}"> 
+                                <apex:outputText value="{!p.pricingCondition.Material2__r.Material_Desc__c}"/>
+                            </apex:outputLink>
+                            <br/><apex:outputText value="{!p.materialNumber}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$Label.Invoice}&nbsp;{!$Label.Price}&nbsp;&nbsp;<br/>{!$Label.Selling}&nbsp;{!$Label.Price}&nbsp;&nbsp;<br/>
+                                <span id="invPriceHdr2-_help" class="helpButton">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <img class="helpOrb" title="" alt="" src="/s.gif"/>
+                                    <script type="text/javascript">
+                                        sfdcPage.setHelp('invPriceHdr2', 'Click on Price to view the Pricing Condition');
+                                    </script>
+                                </span>                                
+                            </apex:facet>
+                            <apex:outputLink value="/{!p.pricingCondition.Id}" title="Click on Price to view the Pricing Condition">
+                                <c:Currency value="{!p.pricingCondition.Invoice_Price__c}"
+                                            code="{!p.pricingCondition.CurrencyIsoCode}"
+                                            decimals="{!decimals}" locale="{!locale}"/>
+                            </apex:outputLink><br/>
+                            <c:Currency value="{!p.pricingCondition.Base_Price__c}"
+                                        code="{!p.pricingCondition.CurrencyIsoCode}"
+                                        decimals="{!decimals}" locale="{!locale}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Previous Prices<br/><br/>
+                                <span id="prvPriceHdr2-_help" class="helpButton">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <img class="helpOrb" title="" alt="" src="/s.gif"/>
+                                    <script type="text/javascript">
+                                        sfdcPage.setHelp('prvPriceHdr2', 'Click on Price to view the Pricing Condition');
+                                    </script>
+                                </span>                                
+                            </apex:facet>
+                            <apex:outputPanel rendered="{!ISBLANK(p.pricingCondition.Cloned_From__c)}">&nbsp;
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!NOT(ISBLANK(p.pricingCondition.Cloned_From__c))}">
+                            <apex:outputLink value="/{!p.pricingCondition.Cloned_From__c}" target="_blank"
+                                             title="Click on Price to view the Pricing Condition">
+                                <c:Currency value="{!p.pricingCondition.Prev_Invoice_Price__c}"
+                                            code="{!p.pricingCondition.CurrencyIsoCode}"
+                                            decimals="{!decimals}" locale="{!locale}"/>
+                            </apex:outputLink><br/>
+                            <c:Currency value="{!p.pricingCondition.Prev_Selling_Price__c}"
+                                        code="{!p.pricingCondition.CurrencyIsoCode}"
+                                        decimals="{!decimals}" locale="{!locale}"/>
+                            </apex:outputPanel>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$Label.Market} {!$Label.Price}<br/>{!$Label.Floor} {!$Label.Price}</apex:facet>
+                            <c:Currency value="{!p.pricingCondition.Market_Price__c}"
+                                        code="{!p.pricingCondition.CurrencyIsoCode}"
+                                        decimals="{!decimals}" locale="{!locale}"/><br/>
+                            <c:Currency value="{!p.pricingCondition.Floor_Price__c}"
+                                        code="{!p.pricingCondition.CurrencyIsoCode}"
+                                        decimals="{!decimals}" locale="{!locale}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Rebate Amount</apex:facet>
+                            <c:Currency value="{!p.pricingCondition.Rebate_Amount__c}"
+                                        code="{!p.pricingCondition.CurrencyIsoCode}"
+                                        decimals="{!decimals}" locale="{!locale}"/>
+                        </apex:column>
+                        <apex:column rendered="{!NOT(isEditable)}">
+                            <apex:facet name="header">{!$Label.INCO}<br/>{!$Label.Term}</apex:facet>
+                            <apex:outputText value="{!p.pricingCondition.INCO_Term_Name__c}"/><br/>
+                            <apex:outputField value="{!p.pricingCondition.INCO_Term_Code__c}"/>
+                        </apex:column>
+                        <apex:column rendered="{!NOT(isEditable)}">
+                            <apex:facet name="header">{!$Label.Payment}<br/>{!$Label.Term}</apex:facet>
+                            <apex:outputText value="{!p.pricingCondition.Payment_Term_Explanation__c}"/><br/>
+                            <apex:outputField value="{!p.pricingCondition.Payment_Terms__c}"/>
+                        </apex:column>
+                        <apex:column rendered="{!NOT(isEditable)}">
+                            <apex:facet name="header">{!$Label.Valid_From}<br/>{!$Label.and_To}</apex:facet>
+                            <apex:outputField value="{!p.pricingCondition.Valid_From_Date__c}"/><br/>
+                            <apex:outputField value="{!p.pricingCondition.Valid_To_Date__c}"/>
+                        </apex:column>
+                        <apex:column rendered="{!isEditable}">
+                            <apex:facet name="header">Valid To Date</apex:facet>
+                            <apex:inputField value="{!p.pricingCondition.Valid_To_Date__c}"/>
+                        </apex:column>
+                        <apex:column rendered="{!NOT(isEditable)}">
+                            <apex:facet name="header">{!$Label.Gross_Profit}<br/>{!$Label.Percent}</apex:facet>
+                            <apex:outputField value="{!p.pricingCondition.Gross_Profit_Percent__c}"/>
+                        </apex:column>
+                        <apex:column rendered="{!NOT(isEditable)}">
+                            <apex:facet name="header">{!$Label.Target_Gross}<br/>{!$Label.Profit_Percent}</apex:facet>
+                            <apex:outputField value="{!p.pricingCondition.Target_Gross_Profit_Percent__c}"/>
+                        </apex:column>
+                        <apex:column rendered="{!NOT(isEditable)}">
+                            <apex:facet name="header">{!$Label.Annual}<br/>{!$Label.Volume}</apex:facet>
+                            <c:Number p_value="{!p.pricingCondition.Forecasted_Annual_Volume__c}"
+                                      p_decimals="0" p_locale="{!locale}"/><br/>
+                            <apex:outputField value="{!p.pricingCondition.Volume_UOM__c}"/>
+                        </apex:column>
+                        <apex:column rendered="{!NOT(isEditable)}">
+                            <apex:facet name="header">{!$Label.Plant}<br/>{!$Label.Name}</apex:facet>
+                            <apex:outputText value="{!p.pricingCondition.Plant_Name__c}"/><br/>
+                            <apex:outputText value="{!p.pricingCondition.Plant_Code__c}"/>
+                        </apex:column>
+                        <apex:column rendered="{!isEditable}">
+                            <apex:facet name="header">Plant<br/>Notes</apex:facet>
+                            <apex:outputText value="{!p.pricingCondition.Plant_Notes__c}"
+                                             style="width: 60px"/>
+                        </apex:column>
+                        <apex:column rendered="{!isEditable}">
+                            <apex:facet name="header">Plant Name and Code</apex:facet>
+                            <apex:selectList value="{!p.plantId}" size="1" style="width: 300px">
+                                <apex:selectOptions value="{!p.selOpts1}" />
+                            </apex:selectList>
+                        </apex:column>
+                        <apex:column rendered="{!isEditable}">
+                            <apex:facet name="header">Freight<br/>Cost</apex:facet>
+                            <apex:inputField value="{!p.pricingCondition.Freight_Cost__c}"
+                                             style="width: 50px"/>
+                        </apex:column>
+                        <apex:column rendered="{!isEditable}">
+                            <apex:facet name="header">Freight<br/>Markup%</apex:facet>
+                            <apex:outputField value="{!p.pricingCondition.Freight_Mark_Up__c}"
+                                              style="width: 50px"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$Label.Freight}<br/>{!$Label.Upcharge}</apex:facet>
+                            <c:Currency value="{!p.pricingCondition.Freight_Up_Charge__c}"
+                                        code="{!p.pricingCondition.CurrencyIsoCode}"
+                                        decimals="{!decimals}" locale="{!locale}"/>
+                        </apex:column>
+                        <apex:column rendered="{!NOT(isEditable)}">
+                            <apex:facet name="header">{!$Label.On_Invoice}<br/>{!$Label.discount}</apex:facet>
+                            <apex:outputField value="{!p.pricingCondition.Discount_Percent__c}"/>
+                        </apex:column>
+                        <apex:column rendered="{!renderLeadTime}">
+                            <apex:facet name="header">Lead Time<br/>in days</apex:facet>
+                            <apex:outputField value="{!p.pricingCondition.Customer_Material_Lead_Time__c}"
+                                              style="width: 50px"/>
+                        </apex:column>
+                        <apex:column rendered="{!NOT(isEditable)}">
+                            <apex:facet name="header">{!$Label.Pricing_Scales}<br/>
+                                                      {!$Label.Min} {!$Label.Volume} | {!$Label.UOM} | {!$Label.Selling} {!$Label.Price} | {!$Label.UOM} | {!$Label.Invoice} {!$Label.Price}
+                            </apex:facet>
+                            <apex:outputText escape="false" value="{!p.pricingScales}"/>
+                        </apex:column>
+                        <apex:column breakBefore="true" colspan="99">
+                            <apex:outputPanel rendered="{!NOT(ISBLANK(p.pricingCondition.Request_Reason_Desc__c))}">          
+                            <apex:outputText styleClass="bold" value="Request Reason : "/>
+                            <apex:outputText value="{!p.pricingCondition.Request_Reason_Desc__c}"/>
+                            <apex:outputPanel rendered="{!NOT(ISBLANK(p.pricingCondition.Comments__c))}">
+                            <br/>
+                            </apex:outputPanel>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!NOT(ISBLANK(p.pricingCondition.Comments__c))}">
+                            <apex:outputText styleClass="bold" value="{!$Label.Comments} : "/>
+                            <apex:outputText value="{!p.pricingCondition.Comments__c}"/>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!NOT(ISBLANK(p.comments))}">
+                            <br/>
+                            <apex:outputText escape="false" value="{!p.comments}" 
+                                             style="font-weight: bold; color: red;"/>
+                            </apex:outputPanel>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:pageBlockSectionItem>
+
+            </apex:pageBlockSection>
+
+        </apex:pageBlock>
+    </apex:form>
+    <style>
+        .bold {font-weight: bold;}
+        .lh1em {line-height: 1em; vertical-align: middle;}
+        .lh2em {line-height: 2em; vertical-align: middle;}
+        .right {text-align: right;}
+        .row1 {background-color: #f3f3ec;}
+        .row2 {background-color: #f8f8f8;}
+        .clsA {text-align: right; vertical-align: top;}
+        .clsB {text-align: left; vertical-align: top;}
+        .warn {background-color: #f3f3ec;}
+    </style>
+</apex:page>

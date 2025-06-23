@@ -1,0 +1,10 @@
+<template>
+    <div if:true={isToastVisible} class={toastClasses} role="alert">
+        <span class="slds-assistive-text">{theme}</span>
+        <div class="slds-notify__content">
+            <h2 class="slds-text-heading_medium label">{label}</h2>
+            <p class="slds-text-body_regular message">{message}</p>
+        </div>
+        <lightning-icon class="close-icon" icon-name="utility:close" alternative-text="Close toast" title="Close Toast" onclick={closeToast} size="small"></lightning-icon>
+    </div>
+</template>

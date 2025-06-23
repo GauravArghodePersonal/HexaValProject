@@ -1,0 +1,181 @@
+<template>
+    <template if:true={isLoading}>
+        <lightning-spinner alternative-text={loadingText} size="small"></lightning-spinner>
+    </template>
+
+    <template if:true={isSuccessful}>
+        <div class="success-message">
+            {successMessage}
+        </div>
+    </template>
+
+    <template if:true={isConfirmationVisible}>
+        <div class="confirmation-section">
+            <div class="slds-text-heading_medium slds-m-bottom_medium center-text" style="margin-bottom: 15px;">{addressConfirmationHeader}</div>
+            <!-- Billing Section -->
+            <div class="slds-text-heading_small slds-m-bottom_small"><strong>{billToAddressHeader}</strong></div>
+            <div class="address-comparison">
+                <!-- Note the click event and conditional class assignment -->
+                <div class={validatedBillingCssClass} onclick={selectBillingAddress} data-id="validated" title="Click to select">
+                    <p><strong>{suggestedLabel}</strong></p>
+                    <p>{validatedBillingAddress.address}</p>
+                    <p>{validatedBillingAddress.city}</p>
+                    <p>{validatedBillingAddress.state}</p>
+                    <p>{validatedBillingAddress.postalCode}</p>
+                    <p>{validatedBillingAddress.country}</p>
+                </div>
+                <div class={originalBillingCssClass} onclick={selectBillingAddress} data-id="original" title="Click to select">
+                    <p><strong>{originalLabel}</strong></p>
+                    <p>{data.billToAddress}</p>
+                    <p>{data.billToCity}</p>
+                    <p>{data.billToState}</p>
+                    <p>{data.billToPostalCode}</p>
+                    <p>{data.billToCountry}</p>
+                </div> 
+            </div>
+            <!-- Shipping Section -->
+            <div class="slds-text-heading_small slds-m-bottom_small"><strong>{shipToAddressHeader}</strong></div>
+            <div class="address-comparison">
+                <div class={validatedShippingCssClass} onclick={selectShippingAddress} data-id="validated" title="Click to select">
+                    <p><strong>{suggestedLabel}</strong></p>
+                    <p>{validatedShippingAddress.address}</p>
+                    <p>{validatedShippingAddress.city}</p>
+                    <p>{validatedShippingAddress.state}</p>
+                    <p>{validatedShippingAddress.postalCode}</p>
+                    <p>{validatedShippingAddress.country}</p>
+                </div>
+                <div class={originalShippingCssClass} onclick={selectShippingAddress} data-id="original" title="Click to select">
+                    <p><strong>{originalLabel}</strong></p>
+                    <p>{data.shipToAddress}</p>
+                    <p>{data.shipToCity}</p>
+                    <p>{data.shipToState}</p>
+                    <p>{data.shipToPostalCode}</p>
+                    <p>{data.shipToCountry}</p>
+                </div>
+            </div>
+            <div class="submit-section">
+                <lightning-button variant="brand" label="Create Account" onclick={createContact}></lightning-button>
+            </div>
+        </div>
+    </template>
+
+    <template if:true={showInput}>
+        <div class="slds-grid slds-grid_vertical-align-center slds-grid_align-center">
+            <div class="form-container">
+                <div class="slds-text-heading_medium slds-m-bottom_medium center-text">{formHeader}</div>
+                <p class="center-text">{requiredFieldsMessage}</p>
+
+                <!-- Contact Information Section -->
+                <div class="form-section">
+                    <div class="slds-text-heading_small slds-m-bottom_small">{contactInfoHeader}</div>
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-col slds-size_1-of-2 slds-p-right_xx-small">
+                            <input autocomplete="on" type="text" data-id="firstName" class="slds-input slds-m-bottom_medium" placeholder={firstName}/>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2 slds-p-left_xx-small">
+                            <input autocomplete="on" type="text" data-id="lastName" class="slds-input slds-m-bottom_medium" placeholder={lastName}/>
+                        </div>
+                    </div>
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-col slds-size_1-of-4 slds-p-right_xx-small">
+                            <select data-id="areaCode" class="slds-input slds-m-bottom_medium area-code-dropdown"></select>
+                        </div>
+                        <div class="slds-col slds-size_3-of-4 slds-p-left_xx-small">
+                            <input autocomplete="on" type="tel" data-id="phone" class="slds-input slds-m-bottom_medium" placeholder={phoneNumber}/>
+                        </div>
+                    </div>                    
+                    <!-- <input type="tel" data-id="phone" class="slds-input slds-m-bottom_medium" value={areaCodePrefix} placeholder={phoneNumber}/> -->
+                    <template if:true={duplicateEmail}>
+                        <p style="color: rgb(183, 0, 0);"><strong>{duplicateEmailLabel}</strong></p>
+                    </template>
+                    <input autocomplete="on" type="text" data-id="email" class="slds-input slds-m-bottom_medium" placeholder={email}/>
+                    <input autocomplete="on" type="text" data-id="company" class="slds-input slds-m-bottom_medium" placeholder={company}/>
+                </div>
+                
+                <!-- Show VAT? -->
+                <template if:true={showVat}>
+                    <div class="form-section">
+                        <div class="slds-text-heading_small slds-m-bottom_small">{vatLabel}</div>
+                        <template if:true={hasVatError}>
+                            <p style="color: rgb(183, 0, 0);"><strong>{useValidVatLabel}</strong></p>
+                        </template>
+                        <input autocomplete="on" type="text" data-id="vat" class="slds-input slds-m-bottom_medium" placeholder="Enter VAT"/>
+                    </div>
+                </template>
+
+                <!-- KVK Section -->
+                <template if:true={showKVK}>
+                    <div class="form-section">
+                        <div class="slds-text-heading_small slds-m-bottom_small">KVK Number</div>
+                        <template if:true={hasKVKError}>
+                            <!-- Update this with custom label -->
+                            <p style="color: rgb(183, 0, 0);"><strong>Please use a valid KVK Number</strong></p>
+                        </template>
+                        <input autocomplete="on" type="text" data-id="kvk" class="slds-input slds-m-bottom_medium" placeholder="Enter KVK Number"/>
+                    </div>
+                </template>
+
+                <!-- KVK Section -->
+                <template if:true={showSIRET}>
+                    <div class="form-section">
+                        <div class="slds-text-heading_small slds-m-bottom_small">SIRET</div>
+                        <template if:true={hasSIRETError}>
+                            <!-- Update this with custom label -->
+                            <p style="color: rgb(183, 0, 0);"><strong>Please use a valid SIRET</strong></p>
+                        </template>
+                        <input autocomplete="on" type="text" data-id="siret" class="slds-input slds-m-bottom_medium" placeholder="Enter SIRET Number"/>
+                    </div>
+                </template>
+
+                <!-- CVR / EAN Section -->
+                <template if:true={showEAN}>
+                    <div class="form-section">
+                        <div class="slds-text-heading_small slds-m-bottom_small">CVR / EAN</div>
+                        <template if:true={hasEANError}>
+                            <!-- Update this with custom label -->
+                            <p style="color: rgb(183, 0, 0);"><strong>Please use a valid CVR / EAN</strong></p>
+                        </template>
+                        <input autocomplete="on" type="text" data-id="ean" class="slds-input slds-m-bottom_medium" placeholder="Enter CVR / EAN Number"/>
+                    </div>
+                </template>
+
+                <!-- Business Address Section -->
+                <div class="form-section">
+                    <div class="slds-text-heading_small slds-m-bottom_small">{billToAddressHeader}</div>
+                    <template if:true={hasBillingAddressError}>
+                        <p style="color: rgb(183, 0, 0);"><strong>{useValidAddressLabel}</strong></p>
+                    </template>
+                    <input autocomplete="on" type="text" data-id="billToAddress" class="slds-input slds-m-bottom_medium" placeholder={address}/>
+                    <input autocomplete="on" type="text" data-id="billToCity" class="slds-input slds-m-bottom_medium" placeholder={city}/>
+                    <template if:true={showState}>
+                        <input autocomplete="on" type="text" data-id="billToState" class="slds-input slds-m-bottom_medium" placeholder={state}/>
+                    </template>
+                    <input autocomplete="on" type="text" data-id="billToPostalCode" class="slds-input slds-m-bottom_medium" placeholder={postalCode}/>
+                    <input autocomplete="on" type="text" data-id="billToCountry" class="slds-input slds-m-bottom_medium" value={defaultCountry} disabled/>
+                </div>
+
+                <!-- Ship To Address -->
+                <div class="form-section">
+                    <div class="slds-text-heading_small slds-m-bottom_small">{shipToAddressHeader}</div>
+                    <template if:true={hasShippingAddressError}>
+                        <p style="color: rgb(183, 0, 0);"><strong>{useValidAddressLabel}</strong></p>
+                    </template>
+                    <input autocomplete="on" type="text" data-id="shipToAddress" class="slds-input slds-m-bottom_medium" placeholder={address}/>
+                    <input autocomplete="on" type="text" data-id="shipToCity" class="slds-input slds-m-bottom_medium" placeholder={city}/>
+                    <template if:true={showState}>
+                        <input autocomplete="on" type="text" data-id="shipToState" class="slds-input slds-m-bottom_medium" placeholder={state}/>
+                    </template>
+                    <input autocomplete="on" type="text" data-id="shipToPostalCode" class="slds-input slds-m-bottom_medium" placeholder={postalCode}/>
+                    <input autocomplete="on" type="text" data-id="shipToCountry" class="slds-input slds-m-bottom_medium" value={defaultCountry} disabled/>
+                </div>
+
+                <button class="slds-button slds-button_brand" onclick={register}>{registerText}</button>
+
+                <p class="center-text">
+                    {alreadyHaveAccountText}
+                    <a href="#" data-link="Login" onclick={navigateToLink}> {logInHereText}</a>
+                </p>
+            </div>
+        </div>
+    </template>
+</template>

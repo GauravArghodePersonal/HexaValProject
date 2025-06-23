@@ -1,0 +1,20 @@
+.alignment{
+  align-content: center;
+  float: center;
+  text-align: center;
+}
+.table_td_lb_Cls{
+  width: 20%;
+  padding: 10px; 
+
+}
+.table_td_Cls{
+  width: 20%;
+  padding: 10px;
+  text-align: left;  
+
+}
+.space_Td{
+  width: 10%;
+
+}

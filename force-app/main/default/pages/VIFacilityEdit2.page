@@ -1,0 +1,383 @@
+<apex:page controller="FlintSiteHomeController" 
+    showHeader="false" sidebar="false" tabStyle="VI_Enrollment__c">
+    <!--
+<apex:variable var="v_title" value="{!IF(ISBLANK(facilityId), 'Add', IF(readOnly, 'View', 'Edit'))} Facility"/>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <title>{!v_title}</title>
+    <apex:stylesheet value="{!URLFOR($Resource.VIResources2, 'css/VIStyles.css')}" />
+
+    <apex:includeScript value="{!URLFOR($Resource.VIResources, 'js/jquery-1.4.2.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.VIResources, 'js/utils.js')}" />
+    <script type="text/javascript">
+
+    jQuery.noConflict();
+
+    jQuery(function() {
+        disableButtonsOnSubmit("{!$Component.theForm}");
+    });
+
+    </script>
+
+</head>
+
+<body >
+<div id="VI-Body">
+
+    <c:VI_Portal_Page_Header p_accountId="{!facilityId}"/>
+
+    <div style="position: relative; height: 100%;">
+
+    <apex:sectionHeader title="{!distributor.Name}" subtitle="{!v_title}" />
+
+    <apex:form id="theForm">
+
+        <apex:pageBlock title="Facility Information" mode="edit">
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Save" action="{!save}" />
+                <!-- apex:commandButton value="Available Promotions" action="{!availablePromotions}"
+                    immediate="true" rendered="{!NOT(ISBLANK(facilityId))}" / 
+                <apex:commandButton value="Cancel" action="{!cancel}" immediate="true" />
+            </apex:pageBlockButtons>
+
+            <apex:pageMessages />
+
+            <apex:pageBlockSection columns="2" rendered="{!readOnly}">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Active" />
+                    <apex:outputText value="{!active.value}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Facility Name" />
+                    <apex:outputText value="{!name.value}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="AVI Locator Name" />
+                    <apex:outputText value="{!aviLocatorName.value}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Address" />
+                    <apex:outputText value="{!billingStreet.value}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Estimate Annual Gallons" />
+                    <apex:outputText value="{!estimateGallons.value}" />
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="City" />
+                    <apex:outputText value="{!billingCity.value}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="% of cars taking an Oil Change" />
+                    <apex:outputText value="{!oilChangePercent.value}" />
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="State" />
+                    <apex:outputText value="{!billingState.value}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="% of Volume MaxLife" />
+                    <apex:outputText value="{!maxlifeVolPercent.value}" />
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Zip Code" />
+                    <apex:outputText value="{!billingPostalCode.value}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="% of Volume SynPower" />
+                    <apex:outputText value="{!synpowerPercent.value}" />
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Phone Number" />
+                    <apex:outputText value="{!phone.value}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="% Cars Serviced Taking Valvoline Wiper Blades" />
+                    <apex:outputText value="{!wiperBladesPercent.value}" />
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Fax Number" />
+                    <apex:outputText value="{!fax.value}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="% of Cars Serviced Taking VPS" />
+                    <apex:outputText value="{!vpsPercent.value}" />
+                </apex:pageBlockSectionItem>
+
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection columns="2" rendered="{!NOT(readOnly)}">
+                <apex:pageBlockSectionItem dataStyleClass="dsc1" labelStyleClass="lsc1">
+                    <apex:outputLabel for="active" value="Active" />
+                    <apex:outputPanel layout="block" styleClass="requiredInput">
+                        <div class="requiredBlock"></div>
+                        <apex:selectList id="active" value="{!active.value}"
+                            styleClass="{!IF(NOT(ISBLANK(active.error)), 'error', '')}" size="1">
+                            <apex:selectOption itemValue="Yes" itemLabel="Yes" />
+                            <apex:selectOption itemValue="No" itemLabel="No" />
+                        </apex:selectList>
+                        <apex:outputPanel styleClass="errorMsg" layout="block" rendered="{!NOT(ISBLANK(active.error))}">
+                            <strong>Error:</strong>&nbsp;
+                            <apex:outputText value="{!active.error}" />
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem dataStyleClass="dsc1" labelStyleClass="lsc1">
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem dataStyleClass="dsc1" labelStyleClass="lsc1">
+                    <apex:outputLabel for="name" value="Facility Name" />
+                    <apex:outputPanel layout="block" styleClass="requiredInput">
+                        <div class="requiredBlock"></div>
+                        <apex:inputText id="name" value="{!name.value}"
+                            styleClass="{!IF(NOT(ISBLANK(name.error)), 'error', '')}" size="20" maxlength="255" />
+                        <apex:outputPanel styleClass="errorMsg" layout="block" rendered="{!NOT(ISBLANK(name.error))}">
+                            <strong>Error:</strong>&nbsp;
+                            <apex:outputText value="{!name.error}" />
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem dataStyleClass="dsc1" labelStyleClass="lsc1">
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem dataStyleClass="dsc1" labelStyleClass="lsc1">
+                    <apex:outputLabel for="aviLocatorName" value="AVI Locator Name" />
+                    <apex:outputPanel layout="block">
+                        <apex:inputText id="aviLocatorName" value="{!aviLocatorName.value}" size="20" maxlength="255" />
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem dataStyleClass="dsc1" labelStyleClass="lsc1">
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem dataStyleClass="dsc1" labelStyleClass="lsc1">
+                    <apex:outputLabel for="billingStreet" value="Address" />
+                    <apex:outputPanel layout="block" styleClass="requiredInput">
+                        <div class="requiredBlock"></div>
+                        <apex:inputTextArea id="billingStreet" value="{!billingStreet.value}"
+                            styleClass="{!IF(NOT(ISBLANK(billingStreet.error)), 'error', 'txta1')}"/>
+                        <apex:outputPanel styleClass="errorMsg" layout="block" rendered="{!NOT(ISBLANK(billingStreet.error))}">
+                            <strong>Error:</strong>&nbsp;
+                            <apex:outputText value="{!billingStreet.error}" />
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem dataStyleClass="dsc1" labelStyleClass="lsc1">
+                    <apex:outputLabel value="Estimate Annual Gallons" />
+                    <apex:outputPanel layout="block">
+                        <apex:inputText value="{!estimateGallons.value}" size="10" maxlength="10" />
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem dataStyleClass="dsc1" labelStyleClass="lsc1">
+                    <apex:outputLabel for="billingCity" value="City" />
+                    <apex:outputPanel layout="block" styleClass="requiredInput">
+                        <div class="requiredBlock"></div>
+                        <apex:inputText id="billingCity" value="{!billingCity.value}"
+                            styleClass="{!IF(NOT(ISBLANK(billingCity.error)), 'error', '')}" size="40" maxlength="40" />
+                        <apex:outputPanel styleClass="errorMsg" layout="block" rendered="{!NOT(ISBLANK(billingCity.error))}">
+                            <strong>Error:</strong>&nbsp;
+                            <apex:outputText value="{!billingCity.error}" />
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem dataStyleClass="dsc1" labelStyleClass="lsc1">
+                    <apex:outputLabel value="% of cars taking an Oil Change" />
+                    <apex:outputPanel layout="block">
+                        <apex:inputText value="{!oilChangePercent.value}" size="3" maxlength="3" />
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem dataStyleClass="dsc1" labelStyleClass="lsc1">
+                    <apex:outputLabel for="billingState" value="State" />
+                    <apex:outputPanel layout="block" styleClass="requiredInput">
+                        <div class="requiredBlock"></div>
+                        <apex:inputText id="billingState" value="{!billingState.value}"
+                            styleClass="{!IF(NOT(ISBLANK(billingState.error)), 'error', '')}" size="40" maxlength="20" />
+                        <apex:outputPanel styleClass="errorMsg" layout="block" rendered="{!NOT(ISBLANK(billingState.error))}">
+                            <strong>Error:</strong>&nbsp;
+                            <apex:outputText value="{!billingState.error}" />
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem dataStyleClass="dsc1" labelStyleClass="lsc1">
+                    <apex:outputLabel value="% of Volume MaxLife" />
+                    <apex:outputPanel layout="block">
+                        <apex:inputText value="{!maxlifeVolPercent.value}" size="3" maxlength="3" />
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem dataStyleClass="dsc1" labelStyleClass="lsc1">
+                    <apex:outputLabel for="billingPostalCode" value="Zip Code" />
+                    <apex:outputPanel layout="block" styleClass="requiredInput">
+                        <div class="requiredBlock"></div>
+                        <apex:inputText id="billingPostalCode" value="{!billingPostalCode.value}"
+                            styleClass="{!IF(NOT(ISBLANK(billingPostalCode.error)), 'error', '')}" size="10" maxlength="20" />
+                        <apex:outputPanel styleClass="errorMsg" layout="block" rendered="{!NOT(ISBLANK(billingPostalCode.error))}">
+                            <strong>Error:</strong>&nbsp;
+                            <apex:outputText value="{!billingPostalCode.error}" />
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem dataStyleClass="dsc1" labelStyleClass="lsc1">
+                    <apex:outputLabel value="% of Volume SynPower" />
+                    <apex:outputPanel layout="block">
+                        <apex:inputText value="{!synpowerPercent.value}" size="3" maxlength="3" />
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem dataStyleClass="dsc1" labelStyleClass="lsc1">
+                    <apex:outputLabel for="phone" value="Phone Number" />
+                    <apex:outputPanel layout="block" styleClass="requiredInput">
+                        <div class="requiredBlock"></div>
+                        <apex:inputText id="phone" value="{!phone.value}"
+                            styleClass="{!IF(NOT(ISBLANK(phone.error)), 'error', '')}" size="40" maxlength="40"
+                            onblur="formatPhone(this);" onkeydown="formatPhoneOnEnter(this, event);" />
+                        <apex:outputPanel styleClass="errorMsg" layout="block" rendered="{!NOT(ISBLANK(phone.error))}">
+                            <strong>Error:</strong>&nbsp;
+                            <apex:outputText value="{!phone.error}" />
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem dataStyleClass="dsc1" labelStyleClass="lsc1">
+                    <apex:outputLabel value="% Cars Serviced Taking Valvoline Wiper Blades" />
+                    <apex:outputPanel layout="block">
+                        <apex:inputText value="{!wiperBladesPercent.value}" size="3" maxlength="3" />
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem dataStyleClass="dsc1" labelStyleClass="lsc1">
+                    <apex:outputLabel for="fax" value="Fax Number" />
+                    <apex:outputPanel layout="none">
+                        <apex:inputText id="fax" value="{!fax.value}"
+                            styleClass="{!IF(NOT(ISBLANK(fax.error)), 'error', '')}" size="40" maxlength="40"
+                            onblur="formatPhone(this);" onkeydown="formatPhoneOnEnter(this, event);" />
+                        <apex:outputPanel styleClass="errorMsg" layout="block" rendered="{!NOT(ISBLANK(fax.error))}">
+                            <strong>Error:</strong>&nbsp;
+                            <apex:outputText value="{!fax.error}" />
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem dataStyleClass="dsc1" labelStyleClass="lsc1">
+                    <apex:outputLabel value="% of Cars Serviced Taking VPS" />
+                    <apex:outputPanel layout="block">
+                        <apex:inputText value="{!vpsPercent.value}" size="3" maxlength="3" />
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel for="website" value="Website" />
+                    <apex:outputPanel layout="none">
+                        <apex:inputText id="website" value="{!website.value}"
+                            styleClass="{!IF(NOT(ISBLANK(website.error)), 'error', '')}" size="40" maxlength="255" />
+                        <apex:outputPanel styleClass="errorMsg" layout="block" rendered="{!NOT(ISBLANK(website.error))}">
+                            <strong>Error:</strong>&nbsp;
+                            <apex:outputText value="{!website.error}" />
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem dataStyleClass="dsc1" labelStyleClass="lsc1">
+                </apex:pageBlockSectionItem>
+
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection columns="1">
+                    <apex:panelGrid columns="8" width="100%"
+                                    cellpadding="1" cellspacing="1"
+                                    captionClass="bold">
+                        <apex:facet name="caption">
+                            <apex:outputText >
+                                <br/>Store Hours<br/><br/>
+                            </apex:outputText>
+                        </apex:facet>
+
+                        <apex:outputText value=""/>
+                        <apex:outputText value="Monday" styleClass="bold"/>
+                        <apex:outputText value="Tuesday" styleClass="bold"/>
+                        <apex:outputText value="Wednesday" styleClass="bold"/>
+                        <apex:outputText value="Thursday" styleClass="bold"/>
+                        <apex:outputText value="Friday" styleClass="bold"/>
+                        <apex:outputText value="Saturday" styleClass="bold"/>
+                        <apex:outputText value="Sunday" styleClass="bold"/>
+
+                        <apex:outputText value="Open" styleClass="bold"/>
+                        <apex:selectList value="{!storeHoursMonOpen.value}" size="1">
+                            <apex:selectOptions value="{!storeHourOptions}" />
+                        </apex:selectList>
+                        <apex:selectList value="{!storeHoursTueOpen.value}" size="1">
+                            <apex:selectOptions value="{!storeHourOptions}" />
+                        </apex:selectList>
+                        <apex:selectList value="{!storeHoursWedOpen.value}" size="1">
+                            <apex:selectOptions value="{!storeHourOptions}" />
+                        </apex:selectList>
+                        <apex:selectList value="{!storeHoursThuOpen.value}" size="1">
+                            <apex:selectOptions value="{!storeHourOptions}" />
+                        </apex:selectList>
+                        <apex:selectList value="{!storeHoursFriOpen.value}" size="1">
+                            <apex:selectOptions value="{!storeHourOptions}" />
+                        </apex:selectList>
+                        <apex:selectList value="{!storeHoursSatOpen.value}" size="1">
+                            <apex:selectOptions value="{!storeHourOptions}" />
+                        </apex:selectList>
+                        <apex:selectList value="{!storeHoursSunOpen.value}" size="1">
+                            <apex:selectOptions value="{!storeHourOptions}" />
+                        </apex:selectList>
+
+                        <apex:outputText value="Close" styleClass="bold"/>
+                        <apex:selectList value="{!storeHoursMonClose.value}" size="1">
+                            <apex:selectOptions value="{!storeHourOptions}" />
+                        </apex:selectList>
+                        <apex:selectList value="{!storeHoursTueClose.value}" size="1">
+                            <apex:selectOptions value="{!storeHourOptions}" />
+                        </apex:selectList>
+                        <apex:selectList value="{!storeHoursWedClose.value}" size="1">
+                            <apex:selectOptions value="{!storeHourOptions}" />
+                        </apex:selectList>
+                        <apex:selectList value="{!storeHoursThuClose.value}" size="1">
+                            <apex:selectOptions value="{!storeHourOptions}" />
+                        </apex:selectList>
+                        <apex:selectList value="{!storeHoursFriClose.value}" size="1">
+                            <apex:selectOptions value="{!storeHourOptions}" />
+                        </apex:selectList>
+                        <apex:selectList value="{!storeHoursSatClose.value}" size="1">
+                            <apex:selectOptions value="{!storeHourOptions}" />
+                        </apex:selectList>
+                        <apex:selectList value="{!storeHoursSunClose.value}" size="1">
+                            <apex:selectOptions value="{!storeHourOptions}" />
+                        </apex:selectList>
+                    </apex:panelGrid>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+    <style>
+        .nowrap {white-space: nowrap;}
+        .bold   {font-weight: bold;}
+        .dsc1,
+        .lsc1   {padding: 4px 4px 4px 10px !important;}
+        .txta1  {height: 40px; width: 250px; resize: none; overflow: auto;}
+    </style>
+
+    </div>
+
+    <apex:include pageName="VIPortalPageFooter"/>
+</div>
+</body>
+
+</html>
+-->
+ </apex:page>

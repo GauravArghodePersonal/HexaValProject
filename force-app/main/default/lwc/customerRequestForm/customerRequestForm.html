@@ -1,0 +1,485 @@
+<template>
+    <div class="slds-text-align_center slds-text-title_caps title">Customer Information Packet</div> 
+    <div class="card">
+
+        <h1 class="message">To</h1>
+        <lightning-input name="SF_Customer_Legal_Name__c" onchange={handleChange} label="Customer Legal Name"
+            value={customerRecord.SF_Customer_Legal_Name__c} ></lightning-input>
+        <lightning-input name="SF_Customer_Phone__c" onchange={handleChange} label="Customer Contact Phone Number"
+            value={customerRecord.SF_Customer_Phone__c} type="tel" message-when-pattern-mismatch="Please enter a 10 digit number" placeholder="e.g 555-555-5555" pattern="[\0-9]{5}-[0-9]{3}-[0-9]{4}|[0-9]{3}-[0-9]{3}-[0-9]{4}|[0-9]{10}|[\0-9]{5}[0-9]{7}|[\0-9]{5}\s[0-9]{3}-[0-9]{4}" ></lightning-input>
+        <lightning-input name="SF_Customer_Contact_Name__c" pattern="[a-zA-Z\s]{2,}" onchange={handleChange} label="Customer Contact Name"
+            value={customerRecord.SF_Customer_Contact_Name__c} required ></lightning-input>
+        <lightning-input name="SF_Customer_Contact_Email__c" onchange={handleChange} label="Customer Contact Email"
+            value={customerRecord.SF_Customer_Contact_Email__c} type="Email" required ></lightning-input>
+        <lightning-input name="SF_Customer_Contact_Fax__c" onchange={handleChange} message-when-pattern-mismatch="Please enter a 10 digit number" label="Customer Contact Fax" pattern="[\0-9]{5}-[0-9]{3}-[0-9]{4}|[0-9]{3}-[0-9]{3}-[0-9]{4}|[0-9]{10}|[\0-9]{5}[0-9]{7}|[\0-9]{5}\s[0-9]{3}-[0-9]{4}"
+            value={customerRecord.SF_Customer_Contact_Fax__c}   ></lightning-input>
+        <br>
+        
+
+        
+        <h1 class="message">From</h1>
+        <lightning-input name="SF_Solenis_Contact__c" onchange={handleChange}  pattern="[a-zA-Z\s]{2,}" label="Solenis Contact"
+            value={customerRecord.SF_Solenis_Contact__c} ></lightning-input>
+        <lightning-input name="SF_Solenis_Phone_Number__c" onchange={handleChange} label="Solenis Phone Number"
+            value={customerRecord.SF_Solenis_Phone_Number__c} type="tel" placeholder="e.g 555-555-5555" message-when-pattern-mismatch="Please enter a 10 digit number" pattern="[\0-9]{5}-[0-9]{3}-[0-9]{4}|[0-9]{3}-[0-9]{3}-[0-9]{4}|[0-9]{10}|[\0-9]{5}[0-9]{7}|[\0-9]{5}\s[0-9]{3}-[0-9]{4}" ></lightning-input>
+        
+            
+        <br>
+        <p>Solenis needs the attached information to provide optimum service to your company. Please take a few moments to
+            complete these forms and return them to your Customer Service Representative.
+            If you have any questions regarding any of the forms, please do not hesitate to call.</p>
+            <br>
+            <br>
+        <h1 class="message">Customer Tax Status</h1>
+        <div class="slds-grid slds-wrap">
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-input name="SF_Company_sales_tax_exempt__c" onchange={handleChangeCheckbox} label="Is your company sales tax exempt?*"
+                value={customerRecord.SF_Company_sales_tax_exempt__c} type="checkbox" ></lightning-input>
+            </div>
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-input name="SF_food_tax_applicable_to_Canada__c" onchange={handleChangeCheckbox} label="Are you a food tax customer-applicable to
+                Canada only?" value={customerRecord.SF_food_tax_applicable_to_Canada__c} type="checkbox" ></lightning-input>
+            </div>
+            
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-input name="SF_Is_environmental_handling_charged__c" onchange={handleChangeCheckbox} label="Is environmental handling charged (EHC)?"
+                value={customerRecord.SF_Is_environmental_handling_charged__c} type="checkbox" ></lightning-input>
+            </div>
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-input name="SF_Excise_tax_exempt__c" onchange={handleChangeCheckbox} label="Excise tax exempt?"
+                value={customerRecord.SF_Excise_tax_exempt__c} type="checkbox" ></lightning-input>
+            </div>
+            <div class="slds-col slds-size_2-of-2">
+                
+        <lightning-input name="SF_Tax_ID_Number__c" onchange={handleChange} label="Provide your company’s Tax ID Number**"
+        value={customerRecord.SF_Tax_ID_Number__c} ></lightning-input>
+            </div>
+        <div>
+        <div>  
+        <lightning-input type="file"
+                         label="Attachment for tax"
+                         onchange={handleFileUploaded}
+                         multiple>
+        </lightning-input>
+        </div> </br>
+         <div>
+        <template if:true={filesData}>
+            <template for:each={filesData} for:item="imgName" for:index="index">
+                {imgName.fileName}
+                <lightning-button-icon key={imgName.fileName} data-id={index} variant="container" icon-name="utility:close" onclick={removeReceiptImage} ></lightning-button-icon>
+            </template>
+        </template>
+    </div>
+    </div>
+          </div>
+        
+        
+        
+        
+            <br>
+        <p>*If customer is sales tax exempt, please attach a copy of your tax exemption certificate. It is required from the
+            Payer for the U.S. States and Ontario Province where product is being delivered. Exceptions to this requirement will
+            be managed on an individual basis. If the customer picks up product, we also must obtain a certificate for the State
+            of our inventory site.</p>
+            <br>
+        <p>**Canadian Provinces other than Ontario, please provide your Tax ID Number in the space provided above.</p>
+        <br>
+        <p><b>Note:</b> Accounts will be set up as taxable until required tax information is received.</p>
+    </div>
+
+    <div class="card">
+        <h1 class="message">Sold To <i>(location which places the order)</i></h1>
+        <lightning-input name="SF_SoldTo_Company_Legal_Name__c" onchange={handleChange} label="Company Legal Name"
+            value={customerRecord.SF_SoldTo_Company_Legal_Name__c} required></lightning-input>
+        <lightning-input name="SF_SoldTo_Doing_Business_As__c" onchange={handleChange} label="Doing Business As"
+            value={customerRecord.SF_SoldTo_Doing_Business_As__c} required></lightning-input>
+            <!-- Attn -->
+            <lightning-input name="SF_SoldTo_Attn__c" onchange={handleChange} label="Attn"
+            value={customerRecord.SF_SoldTo_Attn__c} ></lightning-input>
+        <lightning-input name="SF_SoldTo_Address_1__c" onchange={handleChange} label="Address (line 1)"
+            value={customerRecord.SF_SoldTo_Address_1__c} required></lightning-input>
+        <lightning-input name="SF_SoldTo_Address_2__c" onchange={handleChange} label="Address (line 2)"
+            value={customerRecord.SF_SoldTo_Address_2__c} ></lightning-input>
+        <lightning-input name="SF_SoldTo_District_County__c" onchange={handleChange} value={customerRecord.SF_SoldTo_District_County__c}
+            label="District/County" ></lightning-input>
+        <lightning-input name="SF_SoldTo_City" onchange={handleChangeCity} label="City"
+            value={Address.SF_SoldTo_City} required></lightning-input>
+        <lightning-input name="SF_SoldTo_State" onchange={handleChangeCity} label="Province/State"
+            value={Address.SF_SoldTo_State} required></lightning-input>
+        <lightning-input name="SF_SoldTo_PostalCode" onchange={handleChangeCity} label="Postal Code"
+            value={Address.SF_SoldTo_PostalCode} required></lightning-input>
+            <lightning-combobox name="SF_SoldTo_Country__c"
+            label="Countries"
+            placeholder="Select Country"
+            options={countryOptions}
+            onchange={handleChange}
+            value={customerRecord.SF_SoldTo_Country__c}
+            >
+</lightning-combobox>
+        <lightning-input name="SF_SoldTo_Phone__c" onchange={handleChange} value={customerRecord.SF_SoldTo_Phone__c}
+            label="Phone Number" type="tel" pattern="[\0-9]{5}-[0-9]{3}-[0-9]{4}|[0-9]{3}-[0-9]{3}-[0-9]{4}|[0-9]{10}|[\0-9]{5}[0-9]{7}|[\0-9]{5}\s[0-9]{3}-[0-9]{4}" message-when-pattern-mismatch="Please enter a 10 digit number" placeholder="e.g 555-555-5555" required  ></lightning-input>
+        <lightning-input name="SF_SoldTo_Email__c" type="Email" onchange={handleChange} label="Email Address"
+            value={customerRecord.SF_SoldTo_Email__c} required></lightning-input>
+        <lightning-input name="SF_SoldTo_Fax__c" onchange={handleChange} value={customerRecord.SF_SoldTo_Fax__c} message-when-pattern-mismatch="Please enter a 10 digit number" pattern="[\0-9]{5}-[0-9]{3}-[0-9]{4}|[0-9]{3}-[0-9]{3}-[0-9]{4}|[0-9]{10}|[\0-9]{5}[0-9]{7}|[\0-9]{5}\s[0-9]{3}-[0-9]{4}"
+            label="Fax Number" type="tel" ></lightning-input>
+        <lightning-input name="SF_SoldTo_ACH_Email__c" type="Email" onchange={handleChange} label="If ACH is automatic draft notification, email is required"
+            value={customerRecord.SF_SoldTo_ACH_Email__c} required></lightning-input>
+            <!--CURRENCY OPTIONS-->
+            <lightning-combobox name="SF_SoldTo_Currency__c"
+            label="Currency"
+            placeholder="Select Currency"
+            options={PayerCurrencyOptions}
+            onchange={handleChange}
+            value={customerRecord.SF_SoldTo_Currency__c}
+            >
+</lightning-combobox>
+        
+    </div>
+    
+    <div class="card">
+        <h1 class="message">Payer <i>(party responsible for payment)</i></h1>
+        <p class="checkbox"><B>Please check the checkbox to copy phone, Address and other information from Sold To account, otherwise proceed to enter this information manually.</B>
+        <lightning-input type="checkbox" label="" onchange={handleInfo} name="SF_Payer_"></lightning-input>
+        </p>
+        
+        
+        <lightning-input name="SF_Payer_Company_Legal_Name__c" onchange={handleChange} label="Company Legal Name"
+            value={customerRecord.SF_Payer_Company_Legal_Name__c}  required></lightning-input>
+        <lightning-input name="SF_Payer_Doing_Business_As__c" onchange={handleChange} label="Doing Business As"
+            value={customerRecord.SF_Payer_Doing_Business_As__c} id="SF_Payer_" required></lightning-input>
+            <!-- Attn -->
+            <lightning-input  name="SF_Payer_Attn__c" onchange={handleChange} label="Attn"
+            value={customerRecord.SF_Payer_Attn__c} ></lightning-input>
+        <lightning-input name="SF_Payer_Address_1__c" onchange={handleChange} label="Address (line 1)"
+            value={customerRecord.SF_Payer_Address_1__c} required></lightning-input>
+        <lightning-input name="SF_Payer_Address_2__c" onchange={handleChange} label="Address (line 2)"
+            value={customerRecord.SF_Payer_Address_2__c} ></lightning-input>
+        <lightning-input name="SF_Payer_District_County__c" onchange={handleChange} value={customerRecord.SF_Payer_District_County__c}
+            label="District/County" ></lightning-input>
+        <lightning-input name="SF_Payer_City" onchange={handleChangeCity} label="City"
+            value={Address.SF_Payer_City} required></lightning-input>
+        <lightning-input name="SF_Payer_State" onchange={handleChangeCity} label="Province/State"
+            value={Address.SF_Payer_State} required></lightning-input>
+        <lightning-input name="SF_Payer_PostalCode" onchange={handleChangeCity} label="Postal Code"
+            value={Address.SF_Payer_PostalCode} required></lightning-input>
+            <lightning-combobox name="SF_Payer_Country__c"
+            label="Countries"
+            placeholder="Select Country"
+            options={countryOptions}
+            onchange={handleCountryChange}
+            value={customerRecord.SF_Payer_Country__c}
+            >
+</lightning-combobox>
+        <lightning-input name="SF_Payer_Phone__c" onchange={handleChange} value={customerRecord.SF_Payer_Phone__c}
+            label="Phone Number" type="tel" placeholder="e.g 555-555-5555" message-when-pattern-mismatch="Please enter a 10 digit number" pattern="[\0-9]{5}-[0-9]{3}-[0-9]{4}|[0-9]{3}-[0-9]{3}-[0-9]{4}|[0-9]{10}|[\0-9]{5}[0-9]{7}|[\0-9]{5}\s[0-9]{3}-[0-9]{4}" required  ></lightning-input>
+        <lightning-input name="SF_Payer_Email__c" type="Email" onchange={handleChange} label="Email Address"
+            value={customerRecord.SF_Payer_Email__c} required></lightning-input>
+        <lightning-input name="SF_Payer_Fax__c" onchange={handleChange} value={customerRecord.SF_Payer_Fax__c} message-when-pattern-mismatch="Please enter a 10 digit number" pattern="[\0-9]{5}-[0-9]{3}-[0-9]{4}|[0-9]{3}-[0-9]{3}-[0-9]{4}|[0-9]{10}|[\0-9]{5}[0-9]{7}|[\0-9]{5}\s[0-9]{3}-[0-9]{4}"
+            label="Fax Number" type="tel" ></lightning-input>
+        <lightning-input name="SF_Payer_ACH_Email__c" type="Email" onchange={handleChange} label="If ACH is automatic draft notification, email is required"
+            value={customerRecord.SF_Payer_ACH_Email__c} required></lightning-input>
+            <!--CURRENCY OPTIONS-->
+            <lightning-combobox name="SF_Payer_Currency__c"
+            label="Currency"
+            placeholder="Select Currency"
+            options={PayerCurrencyOptions}
+            onchange={handleChange}
+            value={customerRecord.SF_Payer_Currency__c}
+            >
+</lightning-combobox>
+
+    </div>
+
+    <div class="card">
+        <h1 class="message">Bill To<i> (location where invoice is sent)</i></h1>
+        <p class="checkbox"><B>Please check the checkbox to copy phone, Address and other information from Sold To account, otherwise proceed to enter this information manually.</B>
+            <lightning-input type="checkbox" label="" onchange={handleInfo} name="SF_BillTo_"></lightning-input>
+            </p>
+        <lightning-input name="SF_BillTo_Company_Legal_Name__c" onchange={handleChange} label="Company Legal Name"
+            value={customerRecord.SF_BillTo_Company_Legal_Name__c} required></lightning-input>
+        <lightning-input name="SF_BillTo_Doing_Business_As__c" onchange={handleChange} label="Doing Business As"
+            value={customerRecord.SF_BillTo_Doing_Business_As__c} required></lightning-input>
+            <!-- Attn -->
+            <lightning-input name="SF_BillTo_Attn__c" onchange={handleChange} label="Attn"
+            value={customerRecord.SF_BillTo_Attn__c} ></lightning-input>
+        <lightning-input name="SF_BillTo_Address_1__c" onchange={handleChange} label="Address (line 1)"
+            value={customerRecord.SF_BillTo_Address_1__c} required></lightning-input>
+        <lightning-input name="SF_BillTo_Address_2__c" onchange={handleChange} label="Address (line 2)"
+            value={customerRecord.SF_BillTo_Address_2__c} ></lightning-input>
+        <lightning-input name="SF_BillTo_City" onchange={handleChangeCity} label="City"
+            value={Address.SF_BillTo_City} required></lightning-input>
+        <lightning-input name="SF_BillTo_State" onchange={handleChangeCity} label="Province/State"
+            value={Address.SF_BillTo_State} required></lightning-input>
+        <lightning-input name="SF_BillTo_PostalCode" onchange={handleChangeCity} label="Postal Code"
+            value={Address.SF_BillTo_PostalCode} required></lightning-input>
+            <lightning-combobox name="SF_BillTo_Country__c"
+            label="Countries"
+            placeholder="Select Country"
+            options={countryOptions}
+            onchange={handleCountryChange}
+            value={customerRecord.SF_BillTo_Country__c}
+            >
+</lightning-combobox>
+        <lightning-input name="SF_BillTo_Phone__c" onchange={handleChange} value={customerRecord.SF_BillTo_Phone__c}
+            label="Phone Number" type="tel" placeholder="e.g 555-555-5555" message-when-pattern-mismatch="Please enter a 10 digit number" pattern="[\0-9]{5}-[0-9]{3}-[0-9]{4}|[0-9]{3}-[0-9]{3}-[0-9]{4}|[0-9]{10}|[\0-9]{5}[0-9]{7}|[\0-9]{5}\s[0-9]{3}-[0-9]{4}" required  ></lightning-input>
+        <lightning-input name="SF_BillTo_Email__c" type="Email" onchange={handleChange} label="Email Address"
+            value={customerRecord.SF_BillTo_Email__c} required></lightning-input>
+        <lightning-input name="SF_BillTo_Fax__c" onchange={handleChange} value={customerRecord.SF_BillTo_Fax__c} message-when-pattern-mismatch="Please enter a 10 digit number" pattern="[\0-9]{5}-[0-9]{3}-[0-9]{4}|[0-9]{3}-[0-9]{3}-[0-9]{4}|[0-9]{10}|[\0-9]{5}[0-9]{7}|[\0-9]{5}\s[0-9]{3}-[0-9]{4}"
+            label="Fax Number" type="tel" ></lightning-input>
+
+        
+    </div>
+
+
+
+    <div class="card">
+        <h1 class="message">Ship To <i>(shipping location receiving the goods)</i></h1>
+        <p class="checkbox"><B>Please check the checkbox to copy phone, Address and other information from Sold To account, otherwise proceed to enter this information manually.</B>
+            <lightning-input type="checkbox" label="" onchange={handleInfo} name="SF_ShipTo_"></lightning-input>
+            </p>
+        <lightning-input name="SF_ShipTo_Company_Legal_Name__c" onchange={handleChange} label="Company Legal Name"
+            value={customerRecord.SF_ShipTo_Company_Legal_Name__c} required></lightning-input>
+        <lightning-input name="SF_ShipTo_Doing_Business_As__c" onchange={handleChange} label="Doing Business As"
+            value={customerRecord.SF_ShipTo_Doing_Business_As__c} required></lightning-input>
+            <!-- Attn -->
+            <lightning-input name="SF_ShipTo_Attn__c" onchange={handleChange} label="Attn"
+            value={customerRecord.SF_ShipTo_Attn__c} ></lightning-input>
+        <lightning-input name="SF_ShipTo_Address_1__c" onchange={handleChange} label="Address (line 1)"
+            value={customerRecord.SF_ShipTo_Address_1__c} required></lightning-input>
+        <lightning-input name="SF_ShipTo_Address_2__c" onchange={handleChange} label="Address (line 2)"
+            value={customerRecord.SF_ShipTo_Address_2__c} ></lightning-input>
+        <lightning-input name="SF_ShipTo_District_County__c" onchange={handleChange} value={customerRecord.SF_ShipTo_District_County__c}
+            label="District/County" ></lightning-input>
+        <lightning-input name="SF_ShipTo_City" onchange={handleChangeCity} label="City"
+            value={Address.SF_ShipTo_City} required></lightning-input>
+        <lightning-input name="SF_ShipTo_State" onchange={handleChangeCity} label="Province/State"
+            value={Address.SF_ShipTo_State} required></lightning-input>
+        <lightning-input name="SF_ShipTo_PostalCode" onchange={handleChangeCity} label="Postal Code"
+            value={Address.SF_ShipTo_PostalCode} required></lightning-input>
+            <lightning-combobox name="SF_ShipTo_Country__c"
+            label="Countries"
+            placeholder="Select Country"
+            options={countryOptions}
+            onchange={handleCountryChange}
+            value={customerRecord.SF_ShipTo_Country__c}
+            >
+</lightning-combobox>
+        <lightning-input name="SF_ShipTo_Phone__c" onchange={handleChange} value={customerRecord.SF_ShipTo_Phone__c}
+            label="Phone Number" type="tel" placeholder="e.g 555-555-5555" message-when-pattern-mismatch="Please enter a 10 digit number" pattern="[\0-9]{5}-[0-9]{3}-[0-9]{4}|[0-9]{3}-[0-9]{3}-[0-9]{4}|[0-9]{10}|[\0-9]{5}[0-9]{7}|[\0-9]{5}\s[0-9]{3}-[0-9]{4}" required  ></lightning-input>
+        <lightning-input name="SF_ShipTo_Email__c" type="Email" onchange={handleChange} label="Email Address"
+            value={customerRecord.SF_ShipTo_Email__c} required></lightning-input>
+        <lightning-input name="SF_ShipTo_Fax__c" onchange={handleChange} value={customerRecord.SF_ShipTo_Fax__c} message-when-pattern-mismatch="Please enter a 10 digit number" pattern="[\0-9]{5}-[0-9]{3}-[0-9]{4}|[0-9]{3}-[0-9]{3}-[0-9]{4}|[0-9]{10}|[\0-9]{5}[0-9]{7}|[\0-9]{5}\s[0-9]{3}-[0-9]{4}"
+            label="Fax Number" type="tel" ></lightning-input>
+
+        
+    </div>
+
+    <div class="card">
+        <h1 class="message">Additional Ship To <i>(shipping location receiving the goods)</i></h1>
+        <p class="checkbox"><B>Please check the checkbox to copy phone, Address and other information from Sold To account, otherwise proceed to enter this information manually.</B>
+            <lightning-input type="checkbox" label="" onchange={handleInfo} name="SF_AddShipTo_"></lightning-input>
+            </p>
+        <lightning-input name="SF_AddShipTo_Company_Legal_Name__c" onchange={handleChange} label="Company Legal Name"
+            value={customerRecord.SF_AddShipTo_Company_Legal_Name__c} ></lightning-input>
+        <lightning-input name="SF_AddShipTo_Doing_Business_As__c" onchange={handleChange} label="Doing Business As"
+            value={customerRecord.SF_AddShipTo_Doing_Business_As__c} ></lightning-input>
+            <!-- Attn -->
+            <lightning-input name="SF_AddShipTo_Attn__c" onchange={handleChange} label="Attn"
+            value={customerRecord.SF_AddShipTo_Attn__c} ></lightning-input>
+        <lightning-input name="SF_AddShipTo_Address_1__c" onchange={handleChange} label="Address (line 1)"
+            value={customerRecord.SF_AddShipTo_Address_1__c} ></lightning-input>
+        <lightning-input name="SF_AddShipTo_Address_2__c" onchange={handleChange} label="Address (line 2)"
+            value={customerRecord.SF_AddShipTo_Address_2__c} ></lightning-input>
+        <lightning-input name="SF_AddShipTo_District_County__c" onchange={handleChange} value={customerRecord.SF_AddShipTo_District_County__c}
+            label="District/County" ></lightning-input>
+        <lightning-input name="SF_AddShipTo_City" onchange={handleChangeCity} label="City"
+            value={Address.SF_AddShipTo_City} ></lightning-input>
+        <lightning-input name="SF_AddShipTo_State" onchange={handleChangeCity} label="Province/State"
+            value={Address.SF_AddShipTo_State} ></lightning-input>
+        <lightning-input name="SF_AddShipTo_PostalCode" onchange={handleChangeCity} label="Postal Code"
+            value={Address.SF_AddShipTo_PostalCode} ></lightning-input>
+            <lightning-combobox name="SF_AddShipTo_Country__c"
+            label="Countries"
+            placeholder="Select Country"
+            options={countryOptions}
+            onchange={handleCountryChange}
+            value={customerRecord.SF_AddShipTo_Country__c}
+            >
+</lightning-combobox>
+        <lightning-input name="SF_AddShipTo_Phone__c" onchange={handleChange} value={customerRecord.SF_AddShipTo_Phone__c} message-when-pattern-mismatch="Please enter a 10 digit number"
+            label="Phone Number" type="tel" pattern="[\0-9]{5}-[0-9]{3}-[0-9]{4}|[0-9]{3}-[0-9]{3}-[0-9]{4}|[0-9]{10}|[\0-9]{5}[0-9]{7}|[\0-9]{5}\s[0-9]{3}-[0-9]{4}" placeholder="e.g 555-555-5555"  ></lightning-input>
+        <lightning-input name="SF_AddShipTo_Email__c" type="Email" onchange={handleChange} label="Email Address"
+            value={customerRecord.SF_AddShipTo_Email__c} ></lightning-input>
+        <lightning-input name="SF_AddShipTo_Fax__c" onchange={handleChange} value={customerRecord.SF_AddShipTo_Fax__c} message-when-pattern-mismatch="Please enter a 10 digit number" pattern="[\0-9]{5}-[0-9]{3}-[0-9]{4}|[0-9]{3}-[0-9]{3}-[0-9]{4}|[0-9]{10}|[\0-9]{5}[0-9]{7}|[\0-9]{5}\s[0-9]{3}-[0-9]{4}"
+            label="Fax Number" type="tel" ></lightning-input>
+
+        
+    </div>
+
+    <div class="card">
+        <h1 class="message">Additional Ship To <i>(shipping location receiving the goods)</i></h1>
+        <p class="checkbox"><B>Please check the checkbox to copy phone, Address and other information from Sold To account, otherwise proceed to enter this information manually.</B>
+            <lightning-input type="checkbox" label="" onchange={handleInfo} name="SF_Add2ShipTo_"></lightning-input>
+            </p>
+        <lightning-input name="SF_Add2ShipTo_Company_Legal_Name__c" onchange={handleChange} label="Company Legal Name"
+            value={customerRecord.SF_Add2ShipTo_Company_Legal_Name__c} ></lightning-input>
+        <lightning-input name="SF_Add2ShipTo_Doing_Business_As__c" onchange={handleChange} label="Doing Business As"
+            value={customerRecord.SF_Add2ShipTo_Doing_Business_As__c} ></lightning-input>
+            <!-- Attn -->
+            <lightning-input name="SF_Add2ShipTo_Attn__c" onchange={handleChange} label="Attn"
+            value={customerRecord.SF_Add2ShipTo_Attn__c} ></lightning-input>
+        <lightning-input name="SF_Add2ShipTo_Address_1__c" onchange={handleChange} label="Address (line 1)"
+            value={customerRecord.SF_Add2ShipTo_Address_1__c} ></lightning-input>
+        <lightning-input name="SF_Add2ShipTo_Address_2__c" onchange={handleChange} label="Address (line 2)"
+            value={customerRecord.SF_Add2ShipTo_Address_2__c} ></lightning-input>
+        <lightning-input name="SF_Add2ShipTo_District_County__c" onchange={handleChange} value={customerRecord.SF_Add2ShipTo_District_County__c}
+            label="District/County" ></lightning-input>
+        <lightning-input name="SF_Add2ShipTo_City" onchange={handleChangeCity} label="City"
+            value={Address.SF_Add2ShipTo_City} ></lightning-input>
+        <lightning-input name="SF_Add2ShipTo_State" onchange={handleChangeCity} label="Province/State"
+            value={Address.SF_Add2ShipTo_State} ></lightning-input>
+        <lightning-input name="SF_Add2ShipTo_PostalCode" onchange={handleChangeCity} label="Postal Code"
+            value={Address.SF_Add2ShipTo_PostalCode} ></lightning-input>
+            <lightning-combobox name="SF_Add2ShipTo_Country__c"
+            label="Countries"
+            placeholder="Select Country"
+            options={countryOptions}
+            onchange={handleCountryChange}
+            value={customerRecord.SF_Add2ShipTo_Country__c}
+            >
+</lightning-combobox>
+        <lightning-input name="SF_Add2ShipTo_Phone__c" onchange={handleChange} value={customerRecord.SF_Add2ShipTo_Phone__c} message-when-pattern-mismatch="Please enter a 10 digit number"
+            label="Phone Number" type="tel" pattern="[\0-9]{5}-[0-9]{3}-[0-9]{4}|[0-9]{3}-[0-9]{3}-[0-9]{4}|[0-9]{10}|[\0-9]{5}[0-9]{7}|[\0-9]{5}\s[0-9]{3}-[0-9]{4}"  placeholder="e.g 555-555-5555" ></lightning-input>
+        <lightning-input name="SF_Add2ShipTo_Email__c" type="Email" onchange={handleChange} label="Email Address"
+            value={customerRecord.SF_Add2ShipTo_Email__c} ></lightning-input>
+        <lightning-input name="SF_Add2ShipTo_Fax__c" onchange={handleChange} value={customerRecord.SF_Add2ShipTo_Fax__c} message-when-pattern-mismatch="Please enter a 10 digit number" pattern="[\0-9]{5}-[0-9]{3}-[0-9]{4}|[0-9]{3}-[0-9]{3}-[0-9]{4}|[0-9]{10}|[\0-9]{5}[0-9]{7}|[\0-9]{5}\s[0-9]{3}-[0-9]{4}"
+            label="Fax Number" type="tel" ></lightning-input>
+
+        
+    </div>
+
+
+    <div class="card">
+        <h1 class="message">Purchasing Contact</h1>
+        <p class="checkbox"><B>Please check the checkbox to copy phone, name and other information from Contact, otherwise proceed to enter this information manually.</B>
+            <lightning-input type="checkbox" label="" onchange={handleContactInfo} name="SF_Purchasing_"></lightning-input>
+            </p>
+        <lightning-input name="SF_Purchasing_Contact_Name__c" pattern="[a-zA-Z\s]{2,}" onchange={handleChange} label="Name"
+        value={customerRecord.SF_Purchasing_Contact_Name__c} required></lightning-input>
+
+        <lightning-input name="SF_Purchasing_Contact_Phone__c" onchange={handleChange} label="Phone Number" type="tel" pattern="[\0-9]{5}-[0-9]{3}-[0-9]{4}|[0-9]{3}-[0-9]{3}-[0-9]{4}|[0-9]{10}|[\0-9]{5}[0-9]{7}|[\0-9]{5}\s[0-9]{3}-[0-9]{4}"
+        value={customerRecord.SF_Purchasing_Contact_Phone__c} placeholder="e.g 555-555-5555" message-when-pattern-mismatch="Please enter a 10 digit number" required></lightning-input>
+    
+        <lightning-input name="SF_Purchasing_Contact_Email__c" onchange={handleChange} label="Email"
+        value={customerRecord.SF_Purchasing_Contact_Email__c} type="Email" required></lightning-input>
+
+        <lightning-input name="SF_Purchasing_Contact_Fax__c" onchange={handleChange} value={customerRecord.SF_Purchasing_Contact_Fax__c} message-when-pattern-mismatch="Please enter a 10 digit number" pattern="[\0-9]{5}-[0-9]{3}-[0-9]{4}|[0-9]{3}-[0-9]{3}-[0-9]{4}|[0-9]{10}|[\0-9]{5}[0-9]{7}|[\0-9]{5}\s[0-9]{3}-[0-9]{4}"
+            label="Fax Number" type="tel" ></lightning-input>
+        
+        <lightning-input name="SF_Purchasing_Contact_Web_User_ID__c" onchange={handleChange} value={customerRecord.SF_Purchasing_Contact_Web_User_ID__c}
+            label="Web User ID (needed if Internet ordering)"  ></lightning-input>
+        
+        <lightning-input name="SF_Purchasing_Contact_Password__c" onchange={handleChange} value={customerRecord.SF_Purchasing_Contact_Password__c}
+            label="Password (needed if Internet ordering)"  ></lightning-input>
+            <br>
+            <br>
+        <h1 class="message">MSDS Contact (required)</h1>
+        <p class="checkbox"><B>Please check the checkbox to copy phone, name and other information from Contact, otherwise proceed to enter this information manually.</B>
+            <lightning-input type="checkbox" label="" onchange={handleContactInfo} name="SF_MSDS_"></lightning-input>
+            </p>
+        <lightning-input name="SF_MSDS_Contact_Name__c" pattern="[a-zA-Z\s]{2,}" onchange={handleChange} label="Name"
+        value={customerRecord.SF_MSDS_Contact_Name__c} required></lightning-input>
+
+       <lightning-input name="SF_MSDS_Contact_Phone__c" onchange={handleChange} label="Phone Number" message-when-pattern-mismatch="Please enter a 10 digit number" placeholder="e.g 555-555-5555" type="tel" pattern="[\0-9]{5}-[0-9]{3}-[0-9]{4}|[0-9]{3}-[0-9]{3}-[0-9]{4}|[0-9]{10}|[\0-9]{5}[0-9]{7}|[\0-9]{5}\s[0-9]{3}-[0-9]{4}"
+        value={customerRecord.SF_MSDS_Contact_Phone__c} required ></lightning-input>
+    
+    
+       <lightning-input name="SF_MSDS_Contact_Email__c" onchange={handleChange} label="Email"
+        value={customerRecord.SF_MSDS_Contact_Email__c} type="Email" required></lightning-input>
+
+        <lightning-input name="SF_MSDS_Contact_Fax__c" onchange={handleChange} value={customerRecord.SF_MSDS_Contact_Fax__c} message-when-pattern-mismatch="Please enter a 10 digit number" pattern="[\0-9]{5}-[0-9]{3}-[0-9]{4}|[0-9]{3}-[0-9]{3}-[0-9]{4}|[0-9]{10}|[\0-9]{5}[0-9]{7}|[\0-9]{5}\s[0-9]{3}-[0-9]{4}"
+            label="Fax Number" type="tel" ></lightning-input>
+
+            <lightning-combobox name="SF_MSDS_Contact_Language__c"
+            label="Language"
+            placeholder="Select Language"
+            options={languageOptions}
+            onchange ={handleChange}
+            value={customerRecord.SF_MSDS_Contact_Language__c}
+            required>
+    </lightning-combobox>
+
+    </div>
+
+
+
+    <div class="card">
+        
+        <h1 class="message">Billing/Credit Contact</h1>
+        <p class="checkbox"><B>Please check the checkbox to copy phone, name and other information from Contact, otherwise proceed to enter this information manually.</B>
+            <lightning-input type="checkbox" label="" onchange={handleContactInfo} name="SF_Billing_"></lightning-input>
+            </p>
+        <lightning-input name="SF_Billing_Contact_Name__c" onchange={handleChange} pattern="[a-zA-Z\s]{2,}" label="Name"
+        value={customerRecord.SF_Billing_Contact_Name__c} required></lightning-input>
+
+        <lightning-input name="SF_Billing_Contact_Phone__c" onchange={handleChange} label="Phone Number" message-when-pattern-mismatch="Please enter a 10 digit number" placeholder="e.g 555-555-5555" type="tel" pattern="[\0-9]{5}-[0-9]{3}-[0-9]{4}|[0-9]{3}-[0-9]{3}-[0-9]{4}|[0-9]{10}|[\0-9]{5}[0-9]{7}|[\0-9]{5}\s[0-9]{3}-[0-9]{4}"
+        value={customerRecord.SF_Billing_Contact_Phone__c} required></lightning-input>
+    
+        <lightning-input name="SF_Billing_Contact_Email__c" onchange={handleChange} label="Email"
+        value={customerRecord.SF_Billing_Contact_Email__c} type="Email" required></lightning-input>
+
+        <lightning-input name="SF_Billing_Contact_Fax__c" onchange={handleChange} value={customerRecord.SF_Billing_Contact_Fax__c} message-when-pattern-mismatch="Please enter a 10 digit number" pattern="[\0-9]{5}-[0-9]{3}-[0-9]{4}|[0-9]{3}-[0-9]{3}-[0-9]{4}|[0-9]{10}|[\0-9]{5}[0-9]{7}|[\0-9]{5}\s[0-9]{3}-[0-9]{4}"
+            label="Fax Number" type="tel" ></lightning-input>
+            <br>
+            <br>
+            <h1 class="message">Technical Contact</h1>
+            <p class="checkbox"><B>Please check the checkbox to copy phone, name and other information from Contact, otherwise proceed to enter this information manually.</B>
+                <lightning-input type="checkbox" label="" onchange={handleContactInfo} name="SF_Technical_"></lightning-input>
+                </p>
+            <lightning-input name="SF_Technical_Contact_Name__c" onchange={handleChange} pattern="[a-zA-Z\s]{2,}" label="Name"
+            value={customerRecord.SF_Technical_Contact_Name__c} ></lightning-input>
+    
+            <lightning-input name="SF_Technical_Contact_Phone__c" onchange={handleChange} label="Phone Number" message-when-pattern-mismatch="Please enter a 10 digit number" placeholder="e.g 555-555-5555" type="tel" pattern="[\0-9]{5}-[0-9]{3}-[0-9]{4}|[0-9]{3}-[0-9]{3}-[0-9]{4}|[0-9]{10}|[\0-9]{5}[0-9]{7}|[\0-9]{5}\s[0-9]{3}-[0-9]{4}"
+            value={customerRecord.SF_Technical_Contact_Phone__c} ></lightning-input>
+        
+            <lightning-input name="SF_Technical_Contact_Email__c" onchange={handleChange} label="Email"
+            value={customerRecord.SF_Technical_Contact_Email__c} type="Email" ></lightning-input>
+    
+            <lightning-input name="SF_Technical_Contact_Fax__c" onchange={handleChange} value={customerRecord.SF_Technical_Contact_Fax__c} message-when-pattern-mismatch="Please enter a 10 digit number" pattern="[\0-9]{5}-[0-9]{3}-[0-9]{4}|[0-9]{3}-[0-9]{3}-[0-9]{4}|[0-9]{10}|[\0-9]{5}[0-9]{7}|[\0-9]{5}\s[0-9]{3}-[0-9]{4}"
+                label="Fax Number" type="tel" ></lightning-input>
+                <br>
+                <br>
+        <h1 class="message">Receiving Contact</h1>
+        <p class="checkbox"><B>Please check the checkbox to copy phone, name and other information from Contact, otherwise proceed to enter this information manually.</B>
+            <lightning-input type="checkbox" label="" onchange={handleContactInfo} name="SF_Receiving_"></lightning-input>
+            </p>
+        <lightning-input name="SF_Receiving_Contact_Name__c" onchange={handleChange} pattern="[a-zA-Z\s]{2,}" label="Name"
+        value={customerRecord.SF_Receiving_Contact_Name__c} ></lightning-input>
+
+        <lightning-input name="SF_Receiving_Contact_Phone__c" onchange={handleChange} label="Phone Number" message-when-pattern-mismatch="Please enter a 10 digit number" placeholder="e.g 555-555-5555" type="tel" pattern="[\0-9]{5}-[0-9]{3}-[0-9]{4}|[0-9]{3}-[0-9]{3}-[0-9]{4}|[0-9]{10}|[\0-9]{5}[0-9]{7}|[\0-9]{5}\s[0-9]{3}-[0-9]{4}"
+        value={customerRecord.SF_Receiving_Contact_Phone__c} ></lightning-input>
+    
+        <lightning-input name="SF_Receiving_Contact_Email__c" onchange={handleChange} label="Email"
+        value={customerRecord.SF_Receiving_Contact_Email__c} type="Email" ></lightning-input>
+
+        <lightning-input name="SF_Receiving_Contact_Fax__c" onchange={handleChange} value={customerRecord.SF_Receiving_Contact_Fax__c} message-when-pattern-mismatch="Please enter a 10 digit number" pattern="[\0-9]{5}-[0-9]{3}-[0-9]{4}|[0-9]{3}-[0-9]{3}-[0-9]{4}|[0-9]{10}|[\0-9]{5}[0-9]{7}|[\0-9]{5}\s[0-9]{3}-[0-9]{4}"
+            label="Fax Number" type="tel" ></lightning-input>
+
+        
+    
+    </div>
+
+    <c-captcha onvalidated={onCaptchaValidated}></c-captcha>
+
+    <div if:false={isLoaded}>
+        <div class="slds-backdrop slds-backdrop_open">
+          <lightning-spinner
+            alternative-text="Loading..."
+            variant="brand"
+            size="large"
+          >
+          </lightning-spinner>
+        </div>
+      </div>
+
+</template>

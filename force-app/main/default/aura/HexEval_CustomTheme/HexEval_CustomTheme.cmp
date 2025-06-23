@@ -1,0 +1,50 @@
+<aura:component implements="forceCommunity:themeLayout" access="global" description="Sample Custom Theme Layout">
+    <aura:attribute name="search" type="Aura.Component[]" required="false"/>
+    <aura:attribute name="profileMenu" type="Aura.Component[]" required="false"/>
+    <aura:attribute name="navBar" type="Aura.Component[]" required="false"/>
+    <aura:attribute name="newHeader" type="Aura.Component[]" required="false"/>
+     <aura:attribute name="pageHeader" type="Aura.Component[]" required="false"/>
+         <aura:attribute name="body" type="Aura.Component[]" required="false"/>
+
+    <div>
+        <div class="slds-col slds-size_12-of-12 slds-no-print" style='padding-top: 25px;padding-left: 16px; padding-bottom: 25px;    border-bottom: 1px solid #ababab; background-color: #f1f1f1'>
+            <div class='slds-grid  slds-size_12-of-12'>
+                <div class='slds-col slds-size_2-of-12' style=''>
+                    <!-- <a href = "/SolenisExperienceCloud/s" > <img style='width:228px;' src="{!$Resource.sitelogo}" ></img></a> -->
+                    <a href = "/hexeval/s" > <img style='width:228px;' src="{!$Resource.Solenis_Site_Logo_HexEval}" ></img></a>
+                </div>
+                <div class="slds-col slds-size_8-of-12" style='text-align:center'>
+                    <h3 style= 'font-size: 30px;'>HexEval</h3>
+                    <h3 style= 'font-size: 20px;'>Predicting your success!</h3>
+                </div>
+                <div class="profileMenuRegion slds-col slds-size_2-of-12 text-align:right">
+                    {!v.profileMenu}
+                </div>
+            </div>
+            
+        </div>
+        <!--  <div class="searchRegion">
+           
+        </div> -->
+        
+        <!-- <div class="navigation">
+            {!v.navBar}
+        </div> -->
+        <div class="newHeader">
+            {!v.newHeader}
+        </div>
+         
+           
+        <div  class="mainContentArea">
+             <div class="contentHeader">
+                {!v.pageHeader}
+            </div>
+            <div >
+                 {!v.body}
+            </div>
+            
+           
+        </div>
+          
+    </div>
+</aura:component>

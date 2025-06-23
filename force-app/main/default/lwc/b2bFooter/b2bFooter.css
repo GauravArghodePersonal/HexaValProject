@@ -1,0 +1,33 @@
+.topFooter{
+    background: #7aa5ba;
+    padding: 15px 30px;
+    color: #fff;
+}
+a {
+    color: #fff;
+}
+.center {
+    text-align: center;
+}
+.slds-list_horizontal {
+    display: inline-flex;
+}
+.bottomFooter{
+    background: #17344c;
+    padding: 0px 15px;
+    color: #fff;
+}
+.right {
+    text-align: right;
+}
+.pad15 {
+    padding: 15px;
+}
+.footerIcons{
+    display: inline-flex;
+    width: 100%;
+    justify-content: flex-end;
+}
+.footerIcons > a{
+    padding: 0 5px;
+}

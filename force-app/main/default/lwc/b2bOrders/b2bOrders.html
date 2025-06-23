@@ -1,0 +1,119 @@
+<template>
+    <template if:true={loadingflag}>
+         <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+    </template>
+    
+    <template if:true={ordersflag}>
+        <!--<lightning-button-menu menu-alignment="right" tooltip="Sort by" alternative-text="Sort By" variant="border-filled" slot="actions" onselect={handleOnselectSort}>
+            <lightning-menu-item value="DateSort" label="Sort BY Date"></lightning-menu-item>
+            <lightning-menu-item value="OrderNumberSort" label="Sort By Order Number"></lightning-menu-item>
+        </lightning-button-menu>-->
+        <br/>
+        <div class="slds-grid slds-wrap" style="width: 90%;
+                                                margin: 0 auto;">
+            <div class="slds-col slds-size_11-of-12" >
+                <br/>
+            </div>
+            <div class="slds-col slds-size_1-of-12" style="text-align: right;
+                                                           padding: 0px 5px 0px 0px; ">
+                <img src={sorticonurl} style="width: 25px;cursor: pointer;" title="Sort" onclick={showList}>
+                <div if:true={showdropdown} class="slds-dropdown slds-dropdown_actions slds-dropdown_right" style="right: 110px;">
+                    <ul class="slds-dropdown__list" role="menu">
+                        <li class="slds-dropdown__item" role="presentation">
+                            <a href="javascript:void(0);" role="menuitem" tabindex="0" data-sort="DateSort" onclick={handleOnselectSort}>
+                                <span class="slds-truncate" title="Sort BY Date">Sort BY Date</span>
+                            </a>
+                        </li>
+                        <li class="slds-dropdown__item" role="presentation" data-sort="OrderNumberSort" onclick={handleOnselectSort}>
+                            <a href="javascript:void(0);" role="menuitem" tabindex="-1">
+                                <span class="slds-truncate" title="Sort By Order Number">Sort By Order Number</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <div class="slds-grid slds-wrap">
+            <div class="slds-col slds-size_12-of-12" >
+                <div class="slds-card slds-var-p-around_x-small box">
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-col slds-size_6-of-12" >
+                            <div class="slds-text-align_left title">YOUR ORDERS/TRACKING</div>
+                        </div>
+                        <div class="slds-col slds-size_6-of-12" >
+                            <div class="slds-text-align_right tright">{pageStartIndex}-{pageEndIndex} of {orderCount} Orders</div>
+                        </div>
+                    </div>
+                    <!--<lightning-button-icon  icon-name="utility:down" variant="border-filled" alternative-text="Show More" slot="actions"></lightning-button-icon>-->
+                    
+                    <div class="slds-crd slds-var-p-around_x-small">
+                        <template if:true={orderShowList}>
+                            <template if:true={orderShowList.length}>
+                                <div class="content">
+                                    <div class="slds-gri slds-wrap">
+                                        <lightning-layout multiple-rows>
+                                            <hr class="hr"/>
+                                            <lightning-layout-item  class="slds-border_top slds-border_bottom" size="12"  small-device-size="3" medium-device-size="6" large-device-size="3" >
+                                                <div class="tableheader">ORDER NUMBER</div>
+                                            </lightning-layout-item>
+                                            <lightning-layout-item class="slds-border_top slds-border_bottom"  size="12" small-device-size="3" medium-device-size="6" large-device-size="2" >
+                                                <div class="tableheader">P.O. NUMBER</div>
+                                            </lightning-layout-item>
+                                            <lightning-layout-item class="slds-border_top slds-border_bottom"   size="12" small-device-size="3" medium-device-size="6" large-device-size="3" >
+                                                <div class="tableheader">ORDER STATUS</div>
+                                            </lightning-layout-item>
+                                            <lightning-layout-item class="slds-border_top slds-border_bottom"  size="12" small-device-size="3" medium-device-size="6" large-device-size="2" >
+                                                <div class="tableheader">DATE PLACED</div>
+                                            </lightning-layout-item>
+                                            <lightning-layout-item class="slds-border_top slds-border_bottom"  size="12" small-device-size="3" medium-device-size="6" large-device-size="2" >
+                                                <div class="tableheader">SHIP TO NUMBER</div>
+                                            </lightning-layout-item>
+                                            <hr class="hr"/>
+                                            <hr class="hr"/>
+                                            <!-- heading Complete-->
+                                            <template for:each={orderShowList} for:item="order">
+                                                <lightning-layout-item key={order.OrderID} size="12" padding="around-small" small-device-size="3" medium-device-size="6" large-device-size="3" >
+                                                    <div class="tableHyperlink" key={order.orderID}>
+                                                        <a class="tableHyperlink"  data-item={order.orderID} onclick={orderclickHandler}>{order.sapOrderNumber}</a>
+                                                    </div>
+                                                </lightning-layout-item>
+                                                <lightning-layout-item key={order.OrderID} size="12" padding="around-small" small-device-size="3" medium-device-size="6" large-device-size="2" >
+                                                    <div class="tableChild" key={order.OrderID}>{order.poNumber}</div>
+                                                </lightning-layout-item>
+                                                <lightning-layout-item key={order.OrderID} size="12" padding="around-small" small-device-size="3" medium-device-size="6" large-device-size="3" >
+                                                    <div class="tableChild" key={order.OrderID}>{order.status}</div>
+                                                </lightning-layout-item>
+                                                <lightning-layout-item key={order.OrderID} size="12" padding="around-small" small-device-size="3" medium-device-size="6" large-device-size="2" >
+                                                    <!-- <div class="tableChild" key={order.OrderID}>{order.effectivedate}</div> -->
+                                                    <lightning-formatted-date-time class="tableChild" key={order.OrderID} value={order.effectivedate}></lightning-formatted-date-time>
+                                                </lightning-layout-item>
+                                                  <lightning-layout-item key={order.OrderID} size="12" padding="around-small" small-device-size="3" medium-device-size="6" large-device-size="2" >
+                                                    <div class="tableChild" key={order.OrderID}>{order.ShiptoNumber}</div>
+                                                </lightning-layout-item>
+                                            </template>
+                                        </lightning-layout>
+                                    </div>
+                                </div>
+                            </template>
+                            <template if:false={orderShowList.length}>
+                                <p>No Orders found</p>
+                            </template>
+                        </template>
+                    </div>
+                </div>
+            </div>
+
+            <br/>
+            <!-- Product Pagination Component here-->
+            <div class="slds-grid slds-wrap" style="width: 90%;
+                                                    margin: 20px auto;">
+                <div class="slds-col slds-size_12-of-12" >
+                    <div if:true={orderCount}>
+                        <c-b2b-pagination page-size={pageSize} record-count={orderCount} oncallpagechange={pageChange}></c-b2b-pagination>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+</template>

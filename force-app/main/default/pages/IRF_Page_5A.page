@@ -1,0 +1,212 @@
+<apex:page controller="IRF_Controller" action="{!initAction5}"
+           sidebar="false" tabStyle="Pending_Approvals__tab">
+
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-1.6.2.min.js')}" />
+
+    <apex:form id="form1">
+    <apex:pageMessages escape="false"/>
+    <apex:pageBlock Title="IRF Monthly Data - Pending Approval" mode="edit">
+    <apex:pageBlockButtons location="top">
+        <apex:actionStatus id="pbbStatus">
+            <apex:facet name="start">
+                <apex:outputText styleClass="bold" value=" Please wait ...">
+                    <apex:image value="{!$Resource.spinner}"/>
+                </apex:outputText>
+            </apex:facet>
+            <apex:facet name="stop">
+                <apex:outputPanel >
+                <apex:commandButton value="Approve Selected Items"
+                    rerender="form1" status="pbbStatus"
+                    action="{!approveImds}" />
+                <apex:commandButton value="Reject Selected Items"
+                    rerender="form1" status="pbbStatus"
+                    action="{!rejectImds}" />
+                </apex:outputPanel>
+            </apex:facet>
+        </apex:actionStatus>
+    </apex:pageBlockButtons>
+    
+    <apex:pageBlockSection columns="1">
+
+        <apex:pageBlockSectionItem >
+            <apex:outputLabel value="Approve / Reject Comments:"/>
+
+            <apex:inputTextArea title="Approve / Reject Comments" 
+                                styleClass="txta1" value="{!userComments}"/>
+
+        </apex:pageBlockSectionItem>
+
+        <apex:pageBlockSectionItem >
+            <apex:outputPanel layout="block">
+                <table class="tbl1">
+		            <tr><td class="note1" colspan="99">
+                        Note : Any records selected in this page will be 
+                        deselected on changing to another page<br/></td></tr>
+                    <tr><td class="center" width="20%">
+                        <apex:outputText value="Records: {!pc7.recordFrom} - {!pc7.recordTo} of {!pc7.resultSize}" 
+                                         styleClass="nowrap"/></td>
+
+                    <td class="center" width="60%">
+                        <apex:actionStatus id="pageControls">
+                            <apex:facet name="start">
+                                <apex:outputText styleClass="bold" value=" Please wait ...">
+                                    <apex:image value="{!$Resource.spinner}"/>
+                                </apex:outputText>
+                            </apex:facet>
+                            <apex:facet name="stop">
+                            <apex:outputPanel >
+                            <apex:outputText value="Rows Per Page:"/>&nbsp;
+                            <apex:selectList id="pageSize" value="{!pc7.pageSize}" size="1" title="Rows Per Page:">
+                                <apex:actionSupport event="onchange" action="{!pc7Size}" 
+                                                rerender="form1" status="pageControls"/>
+                                <apex:selectOption itemLabel="20" itemValue="20"/>
+                                <apex:selectOption itemLabel="50" itemValue="50"/>
+                                <apex:selectOption itemLabel="100" itemValue="100"/>
+                                <apex:selectOption itemLabel="200" itemValue="200"/>
+                            </apex:selectList>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <apex:commandButton action="{!pc7Frst}" disabled="{!NOT(pc7.hasPrevious)}" 
+                                                rerender="form1" status="pageControls"
+                                                title="First Page" value="<<"/>&nbsp;&nbsp;
+                            <apex:commandButton action="{!pc7Prev}" disabled="{!NOT(pc7.hasPrevious)}" 
+                                                rerender="form1" status="pageControls"
+                                                title="Prev Page" value="<"/>
+                                                
+                            Previous&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Next&nbsp;
+                            
+                            <apex:commandButton action="{!pc7Next}" disabled="{!NOT(pc7.hasNext)}" 
+                                                rerender="form1" status="pageControls"
+                                                title="Next Page" value=">"/>&nbsp;&nbsp;
+                            <apex:commandButton action="{!pc7Last}" disabled="{!NOT(pc7.hasNext)}" 
+                                                rerender="form1" status="pageControls"
+                                                title="Last Page" value=">>"/>
+                            </apex:outputPanel>
+                        </apex:facet></apex:actionStatus></td>
+
+                    <td class="center" width="20%">
+                        <apex:outputText value="Page: {!pc7.pageNumber} of {!pc7.lastPageNumber}"/></td>
+                    </tr>
+            </table>
+            </apex:outputPanel>
+        </apex:pageBlockSectionItem>
+
+        <apex:pageBlockSectionItem > 
+        
+            <apex:pageBlockTable value="{!imdList}" var="d" styleClass="tbl2" id="tbl2">
+                <apex:column headerClass="right" styleClass="right" width="20px">
+                    <apex:facet name="header">#</apex:facet>
+                    <apex:outputText value="{!d.recNum}"/></apex:column>
+                    
+                <apex:column headerClass="chkbx" styleClass="chkbx" width="20px">
+                    <apex:facet name="header">
+                        <apex:inputCheckbox styleClass="allcb2" value="{!allImds}"
+                            onclick="onClick_AllChkbox('rowcb2', this);"/>
+                    </apex:facet>
+                    <apex:inputCheckbox styleClass="rowcb2" value="{!d.selected}"
+                        onclick="onClick_RowChkbox('rowcb2', 'allcb2');"/></apex:column>
+
+                <apex:column style="width: 1%;" headerClass="nowrap" styleClass="nowrap">
+                    <apex:facet name="header">ShipTo Name</apex:facet>
+                    <apex:outputLink value="/{!d.sobj.IRF__r.ShipTo__c}" target="_blank">
+                    	{!d.sobj.IRF__r.ShipTo__r.Name}
+                    </apex:outputLink>
+                </apex:column>
+
+                <apex:column style="width: 1%;" headerClass="nowrap" styleClass="nowrap">
+                    <apex:facet name="header">ShipTo Address</apex:facet>
+                    <apex:outputPanel >
+                    	{!d.sobj.IRF__r.ShipTo__r.SAP_Street__c},&nbsp;
+                    	{!d.sobj.IRF__r.ShipTo__r.SAP_City__c},&nbsp;
+                    	{!d.sobj.IRF__r.ShipTo__r.SAP_State__c}
+                    </apex:outputPanel>
+                </apex:column>
+
+                <apex:column style="width: 1%;" headerClass="nowrap" styleClass="nowrap">
+                    <apex:facet name="header">ShipTo #</apex:facet>
+                    <apex:outputField value="{!d.sobj.IRF__r.ShipTo__r.AccountNumber}"/>
+                </apex:column>
+
+                <apex:column style="width: 1%;" headerClass="nowrap" styleClass="nowrap">
+                    <apex:facet name="header">SOrg</apex:facet>
+                    <apex:outputField value="{!d.sobj.IRF__r.ShipTo__r.SAP_Sales_Org__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 1%;" headerClass="nowrap" styleClass="nowrap">
+                    <apex:facet name="header">IRF Number</apex:facet>
+                    <apex:outputLink value="/{!d.sobj.IRF__c}" target="_blank">{!d.sobj.IRF__r.Name}</apex:outputLink>
+                </apex:column>
+
+                <apex:column style="width: 1%;" headerClass="nowrap" styleClass="nowrap">
+                    <apex:facet name="header">IMD Number</apex:facet>
+                    <apex:outputLink value="/{!d.sobj.Id}" target="_blank">{!d.sobj.Name}</apex:outputLink>
+                </apex:column>
+
+                <apex:column style="width: 1%;" headerClass="number" styleClass="number">
+                    <apex:facet name="header">Start Date</apex:facet>
+                    <apex:outputField value="{!d.sobj.Start_Date__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 1%;" headerClass="number" styleClass="number">
+                    <apex:facet name="header">End Date</apex:facet>
+                    <apex:outputField value="{!d.sobj.End_Date__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 1%;" styleClass="nowrap">
+                    <apex:facet name="header">Submitted By</apex:facet>
+                    <apex:outputField value="{!d.sobj.Submitted_By__r.Name}"/>
+                </apex:column>
+
+                <apex:column style="width: 1%;" styleClass="nowrap">
+                    <apex:facet name="header">Submitted At</apex:facet>
+                    <apex:outputField value="{!d.sobj.Submitted_DateTime__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 100%;">
+                    <apex:facet name="header">&nbsp;</apex:facet>
+                    <apex:outputText >&nbsp;</apex:outputText>
+                </apex:column>
+
+            </apex:pageBlockTable>
+
+        </apex:pageBlockSectionItem>
+    </apex:pageBlockSection>
+    </apex:pageBlock>
+    </apex:form>
+
+    <script type="text/javascript">
+        var $j = jQuery.noConflict();
+        
+        function onClick_AllChkbox(rowCbClass, allChkbox) {
+            $j("."+rowCbClass).each(function() {
+                if (this.disabled == false) {
+                    this.checked = allChkbox.checked;
+                }
+            });
+        }
+
+        function onClick_RowChkbox(rowCbClass, allCbClass) {
+            var allChkbox = $j("."+allCbClass).get(0);
+            allChkbox.checked = true;
+            $j("."+rowCbClass).each(function() {
+                if (!this.checked) {
+                    allChkbox.checked = false;
+                    return false;
+                }
+            });
+        }
+
+    </script>
+
+    <style>
+        .bold         {font-weight: bold;}
+        .center       {text-align: center;}
+        .right        {text-align: right;}
+        .nowrap       {white-space: nowrap;}
+        .number       {text-align: right; white-space: nowrap;}
+        .note1        {font-size: 100% !important; font-style: italic; font-weight: normal;}
+        .tbl1         {background-color: #f8f8f8; font-weight: bold; width: 100%;}
+        .tbl1 td      {color: #4a4a56; font-size: 91%; text-align: center; white-space: nowrap;}
+        .tbl2 .hdr2   {text-decoration: underline !important;}
+        .tbl2 .chkbx  {margin-left: 0px !important;}
+        .txta1        {height: 30px; width: 98%; resize: none; overflow: auto;}
+    </style>
+</apex:page>

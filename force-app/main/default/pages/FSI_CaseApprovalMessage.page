@@ -1,0 +1,7 @@
+<apex:page standardController="Case">
+    <apex:form >
+  
+      <font color="red" size="4PX" ><center>Click submit for approval after review.</center></font>
+  
+    </apex:form>
+</apex:page>

@@ -1,0 +1,10 @@
+<template>
+<div id='contactus'>
+<br/>
+<center onclick={handleContactUs}>For any queries? <!--<a href="/SolenisEshop/s/contactus/" class="sub-heading register-heading">Contact us</a> -->
+<a class="sub-heading register-heading">Contact us</a></center>
+</div>
+<template if:true={contactusCheck}>
+    <c-b2b-contactus-details></c-b2b-contactus-details>
+</template>
+</template>

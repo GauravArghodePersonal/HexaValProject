@@ -1,0 +1,9 @@
+<apex:page id="MainPage"
+           showHeader="false" 
+           cache="true"
+           standardController="ValueAdvantage__c"
+           extensions="vdpInternalCustomePDFController"
+           contentType="application/x-pdf#Internal_{!VpdList[0].Name}.pdf">
+    <apex:include pageName="vdpInternalCustomePDF"/>
+                   
+</apex:page>

@@ -1,0 +1,16 @@
+<template>
+    <lightning-card title="Files" icon-name="standard:document">
+        <template if:true={files}>
+            <ul class="slds-m-around_medium">
+                <template for:each={files} for:item="file">
+                    <li key={file.downloadLink}>
+                        {file.title} - <a href={file.downloadLink} download target="_blank">Download</a>
+                    </li>
+                </template>
+            </ul>
+        </template>
+        <template if:true={error}>
+            <p class="slds-m-around_medium">{error}</p>
+        </template>
+    </lightning-card>
+</template>

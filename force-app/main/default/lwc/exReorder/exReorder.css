@@ -1,0 +1,486 @@
+.Main {
+    
+    width: 90%;  
+    padding: 10px;
+    margin: auto;
+    border: 1px solid #999999;
+    
+  }
+  .alignment{
+    align-content: center;
+    float: center;
+    text-align: center;
+    padding: 10px;
+  }
+  .error {
+    align-content: center;
+    float: center;
+    text-align: center;
+    padding: 10px;
+    color: red;
+    font-weight: bold;
+  }
+  .Table {
+    
+    width: 80%;  
+    padding: 10px;
+    margin: auto;   
+    align-content: center;
+    float: center;
+    text-align: center;
+  }
+  td{
+    padding: 1px;
+  }
+  .datestd{
+    padding: 1px;
+    padding-top: 40px ;
+  }
+  .datestd1{
+    padding-top:18px;
+  }
+
+  .error {
+    padding: 10px;
+    color: red;
+  }
+  .info{
+    color: rgb(105, 15, 15);
+  }
+
+  .blink{		
+	  color: red;
+			
+	}
+	.spanblink{		
+		color: red;
+		animation: blink 10s linear infinite;
+	}
+@keyframes blink{
+    0%{opacity: 0;}
+    50%{opacity: .5;}
+    100%{opacity: 1;}
+}
+.modal{
+  display: block !important; /* I added this to see the modal, you don't need this */
+}
+
+/* Important part */
+.modal-dialog{
+  overflow-y: initial !important
+}
+.modal-body{
+  height: 250px;
+  overflow-y: auto;
+}
+.vl {
+  border-left: 3px solid red;
+  height: 20px;
+}
+.exampleHolder{
+  position: relative;
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+}
+.isa_warning {
+  color: #9F6000;
+  background-color: #FEEFB3;
+
+  margin:10px 22px;
+  font-size:1em;
+  vertical-align:middle;
+}
+
+.modal-container{
+  width: 1130px;
+  height: 629px;
+  border-radius: 7px;
+  background: #FFF;
+  margin: auto;
+}
+
+.exorder-modal-button{
+  color: white;
+  background-color: #4A82F9;
+  font-size: 16px;
+  /* font-family: DIN; */
+  font-style: normal;
+  font-weight: 500;
+  width: 87px;
+  height: 45px;
+  padding: 13px 11px 12px;
+  border-radius: 5px;
+  border-style: none;
+  margin-right: 12px;
+  margin-top: 51px;
+  margin-bottom: 21px;
+
+}
+
+.exorder-modal-submit-button{
+  color: white;
+  background-color: #4A82F9;
+  font-size: 16px;
+  /* font-family: DIN; */
+  font-style: normal;
+  font-weight: 500;
+  width: auto;
+  height: 45px;
+  padding: 13px 11px 12px 12px;
+  border-radius: 5px;
+  border-style: none;
+  margin-right: 12px;
+  margin-top: 51px;
+  margin-bottom: 21px;
+  margin-left: 12px;
+}
+
+.exorder-modal-submit-button-grey{
+  background-color: #7AA5BA;
+  color: white;
+  font-size: 16px;
+  /* font-family: DIN; */
+  font-style: normal;
+  font-weight: 500;
+  width: auto;
+  height: 45px;
+  padding: 13px 11px 12px 12px;
+  border-radius: 5px;
+  border-style: none;
+  margin-right: 12px;
+  margin-top: 51px;
+  margin-bottom: 21px;
+  margin-left: 12px;
+}
+
+.exrecords-body-container{
+  width: 1062px;
+  border-radius: 19px;
+  border: 1px solid #000;
+  height: 479px;
+  margin: auto;
+  
+}
+
+.modal-table{
+  margin: 51px 64px 0px 70px;
+}
+.order-type{
+  width:101px;
+  height: 29px;
+  font-size: 20px;
+  /* font-family: DIN; */
+  font-style: normal;
+  font-weight: 400;
+  line-height: 28px;
+}
+
+.order-type-options{
+  width: 275px;
+  border-radius: 13px;
+  background: #F1F1F1;
+}
+
+.pilot-user-container{
+  width: 1062px;
+  height: 397px;
+  border-radius: 19px;
+  border: 1px solid #000;
+  background: #FFF;
+  margin: auto;
+}
+
+.record-container  {
+  width: 1062px;
+  height: 406px;
+  margin: auto;
+  border-radius: 19px;
+  border: 1px solid #000;
+  background: #FFF;
+  padding-left: 32px;
+  padding-right: 23px;
+  padding-top: 24px;
+  padding-bottom:5px;
+  overflow: auto; /* changed "scroll" to "auto" */
+}
+
+.record-heading {
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.record-container::-webkit-scrollbar {
+  display: none;
+
+}
+
+.ship-to{
+width: 262px;
+height: 37px;
+border-radius: 7px;
+background: rgba(217, 217, 217, 0.54);
+}
+
+.order-header{
+  width: 1020px;
+  height: 37px;
+  border-radius: 7px;
+  padding:5px 0px 13px 5px;
+  background: rgba(217, 217, 217, 0.54);
+}
+
+.standard-billing{
+width: 275.981px;
+height: 36px;
+border-radius: 13px;
+border: 1px solid rgba(0, 0, 0, 0.17);
+background: #F1F1F1;
+}
+
+
+.text-bold{
+font-size: 16px;
+/* font-family: DIN; */
+font-style: normal;
+font-weight: 400;
+line-height: 28px;
+}
+
+.request-delivery-inputs{
+   padding: 5px;
+}
+.request-delivery-inputs:focus{
+  outline: none;
+}
+
+.modal-input{
+  margin-top: 26px;
+  padding: 15px;
+  border-radius: 6px;
+  border-color: grey;
+}
+.modal-input:focus{
+  outline: none;
+}
+ .table-container{
+    width: 1062px;
+    height: 397px;
+    border-radius: 19px;
+    border: 1px solid #000;
+    padding:18px 17px 0px 24px;
+    overflow: auto;
+    margin: auto;
+ }
+ .table-container::-webkit-scrollbar {
+  display: none;
+}
+.table-heading-container{
+  width: 1022px;
+  height: 37px;
+  background-color: rgba(217, 217, 217, 0.54);
+ 
+}
+.table-heading{
+  width:122px;
+  padding: 5px 4px 9px 15px;
+  font-size: 16px;
+  /* font-family: DIN; */
+  font-weight: 600;
+  color:#17344C;
+  text-overflow: ellipsis; 
+}
+.table-heading-checkbox{
+  width:122px;
+  padding: 5px 4px 9px 15px;
+}
+
+.table-data{
+  padding: 36px 5px 35px 15px;
+  border-bottom: 1px solid grey;
+  font-size: 14px;
+  /* font-family: DIN; */
+  font-weight: 400;
+  color: #17344C;
+}
+
+.table-data-check{
+  width:"122px";
+  padding: 5px 4px 9px 15px;
+  border-bottom: 1px solid grey;
+}
+
+.slds-backdrop{
+  opacity: 20%;
+}
+
+.slds-trunc{
+  padding-top:3px;
+}
+
+.exorder-modal-submit-button-addMaterial{
+  width: 199px;
+  height: 45px;
+  top: 527px;
+  left: 783px;
+  color: white;
+  background-color: #4A82F9;
+  font-size: 16px;
+  /* font-family: DIN; */
+  font-style: normal;
+  font-weight: 500;
+  border-radius: 5px;
+  border-style: none;
+  Margin:6px 6px 6px 6px;
+
+}
+.exorder-modal-submit-button-cancelMaterial{
+  width: 87px;
+  height: 45px;
+  top: 527px;
+  left: 994px;
+  color: white;
+  background-color: #4A82F9;
+  font-size: 16px;
+  /* font-family: DIN; */
+  font-style: normal;
+  font-weight: 500;
+ border-radius: 5px;
+border-style: none;
+Margin:6px 6px 6px 6px;
+}
+
+.exorder-modal-submit-button-searchMaterial{
+  width: 87px;
+  height: 45px;
+  top: 166px;
+  left: 517px;
+  color: white;
+  background-color: #4A82F9;
+  font-size: 16px;
+  /* font-family: DIN; */
+  font-style: normal;
+  font-weight: 500;
+  border-radius: 5px;
+  border-style: none;
+  Margin:6px 6px 6px 6px;
+
+}
+
+.centerModal{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.exorder-addmaterial-container{
+  width: 1130px;
+  height: 629px;
+  border-radius: 7px;
+  background: #FFF;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.exorder-add-material-table-container{
+    width: 1062px;
+    height: 453px;
+    border-radius: 19px;
+    border: 1px solid #000;
+    background: #FFF;
+    overflow: auto;
+    padding: 23px 17px 23px 23px;
+}
+.exorder-add-material-table-container::-webkit-scrollbar {
+  display: none;
+}
+
+.exorder-addmaterial-footer{
+  align-self: end;
+  box-shadow: none;
+  border: none;
+  margin: 5px;
+}
+
+.closeButton{
+  top:-2px;
+  right: 5px;
+}
+
+.exorder-modal-button-bg-color{
+  background-color: #7AA5BA !important;
+  padding:10px 10px 16px 11px;
+}
+
+.warning-modal-container{
+  opacity: 1;
+    visibility: visible;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 10000;
+}
+
+
+/* Media query for small screens */
+@media only screen and (max-width: 600px) {
+  .modal-container {
+    width: 90%;
+    height: 70%;
+  }
+  .table-container{
+    width: 90%;
+    height: 66%;
+    margin: 5%;
+    overflow-x: auto;
+  }
+
+  .table-container::-webkit-scrollbar:horizontal{
+    display: block;
+  }
+  .record-container{
+     width: 90%;
+    height: 70%;
+  }
+  .exorder-addmaterial-container{
+    width: 90%;
+    height: 70%;
+    padding: 5%;
+  }
+  .exorder-add-material-table-container{
+     width: 90%;
+    height: 66%;
+    overflow-x: auto;
+  }
+}
+
+/* Media query for medium screens */
+@media only screen and (min-width: 601px) and (max-width: 1024px) {
+  .modal-container {
+    width: 70%;
+    height: 65%;
+    margin: 10% auto;
+  }
+  .table-container{
+    width: 90%;
+    height: 70%;
+    overflow-x: scroll;
+  }
+  .record-container{
+    width: 80%;
+    height: 60%;
+  }
+   .exorder-addmaterial-container{
+    width: 80%;
+    height: 60%;
+  }
+  .exorder-add-material-table-container{
+    width: 90%;
+    height: 70%;
+    overflow-x: scroll;
+  }
+}

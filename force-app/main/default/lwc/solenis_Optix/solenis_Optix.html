@@ -1,0 +1,48 @@
+<template>
+    <div class='heading'>Optix</div>
+    <div class='caption'>Be proactive using Solenis’ powerful AI tools</div>
+    <div class="slds-card__body_inner slds-p-around_x-small">
+        <!-- Start bear list -->
+        <template if:true={tileList}>
+            <lightning-layout multiple-rows="true" pull-to-boundary="small">
+                <template for:each={tileList} for:item="tile">
+                    <lightning-layout-item key={tile.Id} class="slds-var-p-around_xx-small">
+                        <!-- size="3"  -->
+                        <!-- Start bear tile -->
+                        <div title={tile.Name} class="bear-tile">
+                            <div class="bg-image" style={tile.bgImage}></div>
+                            <div class="centered-element">
+                                <div class="slds-text-align_center tileValue">{tile.Value}</div>
+                                <div class="slds-text-align_center tileCaption">{tile.Caption}</div>
+                            </div>
+                            <div class="bottom-element-left">
+                                <div class="compare">Compare &nbsp;<img alt="Collapse" src={compareButton} height="10" width="10"/></div>
+                            </div>
+                            <div class="bottom-element-right">
+                                <img alt="Collapse" class="flipButton" src={flipButton} height="20" width="20"/>
+                            </div>
+                        </div>
+                        <!-- End bear tile -->
+                    </lightning-layout-item>
+                </template>
+            </lightning-layout>
+            <div class="slds-clearfix">
+                <div class="slds-float_right slds-m-top_medium">
+                    <a href="javascript:void(0)" class="visitPortal">
+                        <span class="slds-m-right_xx-small ">Visit the Portal</span>
+                        <svg class="slds-button__icon slds-button__icon_medium" aria-hidden="true">
+                            <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#chevronright"></use>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </template>
+        <!-- End bear list -->
+        <!-- Data failed to load -->
+        <template if:true={error}>
+            <div class="slds-text-color_error">
+                An error occurred while loading the bear list
+            </div>
+        </template>
+    </div>
+</template>

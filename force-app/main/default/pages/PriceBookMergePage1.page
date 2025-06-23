@@ -1,0 +1,586 @@
+<apex:page standardController="Price_Book__c" 
+           extensions="PriceBookMergeController"
+           action="{!init}" id="thePage" sidebar="false"
+           tabStyle="Price_Book__c">
+
+    <apex:includeScript value="{!URLFOR($Resource.VIResources, 'js/jquery-1.4.2.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.VIResources, 'js/utils.js')}" />
+    <apex:includeScript value="{!$Resource.PendingApprovalFunctions}" />
+    <script language="javascript">
+        jQuery.noConflict();
+        jQuery(function() {disableButtonsOnSubmit("{!$Component.theForm}");});
+        function focus(id) {document.getElementById(id).focus();}
+        function getConfirm(q) {a = confirm(q); return (a != 0);}
+        function validateForm(f) {
+            var msg = '';
+            if (!paf_checkForAtleastOneRowSelection(f, 'rowcb')) {
+                msg += '*** None selected to Update ***\n\n';
+            }
+            if (msg != '') {alert(msg); return false;}
+            return true;
+        }
+        window.onload = function() {focus('{!$Component.thePage}');}
+    </script>
+
+    <apex:variable var="listSize" value="15"/>
+    <apex:variable var="decimals" value="4"/>
+    <apex:variable var="locale" value="{!userLocale}"/>
+    <apex:form id="theForm">
+    <apex:pageMessages />
+    
+    <apex:tabPanel activeTabClass="activeTab"
+                   tabClass="tabStyle"
+                   headerSpacing="4" 
+                   switchType="client" 
+                   value="{!activeTab}"
+                   rendered="{!pageBlockNumber = 1}">    
+
+        <apex:tab labelWidth="96px" label="Price Book Details" name="tabDChan">
+            <apex:pageBlock title="Price Book Details">
+            <apex:panelGrid columns="2" cellpadding="5px" 
+                            columnClasses="textAlignRight,textAlignLeft">
+                <apex:panelGroup >
+                    <apex:outputLabel value="Distribution Channel : "
+                                      styleClass="bold"/>
+                </apex:panelGroup>
+                <apex:panelGroup >
+                    <apex:selectRadio value="{!distChanCode}" 
+                                      layout="lineDirection"
+                                      required="true">
+                        <apex:selectOption itemValue="10" itemEscaped="false" 
+                                           itemLabel="10 - AHWT &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" />
+                    </apex:selectRadio>
+                </apex:panelGroup>
+
+                <apex:panelGroup >
+                    <apex:outputLabel value="Division : "
+                                      styleClass="bold"/>
+                </apex:panelGroup>
+                <apex:panelGroup >
+                    <apex:selectRadio value="{!divisionCode}" 
+                                      layout="lineDirection"
+                                      required="true">
+                        <apex:selectOption itemValue="11" itemEscaped="false" 
+                                           itemLabel="11 - AHWT &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" />
+                        <apex:selectOption itemValue="13" itemEscaped="false" 
+                                           itemLabel="13 - StreamLink &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/>
+                        <apex:selectOption itemValue="14" itemEscaped="false"
+                                           itemLabel="14 - Growth Verticals &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/>
+                    </apex:selectRadio>
+                </apex:panelGroup>
+
+                <apex:panelGroup >
+                    <apex:outputLabel value="PriceBook Status : "
+                                      styleClass="bold"/>
+                </apex:panelGroup>
+                <apex:panelGroup >
+                    <apex:selectCheckboxes value="{!pbStats}" 
+                                           layout="lineDirection">
+                        <apex:selectOption itemValue="Active" itemEscaped="false" 
+                                           itemLabel="Active&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" />
+                        <apex:selectOption itemValue="Draft" itemEscaped="false" 
+                                           itemLabel="Draft"/>
+                    </apex:selectCheckboxes>
+                </apex:panelGroup>
+
+                <apex:panelGroup >
+                    <apex:actionStatus id="dcstat1">
+                        <apex:facet name="start">
+                            <apex:outputText escape="false" styleClass="centerBtns" 
+                                             value=" Please wait ... ">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop">
+                            <apex:commandButton action="{!getSapSalesOrgs}"
+                                                value=" Get Sales Orgs » "
+                                                rerender="theForm" status="dcstat1"/>
+                        </apex:facet>
+                    </apex:actionStatus>
+                </apex:panelGroup>
+            </apex:panelGrid>
+            </apex:pageBlock>
+        </apex:tab>
+
+<!-- -------------------------------------------------- Sales Orgs ------------ -->
+ 
+        <apex:tab labelWidth="96px" label="Sales Orgs" name="tabSOrg">
+
+            <apex:pageBlock title="Sales Orgs">
+            <apex:panelGrid columns="4" id="sorgopts">
+                <apex:selectList value="{!salesOrgs1}" multiSelect="true" 
+                                 size="{!listSize}" styleClass="slist"
+                                 ondblclick="addSalesOrgs2();">
+                    <apex:selectOptions value="{!sorgOpts1}"/>
+                </apex:selectList>
+                <apex:panelGroup >
+                    <apex:actionStatus id="sorgstat1">
+                        <apex:facet name="start">
+                            <apex:outputText escape="false" styleClass="centerBtns" 
+                                             value=" Please wait ... ">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop">
+                            <apex:outputPanel >
+                            <apex:commandButton action="{!addSalesOrgs2}" 
+                                                value=" Add » " 
+                                                rerender="sorgopts" status="sorgstat1"
+                                                styleClass="centerBtns"/>
+                            <br/><br/>
+                            <apex:commandButton action="{!addAllSalesOrgs2}" 
+                                                value=" Add All » " 
+                                                rerender="sorgopts" status="sorgstat1"
+                                                styleClass="centerBtns"/>
+                            <br/><br/>
+                            <apex:commandButton action="{!removeSalesOrgs2}" 
+                                                value=" « Remove "
+                                                rerender="sorgopts" status="sorgstat1"
+                                                styleClass="centerBtns"/>
+                            <br/><br/>
+                            <apex:commandButton action="{!removeAllSalesOrgs2}" 
+                                                value=" « Remove All "
+                                                rerender="sorgopts" status="sorgstat1"
+                                                styleClass="centerBtns"/>
+                            </apex:outputPanel>
+                        </apex:facet>
+                    </apex:actionStatus>
+                </apex:panelGroup>
+                <apex:selectList value="{!salesOrgs2}" multiSelect="true" 
+                                 size="{!listSize}" styleClass="slist"
+                                 ondblclick="removeSalesOrgs2();">
+                    <apex:selectOptions value="{!sorgOpts2}"/>
+                </apex:selectList>
+                <apex:panelGroup >
+                    <apex:actionStatus id="sorgstat2">
+                        <apex:facet name="start">
+                            <apex:outputText escape="false" styleClass="centerBtns" 
+                                             value=" Please wait ... ">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop">
+                            <apex:commandButton action="{!getProductLines}"
+                                                value=" Get SBU (PH2) » "
+                                                rerender="theForm" status="sorgstat2"/>
+                        </apex:facet>
+                    </apex:actionStatus>
+                </apex:panelGroup>
+            </apex:panelGrid>
+            <apex:actionFunction name="addSalesOrgs2" action="{!addSalesOrgs2}"
+                                 rerender="sorgopts" status="sorgstat1"/> 
+            <apex:actionFunction name="removeSalesOrgs2" action="{!removeSalesOrgs2}"
+                                 rerender="sorgopts" status="sorgstat1"/> 
+            </apex:pageBlock>
+        </apex:tab>
+
+<!-- ---------------------------------------- ProductLines ------------ -->
+<!-- ---------------------------------------- ProdcutLines Label changed to SBU for PH Project------------ -->
+ 
+        <apex:tab labelWidth="96px" label="SBU (PH2)" name="tabPH6">
+            <apex:pageBlock title="SBU (PH2)">
+            <apex:panelGrid columns="4" id="ph6opts">
+                <apex:selectList value="{!ph6s1}" multiSelect="true" 
+                                 size="{!listSize}" styleClass="slist"
+                                 ondblclick="addPh6s2();">
+                    <apex:selectOptions value="{!ph6Opts1}"/>
+                </apex:selectList>
+                <apex:panelGroup >
+                    <apex:actionStatus id="ph6stat1">
+                        <apex:facet name="start">
+                            <apex:outputText escape="false" styleClass="centerBtns" 
+                                             value=" Please wait ... ">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop">
+                            <apex:outputPanel >
+                            <apex:commandButton action="{!addPh6s2}" 
+                                                value=" Add » " 
+                                                rerender="ph6opts" status="ph6stat1"
+                                                styleClass="centerBtns"/>
+                            <br/><br/>
+                            <apex:commandButton action="{!addAllPh6s2}" 
+                                                value=" Add All » " 
+                                                rerender="ph6opts" status="ph6stat1"
+                                                styleClass="centerBtns"/>
+                            <br/><br/>
+                            <apex:commandButton action="{!removePh6s2}" 
+                                                value=" « Remove "
+                                                rerender="ph6opts" status="ph6stat1"
+                                                styleClass="centerBtns"/>
+                            <br/><br/>
+                            <apex:commandButton action="{!removeAllPh6s2}" 
+                                                value=" « Remove All "
+                                                rerender="ph6opts" status="ph6stat1"
+                                                styleClass="centerBtns"/>
+                            </apex:outputPanel>
+                        </apex:facet>
+                    </apex:actionStatus>
+                </apex:panelGroup>
+                <apex:selectList value="{!ph6s2}" multiSelect="true" 
+                                 size="{!listSize}" styleClass="slist"
+                                 ondblclick="removePh6s2();">
+                    <apex:selectOptions value="{!ph6Opts2}"/>
+                </apex:selectList>
+                <apex:panelGroup >
+                    <apex:actionStatus id="ph6stat2">
+                        <apex:facet name="start">
+                            <apex:outputText escape="false" styleClass="centerBtns" 
+                                             value=" Please wait ... ">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop">
+                            <apex:commandButton action="{!getProductFamilies}"
+                                                value=" Get Business (PH1) » "
+                                                rerender="theForm" status="ph6stat2"/>
+                        </apex:facet>
+                    </apex:actionStatus>
+                </apex:panelGroup>
+            </apex:panelGrid>
+            <apex:actionFunction name="addPh6s2" action="{!addPh6s2}"
+                                 rerender="ph6opts" status="ph6stat1"/> 
+            <apex:actionFunction name="removePh6s2" action="{!removePh6s2}"
+                                 rerender="ph6opts" status="ph6stat1"/> 
+            </apex:pageBlock>
+        </apex:tab>
+
+<!-- --------------------------------------- ProductFamilies ------------ -->
+<!-- --------------------------------------- ProductFamilies Label changed to Business for PH Project------------ -->
+ 
+        <apex:tab labelWidth="96px" label="Business (PH1)" name="tabPH5">
+            <apex:pageBlock title="Business (PH1)">
+            <apex:panelGrid columns="4" id="ph5opts">
+                <apex:selectList value="{!ph5s1}" multiSelect="true" 
+                                 size="{!listSize}" styleClass="slist"
+                                 ondblclick="addPh5s2();">
+                    <apex:selectOptions value="{!ph5Opts1}"/>
+                </apex:selectList>
+                <apex:panelGroup >
+                    <apex:actionStatus id="ph5stat1">
+                        <apex:facet name="start">
+                            <apex:outputText escape="false" styleClass="centerBtns" 
+                                             value=" Please wait ... ">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop">
+                            <apex:outputPanel >
+                            <apex:commandButton action="{!addPh5s2}" 
+                                                value=" Add » " 
+                                                rerender="ph5opts" status="ph5stat1"
+                                                styleClass="centerBtns"/>
+                            <br/><br/>
+                            <apex:commandButton action="{!addAllPh5s2}" 
+                                                value=" Add All » " 
+                                                rerender="ph5opts" status="ph5stat1"
+                                                styleClass="centerBtns"/>
+                            <br/><br/>
+                            <apex:commandButton action="{!removePh5s2}" 
+                                                value=" « Remove "
+                                                rerender="ph5opts" status="ph5stat1"
+                                                styleClass="centerBtns"/>
+                            <br/><br/>
+                            <apex:commandButton action="{!removeAllPh5s2}" 
+                                                value=" « Remove All "
+                                                rerender="ph5opts" status="ph5stat1"
+                                                styleClass="centerBtns"/>
+                            </apex:outputPanel>
+                        </apex:facet>
+                    </apex:actionStatus>
+                </apex:panelGroup>
+                <apex:selectList value="{!ph5s2}" multiSelect="true" 
+                                 size="{!listSize}" styleClass="slist"
+                                 ondblclick="removePh5s2();">
+                    <apex:selectOptions value="{!ph5Opts2}"/>
+                </apex:selectList>
+                <apex:panelGroup >
+                    <apex:actionStatus id="ph5stat2">
+                        <apex:facet name="start">
+                            <apex:outputText escape="false" styleClass="centerBtns" 
+                                             value=" Please wait ... ">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop">
+                            <apex:commandButton action="{!getRegions}"
+                                                value=" Get Regions » "
+                                                rerender="theForm" status="ph5stat2"/>
+                        </apex:facet>
+                    </apex:actionStatus>
+                </apex:panelGroup>
+            </apex:panelGrid>
+            <apex:actionFunction name="addPh5s2" action="{!addPh5s2}"
+                                 rerender="ph5opts" status="ph5stat1"/> 
+            <apex:actionFunction name="removePh5s2" action="{!removePh5s2}"
+                                 rerender="ph5opts" status="ph5stat1"/> 
+            </apex:pageBlock>
+        </apex:tab>
+
+<!-- --------------------------------------- Regions ------------ -->
+ 
+        <apex:tab labelWidth="96px" label="Regions" name="tabRegn">
+            <apex:pageBlock title="Regions">
+            <apex:panelGrid columns="4" id="regionopts">
+                <apex:selectList value="{!regions1}" multiSelect="true" 
+                                 size="{!listSize}" styleClass="slist"
+                                 ondblclick="addRegions2();">
+                    <apex:selectOptions value="{!regionOpts1}"/>
+                </apex:selectList>
+                <apex:panelGroup >
+                    <apex:actionStatus id="regionstat1">
+                        <apex:facet name="start">
+                            <apex:outputText escape="false" styleClass="centerBtns" 
+                                             value=" Please wait ... ">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop">
+                            <apex:outputPanel >
+                            <apex:commandButton action="{!addRegions2}" 
+                                                value=" Add » " 
+                                                rerender="regionopts" status="regionstat1"
+                                                styleClass="centerBtns"/>
+                            <br/><br/>
+                            <apex:commandButton action="{!addAllRegions2}" 
+                                                value=" Add All » " 
+                                                rerender="regionopts" status="regionstat1"
+                                                styleClass="centerBtns"/>
+                            <br/><br/>
+                            <apex:commandButton action="{!removeRegions2}" 
+                                                value=" « Remove "
+                                                rerender="regionopts" status="regionstat1"
+                                                styleClass="centerBtns"/>
+                            <br/><br/>
+                            <apex:commandButton action="{!removeAllRegions2}" 
+                                                value=" « Remove All "
+                                                rerender="regionopts" status="regionstat1"
+                                                styleClass="centerBtns"/>
+                            </apex:outputPanel>
+                        </apex:facet>
+                    </apex:actionStatus>
+                </apex:panelGroup>
+                <apex:selectList value="{!regions2}" multiSelect="true" 
+                                 size="{!listSize}" styleClass="slist"
+                                 ondblclick="removeRegions2();">
+                    <apex:selectOptions value="{!regionOpts2}"/>
+                </apex:selectList>
+                <apex:panelGroup >
+                    <apex:actionStatus id="regionstat2">
+                        <apex:facet name="start">
+                            <apex:outputText escape="false" styleClass="centerBtns" 
+                                             value=" Please wait ... ">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop">
+                            <apex:commandButton action="{!getCustomerGroups}"
+                                                value=" Get Customer Groups » "
+                                                rerender="theForm" status="regionstat2"/>
+                        </apex:facet>
+                    </apex:actionStatus>
+                </apex:panelGroup>
+            </apex:panelGrid>
+            <apex:actionFunction name="addRegions2" action="{!addRegions2}"
+                                 rerender="regionopts" status="regionstat1"/> 
+            <apex:actionFunction name="removeRegions2" action="{!removeRegions2}"
+                                 rerender="regionopts" status="regionstat1"/> 
+            </apex:pageBlock>
+        </apex:tab>
+
+<!-- ----------------------------------- Customer Groups ------------ -->
+ 
+        <apex:tab labelWidth="96px" label="Customer Groups" name="tabCGrp">
+            <apex:pageBlock title="Customer Groups">
+            <apex:panelGrid columns="4" id="custGrpopts">
+                <apex:selectList value="{!custGrps1}" multiSelect="true" 
+                                 size="{!listSize}" styleClass="slist"
+                                 ondblclick="addCustGrps2();">
+                    <apex:selectOptions value="{!custGrpOpts1}"/>
+                </apex:selectList>
+                <apex:panelGroup >
+                    <apex:actionStatus id="custGrpstat1">
+                        <apex:facet name="start">
+                            <apex:outputText escape="false" styleClass="centerBtns" 
+                                             value=" Please wait ... ">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop">
+                            <apex:outputPanel >
+                            <apex:commandButton action="{!addCustGrps2}" 
+                                                value=" Add » " 
+                                                rerender="custGrpopts" status="custGrpstat1"
+                                                styleClass="centerBtns"/>
+                            <br/><br/>
+                            <apex:commandButton action="{!addAllCustGrps2}" 
+                                                value=" Add All » " 
+                                                rerender="custGrpopts" status="custGrpstat1"
+                                                styleClass="centerBtns"/>
+                            <br/><br/>
+                            <apex:commandButton action="{!removeCustGrps2}" 
+                                                value=" « Remove "
+                                                rerender="custGrpopts" status="custGrpstat1"
+                                                styleClass="centerBtns"/>
+                            <br/><br/>
+                            <apex:commandButton action="{!removeAllCustGrps2}" 
+                                                value=" « Remove All "
+                                                rerender="custGrpopts" status="custGrpstat1"
+                                                styleClass="centerBtns"/>
+                            </apex:outputPanel>
+                        </apex:facet>
+                    </apex:actionStatus>
+                </apex:panelGroup>
+                <apex:selectList value="{!custGrps2}" multiSelect="true" 
+                                 size="{!listSize}" styleClass="slist"
+                                 ondblclick="removeCustGrps2();">
+                    <apex:selectOptions value="{!custGrpOpts2}"/>
+                </apex:selectList>
+                <apex:panelGroup >
+                    <apex:actionStatus id="custGrpstat2">
+                        <apex:facet name="start">
+                            <apex:outputText escape="false" styleClass="centerBtns" 
+                                             value=" Please wait ... ">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop">
+                            <apex:commandButton action="{!getPriceBooks}"
+                                                value=" Get Price Books » "
+                                                rerender="theForm" status="custGrpstat2"/>
+                        </apex:facet>
+                    </apex:actionStatus>
+                </apex:panelGroup>
+            </apex:panelGrid>
+            <apex:actionFunction name="addCustGrps2" action="{!addCustGrps2}"
+                                 rerender="custGrpopts" status="custGrpstat1"/> 
+            <apex:actionFunction name="removeCustGrps2" action="{!removeCustGrps2}"
+                                 rerender="custGrpopts" status="custGrpstat1"/> 
+            </apex:pageBlock>
+        </apex:tab>
+
+    </apex:tabPanel>
+<!-- ---------------------------------- PriceBooks -------------------------- -->
+
+        <apex:pageBlock title="Price Books"
+                        rendered="{!pageBlockNumber = 2}">
+            <table width="100%"><tr><td align="center">
+                <apex:outputPanel >
+                    <apex:commandButton action="{!gotoPageBlock1}"
+                                        value=" « Back to Search "/>&nbsp;
+                    <apex:commandButton action="{!selectPriceBooks}" 
+                                        rendered="{!showPBSelectBtn}"
+                                        value=" Select Price Books » "/>
+                    <apex:commandButton action="{!mergePriceBooks}" 
+                                        rendered="{!showPBMergeBtn}"
+                                        value=" Merge Price Books » "/>
+                </apex:outputPanel><br/><br/>
+                <apex:outputPanel rendered="{!showPBMergeBtn}">
+                    <apex:outputLabel for="pbDesc" value="New PriceBook Description : " styleClass="bold"/>
+                    <apex:inputText id="pbDesc" value="{!pbDescription}" maxLength="250" size="150"/>
+                </apex:outputPanel><br/><br/>
+            </td></tr></table><br/>
+            <apex:pageBlockTable id="list" value="{!pblist}" var="p"
+                                 rowClasses="row1,row2"
+                                 style="font-size: 80%;">
+                                 
+                <apex:column width="2%" rendered="{!showPBSelectCBs}">
+                    <apex:facet name="header">
+                        <apex:inputCheckbox id="allcb" value="{!allSelected}"
+                            onclick="paf_checkAll(this.form, this, 'rowcb')" />
+                    </apex:facet>
+                    <apex:inputCheckbox id="rowcb" value="{!p.selected}"
+                        onclick="paf_toggleAllCheckbox(this.form, this);" />
+                </apex:column>
+
+                <apex:column width="5%">
+                    <apex:facet name="header">Price Book</apex:facet>
+                    <apex:outputPanel >
+                        <apex:outputLink value="/{!p.priceBook.Id}"> 
+                            <apex:outputField value="{!p.priceBook.Name}"/>
+                        </apex:outputLink><br/><br/>
+                        <apex:outputField value="{!p.priceBook.Record_Status__c}"/>
+                    </apex:outputPanel>
+                </apex:column>
+
+                <apex:column width="15%">
+                    <apex:facet name="header">Description</apex:facet>
+                    <apex:outputPanel >
+                        <apex:outputField value="{!p.priceBook.Description__c}"/>
+                        <br/><br/>Number of Materials :&nbsp; 
+                        <apex:outputField value="{!p.priceBook.Number_of_Materials_on_Price_Book__c}"/>
+                    </apex:outputPanel>
+                </apex:column>
+
+                <apex:column width="5%">
+                    <apex:facet name="header">Dist.Chan</apex:facet>
+                    <apex:outputText value="{!p.priceBook.Dist_Channel_Description__c} - {!p.priceBook.Dist_Channel_Code__c}"/>
+                </apex:column>
+
+                <apex:column width="5%">
+                    <apex:facet name="header">Division</apex:facet>
+                    <apex:outputText value="{!p.priceBook.Division_Description__c} - {!p.priceBook.Division_Code__c}"/>
+                </apex:column>
+
+                <apex:column width="10%">
+                    <apex:facet name="header">SalesOrgs</apex:facet>
+                    <apex:outputText escape="false" value="{!p.salesOrgs}"/>
+                </apex:column>
+
+                <apex:column width="10%">
+                    <apex:facet name="header">ProductLines</apex:facet>
+                    <apex:outputText escape="false" value="{!p.productLines}"/>
+                </apex:column>
+
+                <apex:column width="10%">
+                    <apex:facet name="header">ProductFamilies</apex:facet>
+                    <apex:outputText escape="false" value="{!p.families}"/>
+                </apex:column>
+
+                <apex:column width="5%">
+                    <apex:facet name="header">Regions</apex:facet>
+                    <apex:outputText escape="false" value="{!p.regions}"/>
+                </apex:column>
+
+                <apex:column width="15%">
+                    <apex:facet name="header">CustomerGroups</apex:facet>
+                    <apex:outputText escape="false" value="{!p.customerGroups}"/>
+                </apex:column>
+
+            </apex:pageBlockTable>        
+        </apex:pageBlock>
+
+        <apex:pageBlock rendered="{!pageBlockNumber = 3}">
+            <table width="100%"><tr><td align="center">
+                <apex:outputPanel >
+                    <apex:commandButton action="{!gotoPageBlock1}"
+                                        value=" « Back to Search "/>&nbsp;
+                </apex:outputPanel>
+            </td></tr></table><br/>
+        </apex:pageBlock>
+
+    </apex:form>
+    <style>
+        table.approvers {border-collapse: collapse; empty-cells: show; width: 100%}
+        table.approvers td {border-style: none; padding:0px; white-space: nowrap;}
+        table {border-collapse: collapse;}
+        .textAlignCenter {text-align: center;}
+        .textAlignLeft {text-align: left;}
+        .textAlignRight {text-align: right;}
+        .nowrap {white-space: nowrap;}
+        .bold {font-weight: bold;}
+        .row1 {background-color: #f3f3ec;}
+        .row2 {background-color: #eeecd1;}
+        .centerBtns {font-weight: bold; 
+                     text-align: center; 
+                     width: 94px; 
+                     white-space: nowrap;}
+        .slist {font-family: monospace; font-size: 95%; width: 320px;}
+        .tabStyle {font-family: sans-serif; height: 40px; width: 80px; 
+                   background-color: #f1f1f1; background-image: none; cursor: pointer;}
+        .activeTab {font-family: sans-serif; font-weight: bold; color: white;
+                    height: 40px; width: 80px;
+                    background-color: #9096a1; background-image: none;}
+    </style>
+</apex:page>

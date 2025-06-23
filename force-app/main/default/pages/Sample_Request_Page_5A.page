@@ -1,0 +1,882 @@
+<apex:page controller="Sample_Request_Controller" sidebar="false"
+           tabStyle="Sample_Request__c" action="{!init5A}" id="thePage" lightningStylesheets="true">
+           <apex:slds />
+
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-1.6.2.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-ui-1.8.16.custom.min.js')}" />
+    <style type="text/css">
+        @import "{!URLFOR($Resource.jQuery, 'css/redmond/jquery-ui-1.8.16.custom.css')}";
+    </style>
+
+    <apex:stylesheet value="{!$Resource.SampleRequestStyles}" />
+
+    <apex:sectionHeader title="{!$Label.New_Sample_Request}" subtitle="{!$Label.Step_4}"/>
+
+    <apex:outputPanel id="thePanel" styleClass="p5a-panel1">
+
+        <apex:form id="form1" >
+            <apex:actionFunction action="{!onAquariusClose}" name="onAquariusClose"
+                                immediate="true" rerender="thePanel" status="astat1"/>
+
+            <apex:actionFunction action="{!initAquarius}" name="initAquarius"/>
+
+        </apex:form>
+        <apex:outputPanel >
+        <apex:actionStatus id="astat1">
+            <apex:facet name="start">
+                <apex:outputText styleClass="bold" value=" Please wait">
+                    <apex:image value="{!$Resource.spinner}"/>
+                </apex:outputText>
+            </apex:facet>
+            <apex:facet name="stop">
+                <apex:outputPanel layout="block">
+                <c:Aquarius_Request_Comp1 p_attr1="{!aquariusRequest}"
+                                          rendered="{!renderAquariusForm}"/>
+                </apex:outputPanel>
+            </apex:facet>
+        </apex:actionStatus>
+        </apex:outputPanel>
+
+    <apex:form id="p5a-form2" rendered="{!!renderAquariusForm}">
+
+        <script type="text/javascript">
+            var $j = jQuery.noConflict();
+
+            $j(function() {
+                var f = $j('form[id$=p5a-form2]');
+                //console.log($j(f));
+                $j(f).keypress(function(e) {
+                    var k = e.charCode || e.keyCode || e.which;
+                    //console.log(k);
+                    if (k == 13 && e.target.tagName != 'TEXTAREA') {
+                        e.preventDefault(); return false;
+                    }
+                });
+                var nb2 = $j('[id$=nextBtn2]'); nb2.focus();
+            });
+        </script>
+
+        <apex:actionFunction action="{!addNewMaterial}" name="addNewMaterial"/>
+
+        <apex:pageMessages id="msgs" escape="false"/>
+
+        <apex:outputPanel rendered="{!!renderMatCatalogPB}">
+
+        <center>
+            <apex:commandButton action="{!gotoPage4A}" value="{!$Label.Previous}" immediate="true"/>&nbsp;
+            <apex:commandButton action="{!gotoPage6A}" value="{!$Label.Next}"/>&nbsp;
+            <apex:commandButton action="{!cancel}" value="Cancel" immediate="true" />
+        </center><br/>
+
+        <apex:pageBlock title="{!$Label.Sample_Information}" mode="edit">
+            <apex:include pageName="Sample_Request_Page_1H"/>
+        </apex:pageBlock>
+
+        <apex:pageBlock mode="edit" id="p5a-pb1">
+
+            <center>
+            <apex:panelGrid columns="6" width="100%" cellpadding="4px"
+                            columnClasses="p5acol1,p5acol2">
+                <!-- row 1 -->
+                <apex:panelGroup ><apex:outputText value="Product Dev? :"
+                                     rendered="{!RenderProductDevelopment}"/>
+                                 <apex:outputText value="Package Size :"
+                                     rendered="{!isAHWT}"/></apex:panelGroup>
+                <apex:panelGroup ><apex:inputField value="{!sampleRequest.Product_Development__c}"
+                                     rendered="{!RenderProductDevelopment}"/>
+                   <apex:actionStatus id="nochargeStatus" rendered="{!renderNochargeInput}">
+                       <apex:facet name="start">
+                           <apex:outputText styleClass="bold" value=" Please wait">
+                           <apex:image value="{!$Resource.spinner}"/></apex:outputText></apex:facet>
+                       <apex:facet name="stop"><apex:outputPanel >Commercial
+                        <!--  <span id="commercial-_help" class="helpButton">
+                          <img class="helpOrb" title="" alt="" src="/s.gif"/>
+                           <script type="text/javascript">
+                                sfdcPage.setHelp('commercial', 'Commercially available package size within that sales org. (ie.: pail, drum, bag, tote,etc)');
+                            </script>
+                        </span>-->
+                           <apex:inputCheckbox value="{!commercialOrder}" title="commercial', 'Commercially available package size within that sales org. (ie.: pail, drum, bag, tote,etc)">
+                           <apex:actionSupport event="onclick" action="{!commercialOrderAction}"
+                                               rerender="p5a-form2" status="nochargeStatus"/>
+                           </apex:inputCheckbox>
+                          Non-Commercial
+                          <!-- <span id="noncommercial-_help" class="helpButton">
+                               <img class="helpOrb" title="noncommercial', 'sample size of 50 - 500 ml  (approved sample materials only)" alt="" src="/s.gif"/>
+                              <script type="text/javascript">
+                                   sfdcPage.setHelp('noncommercial', 'sample size of 50 - 500 ml  (approved sample materials only)');
+                               </script>
+                           </span>-->
+                           <apex:inputCheckbox value="{!noncmrcialOrder}" title="noncommercial', 'sample size of 50 - 500 ml  (approved sample materials only)">
+                           <apex:actionSupport event="onclick" action="{!noncmrcialOrderAction}"
+                                               rerender="p5a-form2" status="nochargeStatus"/>
+                           </apex:inputCheckbox>
+                   </apex:outputPanel></apex:facet></apex:actionStatus>
+
+                   <apex:outputField value="{!sampleRequest.No_Charge_Order__c}"
+                                     rendered="{!AND(isAHWT, !renderNochargeInput)}"/>
+                </apex:panelGroup>
+
+                <apex:panelGroup ><apex:outputText value="Oak Creek Samples? :"
+                                     rendered="{!RenderOakCreek}"/></apex:panelGroup>
+                <apex:panelGroup ><apex:inputField id="OakCreek" value="{!sampleRequest.Oak_Creek__c}"
+                                     rendered="{!RenderOakCreek}"/></apex:panelGroup>
+<!--
+                <apex:panelGroup ><apex:outputText value="AST Samples? :"
+                                     rendered="{!RenderASTSamples}"/></apex:panelGroup>
+                <apex:panelGroup ><apex:inputField id="ASTSample" value="{!sampleRequest.AST_Sample__c}"
+                                     onchange="javascript:astalert('{!$Component.ASTSample}')"
+                                     rendered="{!RenderASTSamples}"/></apex:panelGroup>
+-->
+                <apex:panelGroup >&nbsp;</apex:panelGroup>
+                <apex:panelGroup >&nbsp;</apex:panelGroup>
+
+                <!-- row 2 -->
+                <apex:panelGroup ><apex:outputText value="Aquarius Samples? :"
+                                     rendered="{!isASI}"/></apex:panelGroup>
+                <apex:panelGroup ><apex:actionStatus id="aquariusStatus"
+                                     rendered="{!isASI}">
+                       <apex:facet name="start">
+                           <apex:outputText styleClass="bold" value=" {!$Label.Please_Wait} ...">
+                               <apex:image value="{!$Resource.spinner}"/>
+                           </apex:outputText>
+                       </apex:facet>
+                       <apex:facet name="stop"><apex:outputPanel id="aquariusBtn">
+                               <apex:outputField value="{!sampleRequest.Aquarius_Sample__c}"/>
+                               <apex:commandButton oncomplete="closeWaitMsg();"
+                                                   onclick="onAquariusBtnClick();"
+                                                   value="Aquarius Data"/>
+                       </apex:outputPanel></apex:facet></apex:actionStatus></apex:panelGroup>
+
+                <apex:panelGroup ><apex:outputtext value="Carrier :"
+                                     rendered="{!isASI}"/></apex:panelGroup>
+                <apex:panelGroup ><apex:inputfield value="{!sampleRequest.Carrier_Type_for_Sample_Delivery__c}"
+                                     rendered="{!isASI}"/></apex:panelGroup>
+
+                <apex:panelGroup ><apex:outputText value="Small Pack Sale? :"
+                                     rendered="{!renderSmallPackChkbox}"/></apex:panelGroup>
+
+                <apex:panelGroup ><apex:actionStatus id="spSaleStat" rendered="{!renderSmallPackChkbox}">
+                   <apex:facet name="start">
+                       <apex:outputText styleClass="bold" value=" Please wait">
+                           <apex:image value="{!$Resource.spinner}"/>
+                       </apex:outputText>
+                   </apex:facet>
+                   <apex:facet name="stop">
+                       <apex:inputField value="{!sampleRequest.Small_Package_Sale__c}">
+                           <apex:actionSupport event="onclick" action="{!initSmallPackSale}"
+                                               rerender="p5a-form2"
+                                               status="spSaleStat"/>
+                       </apex:inputField>
+                   </apex:facet></apex:actionStatus></apex:panelGroup>
+
+                <!-- row 3 -->
+               <!-- <apex:panelGroup ><apex:outputtext value="Sample Center :"/></apex:panelGroup>-->
+
+                <apex:panelGroup id="sampleCenter"><apex:actionStatus id="sampleCenterStatus"
+                                rendered="{!renderSampleCenterInput}">
+                   <apex:facet name="start">
+                       <apex:outputText styleClass="bold" value=" {!$Label.Please_Wait} ...">
+                           <apex:image value="{!$Resource.spinner}"/>
+                       </apex:outputText>
+                   </apex:facet>
+                   <apex:facet name="stop">
+                       <apex:outputPanel >
+                       <!--<apex:selectList size="1" value="{!sampleRequest.Sample_Center__c}">
+                           <apex:actionSupport event="onchange" action="{!setMatCatalogPC}"
+                                               status="sampleCenterStatus" rerender="p5a-form2"/>
+                           <apex:selectOptions value="{!sampleCenterOpts}"/>
+                       </apex:selectList>-->
+                       </apex:outputPanel>
+                   </apex:facet></apex:actionStatus>
+                <apex:outputField value="{!sampleRequest.Sample_Center__c}"
+                                    rendered="{!!renderSampleCenterInput}"/></apex:panelGroup>
+
+                <apex:panelGroup ><apex:outputtext value="Carrier Account # :"
+                                     rendered="{!isASI}"/></apex:panelGroup>
+                <apex:panelGroup ><apex:inputfield value="{!sampleRequest.Carrier_Account_Number__c}"
+                                     rendered="{!isASI}"/></apex:panelGroup>
+
+                <apex:panelGroup ><apex:outputText value="Shipment Email? :"
+                                      rendered="{!renderShipmntNotify}"/></apex:panelGroup>
+                <apex:panelGroup ><apex:inputField value="{!sampleRequest.Shipment_Notification__c}"
+                                      rendered="{!renderShipmntNotify}"/></apex:panelGroup>
+
+                <!-- row 4 -->
+                <apex:outputText value=""/><apex:outputText value=""/>
+
+                <apex:panelGroup ><apex:outputText value="Lab Contact Name :"
+                                      rendered="{!renderLabContactInput}"/></apex:panelGroup>
+                <apex:panelGroup ><apex:inputField value="{!labContact.OwnerId}" required="false"
+                                      rendered="{!renderLabContactInput}"/></apex:panelGroup>
+
+                <apex:outputText value=""/><apex:outputText value=""/>
+                <!-- row 5 -->
+                <apex:outputText value=""/><apex:outputText value=""/><apex:outputText value=""/>
+
+                <apex:panelGroup ><apex:outputPanel rendered="{!renderLabContactInput}">
+                        Note: for Commercial OR<br/>
+                        Developmental Samples to be<br/>
+                        produced by an Ashland lab,<br/>
+                        please provide an accurate lab<br/>
+                        Contact name. Failure to provide<br/>
+                        this name will result in Sample<br/>
+                        processing delays.<br/>
+                    </apex:outputPanel></apex:panelGroup>
+
+                <apex:outputText value=""/><apex:outputText value=""/>
+            </apex:panelGrid>
+        </center>
+
+        <apex:outputPanel rendered="{!IF(sampleCenterMsg != '', 'true', 'false')}">
+        <br/>&nbsp;&nbsp;&nbsp;&nbsp;
+        <apex:outputText styleClass="{!sampleCenterMsgStyle}" value="{!sampleCenterMsg}"/><br/>
+        </apex:outputPanel><br/>
+        </apex:pageBlock>
+        </apex:outputPanel>
+
+        <apex:outputPanel Id="spSaleSection">
+            <!-- apex:messages / -->
+            <apex:pageBlock mode="edit" rendered="{!renderSmallPackSale}">
+            <apex:facet name="header">
+                <apex:outputPanel layout="block">
+                <table class="bold">
+                    <tr class="pbtr1">
+                        <td class="pbtd11">Small Package Sale</td>
+                        <td class="left" style="vertical-align: middle;">
+                        <apex:actionStatus id="spSaleStat">
+                            <apex:facet name="start">
+                                <apex:outputText styleClass="bold" value=" Please wait">
+                                    <apex:image value="{!$Resource.spinner}"/>
+                                </apex:outputText>
+                            </apex:facet>
+                            <apex:facet name="stop">
+                                <apex:outputPanel styleClass="nowrap">
+                                    <apex:commandButton action="{!calculateTotalCost}"
+                                                        value="Calculate Total Cost"
+                                                        rerender="spSaleSection"
+                                                        status="spSaleStat"/>
+                                </apex:outputPanel>
+                            </apex:facet>
+                        </apex:actionStatus>
+                        </td>
+                    </tr>
+                </table>
+                </apex:outputPanel>
+            </apex:facet>
+            <center>
+            <apex:panelGrid columns="6" width="90%" cellpadding="4px"
+                            columnClasses="p5acol1,p5acol2">
+            <!-- r1-c1 -->
+            <apex:panelGroup ><apex:outputText value="Currency :"/></apex:panelGroup>
+
+            <apex:panelGroup ><apex:inputField styleClass="invfld1"
+                value="{!sampleRequest.CurrencyIsoCode}"/></apex:panelGroup>
+
+            <!-- r1-c2 -->
+            <apex:panelGroup ><apex:outputText value="VAT/Fed Tax ID :"/></apex:panelGroup>
+
+            <apex:panelGroup ><apex:inputField styleClass="invfld1"
+                value="{!sampleRequest.VAT_Fed_Tax_ID__c}"/></apex:panelGroup>
+
+            <!-- r1-c3 -->
+            <apex:panelGroup ><apex:outputText value="Shipped Weight (Kg) :"/></apex:panelGroup>
+
+            <apex:panelGroup ><apex:inputField styleClass="invfld1"
+                value="{!sampleRequest.Shipped_Weight_Kg__c}"/></apex:panelGroup>
+
+            <!-- r2-c1 -->
+            <apex:panelGroup ><apex:outputText value="Total Item Cost :"/></apex:panelGroup>
+
+            <apex:panelGroup ><apex:inputText styleClass="invfld1" disabled="true"
+                value="{!totalItemCost}"/></apex:panelGroup>
+
+            <!-- r2-c2 -->
+            <apex:panelGroup ><apex:outputText value="Freight Cost :"/></apex:panelGroup>
+
+            <apex:panelGroup ><apex:inputField styleClass="invfld1"
+                value="{!sampleRequest.Freight_Cost__c}"/></apex:panelGroup>
+
+            <!-- r2-c3 -->
+            <apex:panelGroup ><apex:outputText value="Total Cost :"/></apex:panelGroup>
+
+            <apex:panelGroup ><apex:inputText styleClass="invfld1" disabled="true"
+                value="{!totalSampCost}"/></apex:panelGroup>
+
+            <apex:panelGroup >Invoice Address :</apex:panelGroup>
+            <apex:panelGroup >
+                <apex:actionStatus id="spSaleAdrStat">
+                    <apex:facet name="start">
+                        <apex:outputText styleClass="bold" value=" Please wait">
+                            <apex:image value="{!$Resource.spinner}"/>
+                        </apex:outputText>
+                    </apex:facet>
+                    <apex:facet name="stop">
+                        <apex:outputPanel styleClass="nowrap">
+                            Same As Shipping Address?&nbsp;
+                        <apex:inputCheckbox value="{!readonlyInvoiceAddress}">
+                            <apex:actionSupport event="onclick" action="{!initInvoiceAddress}"
+                                                rerender="spSaleSection" status="spSaleAdrStat"/>
+                        </apex:inputCheckbox>
+                        </apex:outputPanel>
+                    </apex:facet>
+                </apex:actionStatus></apex:panelGroup>
+
+            <apex:panelGroup ></apex:panelGroup>
+            <apex:panelGroup ></apex:panelGroup>
+            <apex:panelGroup ></apex:panelGroup>
+            <apex:panelGroup ></apex:panelGroup>
+
+            <!-- r3-c1 -->
+            <apex:panelGroup ><apex:outputText value="Mr./Ms. :"/></apex:panelGroup>
+
+            <apex:panelGroup ><apex:selectList value="{!sampleRequest.Invoice_Salutation__c}"
+                                               disabled="{!readonlyInvoiceAddress}"
+                                               size="1" styleClass="invfld1">
+                                  <apex:selectOptions value="{!salutationOptions}"/>
+                              </apex:selectList></apex:panelGroup>
+
+            <!-- r3-c2 -->
+            <apex:panelGroup ><apex:outputText value="Company :"/></apex:panelGroup>
+
+            <apex:panelGroup ><apex:inputText styleClass="invfld1" disabled="{!readonlyInvoiceAddress}"
+                value="{!sampleRequest.Invoice_Company__c}"/></apex:panelGroup>
+
+            <!-- r3-c3 -->
+            <apex:panelGroup ><apex:outputText value="City :"/></apex:panelGroup>
+
+            <apex:panelGroup ><apex:inputText styleClass="invfld1" disabled="{!readonlyInvoiceAddress}"
+                value="{!sampleRequest.Invoice_City__c}"/></apex:panelGroup>
+
+            <!-- r4-c1 -->
+            <apex:panelGroup ><apex:outputText value="First Name :"/></apex:panelGroup>
+
+            <apex:panelGroup ><apex:inputText styleClass="invfld1" disabled="{!readonlyInvoiceAddress}"
+                value="{!sampleRequest.Invoice_FirstName__c}"/></apex:panelGroup>
+
+            <!-- r4-c2 -->
+            <apex:panelGroup ><apex:outputText value="Address 1 :"/></apex:panelGroup>
+
+            <apex:panelGroup ><apex:inputText styleClass="invfld1" disabled="{!readonlyInvoiceAddress}"
+                value="{!sampleRequest.Invoice_Address1__c}"/></apex:panelGroup>
+
+            <!-- r4-c3 -->
+            <apex:panelGroup ><apex:outputText value="State/Province :"/></apex:panelGroup>
+
+            <apex:panelGroup ><apex:inputText styleClass="invfld1" disabled="{!readonlyInvoiceAddress}"
+                value="{!sampleRequest.Invoice_State__c}"/></apex:panelGroup>
+
+            <!-- r5-c1 -->
+            <apex:panelGroup ><apex:outputText value="Last Name :"/></apex:panelGroup>
+
+            <apex:panelGroup ><apex:inputText styleClass="invfld1" disabled="{!readonlyInvoiceAddress}"
+                value="{!sampleRequest.Invoice_LastName__c}"/></apex:panelGroup>
+
+            <!-- r5-c2 -->
+            <apex:panelGroup ><apex:outputText value="Address 2 :"/></apex:panelGroup>
+
+            <apex:panelGroup ><apex:inputText styleClass="invfld1" disabled="{!readonlyInvoiceAddress}"
+                value="{!sampleRequest.Invoice_Address2__c}"/></apex:panelGroup>
+
+            <!-- r5-c3 -->
+            <apex:panelGroup ><apex:outputText value="Zip/Postal Code :"/></apex:panelGroup>
+
+            <apex:panelGroup ><apex:inputText styleClass="invfld1" disabled="{!readonlyInvoiceAddress}"
+                value="{!sampleRequest.Invoice_PostalCode__c}"/></apex:panelGroup>
+
+            <!-- r6-c1 -->
+            <apex:panelGroup ><apex:outputText value="Phone :"/></apex:panelGroup>
+
+            <apex:panelGroup ><apex:inputText styleClass="invfld1" disabled="{!readonlyInvoiceAddress}"
+                value="{!sampleRequest.Invoice_Phone__c}"/></apex:panelGroup>
+
+            <!-- r6-c2 -->
+            <apex:panelGroup ><apex:outputText value="Address 3 :"/></apex:panelGroup>
+
+            <apex:panelGroup ><apex:inputText styleClass="invfld1" disabled="{!readonlyInvoiceAddress}"
+                value="{!sampleRequest.Invoice_Address3__c}"/></apex:panelGroup>
+
+            <!-- r6-c3 -->
+            <apex:panelGroup ><apex:outputText value="Country :"/></apex:panelGroup>
+
+            <apex:panelGroup ><apex:selectList value="{!sampleRequest.Invoice_Country__c}"
+                                               disabled="{!readonlyInvoiceAddress}"
+                                               size="1" styleClass="invfld1">
+                                  <apex:selectOptions value="{!countrySelectOptions}"/>
+                              </apex:selectList></apex:panelGroup>
+
+            </apex:panelGrid>
+            </center>
+            </apex:pageBlock>
+        </apex:outputPanel>
+
+        <apex:pageBlock mode="edit" rendered="{!!renderMatCatalogPB}">
+
+            <apex:facet name="header">
+                <apex:outputPanel layout="block">
+                <table class="bold">
+
+                    <tr class="pbtr1">
+                        <td class="pbtd11">Sample Materials</td>
+                        <td class="left" style="vertical-align: middle;">
+                        <apex:actionStatus id="materialStat">
+                            <apex:facet name="start">
+                                <apex:outputText styleClass="bold" value="Please wait">
+                                    <apex:image value="{!$Resource.spinner}"/>
+                                </apex:outputText>
+                            </apex:facet>
+                            <apex:facet name="stop">
+                                <apex:outputPanel styleClass="nowrap">
+                                    <apex:commandButton oncomplete="closeWaitMsg();"
+                                                        onclick="onAddMtrlsBtnClick();"
+                                                        rendered="{!renderAddMaterialsBtn}"
+                                                        value="Add Materials"/>
+                                    <!-- apex:commandButton action="{!addNewMaterial}" value="Add Materials"/ -->
+                                    <apex:commandButton action="{!deleteMaterials}" value="Delete Materials"
+                                                        rerender="p5a-form2" status="materialStat"
+                                                        rendered="{!!renderSampleCenterInput}"/>
+                                    <apex:commandButton action="{!copyNotesToMats}" value="Copy Notes to Materials"
+                                                        rerender="MaterialGrid" status="materialStat"
+                                                        rendered="{!!renderSampleCenterInput}"/>
+                                    <apex:commandButton action="{!specialSizeMaterials}" value="Special Size Materials"
+                                                        rerender="MaterialGrid" status="materialStat"
+                                                        rendered="{!renderSpecSizeBtn}"/>
+                                </apex:outputPanel>
+                            </apex:facet>
+                        </apex:actionStatus>
+                        </td>
+                    </tr>
+
+                </table>
+                </apex:outputPanel>
+            </apex:facet>
+
+            <table class="matNotes"><tr>
+                <td style="width: 1%; font-weight: bold; text-align: right;">Notes :</td>
+                <td style="width: 99%;"><apex:inputText value="{!matNotes}" styleClass="w100"/></td>
+                </tr><tr><td colspan="2" style="font-size: 91%; text-align: center;">
+                <apex:outputPanel rendered="{!renderLabContactInput}"><br/>
+                Note: Complete the "Sourced From" field with a location to the best of your
+                knowledge to ensure timeliness of sample process. Selecting "Other" may
+                result in delays.</apex:outputPanel>
+            </td></tr></table>
+
+            <apex:pageBlockTable id="MaterialGrid" value="{!materials}" var="m" width="100%">
+                <apex:column headerClass="right" styleClass="right" width="20px">
+                    <apex:facet name="header">#</apex:facet>
+                    <apex:outputText value="{!m.recNum}"/>
+                </apex:column>
+                <apex:column headerClass="chkbx" styleClass="chkbx" width="20px">
+                    <apex:facet name="header">
+                        <apex:inputCheckbox styleClass="allcb1" value="{!allMats}"
+                            onclick="onClick_AllChkbox('rowcb1', this);"/>
+                    </apex:facet>
+                    <apex:inputCheckbox styleClass="rowcb1" value="{!m.selected}"
+                        onclick="onClick_RowChkbox('rowcb1', 'allcb1');"/>
+                </apex:column>
+
+                <apex:column width="200px" >
+                    <apex:facet name="header"><span class="reqd">Material Name *</span></apex:facet>
+                    <apex:outputPanel styleClass="matName">
+                        <apex:inputField value="{!m.sm.name}" rendered="{!isOthSampCenter}"/>
+                        <apex:outputText value="{!m.sm.name}" rendered="{!!isOthSampCenter}"/>
+                    </apex:outputPanel>
+                    <apex:facet name="footer"><apex:outputText escape="false" value="Addtl. Costs"
+                        styleClass="subtitle" rendered="{!RenderperSampleCost}"/></apex:facet>
+                </apex:column>
+
+                <apex:column width="140px" rendered="{!isAHWT}">
+                    <apex:facet name="header">Product Class</apex:facet>
+                    <apex:outputPanel styleClass="matStat">{!m.matStat}</apex:outputPanel>
+                    <apex:facet name="footer"><apex:outputText escape="false" value="Addtl. Costs"
+                        styleClass="subtitle" rendered="{!RenderperSampleCost}"/></apex:facet>
+                </apex:column>
+
+                <apex:column width="80px" rendered="{!renderSpecialSize}">
+                    <apex:facet name="header"><span class="reqd">Special Size<br/>Weight / Vol *</span></apex:facet>
+                    <apex:outputPanel rendered="{!m.specialUom}" styleClass="nowrap">
+                        <apex:inputField value="{!m.sm.Sample_Size__c}"
+                                         style="text-align: right; width: 20px"/>&nbsp;
+                        <apex:selectList value="{!m.sm.Sample_UOM__c}" size="1">
+                           <apex:selectOptions value="{!uomSelectOptions}" />
+                        </apex:selectList>
+                    </apex:outputPanel>
+                    <apex:facet name="footer"><apex:outputText escape="false" value="&nbsp" rendered="{!RenderperSampleCost}"/></apex:facet>
+                </apex:column>
+                <apex:column width="160px" style="word-wrap: break-word;">
+                    <apex:facet name="header"><span class="reqd">Sample UOM *</span></apex:facet>
+                    <apex:outputPanel styleClass="matUom">
+                        <apex:outputText value="{!m.sm.Sample_UOM__c}" rendered="{!!m.specialUom}"/>
+                        <apex:selectList value="{!m.sm.Sample_UOM__c}" size="1" rendered="{!isOthSampCenter}">
+                           <apex:selectOptions value="{!uomSelectOptions}" />
+                        </apex:selectList>
+                    </apex:outputPanel>
+                    <apex:facet name="footer"><apex:outputText escape="false" value="&nbsp" rendered="{!RenderperSampleCost}"/></apex:facet>
+                </apex:column>
+                <apex:column width="60px">
+                    <apex:facet name="header"><span class="reqd">Sample<br/>Quantity *</span></apex:facet>
+                    <!-- apex:inputField value="{!m.sm.Sample_Quantity__c}" style="width: 50px" / -->
+                    <!-- c:NumberInput p_number="{!m.qty}" p_decimals="{!qtyDecimals}" p_style="width: 50px"/ -->
+                    <apex:inputText value="{!m.qtyStr}"
+                        onkeypress="return numInp1(event, this, {!qtyDecimals});"
+                        size="10" style="width: 75px"/>
+                    <apex:facet name="footer"><apex:outputText escape="false" value="&nbsp" rendered="{!RenderperSampleCost}"/></apex:facet>
+                </apex:column>
+                <apex:column width="160px">
+                    <apex:facet name="header"><span class="reqd">Date Required *</span></apex:facet>
+                    <!-- apex:inputField value="{!m.sm.Date_Required_By__c}" onchange="validateDeliveryDate(this)"/ -->
+                    <apex:inputField value="{!m.sm.Date_Required_By__c}"/>
+                    <apex:facet name="footer"><apex:outputText escape="false" value="&nbsp" rendered="{!RenderperSampleCost}"/></apex:facet>
+                </apex:column>
+                <apex:column rendered="{!isVALV}" width="100px">
+                    <apex:facet name="header"><span class="reqd">Currency *</span></apex:facet>
+                    <apex:inputField value="{!m.sm.CurrencyIsoCode}" style="width:125px"/>
+                    <apex:facet name="footer"><apex:outputText escape="false" value="&nbsp" rendered="{!RenderperSampleCost}"/></apex:facet>
+                </apex:column>
+                <apex:column rendered="{!renderSmallPackSale}" width="50px">
+                    <apex:facet name="header">Small Pack Cost</apex:facet>
+                    <apex:inputField value="{!m.sm.Small_Pack_Cost__c}" style="width: 50px"/>
+                    <apex:facet name="footer"><apex:outputText escape="false" value="&nbsp" rendered="{!RenderperSampleCost}"/></apex:facet>
+                </apex:column>
+                <apex:column rendered="{!RenderPMCastingsProductLine}" width="50px">
+                    <apex:facet name="header"><span class="reqd">Product<br/>Line *</span></apex:facet>
+                    <apex:inputField value="{!m.sm.PM_Castings_Product_Line__c}"/>
+                    <apex:facet name="footer"><apex:outputText escape="false" value="&nbsp" rendered="{!RenderperSampleCost}"/></apex:facet>
+                </apex:column>
+                <apex:column rendered="{!OR(isVALV,RenderPMCastingsProductLine)}" width="100px">
+                    <apex:facet name="header"><span class="reqd">Sample<br/>Value *</span></apex:facet>
+                    <apex:inputField value="{!m.sm.Estimated_Sample_Value__c}"  style="width: 75px"/>
+                    <apex:facet name="footer"><apex:outputText escape="false" value="&nbsp" rendered="{!RenderperSampleCost}"/></apex:facet>
+                </apex:column>
+                <apex:column rendered="{!isVALV}" width="100px">
+                    <apex:facet name="header"><span class="reqd">Potential<br/>Annual Value *</span></apex:facet>
+                    <apex:inputField value="{!m.sm.Potential_Annual_Value__c}" style="width:125px"/>
+                    <apex:facet name="footer"><apex:outputText escape="false" value="&nbsp" rendered="{!RenderperSampleCost}"/></apex:facet>
+                </apex:column>
+                <apex:column rendered="{!isVALV}" width="50px">
+                    <apex:facet name="header"><span class="reqd">Tectyl<br/>Product? *</span></apex:facet>
+                    <apex:inputField value="{!m.sm.Tectyl_Product__c}"/>
+                    <apex:facet name="footer"><apex:outputText escape="false" value="&nbsp" rendered="{!RenderperSampleCost}"/></apex:facet>
+                </apex:column>
+                <apex:column width="70px">
+                    <apex:facet name="header">Lot Number</apex:facet>
+                    <apex:inputField value="{!m.sm.Lot_Numbers__c}" style="width: 65px"/>
+                    <apex:facet name="footer"><apex:outputText escape="false" value="&nbsp" rendered="{!RenderperSampleCost}"/></apex:facet>
+                </apex:column>
+                <apex:column width="100px" rendered="{!OR(renderShipFromLocation, renderLabContactInput)}">
+                    <apex:facet name="header"><apex:outputPanel >
+                        <apex:outputPanel rendered="{!renderShipFromLocation}">Ship From<br/>Location</apex:outputPanel>
+                        <apex:outputPanel rendered="{!renderLabContactInput}">
+                            <span class="reqd">Sourced<br/>From *</span></apex:outputPanel>
+                        </apex:outputPanel></apex:facet>
+                    <apex:outputPanel >
+                        <apex:inputField rendered="{!renderShipFromLocation}"
+                            value="{!m.sm.Ship_From_Location__c}" style="width: 75px"/>
+                        <apex:selectList rendered="{!renderLabContactInput}"
+                            value="{!m.sm.Ship_From_Location__c}" size="1">
+                           <apex:selectOptions value="{!shipFromLocOpts}" />
+                        </apex:selectList>
+                    </apex:outputPanel>
+                    <apex:facet name="footer"><apex:outputText escape="false" value="&nbsp" rendered="{!RenderperSampleCost}"/></apex:facet>
+                </apex:column>
+                <apex:column width="280px">
+                    <apex:facet name="header">Notes</apex:facet>
+                    <apex:inputField value="{!m.sm.Notes__c}" styleClass="notes2"/>
+                </apex:column>
+            </apex:pageBlockTable>
+
+        </apex:pageBlock>
+
+        <apex:outputPanel rendered="{!!renderMatCatalogPB}">
+
+        <center>
+            <apex:commandButton action="{!gotoPage4A}" value="{!$Label.Previous}" immediate="true"/>&nbsp;
+            <apex:commandButton action="{!gotoPage6A}" value="{!$Label.Next}" id="nextBtn2"/>&nbsp;
+            <apex:commandButton action="{!cancel}" value="Cancel" immediate="true" />
+        </center><br/>
+
+        </apex:outputPanel>
+
+        <apex:pageBlock id="matCatalog" rendered="{!renderMatCatalogPB}">
+
+            <apex:facet name="header">
+                <apex:outputPanel layout="block">
+                <table class="bold">
+
+                    <tr class="pbtr1">
+                        <td class="pbtd11">Material Catalog - Sample Center: {!sampleRequest.Sample_Center__c}</td>
+                        <td class="left" colspan="2" style="vertical-align: middle;">
+                        <apex:actionStatus id="matCatalogBtns">
+                            <apex:facet name="start">
+                                <apex:outputText styleClass="bold" value=" Please wait">
+                                    <apex:image value="{!$Resource.spinner}"/>
+                                </apex:outputText>
+                            </apex:facet>
+                            <apex:facet name="stop">
+                                <apex:outputPanel styleClass="nowrap">
+                                &nbsp;&nbsp;
+                                <!--
+                                <apex:outputLabel for="matSrchString" value="Material:"
+                                                  styleClass="lbl1"/>&nbsp;
+                                -->
+                                <apex:inputText id="matSrchString" value="{!matSrchString}"
+                                                styleClass="txt1"/>&nbsp;
+                                <apex:selectList size="1" value="{!matStat}" rendered="{!isAHWT}">
+                                    <apex:actionSupport event="onchange" action="{!setMatCatalogPC}"
+                                                        status="matCatalogBtns" rerender="p5a-form2"/>
+                                    <apex:selectOptions value="{!matStatOpts}"/>
+                                </apex:selectList>&nbsp;
+                                <apex:commandButton action="{!setMatCatalogPC}"
+                                                    value="Search for Materials"
+                                                    rerender="p5a-form2" status="matCatalogBtns"/>
+                                &nbsp;&nbsp;
+                                <apex:commandButton action="{!selectMaterialsAndReturn}"
+                                                    rerender="p5a-form2" status="matCatalogBtns"
+                                                    value="Select and Return"/>
+                                &nbsp;&nbsp;
+                                <apex:commandButton action="{!selectCatalogMaterials}"
+                                                    rerender="p5a-form2" status="matCatalogBtns"
+                                                    value="Select"/>
+                                &nbsp;&nbsp;
+                                <apex:commandButton action="{!returnFromMatCatalog}"
+                                                    rerender="p5a-form2" status="matCatalogBtns"
+                                                    value="Return"/>
+                                </apex:outputPanel>
+                            </apex:facet>
+                        </apex:actionStatus>
+                        </td>
+                    </tr>
+
+                    <tr><td colspan="3">&nbsp;</td></tr>
+
+                    <tr><td class="center" width="15%">
+                        <apex:outputText value="Records: {!pc1.recordFrom} - {!pc1.recordTo} of {!pc1.resultSize}"
+                                         styleClass="nowrap"/>
+                    </td>
+
+                    <td class="center" width="70%">
+                            <apex:actionStatus id="pageControls">
+                                <apex:facet name="start">
+                                    <apex:outputText styleClass="bold" value="Please wait">
+                                        <apex:image value="{!$Resource.spinner}"/>
+                                    </apex:outputText>
+                                </apex:facet>
+                                <apex:facet name="stop">
+                                <apex:outputPanel >
+                                <apex:outputText value="Rows Per Page:"/>&nbsp;
+                                <apex:selectList id="pageSize" value="{!pc1.pageSize}" size="1" title="Rows Per Page:">
+                                    <apex:actionSupport event="onchange" action="{!pc1Size}"
+                                                    rerender="matCatalog" status="pageControls"/>
+                                    <apex:selectOption itemLabel="20" itemValue="20"/>
+                                    <apex:selectOption itemLabel="50" itemValue="50"/>
+                                    <apex:selectOption itemLabel="100" itemValue="100"/>
+                                    <apex:selectOption itemLabel="200" itemValue="200"/>
+                                </apex:selectList>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <apex:commandButton action="{!pc1Frst}" disabled="{!NOT(pc1.hasPrevious)}"
+                                                    rerender="matCatalog" status="pageControls"
+                                                    title="First Page" value="<<"/>&nbsp;&nbsp;
+                                <apex:commandButton action="{!pc1Prev}" disabled="{!NOT(pc1.hasPrevious)}"
+                                                    rerender="matCatalog" status="pageControls"
+                                                    title="Prev Page" value="<"/>
+
+                                Previous&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Next&nbsp;
+
+                                <apex:commandButton action="{!pc1Next}" disabled="{!NOT(pc1.hasNext)}"
+                                                    rerender="matCatalog" status="pageControls"
+                                                    title="Next Page" value=">"/>&nbsp;&nbsp;
+                                <apex:commandButton action="{!pc1Last}" disabled="{!NOT(pc1.hasNext)}"
+                                                    rerender="matCatalog" status="pageControls"
+                                                    title="Last Page" value=">>"/>
+                                </apex:outputPanel>
+                            </apex:facet>
+                        </apex:actionStatus>
+                    </td>
+
+                    <td class="center" width="15%">
+                        <apex:outputText value="Page: {!pc1.pageNumber} of {!pc1.lastPageNumber}"/>
+                    </td>
+                    </tr>
+                    </table>
+                </apex:outputPanel>
+            </apex:facet>
+
+            <apex:pageBlockTable value="{!matCatalog}" var="m" rendered="{!renderMatCatalog}"
+                                 styleClass="matCatalog">
+                <apex:column headerClass="right" styleClass="right" width="20px">
+                    <apex:facet name="header">#</apex:facet>
+                    <apex:outputText value="{!m.recNum}" styleClass="{!m.styleClass}"/>
+                </apex:column>
+                <apex:column headerClass="chkbx" styleClass="chkbx" width="20px">
+                    <apex:facet name="header">
+                        <apex:inputCheckbox styleClass="allcb2" value="{!allMatCatalog}"
+                            onclick="onClick_AllChkbox('rowcb2', this);"/>
+                    </apex:facet>
+                    <apex:inputCheckbox styleClass="rowcb2" value="{!m.selected}"
+                        onclick="onClick_RowChkbox('rowcb2', 'allcb2');"/>
+                </apex:column>
+
+                <apex:column width="360px">
+                    <apex:facet name="header">Material Name</apex:facet>
+                    <apex:outputText value="{!m.matName}" styleClass="matName {!m.styleClass}"/>
+                </apex:column>
+                <apex:column width="140px" headerClass="right" styleClass="right" rendered="{!isAHWT}">
+                    <apex:facet name="header">Product Class</apex:facet>
+                    <apex:outputText value="{!m.matStat}" styleClass="matUom {!m.styleClass}"/>
+                </apex:column>
+                <apex:column width="140px">
+                    <apex:facet name="header">Sample Size</apex:facet>
+                    <apex:outputText value="{!m.matUom}" styleClass="matUom {!m.styleClass}"/>
+                </apex:column>
+                <apex:column width="140px">
+                    <apex:facet name="header">Unit Weight</apex:facet>
+                    <apex:outputText value="{!m.matUwt}" styleClass="matUom {!m.styleClass}"/>
+                </apex:column>
+                <apex:column width="100px">
+                    <apex:facet name="header">Out of Stock?</apex:facet>
+                    <apex:outputText value="{!m.outOfStock}"/>
+                </apex:column>
+                <apex:column width="300px">
+                </apex:column>
+            </apex:pageBlockTable>
+
+            <apex:outputPanel rendered="{!!renderMatCatalog}" layout="block" styleClass="center">
+                <span class="msg">No Sample Materials found</span>
+            </apex:outputPanel>
+
+        </apex:pageBlock>
+
+    </apex:form>
+
+    </apex:outputPanel>
+
+    <apex:outputPanel style="display: none;">
+        <div id="waitMsgDiv">
+            <apex:outputPanel layout="block" >
+                <apex:outputText styleClass="bold" value="Please wait" >
+                    <apex:image value="{!$Resource.spinner}"/>
+                </apex:outputText>
+           </apex:outputPanel>
+        </div>
+    </apex:outputPanel>
+
+    <span class="pageid">5A</span>
+
+    <script type="text/javascript">
+        var $j = jQuery.noConflict();
+
+        function onClick_AllChkbox(rowCbClass, allChkbox) {
+            $j("."+rowCbClass).each(function() {
+                if (this.disabled == false) {
+                    this.checked = allChkbox.checked;
+                }
+            });
+        }
+
+        function onClick_RowChkbox(rowCbClass, allCbClass) {
+            var allChkbox = $j("."+allCbClass).get(0);
+            allChkbox.checked = true;
+            $j("."+rowCbClass).each(function() {
+                if (!this.checked) {
+                    allChkbox.checked = false;
+                    return false;
+                }
+            });
+        }
+
+        function setfocus(fid) {
+            var fld = document.getElementById(fid);
+            if (fld != null) {fld.focus();}
+        }
+
+        function astalert(field) {
+            var t = {!$Label.Dublin_Analytical_Popup};
+            var ex = document.getElementById(field).checked;
+            if(ex) {
+                var r=confirm(t);
+                if (r==false) {
+                    document.getElementById(field).checked = false;
+                }
+            }
+        }
+
+        function validateDeliveryDate(fld) {
+            d1 = new Date((new Date()).setHours(0, 0, 0, 0));
+            //d2 = new Date(fld.value);
+            d2 = new Date(DateUtil.getDateFromUserLocale(fld.value).setHours(0, 0, 0, 0));
+            console.log('d1 = ' + d1);
+            console.log('d2 = ' + d2);
+            if(d2 < d1) {fld.value = '';}
+        }
+
+        function numInp1(e, tb, n) {
+            //console.log(tb.value);
+            var k = e.which || e.keyCode;
+            //console.log(k);
+            //console.log(String.fromCharCode(k));
+            if (k < 48) {return;}
+            var val = tb.value + String.fromCharCode(k);
+            //console.log(val);
+            var re = new RegExp("^[\\+,-]?(\\d*[\\.,]?\\d{0," + n + "})$");
+            if (re.test(val)) {return true;}
+            return false;
+        }
+
+        $j("#waitMsgDiv").dialog({
+            modal: true, autoOpen: false, dialogClass: "no-title",
+            height: 50, width: 40, resizable: false
+        });
+
+        function onAquariusBtnClick() {
+            $j("#waitMsgDiv").dialog("open");
+            initAquarius();
+        }
+
+        function onAddMtrlsBtnClick() {
+            $j("#waitMsgDiv").dialog("open");
+            addNewMaterial();
+        }
+
+        function closeWaitMsg() {$j("#waitMsgDiv").dialog("close");}
+
+    </script>
+
+    <style>
+        .p5a-panel1 input[type="checkbox"] {margin-left: 0;}
+        .tbl {border-spacing: 0; border-collapse: collapse; width: 100%;}
+        .tbl td {padding: 4px; vertical-align: top; width: 16%; white-space: nowrap;}
+        .tbl td.lbl, .lbl {color: #4a4a56; font-weight: bold; text-align: right;}
+        .tbl td.fld, .fld {width: 15em;}
+        .tbl td.fld2, .fld2 {width: 5em;}
+        .tbl td a.error {border: 0px !important;}
+        .tbl td a.fld {border: 0px;}
+        .tbl td.msg, .msg {background-color: #ffc; color: blue; font-weight: bold; text-align: center;}
+        .tbl td .chkbx {margin-left: 0px; padding-left: 0px; width: 10px;}
+        .matCatalog td, th {border-left: 1px solid #e0e3e5 !important;}
+        .txt1 {width: 15em;}
+        .txta {height: 50px; width: 100%;}
+        .w100 {width: 100%;}
+        .chkbx {text-align: center; width: 20px;}
+        .bold {font-weight: bold;}
+        .boldblue {color: blue; font-weight: bold;}
+        .center {text-align: center;}
+        .left {text-align: left;}
+        .right {text-align: right;}
+        .nowrap {white-space: nowrap;}
+        .reqd {color: red;}
+        .error {background-color: #ffc; border: 1px solid !important;}
+        .onfocus {border: 2px solid #7f9db9;}
+        .onblur {border: 1px solid #7f9db9;}
+        .matName {white-space: nowrap; width: 200px;}
+        .matNotes {white-space: nowrap; padding: 12px; width: 100%;}
+        .matUom {white-space: nowrap; width: 100px;}
+        .invfld1 {width: 200px;}
+        .notes2 {width: 260px;}
+        .pbtr1 {background-color: #f8f8f8; text-align: center;}
+        .pbtd11 {font-weight: bold; padding: 12px; text-align: left;
+                 white-space: nowrap; width: 19%;}
+        .p5acol1 {color: #4a4a56 !important; font-size: 91%; font-weight: bold;
+                  text-align: right; white-space: nowrap; min-width: 130px;}
+        .p5acol2 {font-size: 91%; text-align: left; white-space: nowrap; min-width: 200px;}
+        .pageid {font-size: 70%; float: right;}
+        .no-title .ui-dialog-titlebar {display: none;}
+    </style>
+</apex:page>

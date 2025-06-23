@@ -1,0 +1,1586 @@
+<!--  New Case https://{!$Label.SFDC_URL}/apex/CasePage?RecordType=01250000000Hgic&retURL=%2F500%2Fo  -->
+<apex:page id="casePageId" standardcontroller="Case" extensions="CaseExtension" sidebar="false" showHeader="true" >
+
+    <apex:includeScript value="{!URLFOR($Resource.jQuery1x,'jQuery/jquery-1.8.0.min.js')}" />
+
+    <script type="text/javascript">
+        
+        var formFontSize = '8pt';
+        
+        var j$= jQuery.noConflict();
+
+        j$(document).ready(function(){
+            applyJQueryStyling();
+        });
+        
+        function applyJQueryStyling() {
+            j$('[id*=tdSpan6Columns]').parent().attr('colspan', 5);
+            j$('[id*=SBUField]').attr('size',6).children().css('font-size','100%');
+            j$('[id*=SBUField]').css('font-size',formFontSize).children().css('font-size',formFontSize);
+            j$('[id*=reqCompDateExplainField]').css('width',j$('[id*=SBUField]').css('width') * 2);
+            j$('[id*=CaseApexForm]').css('font-size',formFontSize); 
+            j$('[id*=TsrNameLabelId]').parent().css('width', '6%'); 
+            j$('[id*=TsrNameFieldId]').parent().parent().attr('colspan', 5).css('width', '100%');   
+        
+            disableForm();
+
+        }
+        
+        function disableForm()
+        {
+            var isLabWorkApprover = '{!isLabWorkApprover}';
+            var isLabTech = '{!isLabTech}';
+            var statusFieldValue = j$('[id*=StatusFieldId]').text(); //alert(statusFieldValue);
+            var techLabGroupSelectedValue = j$('[id*=TechnicalLabGroupSelectList]').val(); //alert(technicalLabGroup);
+    
+            
+            //j$('[id*=FeedbackCompletedFieldId]').attr("disabled", "disabled");
+            
+            if (statusFieldValue == 'Approved - New TSR' || 
+                statusFieldValue == 'Lab Work Completed' ||
+                statusFieldValue == 'Lab Work Approved' ||
+                statusFieldValue == 'In Approval Process' ||
+                statusFieldValue == 'Customer Feedback Completed')  
+            {
+                
+                j$('[id*=TsrNamePageBlockSectionId]').find("input").attr("disabled", "disabled");
+                j$('[id*=TsrNamePageBlockSectionId]').find("select").attr("disabled", "disabled");
+                j$('[id*=TsrNamePageBlockSectionId]').find("textarea").attr("disabled", "disabled");
+                
+                j$('[id*=TsrInformationPageBlockSectionId]').find("input").attr("disabled", "disabled");
+                j$('[id*=TsrInformationPageBlockSectionId]').find("select").attr("disabled", "disabled");
+                j$('[id*=TsrInformationPageBlockSectionId]').find("textarea").attr("disabled", "disabled");
+                j$('[id*=TsrInformationPageBlockSectionId]').find("img").removeAttr("class");
+                
+                j$('[id*=DescInfoPageBlockSectionId]').find("input").attr("disabled", "disabled");
+                j$('[id*=DescInfoPageBlockSectionId]').find("select").attr("disabled", "disabled");
+                j$('[id*=DescInfoPageBlockSectionId]').find("textarea").attr("disabled", "disabled");                
+                j$('[id*=DescInfoPageBlockSectionId]').find("img").removeAttr("class");
+                
+                //enable aquarius button
+                if ({!m_Case.Aquarius__c})
+                    j$('[id*=AquariusButtonId]').removeAttr("disabled");                
+  
+            }
+            
+            if (isLabTech != 'true')
+            {
+                //alert('here');
+                //j$('[id*=LabResultsPageBlockSectionId]').find("*").prop("disabled", "disabled");
+                j$('[id*=LabWorkCompletedFieldId]').attr("disabled", "disabled");            
+            }
+            else if (j$('[id*=LabWorkCompletedFieldId]').is(":checked"))
+            {
+                //alert('or here');
+                j$('[id*=LabResultsPageBlockSectionId]').find("input").not(j$('[id*=LabWorkApprovedFieldId]')).not(j$('[id*=LabWorkCompletedFieldId]')).attr("disabled", "disabled");
+                j$('[id*=LabResultsPageBlockSectionId]').find("select").attr("disabled", "disabled");
+                j$('[id*=LabResultsPageBlockSectionId]').find("textarea").attr("disabled", "disabled");
+                
+                if (j$('[id*=LabWorkApprovedFieldId]').is(":checked"))
+                {
+                    j$('[id*=LabWorkCompletedFieldId]').attr("disabled", "disabled");
+                }
+                else
+                    j$('[id*=LabWorkApprovedFieldId]').attr("disabled", null);
+    
+                
+            }
+            else
+            {
+                //alert('or there');
+                j$('[id*=LabResultsPageBlockSectionId]').find("*").prop("disabled", null);
+                j$('[id*=LabWorkApprovedFieldId]').attr("disabled", "disabled");
+            }
+            
+            if (j$('[id*=FeedbackCompletedFieldId]').is(":checked"))
+            {
+                j$('[id*=CustFeedPageBlockSectionId]').find("input").not(j$('[id*=FeedbackCompletedFieldId]')).attr("disabled", "disabled");
+                j$('[id*=CustFeedPageBlockSectionId]').find("select").attr("disabled", "disabled");
+                j$('[id*=CustFeedPageBlockSectionId]').find("textarea").attr("disabled", "disabled");
+                j$('[id*=CustFeedPageBlockSectionId]').find("img").prop("class", null);
+                
+            }
+            else
+            {
+                j$('[id*=CustFeedPageBlockSectionId]').find("*").prop("disabled", null);
+                j$('[id*=CustFeedPageBlockSectionId]').find("img").prop("class", "lookupIcon");
+            }
+            
+            if (techLabGroupSelectedValue == 'Pharma - NA' || techLabGroupSelectedValue == 'Pharma - EMEA'
+                || techLabGroupSelectedValue == 'Pharma - LA' || techLabGroupSelectedValue == 'Pharma - China'
+                || techLabGroupSelectedValue == 'Pharma - ROA')
+            {
+                //alert('techLabGroupSelectedValue is Pharma Coatings');
+                j$('[id*=DevExTransStatFieldId]').attr("disabled", null);
+            }
+            else
+            {
+                //alert('techLabGroupSelectedValue is not Pharma Coatings');
+                j$('[id*=DevExTransStatFieldId]').attr("disabled", "disabled");
+            }   
+            
+            // SS Request-5589 
+            if (statusFieldValue == 'Lab Work Approved')
+                j$('[id*=FeedbackCompletedFieldId]').attr("disabled", null);
+            else
+                j$('[id*=FeedbackCompletedFieldId]').attr("disabled", "disabled");           
+                        
+
+
+        }       
+
+
+        //***
+        //  The following items only works this way, they didn't work when 
+        //  included with the code above
+        //***        
+        window.onload=function(){JSWindowLoaded()};
+
+        function JSWindowLoaded()
+        {
+            //alert(j$('[id*=setFocusToFieldId]').val());
+            if (j$('[id*=setFocusToFieldId]').val() == 'CustContactForFeedbackFieldId')
+            {
+                j$('[id*=CustContactForFeedbackFieldId]').focus();  
+            }
+            else if (j$('[id*=setFocusToFieldId]').val() == 'CustomerFeedbackByFieldId')
+            {
+                j$('[id*=CustomerFeedbackByFieldId]').focus();  
+            }
+            else if (j$('[id*=setFocusToFieldId]').val() == '')
+            {
+                j$('[id*=evaluatorfld]').focus();  
+        
+            }
+            else if (j$('[id*=setFocusToFieldId]').val() == '')
+            {
+                j$('[id*=coachfld]').focus();  
+        
+            }
+            j$('[id*=setFocusToFieldId]').val('');         
+            //var statusFieldValue2 = j$('[id*=StatusFieldId]').val();
+            if (j$('[id*=StatusFieldId]').val() == 'Approved - New TSR')
+            {
+                j$('[id*=ProjDurFieldId]').focus();   
+                j$('[id*=ForJQueryId]').attr("disabled", "disabled");               
+                         
+            }
+        }
+        
+        function showSpinner()
+        {
+            j$('[id*=topbtnsStatus]').css("display", "inline");
+            j$('[id*=topbtnsStatusStart]').css("display", "inline");
+            j$('[id*=topbtnsStatusStop]').css("display", "none");
+            
+        }
+        
+        function hideSpinner()
+        {
+            j$('[id*=topbtnsStatus]').css("display", "inline");
+            j$('[id*=topbtnsStatusStart]').css("display", "none");
+            j$('[id*=topbtnsStatusStop]').css("display", "inline");
+        }        
+
+    </script>
+
+    <style type="text/css">
+    
+        
+        input[type="text"]
+        {
+            color: black;
+           -webkit-text-fill-color: black;
+            width: 175px;
+            font-size: formFontSize;
+        }
+        
+        select
+        {
+            width: 175px !important;
+            font-size: formFontSize;
+        }   
+
+        body
+        {
+            font-size: formFontSize;
+        }       
+        
+        input[type="text"]:hover, select:hover, textarea:hover, checkbox:hover
+        {
+            background-color:lightyellow;
+        }
+
+        .lbl1 {color: #4a4a56; font-weight: bold; padding-right: 1.2em; vertical-align: top;}
+        .fld1 {height: 17px; width: 230px;}
+        .bold {font-weight: bold;}
+        .center {text-align: center;}
+        .nowrap {white-space: nowrap;}  
+        .customLookupStyle {width: 165px; !Important}
+        .customRequiredLookupStyle {width: 160px; !Important}  
+
+    </style>
+
+    <apex:sectionHeader title="Case" subtitle="{!m_Case.CaseNumber}"  />
+
+    <apex:outputPanel id="thePanel">
+
+        <apex:form >
+            <apex:actionFunction action="{!onAquariusClose}" name="onAquariusClose" 
+                                 immediate="true" rerender="thePanel" status="astat1"
+                                 oncomplete="applyJQueryStyling();"
+                                 />
+        </apex:form>
+        <apex:actionStatus id="astat1">
+            <apex:facet name="start">
+                <apex:outputText styleClass="bold" value=" Please wait ...">
+                    <apex:image value="{!$Resource.spinner}"/>
+                </apex:outputText>
+            </apex:facet>
+            <apex:facet name="stop">
+                <c:Aquarius_Request_Comp1 p_attr1="{!aquariusRequest}" 
+                                          rendered="{!renderAquariusForm}"/>
+                <!-- <apex:outputPanel id="op1">
+                    <apex:outputText value="{!aquariusRequest}"/>
+                </apex:outputPanel> -->
+            </apex:facet>
+        </apex:actionStatus>
+
+
+    <apex:form rendered="{!renderTSRForm}" id="tsrFormId">
+                     
+        <apex:variable var="decimals" value="2"/>
+        <apex:variable var="locale" value="{!userLocale}"/>
+
+        <apex:outputPanel id="DebugInfoPanel" rendered="{!renderDebugPanel}">
+            <apex:pageBlock >
+                <apex:pageBlockSection title="Debug Info" columns="1" collapsible="true" >
+                    <apex:actionRegion immediate="true">
+                        <apex:inputTextarea id="debugTextareaFieldId" readonly="true" rows="10" cols="150" value="{!debugTextValue}"></apex:inputTextarea>
+                    </apex:actionRegion>
+                </apex:pageBlockSection>            
+            </apex:pageBlock>
+        </apex:outputPanel> 
+        
+        <apex:inputHidden id="setFocusToFieldId" value="{!FocusField}" rendered="true"/>
+        
+        <apex:actionFunction action="{!searchOpps}"  name="searchOpps"  
+            status="oppstat"  rerender="thePanel" oncomplete="applyJQueryStyling();"/>
+            
+        <apex:actionFunction action="{!searchRisks}"  name="searchRisks"  
+            status="riskstat"  rerender="thePanel" oncomplete="applyJQueryStyling();"/> 
+            
+        <apex:actionFunction action="{!searchContacts}"  name="searchContacts"  
+            status="contactstat"  rerender="thePanel" oncomplete="applyJQueryStyling();"/>              
+                    
+        <apex:actionFunction action="{!searchOwners}"  name="searchOwners"  
+            status="ownerstat"  rerender="thePanel" oncomplete="applyJQueryStyling();"/>                
+            
+        <apex:actionFunction action="{!searchCustFeedbackBy}"  name="searchCustFeedbackBy"  
+            status="custFeedbackByStat"  rerender="thePanel" oncomplete="applyJQueryStyling();"/>               
+
+        <apex:actionFunction action="{!searchCustContFeedback}"  name="searchCustContFeedback"  
+            status="custContFeedStat"  rerender="thePanel" oncomplete="applyJQueryStyling();"/>
+            
+        <apex:pageBlock id="displayCasePageBlock" rendered="{!displayCasePageBlock}" mode="edit" >
+        
+            <apex:pageMessage id="vfPageMessage" severity="warning" strength="3" summary="{!m_vfPageMessageSummary}" rendered="false" escape="false" />        
+            <apex:pageMessages id="vfPageMessages" escape="false" />
+
+            <!-- Buttons -->
+            <apex:pageBlockButtons location="top">
+                <apex:actionStatus id="topbtnsStatus"> 
+                    <apex:facet name="start" >
+                        <apex:outputPanel id="topbtnsStatusStart">
+                            <apex:outputText styleClass="lbl1" value=" {!$Label.Please_Wait} ...">
+                            <apex:image value="{!$Resource.spinner}"/></apex:outputText>
+                        </apex:outputPanel>
+                    </apex:facet>
+                    <apex:facet name="stop" >
+                        <apex:outputPanel id="topbtnsStatusStop">            
+                            <apex:commandButton value="Save" action="{!save}" status="topbtnsStatus" rerender="thePanel" disabled="{!disableSave}" oncomplete="applyJQueryStyling();"/>
+                            <apex:commandButton value="Save and New" action="{!saveAndNew}" status="topbtnsStatus" rerender="thePanel" disabled="{!disableSave}" oncomplete="applyJQueryStyling();" />
+                            <apex:commandButton value="Save and Submit" action="{!saveAndSubmit}" 
+                                status="topbtnsStatus" rerender="thePanel" disabled="{!disableSave}" 
+                                rendered="{!renderSaveAndSubmitButton}"
+                                oncomplete="applyJQueryStyling();"/>
+                            <apex:commandButton value="Cancel" action="{!cancel}" status="topbtnsStatus" rerender="thePanel" oncomplete="applyJQueryStyling();"/>
+                        </apex:outputPanel>
+                    </apex:facet>
+                </apex:actionStatus>                                
+            </apex:pageBlockButtons>          
+            
+            
+            <!-- TSR Name Section -->
+            <apex:pageBlockSection id="TsrNamePageBlockSectionId" columns="3" title="TSR Name" collapsible="false">
+            
+                <!-- Row 1 -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputText id="TsrNameLabelId" value="{!$ObjectType.Case.fields.Subject.label}" />
+                    <apex:outputPanel layout="block" styleClass="requiredInput">                
+                        <apex:outputPanel layout="block" styleClass="requiredBlock"></apex:outputPanel>                 
+                        <apex:inputField style="width: 66%" id="TsrNameFieldId" value="{!m_Case.Subject}" 
+                            required="false" styleClass="{!SubjectRequireStyle}"/>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputText rendered="false">test</apex:outputText>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText rendered="false">test</apex:outputText>
+                </apex:pageBlockSectionItem>                        
+                    
+                                                        
+            
+            </apex:pageBlockSection>
+            
+                        
+            <!-- TSR Information Section -->
+            <apex:pageBlockSection id="TsrInformationPageBlockSectionId" columns="3" title="TSR Information" collapsible="false">                           
+            
+                <!-- Row 1 -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Internal_External__c.label}"/>
+                    <apex:outputPanel >
+                        <apex:actionRegion immediate="true">
+                            <apex:outputPanel layout="block" styleClass="requiredInput">                
+                                <apex:outputPanel layout="block" styleClass="requiredBlock"></apex:outputPanel>                     
+                                <apex:inputField id="InternalExternalFieldId" 
+                                    value="{!m_Case.Internal_External__c}" required="false" 
+                                    rendered="{!InternalExternalFieldEditable}"
+                                    styleClass="{!InternalExternalRequireStyle}">
+                                    <apex:actionSupport action="{!InternalExternalField_OnChange}" 
+                                        event="onchange" 
+                                        rerender="CaseReasonSelectList, CaseOriginSelectList" 
+                                        oncomplete="applyJQueryStyling();"/>                            
+                                    
+                                </apex:inputField>
+                            </apex:outputPanel>
+                        </apex:actionRegion>
+                        <apex:outputField value="{!m_Case.Internal_External__c}" rendered="{!NOT(InternalExternalFieldEditable)}"/>
+                    </apex:outputPanel>                     
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.AccountId.label}"/>
+                    <apex:outputPanel layout="block" id="AccountOutputPanelId">   
+                        <apex:actionRegion immediate="true">  
+                            <apex:outputPanel layout="block" styleClass="requiredInput">                
+                                <apex:outputPanel layout="block" styleClass="requiredBlock"></apex:outputPanel>                                
+                                <apex:inputField id="AccountFieldId" value="{!m_Case.AccountId}" required="false" 
+                                    rendered="{!AccountIdFieldEditable}" styleClass="{!AccountIdRequireStyle}">
+                                    <apex:actionSupport action="{!GetAccountRelatedInfo}" 
+                                        event="onchange" 
+                                        rerender="caseOwnerIdField, CustomerFeedbackByFieldId" 
+                                        oncomplete="applyJQueryStyling();"/>
+                                </apex:inputField>
+                            </apex:outputPanel>
+                        </apex:actionRegion>
+                        <apex:outputField value="{!m_Case.AccountId}" rendered="{!NOT(AccountIdFieldEditable)}"/>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+            
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Status.label}"/>                  
+                        <apex:outputField id="StatusFieldId" value="{!m_Case.Status}" 
+                            styleClass="{!StatusRequireStyle}"/>
+                </apex:pageBlockSectionItem>
+
+                <!-- Row 2 -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Reason.label}"/>
+                    <apex:outputPanel layout="block" styleClass="requiredInput">
+                        <!--  <apex:inputField value="{!m_Case.Reason}" required="true"/> -->
+                        <apex:outputPanel layout="block" styleClass="requiredBlock"></apex:outputPanel>
+                        <apex:selectList value="{!CaseReason}" size="1" id="CaseReasonSelectList" 
+                            required="false" styleClass="{!CaseReasonRequireStyle}">
+                          <apex:selectOptions value="{!CaseReasons}" /> 
+                        </apex:selectList>
+                    </apex:outputPanel>                 
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <c:Label labelValue="EndUse Customer" helpText="EndUse Customer"/>
+                    <apex:outputField value="{!m_Case.EndUse_Customer_Desc__c}"/>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Related_Opportunity__c.label}"/>
+                    <apex:actionStatus id="oppstat"> 
+                        <apex:facet name="start">
+                            <apex:outputText styleClass="lbl1" value=" {!$Label.Please_Wait} ...">
+                            <apex:image value="{!$Resource.spinner}"/></apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop">
+                            <apex:outputPanel styleClass="nowrap">
+                            <apex:actionRegion immediate="true">
+                                <apex:inputText id="oppfld" value="{!oppName}" styleClass="customLookupStyle" >
+                                    <apex:actionSupport action="{!OppNameOnChange}" 
+                                        event="onchange" 
+                                        rerender="TotalOppRevAnnual, debugTextareaFieldId" 
+                                        oncomplete="applyJQueryStyling();"
+                                        status="oppstat"/>                               
+                                </apex:inputText> 
+                            </apex:actionRegion>
+                                <apex:image alt="" title=""
+                                            style="cursor: pointer;" styleClass="lookupIcon"
+                                            onclick="searchOpps(); return false;" 
+                                            onmouseover="this.className = 'lookupIconOn';" 
+                                            onmouseout="this.className = 'lookupIcon';" 
+                                            url="/s.gif" id="oppLkupImg"/>
+                            </apex:outputPanel>
+                        </apex:facet>
+                    </apex:actionStatus>                        
+                </apex:pageBlockSectionItem>
+                                
+<!-- Row 3 -->
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Owner"/>
+                    <apex:outputPanel layout="block" >
+                    
+                        <apex:actionStatus id="ownerstat"> 
+                            <apex:facet name="start">
+                                <apex:outputText styleClass="lbl1" value=" {!$Label.Please_Wait} ...">
+                                <apex:image value="{!$Resource.spinner}"/></apex:outputText>
+                            </apex:facet>
+                            <apex:facet name="stop">
+                                <apex:outputPanel styleClass="nowrap">
+                                    <apex:outputPanel layout="block" styleClass="requiredInput">               
+                                        <apex:outputPanel layout="block" styleClass="requiredBlock"></apex:outputPanel> 
+                                        <apex:actionRegion immediate="true">                            
+                                            <apex:inputText id="caseOwnerIdField" value="{!ownerName}" 
+                                                styleClass="OwnerIdRequireStyle" >                             
+                                            </apex:inputText> 
+                                        </apex:actionRegion>
+                                        <apex:image alt="" title=""
+                                                    style="cursor: pointer;" styleClass="lookupIcon"
+                                                    onclick="searchOwners(); return false;" 
+                                                    onmouseover="this.className = 'lookupIconOn';" 
+                                                    onmouseout="this.className = 'lookupIcon';" 
+                                                    url="/s.gif" id="oppLkupImg"/>      
+                            
+                                    </apex:outputPanel> 
+                                
+
+                                </apex:outputPanel>
+                            </apex:facet>
+                        </apex:actionStatus>                    
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <c:Label labelValue="Sales District" helpText="{!lisd.helpText_sd} "/>
+                    <apex:outputField value="{!m_Case.Sales_District__c}"/>             
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Total_Opportunity_Revenue_Annual__c.label}"/>
+                    <apex:actionRegion immediate="true">
+                        <c:Currency id="TotalOppRevAnnual" value="{!TotalOpportunityRevenueAnnual}"
+                                    code="{!OppCurrency}" decimals="{!decimals}" locale="{!locale}"/>
+                    </apex:actionRegion>
+                </apex:pageBlockSectionItem>
+                
+<!-- Row 4 -->                
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Contact"/>
+                    <apex:outputPanel layout="block" >
+                    
+                        <apex:actionStatus id="contactstat"> 
+                            <apex:facet name="start">
+                                <apex:outputText styleClass="lbl1" value=" {!$Label.Please_Wait} ...">
+                                <apex:image value="{!$Resource.spinner}"/></apex:outputText>
+                            </apex:facet>
+                            <apex:facet name="stop">
+                                <apex:outputPanel styleClass="nowrap">
+                                    <apex:actionRegion immediate="true">
+                                    <apex:outputPanel layout="block" styleClass="requiredInput">               
+                                        <apex:outputPanel layout="block" styleClass="requiredBlock"></apex:outputPanel> 
+                                            <apex:inputText id="contactfld" value="{!contactName}" styleClass="{!ContactIdRequireStyle}" 
+                                                rendered="{!ContactIdFieldEditable}" >
+                                                <apex:actionSupport action="{!ContactOnChangeEvent}" 
+                                                    event="onchange" 
+                                                    rerender="CustContactForFeedbackFieldId" 
+                                                    oncomplete="applyJQueryStyling();"/>                               
+                                            </apex:inputText> 
+                                            <apex:image alt="" title="" rendered="{!ContactIdFieldEditable}"
+                                                        style="cursor: pointer;" styleClass="lookupIcon"
+                                                        onclick="searchContacts(); return false;" 
+                                                        onmouseover="this.className = 'lookupIconOn';" 
+                                                        onmouseout="this.className = 'lookupIcon';" 
+                                                        url="/s.gif" id="oppLkupImg"/>      
+                            
+                                    </apex:outputPanel> 
+                                </apex:actionRegion>
+                                </apex:outputPanel>
+                            </apex:facet>
+                        </apex:actionStatus>                    
+
+                        <apex:outputField value="{!m_Case.ContactId}" rendered="{!NOT(ContactIdFieldEditable)}"/>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <c:Label labelValue="Sales Office" helpText="{!lisd.helpText_so }"/>
+                    <apex:outputField value="{!m_Case.Sales_Office_Desc__c}"/>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Risk_To_Plan__c.label}"/>
+                    <apex:actionStatus id="riskstat"> 
+                        <apex:facet name="start">
+                            <apex:outputText styleClass="lbl1" value=" {!$Label.Please_Wait} ...">
+                            <apex:image value="{!$Resource.spinner}"/></apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop">
+                            <apex:outputPanel styleClass="nowrap">
+                            <apex:actionRegion immediate="true">
+                                <apex:inputText id="riskfld" value="{!riskName}" styleClass="customLookupStyle" >
+                                <apex:actionSupport action="{!RickNameOnChange}" 
+                                    event="onchange"
+                                    rerender="BudgetAtRiskFieldId, debugTextareaFieldId" 
+                                    oncomplete="applyJQueryStyling();"
+                                    status="riskstat"
+                                    />                               
+                                </apex:inputText> 
+                            </apex:actionRegion>
+                                <apex:image alt="" title=""
+                                            style="cursor: pointer;" styleClass="lookupIcon"
+                                            onclick="searchRisks(); return false;" 
+                                            onmouseover="this.className = 'lookupIconOn';" 
+                                            onmouseout="this.className = 'lookupIcon';" 
+                                            url="/s.gif" id="oppLkupImg"/>
+                            </apex:outputPanel>
+                        </apex:facet>
+                    </apex:actionStatus>                    
+
+                </apex:pageBlockSectionItem>                
+                
+<!-- Row 5 -->                
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Technical_Lab_Group__c.label}"/>
+                    <apex:outputPanel layout="block" styleClass="requiredInput">
+                        <apex:outputPanel layout="block" styleClass="requiredBlock"></apex:outputPanel>
+                        <apex:selectList value="{!TechnicalLabGroup}" size="1" id="TechnicalLabGroupSelectList" 
+                            required="false" styleClass="{!TechnicalLabGroupRequireStyle}">
+                          <apex:selectOptions value="{!TechnicalLabGroups}" /> 
+                        </apex:selectList>
+                    </apex:outputPanel>                 
+                </apex:pageBlockSectionItem>               
+                
+                <apex:pageBlockSectionItem >
+                    <c:Label labelValue="Sales Group" helpText="{!lisd.helpText_sg }"/>
+                    <apex:outputField value="{!m_Case.Sales_Group_Desc__c}"/>                
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Amount_at_Risk_CY__c.label}"/>
+                    <apex:actionRegion immediate="true">
+                        <c:Currency id="BudgetAtRiskFieldId" value="{!CYAmountAtRisk}"
+                                    code="{!RiskCurrency}" decimals="{!decimals}" locale="{!locale}"/>  
+                    </apex:actionRegion>                            
+                </apex:pageBlockSectionItem>
+                
+<!-- Row 6 -->                
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Required_Technical_Output__c.label}"/>
+                    <apex:inputField value="{!m_Case.Required_Technical_Output__c}" required="false"/>
+                </apex:pageBlockSectionItem>                 
+                
+                <apex:pageBlockSectionItem >
+                    <c:Label labelValue="Customer Group" helpText="{!lisd.helpText_cg }"/>
+                    <apex:outputField value="{!m_Case.Customer_Group_Desc__c}"/>                
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputPanel id="aquariusBtn" >
+                        <apex:outputText value="{!$ObjectType.Case.fields.Aquarius__c.label}"/>
+
+                        <apex:outputField value="{!m_Case.Aquarius__c}"/>                           
+
+                            <apex:commandButton id="AquariusButtonId" action="{!initAquarius}" value="Enter Aquarius Data"
+                                                status="aquariusStatus" rerender="thePanel" 
+                                                oncomplete="applyJQueryStyling();"
+                                                />
+
+                        <apex:actionStatus id="aquariusStatus">
+                            <apex:facet name="start">
+                                <apex:outputText escape="false" style="font-weight: bold;" 
+                                                 value="&nbsp;{!$Label.Please_Wait}...">
+                                    <apex:image value="{!$Resource.spinner}"/>
+                                </apex:outputText>
+                            </apex:facet>
+                            <apex:facet name="stop">
+                            </apex:facet>
+                        </apex:actionStatus>
+                    </apex:outputPanel>             
+                </apex:pageBlockSectionItem>
+                
+<!-- Row 7 -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Problem_Cause__c.label}"/>
+                    <apex:outputPanel layout="block" >                
+                        <apex:outputPanel layout="block" styleClass="requiredBlock"></apex:outputPanel>
+                        <apex:inputField id="ForJQueryId" value="{!m_Case.Problem_Cause__c}"  
+                                            required="false" label=""/>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>                
+                
+                <apex:pageBlockSectionItem labelStyleClass="ColWidth3Label" dataStyleClass="ColWidth3Data" helpText="Depends on Business Unit">
+                    <apex:outputText value="{!$ObjectType.Case.fields.PAC_Description__c.label}"/>
+                    <apex:outputPanel >
+                        <apex:outputPanel layout="block" rendered="{!isEditable}">
+                            <apex:actionStatus id="pacdStatus">
+                            <apex:facet name="start">
+                                <apex:outputText styleClass="bold" value=" Please wait ...">
+                                    <apex:image value="{!$Resource.spinner}"/>
+                                </apex:outputText>
+                            </apex:facet>
+                            <apex:facet name="stop">
+                            <apex:outputPanel >
+                                 <apex:selectList id="pacdfld" styleClass="fld3" size="1" 
+                                                  onfocus="addStyleOnFocus(this)" onblur="addStyleOnBlur(this)"
+                                               onkeydown="setfocus2(event, '{!$Component.krtpfld}');"
+                                               disabled="{!lisd.readOnlyL2}" title="{!m_Case.PAC_Description__c}"
+                                                   value="{!m_Case.PAC_Industry_Code__c}" required="false">
+                                      <apex:actionSupport event="onchange" action="{!setPacIndustry}" 
+                                                   rerender="pacdfld, pacifld" status="pacdStatus"/>
+                                      <apex:selectOptions value="{!lisd.pacIndustries}"/>
+                                  </apex:selectList>
+                              </apex:outputPanel>
+                             </apex:facet>
+                             </apex:actionStatus>
+                        </apex:outputPanel>
+                        <apex:outputField rendered="{!!isEditable}"
+                                        value="{!m_Case.PAC_Description__c}"/>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>    
+                               
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.T_RequestedCompletionDate__c.label}"/>
+                    <apex:outputPanel layout="block" styleClass="requiredInput">                
+                        <apex:outputPanel layout="block" styleClass="requiredBlock"></apex:outputPanel>                 
+                        <apex:inputField id="RequestedCompletionDateField" value="{!m_Case.T_RequestedCompletionDate__c}" required="false"
+                            styleClass="{!RequestedCompletionDateRequireStyle}"/>
+                    </apex:outputPanel>                 
+                </apex:pageBlockSectionItem>                 
+                
+<!-- new row -->                
+                <apex:pageBlockSectionItem labelStyleClass="ColWidth3Label" dataStyleClass="ColWidth3Data">
+                    <apex:outputText value=""/>
+                    <apex:outputText value=""/>
+                </apex:pageBlockSectionItem>                                
+                
+                <apex:pageBlockSectionItem labelStyleClass="ColWidth3Label" dataStyleClass="ColWidth3Data" helpText="Depends on PAC Description">
+                    <apex:outputText value="{!$ObjectType.Case.fields.PAC_Industry_Code__c.label}"/>
+                    <apex:outputField id="pacifld" value="{!m_Case.PAC_Industry_Code__c}"/>
+                </apex:pageBlockSectionItem>    
+                
+                <apex:pageBlockSectionItem labelStyleClass="ColWidth3Label" dataStyleClass="ColWidth3Data">
+                    <apex:outputText value=""/>
+                    <apex:outputText value=""/>
+                </apex:pageBlockSectionItem>   
+                                
+<!-- Row 8 -->                                                
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Is_Request_Confidential__c.label}"/>
+                    <apex:inputField value="{!m_Case.Is_Request_Confidential__c}"  
+                                            required="false" label=""/>
+                </apex:pageBlockSectionItem>            
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.SBU__c.label}"/>
+                    <apex:outputPanel layout="block" styleClass="requiredInput">                
+                        <apex:outputPanel layout="block" styleClass="requiredBlock"></apex:outputPanel>                 
+                        <apex:inputField id="SBUField" value="{!m_Case.SBU__c}" required="false"
+                            styleClass="{!SBURequireStyle}"/>
+                    </apex:outputPanel>                 
+                </apex:pageBlockSectionItem>            
+                         
+            
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Requested_Completion_Date_Explanation__c.label}"/>
+                    <apex:inputField id="reqCompDateExplainField" style="width: 95%" 
+                        value="{!m_Case.Requested_Completion_Date_Explanation__c}" required="false"/>                   
+                </apex:pageBlockSectionItem>
+
+<!-- Row 9 -->    
+
+                                        
+
+
+            </apex:pageBlockSection>
+            
+           
+            
+            
+            <!-- Description Information Section -->
+            <apex:pageBlockSection id="DescInfoPageBlockSectionId" columns="3" title="Description Information" collapsible="false">
+            
+                <!-- Row 1 -->
+                <apex:pageBlockSectionItem rendered="false">
+                    <apex:outputText value="{!$ObjectType.Case.fields.Material__c.label}"/>
+                    <apex:inputField id="MaterialFieldId" value="{!m_Case.Material__c}" required="false"/>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem rendered="false">
+                    <apex:outputText value="{!$ObjectType.Case.fields.Priority.label}"/>
+                    <apex:inputField value="{!m_Case.Priority}"  
+                                            required="false" label=""/>
+
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem rendered="false"></apex:pageBlockSectionItem>       
+                
+                <!-- Row -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Objective__c.label}"/>
+                    <apex:outputPanel id="tdSpan6Columns">
+                        <apex:outputPanel layout="block" styleClass="requiredInput">                
+                            <apex:outputPanel layout="block" styleClass="requiredBlock"></apex:outputPanel>                 
+                            <apex:inputField style="width: 100%"  value="{!m_Case.Objective__c}" required="false"
+                                styleClass="{!ObjectiveRequireStyle}"/>
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText rendered="false">test</apex:outputText>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText rendered="false">test</apex:outputText>
+                </apex:pageBlockSectionItem>                          
+
+                <!-- Row 3 -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Background__c.label}"/>
+                    <apex:outputPanel id="tdSpan6Columns">
+                        <apex:outputPanel layout="block" styleClass="requiredInput">                
+                            <apex:outputPanel layout="block" styleClass="requiredBlock"></apex:outputPanel>                 
+                            <apex:inputField style="width: 100%"  value="{!m_Case.Background__c}" required="false"
+                                styleClass="{!BackgroundRequireStyle}"/>
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText rendered="false">test</apex:outputText>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText rendered="false">test</apex:outputText>
+                </apex:pageBlockSectionItem>   
+
+
+                <!-- Row 4 -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Describe_Work_Needed__c.label}"/>
+                    <apex:outputPanel id="tdSpan6Columns">
+                        <apex:outputPanel layout="block" styleClass="requiredInput">                
+                            <apex:outputPanel layout="block" styleClass="requiredBlock"></apex:outputPanel>                 
+                            <apex:inputField style="width: 100%"  value="{!m_Case.Describe_Work_Needed__c}" required="false"
+                                styleClass="{!DescribeWorkNeededRequireStyle}"/>
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText rendered="false">test</apex:outputText>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText rendered="false">test</apex:outputText>
+                </apex:pageBlockSectionItem>   
+                
+                <!-- Row 5 -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Competitive_Products__c.label}"/>
+                    <apex:inputField id="tdSpan6Columns" style="width: 100%"  value="{!m_Case.Competitive_Products__c}" required="false"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText rendered="false">test</apex:outputText>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText rendered="false">test</apex:outputText>
+                </apex:pageBlockSectionItem>   
+                
+
+                <!-- Row 2 -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Sample or Materials Submitted by Customer?"/>
+                    <apex:inputField style="width: 100%"  value="{!m_Case.Sample_Submitted__c}" required="false"/>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Date Sample or Materials Received"/>
+                    <apex:inputField value="{!m_Case.T_Date_Sample_Shipped__c}" required="false"/>
+                </apex:pageBlockSectionItem>    
+                
+                <apex:pageBlockSectionItem >
+                    
+                </apex:pageBlockSectionItem>                
+                
+                <!-- Row 6 -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputText style="text-wrap: normal"
+                        value="{!$ObjectType.Case.fields.What_type_of_sample_being_sent__c.label}"/>
+                    <apex:inputField id="tdSpan6Columns" style="width: 100%"  
+                        value="{!m_Case.What_type_of_sample_being_sent__c}" required="false"/>
+                </apex:pageBlockSectionItem>                
+                <apex:pageBlockSectionItem >
+                    
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    
+                </apex:pageBlockSectionItem>    
+                                            
+            </apex:pageBlockSection>
+                        
+            
+            <!-- Technical service Information Section -->
+            <apex:pageBlockSection id="TechInfoPageBloackSectionId" columns="3" title="Technical service Information" collapsible="false" rendered="{!renderTechServInfoSection}" >
+            
+                <!-- Row 1 -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Project_Duration__c.label}"/>
+                    <apex:inputField id="ProjDurFieldId" value="{!m_Case.Project_Duration__c}" required="false"/>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Estimated_Start_Date__c.label}"/>
+                    <apex:inputField value="{!m_Case.Estimated_Start_Date__c}"  
+                                           required="false" label=""/>                  
+                </apex:pageBlockSectionItem>
+            
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.T_Estimated_Complete_Date__c.label}"/>
+                    <apex:inputField value="{!m_Case.T_Estimated_Complete_Date__c}" required="false"/>                  
+                </apex:pageBlockSectionItem>
+                
+                <!-- Row 2 -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.T_Date_Sample_Received__c.label}"/>
+                    <apex:inputField value="{!m_Case.T_Date_Sample_Received__c}" required="false"/>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputText rendered="false">test</apex:outputText>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText rendered="false">test</apex:outputText>
+                </apex:pageBlockSectionItem>        
+                                  
+                            
+            </apex:pageBlockSection>
+
+            <!-- Technical service Information Section 2 -->
+            <!--
+            <apex:pageBlockSection columns="1" title="Internal Comments" collapsible="false" showHeader="true">
+            
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Internal Comments"/>
+                    
+                </apex:pageBlockSectionItem>            
+                            
+            </apex:pageBlockSection>    
+             -->
+            
+            <!-- Lab Results Section -->
+            <apex:pageBlockSection id="LabResultsPageBlockSectionId" columns="3" title="Lab Results" collapsible="false" rendered="{!renderLabResultsSection}" >
+
+                <!-- Row  -->
+                <apex:pageBlockSectionItem rendered="{!renderLabWorkApprovedPBSItem}">
+                    <apex:outputText value="{!$ObjectType.Case.fields.Lab_Work_Approved__c.label}"/>
+                    <apex:actionRegion immediate="true">
+                        <apex:inputField id="LabWorkApprovedFieldId" value="{!m_Case.Lab_Work_Approved__c}" required="false">
+                            <apex:actionSupport action="{!LabWorkApprovedOnChange}" 
+                                event="onclick" 
+                                rerender="LabWorkCompletedFieldId, CustFeedDueDateFieldId, StatusFieldId, caseOwnerIdField, debugTextareaFieldId" 
+                                oncomplete="applyJQueryStyling();"
+                                status="botbtnsStatus" />                        
+                        </apex:inputField>
+                    </apex:actionRegion>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem rendered="{!renderLabWorkApprovedPBSItem}">
+                    <apex:outputText rendered="false"></apex:outputText>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!renderLabWorkApprovedPBSItem}">
+                    <apex:outputText rendered="false"></apex:outputText>
+                </apex:pageBlockSectionItem>
+                            
+                <!-- Row 1 -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Lab_Work_Completed__c.label}"/>
+                    <apex:actionRegion immediate="true">
+                        <apex:inputField id="LabWorkCompletedFieldId" value="{!m_Case.Lab_Work_Completed__c}"  
+                            required="false" label="" >
+                            <apex:actionSupport action="{!LabWorkCompletedOnChange}" 
+                                event="onclick" 
+                                rerender="LabWorkCompletedByFieldId, LabWorkCompletedDateFieldId, StatusFieldId, 
+                                    LabWorkApprovedFieldId, caseOwnerIdField, debugTextareaFieldId" 
+                                oncomplete="applyJQueryStyling();" 
+                                status="botbtnsStatus" />    
+                                                                          
+                        </apex:inputField> 
+                    </apex:actionRegion>                    
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Lab_Work_Completed_By__c.label}"/>
+                    <apex:outputField id="LabWorkCompletedByFieldId" value="{!m_Case.Lab_Work_Completed_By__c}" />                  
+                </apex:pageBlockSectionItem>
+            
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Lab_Work_Completed_Date__c.label}"/>
+                    <apex:inputField id="LabWorkCompletedDateFieldId" value="{!m_Case.Lab_Work_Completed_Date__c}" required="false"/>                   
+                </apex:pageBlockSectionItem>
+                
+                <!-- Row 2 -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Technical_Achievement__c.label}"/>
+                    <apex:inputField value="{!m_Case.Technical_Achievement__c}" required="false"/>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Technical_Risk_Assessment__c.label}"/>
+                    <apex:inputField value="{!m_Case.Technical_Risk_Assessment__c}" required="false"/>              
+                </apex:pageBlockSectionItem> 
+                                    
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Technical_Approval_Priority__c.label}"/>
+                    <apex:inputField value="{!m_Case.Technical_Approval_Priority__c}" required="false"/>                
+                </apex:pageBlockSectionItem>      
+                     
+                <!-- Row 3 -->
+                <apex:pageBlockSectionItem >
+
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Lab_Tech_Assigned__c.label}"/>
+                    <apex:inputField value="{!m_Case.Lab_Tech_Assigned__c}" required="false"/>              
+                </apex:pageBlockSectionItem> 
+                                    
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.DevEx_Project_Manager__c.label}"/>
+                    <apex:inputField value="{!m_Case.DevEx_Project_Manager__c}" required="false"/>              
+                </apex:pageBlockSectionItem>   
+                
+                <!-- Row 4 -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.DevEx_Transfer_Status__c.label}"/>
+                    <apex:inputField id="DevExTransStatFieldId" value="{!m_Case.DevEx_Transfer_Status__c}" required="false"/>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Estimated_Start_Date__c.label}"/>
+                    <apex:inputField value="{!m_Case.Estimated_Start_Date__c}"  
+                                           required="false" label=""/>                  
+                </apex:pageBlockSectionItem>
+            
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.T_Estimated_Complete_Date__c.label}"/>
+                    <apex:inputField value="{!m_Case.T_Estimated_Complete_Date__c}" required="false"/>                  
+                </apex:pageBlockSectionItem>                
+                                
+                <!-- Row 6 -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputPanel >
+                        <apex:outputText value="{!$ObjectType.Case.fields.W_Results__c.label}"/>
+                        <br/>
+                        <apex:outputText value="(Limit: 255 chars)" />
+                    </apex:outputPanel>
+                    <apex:inputField id="tdSpan6Columns"  style="width: 100%" value="{!m_Case.W_Results__c}" required="false"/>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputText rendered="false">test</apex:outputText>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText rendered="false">test</apex:outputText>
+                </apex:pageBlockSectionItem>                                              
+                            
+            </apex:pageBlockSection>                
+            
+            <!-- Case Time Section -->
+            <apex:pageBlockSection id="caseTimePageBlockSectionId" columns="3" title="Case Time (in hours)" collapsible="false" rendered="{!renderCaseTimeSection}" >
+            
+                <!-- Row 1 -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Case_Time_In_Progress__c.label}"/>
+                    <apex:inputField value="{!m_Case.Case_Time_In_Progress__c}" required="false"/>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Case_Time_Pending__c.label}"/>
+                    <apex:inputField value="{!m_Case.Case_Time_Pending__c}"  
+                                           required="false" label=""/>                  
+                </apex:pageBlockSectionItem>
+            
+                <apex:pageBlockSectionItem >
+                    <apex:outputText rendered="false">test</apex:outputText>
+                </apex:pageBlockSectionItem>
+                
+                <!-- Row 2 -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Total_Case_Time__c.label}"/>
+                    <apex:inputField value="{!m_Case.Total_Case_Time__c}" required="false"/>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Total_Task_Hours__c.label}"/>
+                    <apex:inputField value="{!m_Case.Total_Task_Hours__c}"  
+                                           required="false" label=""/>                  
+                </apex:pageBlockSectionItem>
+            
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Total_Case_Hours__c.label}"/>
+                    <apex:inputField value="{!m_Case.Total_Case_Hours__c}" required="false"/>                   
+                </apex:pageBlockSectionItem>                    
+                
+            </apex:pageBlockSection>    
+            
+            
+            <!-- Customer Feedback Section -->
+            <apex:pageBlockSection id="CustFeedPageBlockSectionId" columns="3" title="Customer Feedback" collapsible="false" rendered="{!renderCustomerFeedbackSection}" >
+            
+                <!-- Row 1 -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Customer_Feedback_Due_Date__c.label}"/>
+                    <apex:outputField id="CustFeedDueDateFieldId" value="{!m_Case.Customer_Feedback_Due_Date__c}" />
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Customer_Contact_for_Feedback__c.label}"/>
+                    <apex:outputPanel layout="block" >
+                        <apex:actionStatus id="custContFeedStat"> 
+                            <apex:facet name="start">
+                                <apex:outputText styleClass="lbl1" value=" {!$Label.Please_Wait} ...">
+                                <apex:image value="{!$Resource.spinner}"/></apex:outputText>
+                            </apex:facet>
+                            <apex:facet name="stop">
+                                <apex:outputPanel styleClass="nowrap">
+                                    <apex:actionRegion immediate="true">                            
+                                        <apex:inputText id="CustContactForFeedbackFieldId" value="{!custContFeedbackName}">
+                                            <apex:actionSupport action="{!CustContFeedbackOnChange}" 
+                                                    event="onchange" 
+                                                    rerender="CustContactForFeedbackFieldId" 
+                                                    oncomplete="applyJQueryStyling();"/>                                        
+                                        </apex:inputText> 
+                                    </apex:actionRegion>
+                                    <apex:image alt="" title=""
+                                                style="cursor: pointer;" styleClass="lookupIcon"
+                                                onclick="searchCustContFeedback(); return false;" 
+                                                onmouseover="this.className = 'lookupIconOn';" 
+                                                onmouseout="this.className = 'lookupIcon';" 
+                                                url="/s.gif" id="oppLkupImg"/>      
+
+                                </apex:outputPanel>
+                            </apex:facet>
+                        </apex:actionStatus>                    
+                    </apex:outputPanel>                                         
+                </apex:pageBlockSectionItem>
+
+        
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Feedback_Completed__c.label}"/>
+                    <apex:actionRegion immediate="true">
+                        <apex:inputField id="FeedbackCompletedFieldId" value="{!m_Case.Feedback_Completed__c}"  
+                                               required="false" label="">
+                            <apex:actionSupport action="{!FeedbackCompletedOnChange}" 
+                                event="onclick" 
+                                rerender="FeedbackCompletedByFieldId, CustomerFeedbackDateFieldId, StatusFieldId" 
+                                oncomplete="applyJQueryStyling();"
+                                status="botbtnsStatus" />                                               
+                        </apex:inputField> 
+                    </apex:actionRegion>            
+                </apex:pageBlockSectionItem>  
+                
+                <!-- Row 2 -->
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Customer_Feedback_By__c.label}"/>
+                    <apex:outputPanel layout="block" >
+                    
+                        <apex:actionStatus id="custFeedbackByStat"> 
+                            <apex:facet name="start">
+                                <apex:outputText styleClass="lbl1" value=" {!$Label.Please_Wait} ...">
+                                <apex:image value="{!$Resource.spinner}"/></apex:outputText>
+                            </apex:facet>
+                            <apex:facet name="stop">
+                                <apex:outputPanel styleClass="nowrap">
+                                    <apex:actionRegion immediate="true">                            
+                                        <apex:inputText id="CustomerFeedbackByFieldId" value="{!custFeedbackByName}">
+                                            <apex:actionSupport action="{!CustFeedbackByOnChange}" 
+                                                    event="onchange" 
+                                                    rerender="CustomerFeedbackByFieldId" 
+                                                    oncomplete="applyJQueryStyling();"/>                                        
+                                        </apex:inputText> 
+                                    </apex:actionRegion>
+                                    <apex:image alt="" title=""
+                                                style="cursor: pointer;" styleClass="lookupIcon"
+                                                onclick="searchCustFeedbackBy(); return false;" 
+                                                onmouseover="this.className = 'lookupIconOn';" 
+                                                onmouseout="this.className = 'lookupIcon';" 
+                                                url="/s.gif" id="oppLkupImg"/>      
+
+                                </apex:outputPanel>
+                            </apex:facet>
+                        </apex:actionStatus>                    
+                    </apex:outputPanel>                 
+                    
+                </apex:pageBlockSectionItem>                
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Feedback_Completed_Date__c.label}"/>
+                    <apex:inputField id="CustomerFeedbackDateFieldId" value="{!m_Case.Feedback_Completed_Date__c}"  
+                                           required="false" label=""/>                  
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Feedback_Completed_By__c.label}"/>
+                    <apex:outputField id="FeedbackCompletedByFieldId" value="{!m_Case.Feedback_Completed_By__c}"/>              
+                </apex:pageBlockSectionItem>    
+   
+                <!-- Row 3 -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Customer_Conclusion_of_Results__c.label}"/>
+                    <apex:inputField value="{!m_Case.Customer_Conclusion_of_Results__c}" required="false"/>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem ></apex:pageBlockSectionItem>
+            
+                <apex:pageBlockSectionItem ></apex:pageBlockSectionItem>                
+                    
+                <!-- Row 4 -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Customer_Feedback__c.label}"/>
+                    <apex:inputField id="tdSpan6Columns" style="width: 100%" value="{!m_Case.Customer_Feedback__c}" required="false"/>
+                </apex:pageBlockSectionItem>  
+                
+                <apex:pageBlockSectionItem ></apex:pageBlockSectionItem>
+            
+                <apex:pageBlockSectionItem ></apex:pageBlockSectionItem>                       
+                
+                <!-- Row 5 -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$ObjectType.Case.fields.Feedback_Results_and_Recommendations__c.label}"/>
+                    <apex:inputField id="tdSpan6Columns" style="width: 100%" value="{!m_Case.Feedback_Results_and_Recommendations__c}" required="false"/>
+                </apex:pageBlockSectionItem>                                                                                        
+                
+            </apex:pageBlockSection>    
+            
+            <!-- Buttons -->
+            <apex:pageBlockButtons location="bottom">
+                <apex:actionStatus id="botbtnsStatus" onstart="showSpinner();" onstop="hideSpinner();"> 
+                    <apex:facet name="start">
+                        <apex:outputText styleClass="lbl1" value=" {!$Label.Please_Wait} ...">
+                            <apex:image value="{!$Resource.spinner}"/></apex:outputText>
+                    </apex:facet>
+                    <apex:facet name="stop">
+                        <apex:outputPanel >            
+                            <apex:commandButton value="Save" action="{!save}" status="botbtnsStatus" rerender="thePanel" disabled="{!disableSave}" oncomplete="applyJQueryStyling();"/>
+                            <apex:commandButton value="Save and New" action="{!saveAndNew}" status="botbtnsStatus" rerender="thePanel" disabled="{!disableSave}" oncomplete="applyJQueryStyling();" />
+                            <apex:commandButton value="Save and Submit" action="{!saveAndSubmit}" 
+                                status="botbtnsStatus" rerender="thePanel" disabled="{!disableSave}" 
+                                rendered="{!renderSaveAndSubmitButton}"
+                                oncomplete="applyJQueryStyling();"/>
+                            <apex:commandButton value="Cancel" action="{!cancel}" status="botbtnsStatus" rerender="thePanel" oncomplete="applyJQueryStyling();"/>
+                        </apex:outputPanel>
+                    </apex:facet>
+                </apex:actionStatus>                                
+            </apex:pageBlockButtons>
+
+        </apex:pageBlock>
+
+         
+    
+    </apex:form>
+    
+    <!-- Opportunity search form  -->
+    <apex:form rendered="{!renderOppsForm}" >
+        <apex:pageBlock title="Select Opportunity">
+            <apex:pageBlockButtons location="top">
+                <apex:actionStatus id="stat2"> 
+                    <apex:facet name="start">
+                        <apex:outputText styleClass="lbl1" value=" {!$Label.Please_Wait} ...">
+                            <apex:image value="{!$Resource.spinner}"/></apex:outputText>
+                    </apex:facet>
+
+                    <apex:facet name="stop"><apex:outputPanel >
+                <apex:outputLabel for="oppfld2" styleClass="lbl1"
+                                  value="{!$ObjectType.Sample_Request__c.fields.Opportunity__c.label}"/>
+                <apex:inputText id="oppfld2" value="{!oppName}" styleClass="fld1"/>&nbsp;
+                <apex:commandButton action="{!searchOpps}" value="Search" 
+                                    status="stat2" rerender="thePanel"/>
+                <apex:commandButton action="{!cancelSearchOpps}" value="Cancel" 
+                                    status="stat2" rerender="thePanel"
+                                    oncomplete="JSWindowLoaded();applyJQueryStyling();"/>
+                </apex:outputPanel></apex:facet></apex:actionStatus>
+            </apex:pageBlockButtons>
+            <apex:outputPanel rendered="{!!renderOppsList}">
+                <apex:outputLabel value="No Opportunities found for the Selected Account" styleClass="lbl1"/>
+            </apex:outputPanel>
+
+            <apex:pageMessage severity="Warning" strength="3"
+                rendered="{!renderMaxMsg1}"
+                summary="The search returned more than the maximum number of Opportunities ({!maxCount1}). Please refine your search criteria." />
+            
+            <apex:pageBlockTable value="{!opportunities}" var="o" rows="{!maxCount1}" rendered="{!renderOppsList}">
+                <apex:column >
+                    <apex:facet name="header">Opportunity</apex:facet>
+                    <apex:commandLink action="{!cancelSearchOpps}">
+                        <apex:outputText value="{!o.Name}"/>
+                        <apex:param assignTo="{!m_Case.Related_Opportunity__c}" name="p2" value="{!o.Id}"/>
+                        <apex:param assignTo="{!oppName}" name="p1" value="{!o.Name}"/>
+                        <apex:param assignTo="{!oppIdFromOppSearch}" name="p3" value="{!o.Id}"/>
+                    </apex:commandLink>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Description</apex:facet>
+                    <apex:outputText value="{!o.Description}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Stage</apex:facet>
+                    <apex:outputText value="{!o.StageName}"/>
+                </apex:column>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>
+        
+    
+    <!-- Risk search form  -->
+    <apex:form rendered="{!renderRiskForm}" >
+        <apex:variable var="decimals" value="2"/>
+        <apex:variable var="locale" value="{!userLocale}"/>    
+        <apex:pageBlock title="Select Risk">
+            <apex:pageBlockButtons location="top">
+                <apex:actionStatus id="stat3"> 
+                    <apex:facet name="start">
+                        <apex:outputText styleClass="lbl1" value=" {!$Label.Please_Wait} ...">
+                            <apex:image value="{!$Resource.spinner}"/></apex:outputText>
+                    </apex:facet>
+
+                    <apex:facet name="stop"><apex:outputPanel >
+                <apex:outputLabel for="riskfld2" styleClass="lbl1"
+                                  value="{!$ObjectType.Case.fields.Risk_To_Plan__c.label}"/>
+                <apex:inputText id="riskfld2" value="{!riskName}" styleClass="fld1"/>&nbsp;
+                <apex:commandButton action="{!searchRisks}" value="Search" 
+                                    status="stat3" rerender="thePanel"/>
+                <apex:commandButton action="{!cancelSearchRisks}" value="Cancel" 
+                                    status="stat3" rerender="thePanel"
+                                    oncomplete="JSWindowLoaded();applyJQueryStyling();"/>
+                </apex:outputPanel></apex:facet></apex:actionStatus>
+            </apex:pageBlockButtons>
+            <apex:outputPanel rendered="{!!renderRisksList}">
+                <apex:outputLabel value="No Risks found for the Selected Account" styleClass="lbl1"/>
+            </apex:outputPanel>
+
+            <apex:pageMessage severity="Warning" strength="3"
+                rendered="{!renderMaxMsg1}"
+                summary="The search returned more than the maximum number of Risks ({!maxCount1}). Please refine your search criteria." />
+            
+            <apex:pageBlockTable value="{!risks}" var="r" rows="{!maxCount1}" rendered="{!renderRisksList}">
+                <apex:column >
+                    <apex:facet name="header">Risk</apex:facet>
+                    <apex:commandLink action="{!cancelSearchRisks}">
+                        <apex:outputText value="{!r.Name}"/>
+                        <apex:param assignTo="{!riskName}" name="p1" value="{!r.Name}"/>
+                        <apex:param assignTo="{!m_Case.Risk_To_Plan__c}" name="p2" value="{!r.Id}"/>
+                    </apex:commandLink>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Reason</apex:facet>
+                    <apex:outputText value="{!r.Reason__c}"/>
+                </apex:column>                
+                <apex:column >
+                    <apex:facet name="header">Stage</apex:facet>
+                    <apex:outputText value="{!r.Stage__c}"/>
+                </apex:column>                
+                <apex:column >
+                    <apex:facet name="header">Current Year Plan at Risk</apex:facet>
+                     <c:Currency value="{!r.Amount_at_Risk_CY__c}"
+                                 code="{!r.CurrencyIsoCode}" decimals="{!decimals}" locale="{!locale}"/>                        
+                </apex:column>              
+                <apex:column >
+                    <apex:facet name="header">% Probability of Risk this Year</apex:facet>
+                    <apex:outputText value="{!r.Probability_of_Risk_CY__c}"/>                   
+                </apex:column>  
+                <apex:column >
+                    <apex:facet name="header">Weighted Plan at Risk this year</apex:facet>
+                     <c:Currency value="{!r.Weighted_Amount_at_Risk_CY__c}"
+                                 code="{!r.CurrencyIsoCode}" decimals="{!decimals}" locale="{!locale}"/>                        
+                </apex:column>                                                                 
+
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>    
+    
+    
+    <!-- Contact search form  -->
+    <apex:form rendered="{!renderContactForm}" >
+   
+        <apex:pageBlock title="Select Contact">
+            <apex:pageBlockButtons location="top">
+                <apex:actionStatus id="stat3"> 
+                    <apex:facet name="start">
+                        <apex:outputText styleClass="lbl1" value=" {!$Label.Please_Wait} ...">
+                            <apex:image value="{!$Resource.spinner}"/></apex:outputText>
+                    </apex:facet>
+
+                    <apex:facet name="stop"><apex:outputPanel >
+                <apex:outputLabel for="contactfld2" styleClass="lbl1"
+                                  value="Contact"/>
+                <apex:inputText id="contactfld2" value="{!contactName}" styleClass="fld1"/>&nbsp;
+                <apex:commandButton action="{!searchContacts}" value="Search" 
+                                    status="stat3" rerender="thePanel"/>
+                <apex:commandButton action="{!cancelSearchContacts}" value="Cancel" 
+                                    status="stat3" rerender="thePanel"
+                                    oncomplete="JSWindowLoaded();applyJQueryStyling();"/>
+                </apex:outputPanel></apex:facet></apex:actionStatus>
+            </apex:pageBlockButtons>
+            <apex:outputPanel rendered="{!!renderContactsList}">
+                <apex:outputLabel value="No Contacts found for the Selected Account" styleClass="lbl1"/>
+            </apex:outputPanel>
+
+            <apex:pageMessage severity="Warning" strength="3"
+                rendered="{!renderMaxMsg1}"
+                summary="The search returned more than the maximum number of Contacts ({!maxCount1}). Please refine your search criteria." />
+            
+            <apex:pageBlockTable value="{!contacts}" var="c" rows="{!maxCount1}" rendered="{!renderContactsList}">
+                <apex:column >
+                    <apex:facet name="header">Contact</apex:facet>
+                    <apex:commandLink action="{!cancelSearchContacts}">
+                        <apex:outputText value="{!c.Name}"/>
+                        <apex:param assignTo="{!m_Case.ContactId}" name="p2" value="{!c.Id}"/>
+                        <apex:param assignTo="{!contactName}" name="p1" value="{!c.Name}"/>
+                    </apex:commandLink>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Email</apex:facet>
+                    <apex:outputText value="{!c.Email}"/>
+                </apex:column>                
+                <apex:column >
+                    <apex:facet name="header">Phone</apex:facet>
+                    <apex:outputText value="{!c.Phone}"/>
+                </apex:column>                
+                <apex:column >
+                    <apex:facet name="header">City</apex:facet>
+                    <apex:outputText value="{!c.MailingCity}"/>
+                </apex:column>  
+                <apex:column >
+                    <apex:facet name="header">Country</apex:facet>
+                    <apex:outputText value="{!c.MailingCountry}"/>
+                </apex:column>  
+
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>    
+    
+    <!-- Owner search form  -->
+    <apex:form rendered="{!renderOwnerForm}" >
+   
+        <apex:pageBlock title="Select Owner">
+            <apex:pageBlockButtons location="top">
+                <apex:actionStatus id="stat3"> 
+                    <apex:facet name="start">
+                        <apex:outputText styleClass="lbl1" value=" {!$Label.Please_Wait} ...">
+                            <apex:image value="{!$Resource.spinner}"/></apex:outputText>
+                    </apex:facet>
+
+                    <apex:facet name="stop"><apex:outputPanel >
+                <apex:outputLabel for="ownerfld2" styleClass="lbl1"
+                                  value="Owner"/>
+                <apex:inputText id="ownerfld2" value="{!ownerName}" styleClass="fld1"/>&nbsp;
+                <apex:commandButton action="{!searchOwners}" value="Search" 
+                                    status="stat3" rerender="thePanel"/>
+                <apex:commandButton action="{!cancelSearchOwners}" value="Cancel" 
+                                    status="stat3" rerender="thePanel"
+                                    oncomplete="JSWindowLoaded();applyJQueryStyling();"/>
+                </apex:outputPanel></apex:facet></apex:actionStatus>
+            </apex:pageBlockButtons>
+            <apex:outputPanel rendered="{!!renderOwnersList}">
+                <apex:outputLabel value="No Owners found" styleClass="lbl1"/>
+            </apex:outputPanel>
+
+            <apex:pageMessage severity="Warning" strength="3"
+                rendered="{!renderMaxMsg1}"
+                summary="The search returned more than the maximum number of Owners ({!maxCount1}). Please refine your search criteria." />
+            
+            <apex:pageBlockTable value="{!owners}" var="o" rows="{!maxCount1}" rendered="{!renderOwnersList}">
+                <apex:column >
+                    <apex:facet name="header">Owner</apex:facet>
+                    <apex:commandLink action="{!cancelSearchOwners}">
+                        <apex:outputText value="{!o.Full_Name__c}"></apex:outputText>
+                        <apex:param assignTo="{!m_Case.OwnerId}" name="p2" value="{!o.Id}"/>
+                        <apex:param assignTo="{!ownerName}" name="p1" value="{!o.Full_Name__c}"/>
+                    </apex:commandLink>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Ashland Employee Number</apex:facet>
+                    <apex:outputText value="{!o.Ashland_Employee_Number__c}"/>
+                </apex:column>                
+                <apex:column >
+                    <apex:facet name="header">Email</apex:facet>
+                    <apex:outputText value="{!o.Email}"/>
+                </apex:column>                
+                <apex:column >
+                    <apex:facet name="header">Phone</apex:facet>
+                    <apex:outputText value="{!o.Phone}"/>
+                </apex:column>                
+                <apex:column >
+                    <apex:facet name="header">City</apex:facet>
+                    <apex:outputText value="{!o.City}"/>
+                </apex:column>  
+                <apex:column >
+                    <apex:facet name="header">Country</apex:facet>
+                    <apex:outputText value="{!o.Country}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Title</apex:facet>
+                    <apex:outputText value="{!o.Title}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Department</apex:facet>
+                    <apex:outputText value="{!o.Department}"/>
+                </apex:column>                                  
+
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>
+        
+    <!-- Customer_Feedback_By__c search form  -->
+    <apex:form rendered="{!renderCustFeedbackByForm}" >
+   
+        <apex:pageBlock title="Select Owner">
+            <apex:pageBlockButtons location="top">
+                <apex:actionStatus id="stat3"> 
+                    <apex:facet name="start">
+                        <apex:outputText styleClass="lbl1" value=" {!$Label.Please_Wait} ...">
+                            <apex:image value="{!$Resource.spinner}"/></apex:outputText>
+                    </apex:facet>
+
+                    <apex:facet name="stop"><apex:outputPanel >
+                <apex:outputLabel for="ownerfld2" styleClass="lbl1"
+                                  value="Owner"/>
+                <apex:inputText id="ownerfld2" value="{!custFeedbackByName}" styleClass="fld1"/>&nbsp;
+                <apex:commandButton action="{!searchCustFeedbackBy}" value="Search" 
+                                    status="stat3" rerender="thePanel"/>
+                <apex:commandButton action="{!cancelSearchCustFeedbackBy}" value="Cancel" 
+                                    status="stat3" rerender="thePanel"
+                                    oncomplete="JSWindowLoaded();applyJQueryStyling();"/>
+                </apex:outputPanel></apex:facet></apex:actionStatus>
+            </apex:pageBlockButtons>
+            <apex:outputPanel rendered="{!!rendercustFeedbackByList}">
+                <apex:outputLabel value="No Owners found" styleClass="lbl1"/>
+            </apex:outputPanel>
+
+            <apex:pageMessage severity="Warning" strength="3"
+                rendered="{!renderMaxMsg1}"
+                summary="The search returned more than the maximum number of Owners ({!maxCount1}). Please refine your search criteria." />
+            
+            <apex:pageBlockTable value="{!CustFeedbackBy}" var="o" rows="{!maxCount1}" rendered="{!renderCustFeedbackByList}">
+                <apex:column >
+                    <apex:facet name="header">Owner</apex:facet>
+                    <apex:commandLink action="{!cancelSearchCustFeedbackBy}">
+                        <apex:outputText value="{!o.Full_Name__c}"></apex:outputText>
+                        <apex:param assignTo="{!m_Case.Customer_Feedback_By__c}" name="p2" value="{!o.Id}"/>
+                        <apex:param assignTo="{!custFeedbackByName}" name="p1" value="{!o.Full_Name__c}"/>
+                    </apex:commandLink>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Ashland Employee Number</apex:facet>
+                    <apex:outputText value="{!o.Ashland_Employee_Number__c}"/>
+                </apex:column>                
+                <apex:column >
+                    <apex:facet name="header">Email</apex:facet>
+                    <apex:outputText value="{!o.Email}"/>
+                </apex:column>                
+                <apex:column >
+                    <apex:facet name="header">Phone</apex:facet>
+                    <apex:outputText value="{!o.Phone}"/>
+                </apex:column>                
+                <apex:column >
+                    <apex:facet name="header">City</apex:facet>
+                    <apex:outputText value="{!o.City}"/>
+                </apex:column>  
+                <apex:column >
+                    <apex:facet name="header">Country</apex:facet>
+                    <apex:outputText value="{!o.Country}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Title</apex:facet>
+                    <apex:outputText value="{!o.Title}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Department</apex:facet>
+                    <apex:outputText value="{!o.Department}"/>
+                </apex:column>                                  
+
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>
+    
+    <!-- Customer_Contact_for_Feedback__c search form  -->
+    <apex:form rendered="{!renderCustContFeedbackForm}" >
+   
+        <apex:pageBlock title="Select Contact">
+            <apex:pageBlockButtons location="top">
+                <apex:actionStatus id="stat3"> 
+                    <apex:facet name="start">
+                        <apex:outputText styleClass="lbl1" value=" {!$Label.Please_Wait} ...">
+                            <apex:image value="{!$Resource.spinner}"/></apex:outputText>
+                    </apex:facet>
+
+                    <apex:facet name="stop"><apex:outputPanel >
+                <apex:outputLabel for="contactfld2" styleClass="lbl1"
+                                  value="Contact"/>
+                <apex:inputText id="contactfld2" value="{!custContFeedbackName}" styleClass="fld1"/>&nbsp;
+                <apex:commandButton action="{!searchCustContFeedback}" value="Search" 
+                                    status="stat3" rerender="thePanel"/>
+                <apex:commandButton action="{!cancelSearchCustContFeedback}" value="Cancel" 
+                                    status="stat3" rerender="thePanel"
+                                    oncomplete="JSWindowLoaded();applyJQueryStyling();"/>
+                </apex:outputPanel></apex:facet></apex:actionStatus>
+            </apex:pageBlockButtons>
+            <apex:outputPanel rendered="{!!renderCustContFeedbackList}">
+                <apex:outputLabel value="No Contacts found for the Selected Account" styleClass="lbl1"/>
+            </apex:outputPanel>
+
+            <apex:pageMessage severity="Warning" strength="3"
+                rendered="{!renderMaxMsg1}"
+                summary="The search returned more than the maximum number of Contacts ({!maxCount1}). Please refine your search criteria." />
+            
+            <apex:pageBlockTable value="{!CustContFeedback}" var="c" rows="{!maxCount1}" rendered="{!renderCustContFeedbackList}">
+                <apex:column >
+                    <apex:facet name="header">Contact</apex:facet>
+                    <apex:commandLink action="{!cancelSearchCustContFeedback}">
+                        <apex:outputText value="{!c.Name}"/>
+                        <apex:param assignTo="{!custContFeedbackName}" name="p1" value="{!c.Name}"/>
+                        <apex:param assignTo="{!m_Case.Customer_Contact_for_Feedback__c}" name="p2" value="{!c.Id}"/>
+                    </apex:commandLink>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Email</apex:facet>
+                    <apex:outputText value="{!c.Email}"/>
+                </apex:column>                
+                <apex:column >
+                    <apex:facet name="header">Phone</apex:facet>
+                    <apex:outputText value="{!c.Phone}"/>
+                </apex:column>                
+                <apex:column >
+                    <apex:facet name="header">City</apex:facet>
+                    <apex:outputText value="{!c.MailingCity}"/>
+                </apex:column>  
+                <apex:column >
+                    <apex:facet name="header">Country</apex:facet>
+                    <apex:outputText value="{!c.MailingCountry}"/>
+                </apex:column>  
+
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>    
+    
+    
+</apex:outputPanel> 
+
+</apex:page>

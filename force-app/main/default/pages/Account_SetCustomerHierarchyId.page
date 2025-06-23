@@ -1,0 +1,46 @@
+<apex:page controller="Account_Hierarchy_Controller"
+           sidebar="false"
+           tabStyle="Account">
+    <apex:form id="theForm">
+        <apex:pageBlock title="Account - Set Customer Hierarchy Ids ">
+            <apex:pageMessages />
+        
+            <apex:panelGrid columns="3" columnClasses="clsA,clsB">
+                <apex:outputLabel >
+                    AccountNumber SOrg DChan Divsn : <br/>
+                    examples : <br/>
+                    0000123456 0123 10 11<br/>
+                    0000234567 0123 10 11<br/>
+                    ...<br/>
+                </apex:outputLabel>
+                
+                <apex:inputTextArea value="{!accountNumbersText}" 
+                                    cols="25" rows="10"/>
+
+                <apex:actionStatus id="astat1">
+                    <apex:facet name="start">
+                        <apex:outputText escape="false" 
+                                         value=" Please wait ... ">
+                            <apex:image value="{!$Resource.spinner}"/>
+                        </apex:outputText>
+                    </apex:facet>
+                    <apex:facet name="stop">
+                        <apex:outputPanel >
+		                    <apex:commandButton action="{!setCustomerHierarchyIds}"
+		                                        value="Set Customer Hierarchy Ids"
+		                                        rerender="theForm" status="astat1"/>
+		                    <br/><br/>
+		                    <apex:commandButton action="{!submitBatchJob}"
+		                                        value="Submit Batch Job"
+		                                        rerender="theForm" status="astat1"/>
+                        </apex:outputPanel>
+                    </apex:facet>
+                </apex:actionStatus>
+            </apex:panelGrid>
+        </apex:pageBlock>
+    </apex:form>
+    <style>
+        .clsA {font-weight: bold; text-align: center; vertical-align: center;}
+        .clsB {font-weight: normal; text-align: center;}
+    </style>
+</apex:page>

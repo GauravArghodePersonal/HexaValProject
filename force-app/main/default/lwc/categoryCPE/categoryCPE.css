@@ -1,0 +1,22 @@
+.breadcrumb {
+    /* Basic styling for all breadcrumbs */
+    padding: 0 5px;
+}
+
+.breadcrumb.clickable {
+    /* Specific styling for clickable breadcrumbs */
+    text-decoration: underline;
+    color: blue;
+    cursor: pointer;
+}
+
+.separator {
+    /* Styling for separators */
+    padding: 0 5px;
+}
+
+.current-category-id {
+    margin-top: 10px;
+    font-style: italic;
+    color: #333333;
+}

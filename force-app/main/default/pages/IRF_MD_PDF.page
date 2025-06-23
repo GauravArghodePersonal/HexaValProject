@@ -1,0 +1,417 @@
+<apex:page cache="true" showHeader="false" renderAs="pdf" applyBodyTag="false" Controller="PdfController" tabstyle="IRF_Monthly_Data__c">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+        <style>
+            .tableBorder{
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 9pt;
+            border:1px solid black;
+            padding:5px;
+            width:30%;
+            font-weight:600;
+            <!-- font-size:14px; -->
+            }
+            .lowerImage
+            {
+            margin-left: 0px;
+            margin-top: 0px;
+            }
+            .lowerImageContent
+            {
+            margin-left: 0px;
+            margin-top: 90px;
+            }
+            .tableMaterial{
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 9pt;
+            font-weight:600;
+            <!-- font-size:14px; -->
+            height: 45px;
+            border-top: .02em solid black;
+            border-right: .02em solid black;
+            border-bottom: .02em solid black;
+            text-align:left;
+            
+            
+            }
+            .tableMaterialitem
+            {
+            text-align:left;
+            
+            border-bottom: .02em solid black;
+            border-right: .02em solid black;
+            font-weight:200;
+            <!-- font-size:14px; -->
+            height: 45px;
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 9pt;
+            }
+            .tableValue{
+            font-weight:200;    
+            }
+            .bottomTable
+            {
+            font-weight:200;
+            
+            text-align:left;
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 8pt;
+            
+            }
+            
+            .totalDiv{
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 9pt;
+            text-align:left;
+            height:99px;
+            }
+            .billingAddressDiv{
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 10pt;
+            
+            margin-top: 20px;
+            margin-left: 50px;
+            }
+            
+            
+            
+            @page {
+            size: 8.5in 11in;
+            margin-top: 2cm;
+            margin-bottom: 0.5cm;
+            margin-left: 0.5cm;
+            margin-right: 0.5cm;
+            .container{
+            margin:0px;
+            padding:0px;
+            }
+            @top-right {
+            content: "Page " counter(page)"("counter(pages)")";
+            }
+            }
+            .clearfix:after {
+            content: " "; /* Older browser do not support empty content */
+            visibility: hidden;
+            display: block;
+            height: 0;
+            clear: both;
+            }
+        </style>
+    </head>   
+    <html>
+        <div class="container">
+            <apex:repeat value="{!irf_MonthlyData}" var="IRF_Monthly_Data__c" id="theRepeat">
+                <apex:form styleClass="clearfix">
+                    <!--Header Started -->
+                    <div id="parentDiv">                    
+                        <div id="headerdiv" class="clearfix">
+                            <div  id="solenisLogo" style="float:left;font-family: Arial Unicode MS;font-weight: bold; Font-Size:18px;margin-left:0px;">
+                                <apex:image id="theImage" value="{!$Resource.solenisBlackWhite}" alt="LOGO of SOLENIS"/> 
+                            </div>
+                            <div style="width:280px;float:left;margin-left: 64px;">
+                                <div  id="Invoiceheader" style="font-family: Arial Unicode MS;font-weight: bold;font-size:23px;margin:0 auto;width:110px;">
+                                    <apex:outputText value="INVOICE"/>
+                                </div>   
+                            </div>
+                        </div>
+                        <!--Header Complete -->
+                        
+                        <!--MainInfo started -->
+                        <div id="maininfo" class="clearfix">
+                            <div style="float: left;width:30%;">
+                                <div class="addressDiv" style="font-family: 'Helvetica', 'Arial', sans-serif;font-size: 9pt;font-weight:bold;margin-top: 52px;margin-left: 50px;">  
+                                    <div>
+                                        Solenis LLC
+                                    </div>
+                                    
+                                    <div>
+                                        2475 Pinnacle Drive  
+                                    </div>
+                                    <div>
+                                        Wilmington DE 19803    
+                                    </div>
+                                    <div>
+                                        USA 
+                                    </div>        
+                                    <div style="padding-top:30px;">
+                                        Remittance instructions below 
+                                    </div>                                                      
+                                </div>  
+                            </div>
+                            <div style="float: left;width:70%;">   
+                                <table width="100%">
+                                    <tbody>
+                                        <tr>
+                                            <td class="tableBorder">
+                                                <div><apex:outputText value="Invoice Number"/></div> 
+                                                <div class="tableValue"><apex:outputText value="{!IRF_Monthly_Data__c.Invoice_Numbers__c}"/></div>
+                                            </td>
+                                            <td class="tableBorder">
+                                                <div><apex:outputText value="Invoice Start Date"/></div> 
+                                                <div class="tableValue"><apex:outputText value="{0,date,dd' 'MMMMM' 'yyyy}"><apex:param value="{!IRF_Monthly_Data__c.Invoice_Start_Date__c}" /></apex:outputText></div>
+                                            </td>
+                                            <td class="tableBorder">
+                                                <div><apex:outputText value="Invoice Due Date"/></div> 
+                                                <div class="tableValue"><apex:outputText value="{0,date,dd' 'MMMMM' 'yyyy}"><apex:param value="{!IRF_Monthly_Data__c.Invoice_Due_Date__c}" /></apex:outputText></div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="tableBorder">
+                                                <div><apex:outputText value="P.O. Number"/> </div>
+                                                <div class="tableValue"><apex:outputText value="{!IRF_Monthly_Data__c.Purchase_Order_Number__c}"/> </div>  
+                                            </td>
+                                            <td class="tableBorder">
+                                                <div><apex:outputText value="Payment Terms"/> </div>
+                                                <div class="tableValue"><apex:outputText value="{!IRF_Monthly_Data__c.Payment_Terms__c}"/>  </div>
+                                            </td>
+                                            <td class="tableBorder">
+                                                <div><apex:outputText value="Payer Number"/> </div> 
+                                                <div class="tableValue"><apex:outputText value="{!IRF_Monthly_Data__c.IRF__r.ShipTo__r.Related_Payer__r.AccountNumber}"/> </div>                               
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="tableBorder">
+                                                <div> <apex:outputText value="Ship-To Number "/></div> 
+                                                <div class="tableValue"><apex:outputText value="{!IRF_Monthly_Data__c.IRF__r.ShipTo__r.AccountNumber}"/>  </div>                         
+                                            </td>
+                                            <td class="tableBorder">
+                                                <div><apex:outputText value="Sales Order Number"/> </div> 
+                                                <div class="tableValue"><apex:outputText value="{!IRF_Monthly_Data__c.Sales_OrderNum__c }"/> </div>                               
+                                            </td>
+                                            <td class="tableBorder">
+                                                <div> <apex:outputText value="Bill-To Number"/> </div> 
+                                                <div class="tableValue"><apex:outputText value="{!IRF_Monthly_Data__c.IRF__r.ShipTo__r.Related_Bill_To__r.AccountNumber}"/> </div>                               
+                                            </td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td class="tableBorder">
+                                                <div> <apex:outputText value="Incoterms :"/></div> 
+                                                <div class="tableValue"><apex:outputText value="{!IRF_Monthly_Data__c.IRF__r.ShipTo__r.SAP_INCO_Terms1_Desc__c}"/> </div>                          
+                                            </td>
+                                            <td class="tableBorder">
+                                                
+                                                <div> <apex:outputText value="Bill of Lading Number"/> </div> 
+                                                <div class="tableValue"><apex:outputText value="{!IRF_Monthly_Data__c.Bill_LandNumber__c}"/> </div>  
+                                            </td>
+                                            <td class="tableBorder">
+                                                <div><apex:outputText value="Shipped From"/> </div> 
+                                                <div class="tableValue"><apex:outputText value="{!IRF_Monthly_Data__c.Shipped_From__c}"/> </div>       
+                                                
+                                                
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!--MainInfo Complete -->
+                        <!--- Address started -->
+                        
+                        <div class="bAddress clearfix">
+                            <div style="float: left;width:50%;">
+                                <div class="billingAddressDiv">
+                                    <div><B>Billing address</B></div>     
+                                    <div> {!IRF_Monthly_Data__c.IRF__r.ShipTo__r.Related_Bill_To__r.Name} &nbsp;</div>                                      
+                                    <div>{!IRF_Monthly_Data__c.IRF__r.ShipTo__r.Related_Bill_To__r.SAP_Account_Name_2__c}&nbsp;</div>  
+                                    <div> {!IRF_Monthly_Data__c.IRF__r.ShipTo__r.Related_Bill_To__r.BillingStreet} </div>
+                                    <div>{!IRF_Monthly_Data__c.IRF__r.ShipTo__r.Related_Bill_To__r.BillingCity}&nbsp; {!IRF_Monthly_Data__c.IRF__r.ShipTo__r.Related_Bill_To__r.BillingState}&nbsp;{!IRF_Monthly_Data__c.IRF__r.ShipTo__r.Related_Bill_To__r.BillingPostalCode} </div>
+                                </div>
+                            </div>
+                            <div style="float: left;width:50%;">
+                                <div class="billingAddressDiv" style="margin-top: 20px;margin-left: 50px;">
+                                    <div><B>Shipping address</B></div>     
+                                    <div>{!IRF_Monthly_Data__c.IRF__r.ShipTo__r.Name}</div>  
+                                    <div>{!IRF_Monthly_Data__c.IRF__r.ShipTo__r.ShippingStreet}</div> 
+                                    <div>{!IRF_Monthly_Data__c.IRF__r.ShipTo__r.ShippingCity} &nbsp; {!IRF_Monthly_Data__c.IRF__r.ShipTo__r.ShippingState}&nbsp; {!IRF_Monthly_Data__c.IRF__r.ShipTo__r.ShippingPostalCode}  </div>                                                           
+                                    
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <!--- Address Complete -->                        
+                        <!-- Material Table started-->
+                        <div>
+                            <div>                   
+                                <table style="border-collapse:collapse;border-spacing: unset !important;margin-top:10px;">
+                                    <tr>
+                                        <th  width="8%" class="tableMaterial" style="border-left: .02em solid black;"><apex:outputText value="Qty"/></th>
+                                        <th  width="6%" class="tableMaterial"><apex:outputText value="UoM"/> </th>                       
+                                        <th  width="48%" class="tableMaterial"><apex:outputText value="Unit Description"/></th>                 
+                                        <th  width="6%" class="tableMaterial"><apex:outputText value="Billing Qty"/>  <br/> </th>
+                                        <th  width="5%" class="tableMaterial"><apex:outputText value="UoM"/></th>
+                                        <th  width="10%" class="tableMaterial"><apex:outputText value="Unit Price"/> <br/> </th>
+                                        <th  width="15%" class="tableMaterial"><apex:outputText value="Amount USD"/> <br/> </th>                                                                                                                  
+                                    </tr>                                                                      
+                                    <apex:repeat value="{!irf_units}" var="M">  
+                                        <apex:repeat value="{!M.IRF_Unit_Sales__r}" var="temp" >                                           
+                                            <tr>
+                                                <td  class="tableMaterialitem"  style="border-left: .02em solid black;"><apex:outputText value=""/></td>
+                                                <td  class="tableMaterialitem"><apex:outputText value="Units"/></td>
+                                                <td  class="tableMaterialitem"><apex:outputText value="{!temp.Description__c}"/></td>
+                                                <td  class="tableMaterialitem"><apex:outputText value="{!Round(temp.Production__c,4)}"/></td>
+                                                <td  class="tableMaterialitem"><apex:outputText value="Units"/></td>
+                                                <td  class="tableMaterialitem">
+                                                   
+                                                     <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                                                        <apex:param value="{!Round(temp.Price__c,2)}" />
+                                                    </apex:outputText>
+                                                    
+                                                </td>
+                                                <td  class="tableMaterialitem"> 
+                                                    <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                                                        <apex:param value="{!Round(temp.Amount__c,2)}" />
+                                                    </apex:outputText>
+                                                    
+                                                </td>                                                                                            
+                                            </tr>
+                                        </apex:repeat>
+                                    </apex:repeat>
+                                    <tr>
+                                        <td colspan="7"  style="  border-right: .02em solid black;border-left: .02em solid black;padding: 0px !important;margin: 0px !important;">
+                                            <div style="width:100%;" class="totalDiv clearfix">
+                                                <div class="totalDiv" style="width:33%;float:left; border-right: .02em solid black;">
+                                                    <div>
+                                                        Should you have any questions regarding this invoice, please contact
+                                                    </div>
+                                                    <div  style="Padding-top:10px;">
+                                                        <div>
+                                                            {!IRF_Monthly_Data__c.IRF__r.ShipTo__r.SAP_CSR__c} at {!IRF_Monthly_Data__c.IRF__r.ShipTo__r.SAP_CSR_Phone__c}   
+                                                        </div>
+                                                        <div>
+                                                            {!IRF_Monthly_Data__c.IRF__r.ShipTo__r.SAP_CSR_Email__c}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="totalDiv" style="width:33%;float:left;border-right: .02em solid black;"></div>
+                                                <div class="totalDiv" style="width:33%;float:left;">
+                                                    <div class="clearfix" style="margin-top: 33px;margin-left: 41px;">
+                                                        <Span>Invoice Total :</Span>
+                                                        <Span style="float:right"><b>
+                                                            
+                                                            <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                                                                <apex:param value="{!Round(total,2)}" />
+                                                            </apex:outputText>
+                                                            
+                                                            </b> </Span>
+                                                        <Span style="font-weight:bold;display:block;">USD</Span>
+                                                    </div>      
+                                                </div>    
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr style="border: .02em solid black;border-collapse: collapse;height: 50px;">                                       
+                                        <td style="border: .02em solid black;border-collapse: collapse;height: 50px;font-family:'Helvetica','Arial',sans-serif;font-size: 7pt;" colspan="7"><span><b>These items are controlled by the U.S. Government and authorized for export only to the country of ultimate destination for use by the ultimate consignee or end-user(s) herein identified.They may not
+                                            be resold, transferred, or otherwise disposed of, to any other country or to any person other than the authorized ultimate consignee or end-user(s) , either in their original form or after being
+                                            incorporated into other items, without first obtaining approval from the U.S.government or as otherwise authorized by U.S.law and regulations.</b> </span></td>             
+                                    </tr>                          
+                                    <tr>
+                                        <td colspan="7">
+                                            <table style="border: .02em solid black;border-collapse: collapse;margin-top:1px;" width="100%">                                                                                     
+                                                <tr style="border: .02em solid black;border-collapse: collapse;">
+                                                    <td style="border: .02em solid black;border-collapse: collapse;" width="25%">
+                                                        <div class="bottomTable" style="float:left;width:100%;height: 110px;">
+                                                            <div class="clearfix">
+                                                                <div><b>Remit to</b></div>
+                                                                <div> P.O. Box 116232 </div>
+                                                                <div>ATLANTA GA 30368-6232</div>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                    </td>
+                                                    <td style="border: .02em solid black;border-collapse: collapse;" width="25%">
+                                                        
+                                                        <div class="bottomTable" style="float:left;width:100%;height: 110px;">
+                                                            <div class="clearfix">
+                                                                <div><b>ACH Credit</b></div>
+                                                                <div> Solenis LLC </div>
+                                                                <div>Account Number:71522253</div>
+                                                                <div>Clearing House Payments Co L.L</div>
+                                                                <div>Bank-ID: 021052053</div>
+                                                            </div>
+                                                        </div>
+                                                    </td>                                                    
+                                                    <td style="border: .02em solid black;border-collapse: collapse;"  width="25%">
+                                                        <div class="bottomTable" style="float:left;width:100%;height: 110px;">
+                                                            <div class="clearfix">
+                                                                <div><b>Wire transfer</b></div>
+                                                                <div> Solenis LLC </div>
+                                                                <div>Account Number:30960491</div>
+                                                                <div>Citibank NA</div>
+                                                                <div>Bank-ID: 028000082</div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td rowspan="4" style="border: .02em solid black;border-collapse: collapse;height: 50px;" width="25%">                                                        
+                                                        <div class="bottomTable" style="float:left;width:100%;align-content: center;">
+                                                            
+                                                            
+                                                            <div class="lowerImage"> <apex:image id="theImage3" value="{!$Resource.solenisBlackWhite}" alt="Solenis Log Image"/></div>
+                                                            
+                                                            <div class="lowerImageContent">
+                                                                <span>Print date </span><span style="float:right ">{!DAY(TODAY())} &nbsp;<apex:outputText value="{0,date,MMM}"><apex:param value="{!TODAY()}" /></apex:outputText> &nbsp;{!YEAR(TODAY())}</span>   
+                                                            </div>          
+                                                            
+                                                            
+                                                            
+                                                            
+                                                        </div>
+                                                    </td>                                            
+                                                </tr>
+                                                
+                                                <tr style="border: .02em solid black;border-collapse: collapse;height: 40px;">
+                                                    <td style="border: .02em solid black;border-collapse: collapse;"  colspan="3">
+                                                        <div style="float:left;width:100%;height: 40px;font-family:'Helvetica','Arial',sans-serif;font-size: 8pt;">
+                                                            <div class="clearfix">
+                                                                <div>Please refer to the invoice number on the remittance.</div>
+                                                                <div>Please return remittance advice with your payment.</div>                                                      
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>                                                
+                                                <tr style="border: .02em solid black;border-collapse: collapse;height: 30px;">
+                                                    <td style="border: .02em solid black;border-collapse: collapse;font-family:'Helvetica','Arial',sans-serif;font-size: 8pt;"  colspan="3">
+                                                        <div class="bottomTable" style="float:left;width:100%;">
+                                                            <div><b>Comments:</b></div>
+                                                            <div>MONTHLY INVOICE FOR CHEMICAL  &nbsp; 
+                                                                MANAGEMENT CONTRACT {!IRF_Monthly_Data__c.IRF__r.Contract_Number__c} &nbsp;
+                                                                <apex:outputText value="{!IRF_Monthly_Data__c.Month__c}" />&nbsp;
+                                                                 <apex:outputText value="{!IRF_Monthly_Data__c.Year__c}" />
+                                                            </div> 
+                                                        </div>
+                                                        
+                                                    </td>
+                                                </tr>
+                                                <tr style="border: .02em solid black;border-collapse: collapse;height: 100px;">
+                                                    <td style="border: .02em solid black;border-collapse: collapse;"  colspan="3">
+                                                        <div class="bottomTable" style="float:left;width:100%;">
+                                                            <div>Federal ID number 46-5612095 D-U-N-S number 07-943-6434</div>
+                                                            <div>The shipment of the product(s) identified herein serves as confirmation of your acceptance of the product price set forth in this invoice.</div>    
+                                                            <div>This invoice and the underlying sale is expressly made conditional on your assent to the terms and conditions stated above and set forth</div> 
+                                                            <div>at http://www.solenis.com/salesterms and we agree to furnish goods and services to you upon these terms and conditions only.</div> 
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr align="center">
+                                                    <td colspan="4" style="">
+                                                        <div style="font-family:'Helvetica','Arial',sans-serif;font-size: 9pt;float:left;width:100%;text-align:center;">
+                                                            <div><b>visit us at www.solenis.com </b></div>
+                                                        </div>
+                                                        
+                                                        
+                                                    </td>
+                                                </tr>
+                                                
+                                            </table>                                           
+                                        </td>
+                                    </tr>
+                                    
+                                </table>                               
+                            </div>
+                        </div>                       
+                    </div>                    
+                </apex:form>
+            </apex:repeat>
+        </div>
+    </html>        
+</apex:page>

@@ -1,0 +1,19 @@
+<apex:page StandardController="WorkOrder">
+ 
+    <apex:pageMessage severity="confirm" strength="3" rendered="{!IF(Workorder.Age_of_Tank_Formula__c >= 10, true, false)}" id="Id6" summary="It is recommended that you begin conversation with the customer about the purchase of a new tank." /> 
+  <!--  <apex:pageMessage rendered="{!IF(Tank_Inspection__c.Was_tank_compatibility_checked__c  = 'No', true, false)}" id="Id5" summary="It is required that all product / tank compatibilites be checked!!" severity="confirm" strength="3"/>
+    <apex:pageMessage rendered="{!IF(Tank_Inspection__c.Was_customer_Profile_updated__c = 'No', true, false)}" id="Id1" summary="It is recommended that you update the customer delivery profile ASAP to avoid delivery issues." severity="confirm" strength="3"/>
+    <apex:pageMessage rendered="{!IF(Tank_Inspection__c.Is_eye_wash_installed_within_75_ft__c = 'No', true, false)}" id="Id2" summary="You should recommend that an eye wash station be installed with 75 feet of the tank." severity="confirm" strength="3"/>
+    <apex:pageMessage rendered="{!IF(Tank_Inspection__c.Is_safety_shower_installed_in_75_ft__c = 'No', true, false)}" id="Id3" summary="You should recommend that a shower station be installed with 75 feet of the tank." severity="confirm" strength="3"/>
+    <apex:pageMessage rendered="{!IF(Tank_Inspection__c.Safety_spill_procedures_reviewed_w_Cust__c  = 'No', true, false)}" id="Id4" summary="Please review all Safety/Spill Procedures with Customer." severity="confirm" strength="3"/>
+    <apex:pageMessage severity="Info" strength="3" rendered="{!IF(Tank_Inspection__c.Is_tank_visible_from_the_unloading_point__c = 'No', true, false)}" id="Id8" summary="If tank is not visible during the unloading, then 2 people with walkie-talkies must be present for the unloading operation." /> 
+    <apex:pageMessage severity="Info" strength="3" rendered="{!IF(AND(Tank_Inspection__c.Is_tank_visible_from_the_unloading_point__c = 'Yes', Tank_Inspection__c.Was_tank_compatibility_checked__c  != 'No', Tank_Inspection__c.Age_of_Tank_Formula__c < 10, Tank_Inspection__c.Was_customer_Profile_updated__c != 'No', Tank_Inspection__c.Is_eye_wash_installed_within_75_ft__c != 'No', Tank_Inspection__c.Is_safety_shower_installed_in_75_ft__c != 'No', Tank_Inspection__c.Safety_spill_procedures_reviewed_w_Cust__c  != 'No'), true, false)}" id="Id7" summary="No Messages to Display." />
+    <apex:pageMessage severity="Info" strength="3" rendered="{!IF(Tank_Inspection__c.Does_the_fill_line_have_a_ball_valve__c = 'No', true, false)}" id="Id9" summary="We recommend that you install a ball valve at the beginning of fill line for isolation after chemical delivery." /> 
+    <apex:pageMessage severity="Info" strength="3" rendered="{!IF(Tank_Inspection__c.Is_there_a_valve_on_the_discharge_outlet__c = 'No', true, false)}" id="Id10" summary="We recommend that a valve be installed on the discharge outlet of the tank so the discharge line can be isolated." /> !-->
+    <style type="text/css">
+       .mystyle{
+       background-color: #F3F3EC;
+        }
+    </style>
+    
+</apex:page>

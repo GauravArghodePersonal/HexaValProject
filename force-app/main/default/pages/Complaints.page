@@ -1,0 +1,83 @@
+<apex:page standardController="Internal_Complaint__c">
+    <apex:stylesheet value="{!$Resource.MessageBoxCSS}"/>
+
+    <apex:sectionHeader title="Internal Suggestions"/>
+    <apex:form >
+    
+        <apex:pageBlock mode="edit" title="Internal Suggestions Edit">
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Save" action="{!save}"/>
+                <apex:commandButton value="Cancel" action="{!cancel}"/>
+            </apex:pageBlockButtons>
+        
+        <apex:pageBlockSection >
+        
+            <body>
+                <div class="roundbox boxshadow" style="width: 200%; border: solid 2px steelblue" >
+                <div class="boxcontenttext">
+                <p>Please note - This internal suggestion system has been designed to alert management to business concerns or issues impeding the growth of our business. 
+                DO NOT enter complaints in this form which have an SAP Order associated with them.</p>
+        
+                <p> <font color="maroon"><u>Customer and internal complaints associated with an SAP order</u> need to be entered into the SIRS Complaints System, OTC can enter or you 
+                can enter it by clicking here:<a class="link" href="Notes://LPAPP61/8525751300523654/" target="_blank">Solenis Incident Reporting System</a>&nbsp;</font></p>
+                <br></br>
+                </div>
+                </div>
+            </body>
+        
+        </apex:pageBlockSection>
+       
+        <apex:pageBlockSection columns="1" title="Suggestion Information">
+         
+            <apex:panelGrid columns="4" width="75%" border="0" id="topTable" columnClasses="fieldsCol, data" styleClass="topTable"
+                            cellpadding="4">
+                                    
+                <apex:outputText value="Business Unit"/>
+                <apex:inputField required="true" value="{!Internal_Complaint__c.Business_Unit__c}" />
+                
+                <apex:outputText value="Submitted By"/>
+                <table width="100%"><tr align="left"><td>{!$User.FirstName} {!$User.LastName}</td></tr></table>
+                
+                <apex:outputText value="Region"/>
+                <apex:inputField required="true" value="{!Internal_Complaint__c.Region__c}" />
+                
+                <apex:outputText value="Email"/>
+                <table width="100%"><tr align="left"><td>{!$User.Email}</td></tr></table>
+                
+                <apex:outputText value="Topic"/>
+                <apex:inputField required="true" value="{!Internal_Complaint__c.Topic__c}"/>
+                              
+                <apex:outputText value="Phone"/>
+                <table width="100%"><tr align="left"><td>{!$User.Phone} &nbsp;&nbsp;&nbsp; <!-- <a href="https://{!$Label.SFDC_URL}/apex/UpdatePhone" style="color:red; font-weight:bold;">edit</a> --> </td></tr></table>
+                
+                <apex:outputText value="Concern/Issue"/>
+                <apex:inputField required="true" value="{!Internal_Complaint__c.Concern_Issue__c}"/>
+                
+                <apex:outputText value="Mobile"/>
+                <apex:inputField value="{!Internal_Complaint__c.Mobile__c}" />
+                
+            </apex:panelGrid>
+           </apex:pageBlockSection>
+           <apex:pageBlockSection columns="1">
+           <apex:panelGrid columns="2" width="75%" border="0" id="topTable" columnClasses="fieldsCol, data" styleClass="topTable"
+                            cellpadding="4">
+                           
+               <apex:outputText value="Issue"/>
+               <apex:inputField required="true" value="{!Internal_Complaint__c.Issue__c}" style="width:100%"/>             
+               
+               <apex:outputText value="Description"/>
+               <apex:inputField required="true" value="{!Internal_Complaint__c.Description__c}" style="width: 100%; height: 40px"/>
+               
+               <apex:outputText value="Expected Resolution"/>
+               <apex:inputField required="true" value="{!Internal_Complaint__c.Suggested_Resolution__c}" style="width: 100%; height: 90px"/>
+               </apex:panelGrid>
+           
+           </apex:pageBlockSection>
+          
+        
+               
+        
+       </apex:pageBlock>
+         
+    </apex:form>
+</apex:page>

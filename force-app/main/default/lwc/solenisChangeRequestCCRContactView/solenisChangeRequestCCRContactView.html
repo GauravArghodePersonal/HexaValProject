@@ -1,0 +1,36 @@
+<template>
+    <div>
+    <lightning-record-edit-form record-id={recordId} object-api-name="Customer_Creation_Request__c"
+    onsuccess={handleSuccess} onsubmit ={handleSubmit}>
+    <lightning-card class="slds-card__header" title="SAP Contact Information (Read only)">
+    
+<lightning-output-field field-name="Account__c" value={Account_Name__c} disabled>
+</lightning-output-field>
+<lightning-output-field field-name="SAP_Contact_Desc__c" value={SAP_Department_Desc__c} disabled>
+</lightning-output-field>
+    <lightning-input-field field-name="First_Name__c" value={First_Name__c} disabled>
+    </lightning-input-field>
+    <lightning-input-field field-name="Last_Name__c" value={Last_Name__c} disabled>
+    </lightning-input-field>
+    <lightning-input-field field-name="SAP_Email__c" value={SAP_Email__c} disabled>
+    </lightning-input-field>
+    
+    <lightning-input-field field-name="SAP_Title__c" value={SAP_Title__c} disabled>
+    </lightning-input-field>
+    <lightning-input-field field-name="SAP_Fax__c" value={SAP_Fax__c} disabled>
+    </lightning-input-field> 
+    <lightning-input-field field-name="SAP_Phone__c" value={SAP_Phone__c} disabled>
+    </lightning-input-field>
+    
+    <lightning-input-field field-name="SAP_Contact_Number__c" value={SAP_Contact_Number__c} disabled>
+    </lightning-input-field> 
+    <lightning-input-field field-name="SAP_CustomerNumber__c" value={SAP_Customer_Number__c} disabled>
+    </lightning-input-field> 
+    
+    
+    
+    </lightning-card>
+  
+    </lightning-record-edit-form>
+</div>
+    </template>

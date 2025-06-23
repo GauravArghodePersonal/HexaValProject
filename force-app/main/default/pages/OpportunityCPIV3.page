@@ -1,0 +1,78 @@
+<apex:page id="thePage" standardController="Opportunity" 
+           title="Opportunity" extensions="OpportunityExtensionV3" 
+           sidebar="false" action="{!initAction1}">
+
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-1.6.2.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-ui-1.8.16.custom.min.js')}" />
+    <style type="text/css">
+        @import "{!URLFOR($Resource.jQuery, 'css/redmond/jquery-ui-1.8.16.custom.css')}";
+    </style>
+
+    <apex:outputPanel id="op">
+
+        <apex:form >
+            <apex:actionStatus id="astat1">
+                <apex:facet name="start">
+                    <apex:outputText styleClass="bold" value=" Please wait ...">
+                        <apex:image value="{!$Resource.spinner}"/>
+                    </apex:outputText>
+                </apex:facet>
+                <apex:facet name="stop"><apex:outputPanel >
+                    <apex:actionFunction action="{!onConfirmComplete}" name="onConfirmComplete"
+                                         immediate="true" rerender="op" status="astat1"/>
+                    <apex:actionFunction action="{!onLisdComplete}" name="onLisdComplete"
+                                         immediate="true" rerender="op" status="astat1"/>
+                </apex:outputPanel></apex:facet>
+            </apex:actionStatus>
+        </apex:form> 
+                                 
+        <c:ConfirmDialog rendered="{!renderConfirmDialogComp}" p1="{!cdp}"/>                        
+
+        <apex:outputPanel layout="block" styleClass="center">
+            <apex:form rendered="{!!renderConfirmDialogComp}">
+                <apex:actionStatus id="astat2">
+                    <apex:facet name="start">
+                        <apex:outputText styleClass="bold" value=" Please wait ...">
+                            <apex:image value="{!$Resource.spinner}"/>
+                        </apex:outputText>
+                    </apex:facet>
+                    <apex:facet name="stop"><apex:outputPanel >
+                    <apex:commandButton action="{!gotoPage2}" value="Next"
+                                        rendered="{!renderNextButton}" 
+                                        rerender="op" status="astat2"/>                
+                    <apex:commandButton action="{!cancel}" value="Cancel"
+                                        rendered="{!renderLisd}" 
+                                        rerender="op" status="astat2" immediate="true"/>
+                    </apex:outputPanel></apex:facet>
+                </apex:actionStatus>
+            </apex:form>
+        </apex:outputPanel> 
+        
+        <apex:outputPanel rendered="{!!renderConfirmDialogComp}"><br/>
+            <apex:include pageName="OpportunityAqualonPageV3" rendered="{!!renderLisd}"/>
+            <c:SAP_LISD_Comp1 p_sapLisd="{!lisd}" rendered="{!renderLisd}"/>
+        </apex:outputPanel>
+        
+        <apex:outputPanel layout="block" styleClass="center">
+            <apex:form rendered="{!!renderConfirmDialogComp}">
+                <apex:actionStatus id="astat3">
+                    <apex:facet name="start">
+                        <apex:outputText styleClass="bold" value=" Please wait ...">
+                            <apex:image value="{!$Resource.spinner}"/>
+                        </apex:outputText>
+                    </apex:facet>
+                    <apex:facet name="stop"><apex:outputPanel >
+                    <apex:commandButton action="{!gotoPage2}" value="Next"
+                                        rendered="{!renderNextButton}" 
+                                        rerender="op" status="astat3"/>
+                    <apex:commandButton action="{!cancel}" value="Cancel"
+                                        rendered="{!renderLisd}" 
+                                        rerender="op" status="astat3" immediate="true"/>
+                    </apex:outputPanel></apex:facet>
+                </apex:actionStatus>
+            </apex:form>
+        </apex:outputPanel>
+
+    </apex:outputPanel>
+
+</apex:page>

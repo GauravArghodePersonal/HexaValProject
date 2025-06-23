@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <isExposed>true</isExposed>
+    <masterLabel>AdVic Custom Self Register Form</masterLabel>
+    <description>AdVic Self Registration form with validations</description>
+    <targets>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default">
+            <property label="Default Country" name="defaultCountry" type="String"/>
+            <property label="Default Area Code (+1, +93, +672, etc.)" name="defaultAreaCode" type="String"/>
+            <property label="Show Vat?" name="showVat" type="Boolean" default="True"/>
+            <property label="Show CVR?" name="showCVR" type="Boolean" default="False"/>
+            <property label="Show KVK?" name="showKVK" type="Boolean" default="False"/>
+            <property label="Show EAN?" name="showEAN" type="Boolean" default="False"/>
+            <property label="Show SIRET?" name="showSIRET" type="Boolean" default="False"/>
+            <property label="Show SDI?" name="showSDI" type="Boolean" default="False"/>
+            <property label="Show PEC?" name="showPEC" type="Boolean" default="False"/>
+            <property label="Show State?" name="showState" type="Boolean" default="true"/>
+            </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

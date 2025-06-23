@@ -1,0 +1,801 @@
+<template>
+    
+    <c-cq-record-form-container has-loaded={allDone} hide-save={hideSave} title={pageTitle} onsave={saveRecord} oncancel={cancelForm} onsaveandnew={saveAndNewForm} is-saving={isSaving}
+    main-obj={objInfo} form-errors={formErrors} lightning-icon="" save-and-new="true">
+        <div slot="sections" class="slds-col slds-size_1-of-1">
+                    
+                
+                   
+        <template if:true={sectionHider.expando_unique_id_1}>
+            <c-cq-record-form-section section-title={CQSL_CONTACT} expando-unique-id="expando-unique-id-1" edit-heading="true" detail-heading="true">
+                <div slot="sectionsItem">
+                    <div class="slds-grid slds-gutters slds-wrap">
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_SQX_ORIGINATOR__C} value={v_CQ_SL_SQX_ORIGINATOR__C}
+                                            display-value={d_CQ_SL_SQX_ORIGINATOR__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_ORIGINATOR_LOCATION_TEXT__C} value={v_CQ_SL_ORIGINATOR_LOCATION_TEXT__C}
+                                            display-value={d_CQ_SL_ORIGINATOR_LOCATION_TEXT__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_REPORTED_BY__C} value={v_CQ_SL_REPORTED_BY__C}
+                                            display-value={d_CQ_SL_REPORTED_BY__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Required">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_QUICK_FIX__C} value={v_CQ_SL_QUICK_FIX__C}
+                                            display-value={d_CQ_SL_QUICK_FIX__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                         
+                    </div>
+                </div>
+            </c-cq-record-form-section>
+        </template>
+                 
+            
+                
+                   
+        <template if:true={sectionHider.expando_unique_id_2}>
+            <c-cq-record-form-section section-title={CQSL_DETAILS} expando-unique-id="expando-unique-id-2" edit-heading="true" detail-heading="true">
+                <div slot="sectionsItem">
+                    <div class="slds-grid slds-gutters slds-wrap">
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_COMPLAINT_TYPE__C} value={v_CQ_SL_COMPLAINT_TYPE__C}
+                                            display-value={d_CQ_SL_COMPLAINT_TYPE__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Required">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_PLANTCODE__C} value={v_CQ_SL_PLANTCODE__C}
+                                            display-value={d_CQ_SL_PLANTCODE__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Required">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_CATEGORY__C} value={v_CQ_SL_CATEGORY__C}
+                                            display-value={d_CQ_SL_CATEGORY__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Required">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_SAMPLE_EVIDENCE_REQUIRED__C} value={v_CQ_SL_SAMPLE_EVIDENCE_REQUIRED__C}
+                                            display-value={d_CQ_SL_SAMPLE_EVIDENCE_REQUIRED__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_DETAILED_CATEGORY__C} value={v_CQ_SL_DETAILED_CATEGORY__C}
+                                            display-value={d_CQ_SL_DETAILED_CATEGORY__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_RESPONSIBLE_DEPARTMENT__C} value={v_CQ_SL_RESPONSIBLE_DEPARTMENT__C}
+                                            display-value={d_CQ_SL_RESPONSIBLE_DEPARTMENT__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Required">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                            </div>
+                         
+                    </div>
+                </div>
+            </c-cq-record-form-section>
+        </template>
+                 
+            
+                
+                   
+        <template if:true={sectionHider.expando_unique_id_3}>
+            <c-cq-record-form-section section-title={CQSL_DESCRIPTION} expando-unique-id="expando-unique-id-3" edit-heading="true" detail-heading="true">
+                <div slot="sectionsItem">
+                    <div class="slds-grid slds-gutters slds-wrap">
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_COMPLIANCEQUEST__DESCRIPTION_AS_REPORTED__C} value={v_COMPLIANCEQUEST__DESCRIPTION_AS_REPORTED__C}
+                                            display-value={d_COMPLIANCEQUEST__DESCRIPTION_AS_REPORTED__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Required">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_COMPLIANCEQUEST__REPORTED_DATE__C} value={v_COMPLIANCEQUEST__REPORTED_DATE__C}
+                                            display-value={d_COMPLIANCEQUEST__REPORTED_DATE__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_COMPLIANCEQUEST__REQUESTED_ACTION__C} value={v_COMPLIANCEQUEST__REQUESTED_ACTION__C}
+                                            display-value={d_COMPLIANCEQUEST__REQUESTED_ACTION__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_COMPLIANCEQUEST__OCCURRENCE_DATE__C} value={v_COMPLIANCEQUEST__OCCURRENCE_DATE__C}
+                                            display-value={d_COMPLIANCEQUEST__OCCURRENCE_DATE__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Required">
+                                </c-cq-form-item>
+                                
+                            </div>
+                         
+                    </div>
+                </div>
+            </c-cq-record-form-section>
+        </template>
+                 
+            
+                
+                   
+        <template if:true={sectionHider.expando_unique_id_4}>
+            <c-cq-record-form-section section-title={CQSL_SALES_ORDER_INFORMATION} expando-unique-id="expando-unique-id-4" edit-heading="true" detail-heading="true">
+                <div slot="sectionsItem">
+                    <div class="slds-grid slds-gutters slds-wrap">
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_SQX_ORIGINAL_SALES_ORDER__C} value={v_CQ_SL_SQX_ORIGINAL_SALES_ORDER__C}
+                                            display-value={d_CQ_SL_SQX_ORIGINAL_SALES_ORDER__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_SQX_SALES_ORDER_DELIVERIES__C} value={v_CQ_SL_SQX_SALES_ORDER_DELIVERIES__C}
+                                            display-value={d_CQ_SL_SQX_SALES_ORDER_DELIVERIES__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_PART_NAME_TEXT__C} value={v_CQ_SL_PART_NAME_TEXT__C}
+                                            display-value={d_CQ_SL_PART_NAME_TEXT__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Readonly">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_RD_PARTY_ORDER__C} value={v_CQ_SL_RD_PARTY_ORDER__C}
+                                            display-value={d_CQ_SL_RD_PARTY_ORDER__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_MATERIAL__C} value={v_CQ_SL_MATERIAL__C}
+                                            display-value={d_CQ_SL_MATERIAL__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Readonly">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_BASE_CODE__C} value={v_CQ_SL_BASE_CODE__C}
+                                            display-value={d_CQ_SL_BASE_CODE__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Readonly">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_MATERIAL_DESCRIPTION__C} value={v_CQ_SL_MATERIAL_DESCRIPTION__C}
+                                            display-value={d_CQ_SL_MATERIAL_DESCRIPTION__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Readonly">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_BASE_CODE_DESC__C} value={v_CQ_SL_BASE_CODE_DESC__C}
+                                            display-value={d_CQ_SL_BASE_CODE_DESC__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Readonly">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_CSR__C} value={v_CQ_SL_CSR__C}
+                                            display-value={d_CQ_SL_CSR__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Readonly">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_LOT__C} value={v_CQ_SL_LOT__C}
+                                            display-value={d_CQ_SL_LOT__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_SALES_BUSINESS_UNIT__C} value={v_CQ_SL_SALES_BUSINESS_UNIT__C}
+                                            display-value={d_CQ_SL_SALES_BUSINESS_UNIT__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Readonly">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_COMPLIANCEQUEST__SQX_LOT_INFO__C} value={v_COMPLIANCEQUEST__SQX_LOT_INFO__C}
+                                            display-value={d_COMPLIANCEQUEST__SQX_LOT_INFO__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_LINE_OF_BUSINESS__C} value={v_CQ_SL_LINE_OF_BUSINESS__C}
+                                            display-value={d_CQ_SL_LINE_OF_BUSINESS__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Readonly">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_REQUESTED_QUANTITY__C} value={v_CQ_SL_REQUESTED_QUANTITY__C}
+                                            display-value={d_CQ_SL_REQUESTED_QUANTITY__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_SALES_REP__C} value={v_CQ_SL_SALES_REP__C}
+                                            display-value={d_CQ_SL_SALES_REP__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Readonly">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_RECEIVED_QUANTITY__C} value={v_CQ_SL_RECEIVED_QUANTITY__C}
+                                            display-value={d_CQ_SL_RECEIVED_QUANTITY__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_CUSTOMER_GROUP__C} value={v_CQ_SL_CUSTOMER_GROUP__C}
+                                            display-value={d_CQ_SL_CUSTOMER_GROUP__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Readonly">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_SHIPPED_QUANTITY__C} value={v_CQ_SL_SHIPPED_QUANTITY__C}
+                                            display-value={d_CQ_SL_SHIPPED_QUANTITY__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_CUSTOMER_GROUP_DESCRIPTION__C} value={v_CQ_SL_CUSTOMER_GROUP_DESCRIPTION__C}
+                                            display-value={d_CQ_SL_CUSTOMER_GROUP_DESCRIPTION__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Readonly">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_SEGMENT__C} value={v_CQ_SL_SEGMENT__C}
+                                            display-value={d_CQ_SL_SEGMENT__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Readonly">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_COMPLIANCEQUEST__MANUFACTURING_DATE__C} value={v_COMPLIANCEQUEST__MANUFACTURING_DATE__C}
+                                            display-value={d_COMPLIANCEQUEST__MANUFACTURING_DATE__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_COMPLIANCEQUEST__EXPIRATION_DATE__C} value={v_COMPLIANCEQUEST__EXPIRATION_DATE__C}
+                                            display-value={d_COMPLIANCEQUEST__EXPIRATION_DATE__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_CARRIER_NUMBER__C} value={v_CQ_SL_CARRIER_NUMBER__C}
+                                            display-value={d_CQ_SL_CARRIER_NUMBER__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Readonly">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_SUB_SEGMENT__C} value={v_CQ_SL_SUB_SEGMENT__C}
+                                            display-value={d_CQ_SL_SUB_SEGMENT__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Readonly">
+                                </c-cq-form-item>
+                                
+                            </div>
+                         
+                    </div>
+                </div>
+            </c-cq-record-form-section>
+        </template>
+                 
+            
+                
+                   
+        <template if:true={sectionHider.expando_unique_id_5}>
+            <c-cq-record-form-section section-title={CQSL_CUSTOMER} expando-unique-id="expando-unique-id-5" edit-heading="true" detail-heading="true">
+                <div slot="sectionsItem">
+                    <div class="slds-grid slds-gutters slds-wrap">
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_COMPLIANCEQUEST__SQX_ACCOUNT__C} value={v_COMPLIANCEQUEST__SQX_ACCOUNT__C}
+                                            display-value={d_COMPLIANCEQUEST__SQX_ACCOUNT__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Readonly">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_COMPLIANCEQUEST__COUNTRY_OF_ORIGIN__C} value={v_COMPLIANCEQUEST__COUNTRY_OF_ORIGIN__C}
+                                            display-value={d_COMPLIANCEQUEST__COUNTRY_OF_ORIGIN__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Required">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_SQX_RESPONDER__C} value={v_CQ_SL_SQX_RESPONDER__C}
+                                            display-value={d_CQ_SL_SQX_RESPONDER__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_CUSTOMER_REGION__C} value={v_CQ_SL_CUSTOMER_REGION__C}
+                                            display-value={d_CQ_SL_CUSTOMER_REGION__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Readonly">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_CUSTOMER_ADDRESS__C} value={v_CQ_SL_CUSTOMER_ADDRESS__C}
+                                            display-value={d_CQ_SL_CUSTOMER_ADDRESS__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Readonly">
+                                </c-cq-form-item>
+                                
+                            </div>
+                         
+                    </div>
+                </div>
+            </c-cq-record-form-section>
+        </template>
+                 
+            
+                
+                   
+        <template if:true={sectionHider.expando_unique_id_6}>
+            <c-cq-record-form-section section-title={CQSL_OUTSIDE_INVOLVEMENT} expando-unique-id="expando-unique-id-6" edit-heading="true" detail-heading="true">
+                <div slot="sectionsItem">
+                    <div class="slds-grid slds-gutters slds-wrap">
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_OUTSIDE_INVOLVEMENT__C} value={v_CQ_SL_OUTSIDE_INVOLVEMENT__C}
+                                            display-value={d_CQ_SL_OUTSIDE_INVOLVEMENT__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                            </div>
+                         
+                    </div>
+                </div>
+            </c-cq-record-form-section>
+        </template>
+                 
+            
+                
+                   
+        <template if:true={sectionHider.expando_unique_id_7}>
+            <c-cq-record-form-section section-title={CQSL_CARRIER_INFORMATION} expando-unique-id="expando-unique-id-7" edit-heading="true" detail-heading="true">
+                <div slot="sectionsItem">
+                    <div class="slds-grid slds-gutters slds-wrap">
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_CARRIER__C} value={v_CQ_SL_CARRIER__C}
+                                            display-value={d_CQ_SL_CARRIER__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Readonly">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_CARRIER_CONTACT_NAME__C} value={v_CQ_SL_CARRIER_CONTACT_NAME__C}
+                                            display-value={d_CQ_SL_CARRIER_CONTACT_NAME__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_SHIPMENT_MODE__C} value={v_CQ_SL_SHIPMENT_MODE__C}
+                                            display-value={d_CQ_SL_SHIPMENT_MODE__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_PRO__C} value={v_CQ_SL_PRO__C}
+                                            display-value={d_CQ_SL_PRO__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Readonly">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_CARRIER_FAX__C} value={v_CQ_SL_CARRIER_FAX__C}
+                                            display-value={d_CQ_SL_CARRIER_FAX__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Readonly">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_FREIGHT_CLAIM_INVOLVED__C} value={v_CQ_SL_FREIGHT_CLAIM_INVOLVED__C}
+                                            display-value={d_CQ_SL_FREIGHT_CLAIM_INVOLVED__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_CARRIER_PHONE__C} value={v_CQ_SL_CARRIER_PHONE__C}
+                                            display-value={d_CQ_SL_CARRIER_PHONE__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Readonly">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_CARRIER_EMAIL__C} value={v_CQ_SL_CARRIER_EMAIL__C}
+                                            display-value={d_CQ_SL_CARRIER_EMAIL__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Readonly">
+                                </c-cq-form-item>
+                                
+                            </div>
+                         
+                    </div>
+                </div>
+            </c-cq-record-form-section>
+        </template>
+                 
+            
+                
+                   
+        <template if:true={sectionHider.expando_unique_id_8}>
+            <c-cq-record-form-section section-title={CQSL_SUPPLIER_INFORMATION} expando-unique-id="expando-unique-id-8" edit-heading="true" detail-heading="true">
+                <div slot="sectionsItem">
+                    <div class="slds-grid slds-gutters slds-wrap">
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_SUPPLIER__C} value={v_CQ_SL_SUPPLIER__C}
+                                            display-value={d_CQ_SL_SUPPLIER__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Readonly">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_SUPPLIER_CONTACT_NAME__C} value={v_CQ_SL_SUPPLIER_CONTACT_NAME__C}
+                                            display-value={d_CQ_SL_SUPPLIER_CONTACT_NAME__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_SUPPLIER_FAX__C} value={v_CQ_SL_SUPPLIER_FAX__C}
+                                            display-value={d_CQ_SL_SUPPLIER_FAX__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Readonly">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_SUPPLIER_EMAIL__C} value={v_CQ_SL_SUPPLIER_EMAIL__C}
+                                            display-value={d_CQ_SL_SUPPLIER_EMAIL__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Readonly">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_SUPPLIER_PHONE__C} value={v_CQ_SL_SUPPLIER_PHONE__C}
+                                            display-value={d_CQ_SL_SUPPLIER_PHONE__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Readonly">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_SUPPLIER_ID__C} value={v_CQ_SL_SUPPLIER_ID__C}
+                                            display-value={d_CQ_SL_SUPPLIER_ID__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Readonly">
+                                </c-cq-form-item>
+                                
+                            </div>
+                         
+                    </div>
+                </div>
+            </c-cq-record-form-section>
+        </template>
+                 
+            
+                
+                   
+        <template if:true={sectionHider.expando_unique_id_9}>
+            <c-cq-record-form-section section-title={CQSL_CUSTOM_LINKS} expando-unique-id="expando-unique-id-9" edit-heading="false" detail-heading="true">
+                <div slot="sectionsItem">
+                    <div class="slds-grid slds-gutters slds-wrap">
+                         
+                    </div>
+                </div>
+            </c-cq-record-form-section>
+        </template>
+                 
+            
+    
+        
+        <template if:true={sectionHider.expando_unique_id_10}>
+            <c-cq-record-form-section section-title={labels.fileTitle} expando-unique-id="expando-unique-id-10" edit-heading="true" detail-heading="true" icon="file">
+                <div slot="sectionsItem">
+                    <div class="slds-grid slds-gutters slds-wrap">
+                        <c-cq-file class="cq-form-grid" style="width:100%"></c-cq-file>
+                    </div>
+                </div>
+            </c-cq-record-form-section>
+        </template>
+        
+
+        </div>
+    </c-cq-record-form-container>
+</template>

@@ -1,0 +1,275 @@
+<template>
+    <template if:true={showregistrationLoading}>
+        <lightning-spinner class="registrationLoading" alternative-text="Loading" size="medium"></lightning-spinner>
+    </template>
+    <template if:true={showRequestSubmission}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container account-Search-modal">
+                
+                <header class="slds-modal__header account-Search-header">
+                    <button class="slds-button slds-button_icon slds-button_icon-inverse account-Search-close" title="Close" onclick={closeRequestSubmission}>
+                        <lightning-icon variant="inverse" icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 id="modal-heading-03" class="slds-modal__title slds-hyphenate"><a href="javascript:void(0);" class="account-Search-heading">Thank you</a></h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium account-Search-body" id="accountSearchModal3">
+                    
+                    <!-- Account Not Found Text -->
+                    
+                    <div class="forceCommunityRichText forceCommunityRichTextInline" data-aura-class="forceCommunityRichText forceCommunityRichTextInline">
+                        <div dir="ltr" data-aura-rendered-by="37:2;a" class="uiOutputRichText" dat  a-aura-class="uiOutputRichText">
+                            <p><br></p>
+                            <p><span style="color: rgb(255, 255, 255); font-family: arial; font-size: 16px;">{showUserMessage} </span></p>
+                            <p><br></p>
+                        </div>
+                    </div>                        
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+            
+    <template if:true={showRequestError}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container account-Search-modal">
+                
+                <header class="slds-modal__header account-Search-header">
+                    <button class="slds-button slds-button_icon slds-button_icon-inverse account-Search-close" title="Close" onclick={closeRequestError}>
+                        <lightning-icon variant="inverse" icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 id="modal-heading-04" class="slds-modal__title slds-hyphenate"><a href="javascript:void(0);" class="account-Search-heading">Thank you</a></h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium account-Search-body" id="accountSearchModal4">
+                    
+                    <!-- Account Not Found Text -->
+                    
+                    <div class="forceCommunityRichText forceCommunityRichTextInline" data-aura-class="forceCommunityRichText forceCommunityRichTextInline">
+                        <div dir="ltr" data-aura-rendered-by="37:2;a" class="uiOutputRichText" data-aura-class="uiOutputRichText">
+                            <p style="text-align: center;"><br></p>
+                            <p><span style="color: rgb(255, 255, 255); font-family: arial; font-size: 16px;">{showUserMessage} </span></p>
+                            <p><br></p>
+                        </div>
+                        <div class="clear" data-aura-rendered-by="39:2;a"></div>
+                    </div>                        
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+                    
+                    
+    <template if:true={showAccountSearch}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container account-Search-modal">
+
+            <header class="slds-modal__header account-Search-header">
+                <button class="slds-button slds-button_icon slds-button_icon-inverse account-Search-close" title="Close" onclick={closeAccountResult}>
+                    <lightning-icon variant="inverse" icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate"><a href="javascript:void(0);" class="account-Search-heading">Account Not Found</a></h2>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium account-Search-body" id="accountSearchModal">
+                
+                <!-- Account Not Found Text -->
+                
+                <div class="forceCommunityRichText forceCommunityRichTextInline" data-aura-class="forceCommunityRichText forceCommunityRichTextInline"><div dir="ltr" data-aura-rendered-by="37:2;a" class="uiOutputRichText" data-aura-class="uiOutputRichText">
+                    <p style="text-align: center;"><br></p>
+                        <p><span style="color: rgb(255, 255, 255); font-family: arial; font-size: 16px;">Account Details Not found in Solenis, Kindly check the Account Number entered: {accountNumber}</span></p>
+                        <p><br></p></div><div class="clear" data-aura-rendered-by="39:2;a"></div>
+                    </div>                        
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+    <template if:true={showTermsAndConditions}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container account-Search-modal">
+                
+            <header class="slds-modal__header account-Search-header">
+                <button class="slds-button slds-button_icon slds-button_icon-inverse account-Search-close" title="Close" onclick={closeTermsAndCondition}>
+                    <lightning-icon variant="inverse" icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                <h2 id="modal-heading-02" class="slds-modal__title slds-hyphenate"><a href="javascript:void(0);" class="account-Search-heading">Terms & Condition</a></h2>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium account-Search-body" id="termsAndConditionsModal">
+                
+                <!-- Account Not Found Text -->
+                
+                <div class="forceCommunityRichText forceCommunityRichTextInline" data-aura-class="forceCommunityRichText forceCommunityRichTextInline">
+                    <div dir="ltr" data-aura-rendered-by="37:2;a" class="uiOutputRichText" data-aura-class="uiOutputRichText">
+                        <p style="text-align: center;"><br></p>
+                        <p><span style="color: rgb(255, 255, 255); font-family: arial; font-size: 16px;">Kindly find the terms and conditions </span></p>
+                        <p><br></p>
+                    </div><div class="clear" data-aura-rendered-by="39:2;a">
+
+                        </div>
+                    </div>                        
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+    
+    <template if:true={showUserRegistration}>
+        <lightning-layout multiple-rows>  
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="12" padding="around-small">
+                <h1 style="font-size: 24px !important;
+                            font-weight: bold !important;
+                            font-family: system-ui !important;">New Customer Registration</h1>
+            </lightning-layout-item>  
+            
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="4" padding="around-small">
+                <lightning-input field-level-help="10 digit Account Number (Leading 000) " maxlength="10"  class="input" type="text" label="Sold To Account Number" value={accountNumber} onblur={getAccountHandler} onchange={handleAccountNumberChange} required></lightning-input>
+                
+                <span class="errorMessage">{accoutNumberError}</span>
+                <span class="errorMessage">{accountMandatoryMessage}</span>
+            </lightning-layout-item>  
+            
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="4" padding="around-small">
+                <lightning-combobox name="country" label="Country" value={countryValue} onchange={handleCountryChange} options={country} disabled> </lightning-combobox> 
+            </lightning-layout-item>
+            
+            <!--<lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="6" padding="around-small">
+                
+                <div class="slds-col">
+                    <button  class="login-button slds-button" onclick={handleSearch}>Search Account</button>
+                </div>
+            </lightning-layout-item>-->
+            
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="12" padding="around-small">
+                <lightning-input class="input" type="text" label="Account Name" value={accountName}  onchange={handleAccountNumberChange} disabled></lightning-input>
+              
+            </lightning-layout-item>
+            
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="12" padding="around-small">
+                <lightning-input-address
+                                            address-label="Address"
+                                            street-label="Street"
+                                            city-label="City"
+                                            country-label="Country"
+                                            province-label="State"
+                                            postal-code-label="Postal Code"
+                                            street={accountStreet}
+                                            city={accountCity}
+                                            country={accountCountry}
+                                            province={accountprovince}
+                                            postal-code={accountpostalcode}
+                                            
+                                            
+                                            
+                                            field-level-help="Address information will get auto populated based on Account Number" disabled></lightning-input-address>
+                
+            </lightning-layout-item>
+            
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="2" padding="around-small">
+                <lightning-combobox name="country" label="Title" value={title} onchange={handletitleChange} options={titlelist} aria-disabled="true" required> </lightning-combobox> 
+                <span class="errorMessage">{titleError}</span>
+            </lightning-layout-item>
+            
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="5" padding="around-small">
+                <lightning-input class="input" maxlength="50"  type="text" label="First Name" value={firstName} onchange={handleFirstNameChange} required></lightning-input>
+                <span class="errorMessage">{firstNameError}</span>
+            </lightning-layout-item>
+            
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="5" padding="around-small">
+                <lightning-input class="input"  maxlength="30" type="text" label="Last Name" value={lastName} onchange={handleLastNameChange} required></lightning-input>
+                <span class="errorMessage">{lastNameError}</span>
+            </lightning-layout-item>
+            
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="8" padding="around-small">
+                <lightning-input class="input" maxlength="70"  type="text" label="Email" value={email}  onchange={handleEmailChange} required></lightning-input>
+                <span class="errorMessage">{emailMandatoryMessage}</span>
+                <span class="errorMessage">{emailError}</span>
+            </lightning-layout-item>
+            
+            <lightning-layout-item size="12"  small-device-size="12" medium-device-size="12" large-device-size="4" padding="around-small">
+                <lightning-input class="input" maxlength="10" type="tel" label="Phone Number" value={phoneNumber}  onchange={handlePhoneChange} required></lightning-input>
+                <span class="errorMessage">{phoneNumberError}</span>
+            </lightning-layout-item>
+            
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="1" padding="around-small">
+                <div class="slds-col">
+                 <lightning-checkbox-group name="Checkbox Group"
+                                    options={termsoptions}
+                                    value={valueterms}
+                                    onchange={handleChangeCheckbox}></lightning-checkbox-group>  
+                </div>
+                
+                
+            </lightning-layout-item>
+  <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="11" padding="around-small">
+                <div class="slds-col">
+                <span class="sub-heading">By signing up you are agreeing to our <a class="account-Search-link" href="javascript:void(0);" onclick={handleTermsAndConditions}>terms and conditions</a></span>
+                  <span class="errorMessage">{termsandConditionMessageError}</span>
+                </div>
+
+            </lightning-layout-item>
+            
+             <template if:true={showRegisterNotification}>
+                  <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="12" padding="around-small">
+
+                <div class="slds-modal__content slds-p-around_medium account-Search-body" id="accountSearchModal6">
+                    
+                    <!-- Account Not Found Text -->
+                   
+                    <div class="forceCommunityRichText forceCommunityRichTextInline" data-aura-class="forceCommunityRichText forceCommunityRichTextInline">
+                         <button class="slds-button slds-button_icon slds-button_icon-inverse account-Search-close" title="Close" onclick={closeshowRegisterNotification}>
+                        <lightning-icon variant="inverse" icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                        <div dir="ltr" data-aura-rendered-by="37:2;a" class="uiOutputRichText" data-aura-class="uiOutputRichText">
+                            
+                            <p><span style="color: rgb(255, 255, 255); font-family: arial; font-size: 16px;">{showRegisterNotificationMsg} </span></p>
+                            
+                        </div>
+                    </div>                        
+                </div>
+                  </lightning-layout-item>
+    </template>
+         <template if:true={showRegisterNotificationError}>
+                  
+ <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="12" padding="around-small">
+                <div class="slds-modal__content slds-p-around_medium account-Search-bodyError" id="accountSearchModal7">
+                    
+                    <!-- Account Not Found Text -->
+                 
+                        <div dir="ltr" data-aura-rendered-by="37:2;a" class="uiOutputRichText" data-aura-class="uiOutputRichText">
+                           <button class="slds-button slds-button_icon slds-button_icon-inverse account-Search-close" title="Close" onclick={closeshowRegisterNotificationError}>
+                        <lightning-icon variant="inverse" icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                            
+                            <p><span style="color: rgb(255, 255, 255); font-family: arial; font-size: 16px;">{showRegisterNotificationMsgError} </span></p>
+   
+                        </div>
+                    </div>   
+ </lightning-layout-item>                     
+    </template>
+        
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="12" padding="around-small">
+                <div class="slds-col">
+                    <button type="submit" class="login-button slds-button" disabled={disable} onclick={handleRegister}>Sign Up</button>
+                </div>
+            </lightning-layout-item>
+
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="12" padding="around-small">
+                <!-- <c-google-captcha oncaptcha={handleUpdate}></c-google-captcha><br/> <p>Check</p> -->
+            </lightning-layout-item>
+            
+           <!-- <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="12" padding="around-small">
+                <div class="slds-col">         
+                    <p class="text-align-center">
+                        <span class="sub-heading register-heading"> you have any issues please contact admintest@solenis.com</span>
+                    </p>
+                </div>
+            </lightning-layout-item> -->
+        </lightning-layout>
+        <!-- </lightning-card> -->
+    </template>
+</template>

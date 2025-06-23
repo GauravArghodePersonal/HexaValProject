@@ -1,0 +1,138 @@
+<apex:page standardController="Service_Provider_Profile__c" extensions="Service_Provider_Profile_Extension">
+    <apex:stylesheet value="{!$Resource.tableFormatting}"/>
+
+	<apex:outputText value="{!Service_Provider_Profile__c.id} {!Service_Provider_Profile__c.name}" rendered="false"/>
+
+	<apex:sectionHeader title="Valvoline Service Provider Profile"/>
+    	<apex:form >
+
+        	<apex:pageBlock title="">
+			    <apex:pageBlockButtons >
+					<apex:commandButton action="{!save_Service_Provider_Profile}" value="Save" immediate="false"/>
+					<apex:commandButton action="{!cancel}" value="Cancel"/>
+				</apex:pageBlockButtons>	
+
+				<apex:pageMessage title="Errors Exist!  Please correct these errors and then click 'Save'" severity="error" strength="3" rendered="{!showErrorSection}">
+		            <apex:outputText value="{!ErrorMessage}" escape="false"/>
+					<apex:commandButton action="{!validateDataButton}" value="Revalidate Data"/>
+		        </apex:pageMessage>
+	          
+	          <apex:pageMessages />
+	           
+	        	<apex:pageBlock title="">
+	                <apex:pageBlockSection columns="1" collapsible="false">
+	
+						<apex:panelGrid columns="4" id="GeneralInformationGrid" width="935px" styleClass="TableStyleClass" captionClass="TableCaptionClass" headerClass="TableHeaderClass" rowClasses="TableRowClasses_odd,TableRowClasses_even" columnClasses="GeneralInfo_Label_ColumnFormat,GeneralInfo_Label_DataFormat">
+	                        <apex:facet name="caption">General Information</apex:facet>
+						
+							<apex:outputText value="Store Name:"/>
+		                	<apex:outputField value="{!serviceProviderProfile.DIFM_Installer_Data__r.Account__c}"/>
+							<apex:outputText value=""/>
+							<apex:outputText value=""/>
+	
+							<apex:outputText value="Contact:"/>
+		                	<apex:outputField value="{!serviceProviderProfile.DIFM_Installer_Data__r.Contact__c}"/>
+							<apex:outputText value=""/>
+							<apex:outputText value=""/>
+						</apex:panelGrid>
+					</apex:pageBlockSection>
+				</apex:pageBlock>
+	
+	        	<apex:pageBlock title="Service Provider Profile">
+	                <apex:pageBlockSection columns="2" collapsible="false">
+					    <apex:dataTable value="{!serviceProviderQuestions}" var="lines" id="ServiceProviderProfileGrid" width="935px" styleClass="TableStyleClass" captionClass="TableCaptionClass" headerClass="TableHeaderClass" rowClasses="TableRowClasses_odd,TableRowClasses_even" columnClasses="ServiceProviderProfileQuestions_QuestionNumberFormat,ServiceProviderProfileQuestions_ColumnFormat,ServiceProviderProfilePrefix_ColumnFormat,ServiceProviderProfileAnswers_ColumnFormat,ServiceProviderProfileSuffix_ColumnFormat">
+	                        <apex:facet name="caption">Services Provider Questions</apex:facet>
+							<apex:column >
+	 						    <apex:outputText escape="false" value="{!lines.listPosition_Formatted}"/> 
+							</apex:column>
+							<apex:column >
+	 						    <apex:outputText escape="false" value="{!lines.question_Formatted}"/> 
+							</apex:column>
+							<apex:column >
+							    <apex:outputText value="{!lines.prefix}" styleClass="ServiceProviderProfilePrefix_ColumnFormat"/>
+							</apex:column>
+							<apex:column >
+	  						    <apex:inputText value="{!lines.fieldValue_String}" styleClass="{!if(lines.isValid,'ServiceProviderProfileAnswers_ColumnFormat','ServiceProviderProfileAnswers_ColumnFormat_Error')}" rendered="{!lines.isTextBox}" title="{!lines.errorMessage}">
+	<!--  	  						    <apex:actionSupport event="onchange" rerender="ServiceProviderProfileGrid"/> -->
+	                            </apex:inputText>
+	                            <apex:selectList value="{!lines.fieldValue_Picklist}" multiselect="false" size="1" rendered="{!lines.isPickList}" styleClass="ServiceProviderProfileAnswers_ColumnFormat">
+	                            	<apex:selectOptions Value="{!lines.picklistValues}"/>
+	                            </apex:selectList>
+							</apex:column>
+							<apex:column >
+							    <apex:outputText escape="false" value="{!lines.suffix}" styleClass="ServiceProviderProfileSuffix_ColumnFormat"/>
+							</apex:column>
+						</apex:dataTable>
+					</apex:pageBlockSection>
+	        	</apex:pageBlock>
+	 
+	            <apex:pageBlock title="Services Profile">
+	                <apex:pageBlockSection columns="2" collapsible="false">
+	                    <apex:dataTable value="{!serviceProfileQuestions}" var="lines" id="serviceProfileQuestionsGrid" border="1" width="935px" styleClass="TableStyleClass" captionClass="TableCaptionClass" headerClass="TableHeaderClass" rowClasses="TableRowClasses_odd,TableRowClasses_even" columnClasses="GQ_Question_ColumnFormat,Buying_Valvoline_Value_ColumnFormat,Average_Daily_Service_Volume_Value_ColumnFormat,Retail_Price_Value_ColumnFormat,Current_Installer_Product_Cost_Value_ColumnFormat,Include_Labor_Rate_Value_ColumnFormat,Percent_of_Hours_to_Complete_Value_ColumnFormat,Total_Labor_Costs_Value_ColumnFormat">
+	                        <apex:column styleClass="{!if(lines.isBlankLine=='true','formatBlankColumn',if(lines.isHeaderLine=='true','formatHeaderColumn',''))}">
+	                            <apex:facet name="header">Services Profile</apex:facet>
+	                            <apex:outputText escape="false" value="{!lines.GQ_Question_Formatted}" rendered="{!lines.isQuestion}" styleClass="GQ_Question_ColumnFormat" />
+	                            <apex:outputText escape="false" value="&nbsp" rendered="{!lines.isBlankLine}" styleClass="formatBlankLine"/>
+	                            <apex:outputText escape="false" value="{!lines.GQ_Question_Formatted}" rendered="{!lines.isHeaderLine}" styleClass="formatHeaderLine"/>
+	                        </apex:column>
+	                        <apex:column styleClass="{!if(lines.isBlankLine=='true','formatBlankColumn',if(lines.isHeaderLine=='true','formatHeaderColumn',''))}">
+	                            <apex:facet name="header"><CENTER>Buying<BR/>Valvoline?</CENTER></apex:facet>
+	                            <apex:selectList value="{!lines.Buying_Valvoline_Value}" multiselect="false" size="1" rendered="{!lines.isQuestion}" styleClass="Buying_Valvoline_Value_ColumnFormat">
+	                            	<apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+	                            	<apex:selectOption itemValue="No"  itemLabel="No"/>
+	                            </apex:selectList>
+	                            <apex:outputText escape="false" value="&nbsp" rendered="{!lines.isBlankLine}" styleClass="formatBlankLine"/>
+	                            <apex:outputText escape="false" value="&nbsp" rendered="{!lines.isHeaderLine}" styleClass="formatHeaderLine"/>
+	                        </apex:column>
+	                        <apex:column styleClass="{!if(lines.isBlankLine=='true','formatBlankColumn',if(lines.isHeaderLine=='true','formatHeaderColumn',''))}">
+	                            <apex:facet name="header"><CENTER>Average<BR/>Daily<BR/>Service<BR/>Volume</CENTER></apex:facet>
+	                            <apex:inputText value="{!lines.Average_Daily_Service_Volume_Value}" rendered="{!lines.isQuestion}" styleClass="Average_Daily_Service_Volume_Value_ColumnFormat"/>  
+	                            <apex:outputText escape="false" value="&nbsp" rendered="{!lines.isBlankLine}" styleClass="formatBlankLine"/>
+	                            <apex:outputText escape="false" value="&nbsp" rendered="{!lines.isHeaderLine}" styleClass="formatHeaderLine"/>
+							    <apex:outputText value="{!lines.VSQD_Average_Daily_Service_Volume_Suffix}" rendered="{!lines.isQuestion}" styleClass="ServiceProviderProfileSuffix_ColumnFormat"/>
+							</apex:column>
+	                        <apex:column styleClass="{!if(lines.isBlankLine=='true','formatBlankColumn',if(lines.isHeaderLine=='true','formatHeaderColumn',''))}">
+	                            <apex:facet name="header">Retail<BR/>Price<BR/>(in $)</apex:facet>
+	                            <apex:inputText value="{!lines.Retail_Price_Value}" rendered="{!lines.isQuestion}" styleClass="Retail_Price_Value_ColumnFormat"/>  
+	                            <apex:outputText escape="false" value="&nbsp" rendered="{!lines.isBlankLine}" styleClass="formatBlankLine"/>
+	                            <apex:outputText escape="false" value="&nbsp" rendered="{!lines.isHeaderLine}" styleClass="formatHeaderLine"/>
+	                        </apex:column>
+	                        <apex:column styleClass="{!if(lines.isBlankLine=='true','formatBlankColumn',if(lines.isHeaderLine=='true','formatHeaderColumn',''))}">
+	                            <apex:facet name="header">Current<BR/>Installer<BR/>Product<BR/>Cost<BR/>(in $)</apex:facet>
+	                            <apex:inputText value="{!lines.Current_Installer_Product_Cost_Value}" rendered="{!lines.isQuestion}" styleClass="Current_Installer_Product_Cost_Value_ColumnFormat"/>  
+	                            <apex:outputText escape="false" value="&nbsp" rendered="{!lines.isBlankLine}" styleClass="formatBlankLine"/>
+	                            <apex:outputText escape="false" value="&nbsp" rendered="{!lines.isHeaderLine}" styleClass="formatHeaderLine"/>
+							    <apex:outputText value="{!lines.VSQD_Current_Installer_Product_Cost_Suffix}" rendered="{!lines.isQuestion}" styleClass="ServiceProviderProfileSuffix_ColumnFormat"/>
+							</apex:column>
+	                        <apex:column styleClass="{!if(lines.isBlankLine=='true','formatBlankColumn',if(lines.isHeaderLine=='true','formatHeaderColumn',''))}">
+	                            <apex:facet name="header">Include<BR/>Labor<BR/>Rate?</apex:facet>
+	                            <apex:selectList value="{!lines.Include_Labor_Rate_Value}" multiselect="false" size="1" rendered="{!lines.isQuestion}" styleClass="Buying_Valvoline_Value_ColumnFormat">
+	                            	<apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+	                            	<apex:selectOption itemValue="No"  itemLabel="No"/>
+	                            </apex:selectList>
+	                            <apex:outputText escape="false" value="&nbsp" rendered="{!lines.isBlankLine}" styleClass="formatBlankLine"/>
+	                            <apex:outputText escape="false" value="&nbsp" rendered="{!lines.isHeaderLine}" styleClass="formatHeaderLine"/>
+	                        </apex:column>
+	                        <apex:column styleClass="{!if(lines.isBlankLine=='true','formatBlankColumn',if(lines.isHeaderLine=='true','formatHeaderColumn',''))}">
+	                            <apex:facet name="header"><apex:outputText escape="false" value="{!PercentofHourtoCompleteHeader}"/></apex:facet>
+	                            <apex:inputText value="{!lines.Percent_of_Hours_to_Complete_Value}" rendered="{!lines.isQuestion}" styleClass="Percent_of_Hours_to_Complete_Value_ColumnFormat"/>  
+	                            <apex:outputText escape="false" value="&nbsp" rendered="{!lines.isBlankLine}" styleClass="formatBlankLine"/>
+	                            <apex:outputText escape="false" value="&nbsp" rendered="{!lines.isHeaderLine}" styleClass="formatHeaderLine"/>
+							    <apex:outputText value="%" styleClass="ServiceProviderProfileSuffix_ColumnFormat" rendered="{!lines.isQuestion}"/>
+	                        </apex:column>
+	                    </apex:dataTable>
+	                </apex:pageBlockSection>
+	            </apex:pageBlock>
+	
+	        	<apex:pageBlock title="">
+	                <apex:pageBlockSection columns="1" collapsible="false">
+						<apex:panelGrid columns="1" id="GeneralInformationGrid" width="935px" styleClass="TableStyleClass" captionClass="TableCaptionClass" headerClass="TableHeaderClass" rowClasses="TableRowClasses_even" columnClasses="GeneralInfo_Label_DataFormat">
+	                        <apex:facet name="caption">Comments</apex:facet>
+		                	<apex:inputField value="{!serviceProviderProfile.Comments__c}" styleClass="Comments_Format"/>
+						</apex:panelGrid>
+					</apex:pageBlockSection>
+				</apex:pageBlock>
+			</apex:pageBlock>
+
+		</apex:form>
+ </apex:page>

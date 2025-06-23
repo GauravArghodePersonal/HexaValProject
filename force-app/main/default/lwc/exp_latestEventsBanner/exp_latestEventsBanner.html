@@ -1,0 +1,14 @@
+<template>
+	<template for:each={latestEvents} for:item="e">
+		<div key={e.id}>
+            <center>
+                <div class="exp_border"></div><br/>
+                <div class="exp_banner_heading">{e.heading}</div>
+                <div class="exp_banner_subheading">{e.subHeading}</div>
+                <div class="exp_banner_content">{e.content}</div>
+                <button class="slds-button slds-button_brand my_button">{e.buttonLabel}</button>
+                <br/><br/><br/><div class="exp_border"></div>
+            </center>
+		</div>
+	</template>
+</template>

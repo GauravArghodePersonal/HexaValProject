@@ -1,0 +1,42 @@
+<template>
+    <div if:true={showLoader}>
+        <lightning-spinner alternative-text="Loading" variant="brand" size="large"></lightning-spinner>
+    </div>
+
+    <div class="slds-crd slds-var-p-around_x-small">
+        <template if:true={productShowList}>
+            <template if:true={productShowList.length}>
+                <div class="content">
+                    <div class="slds-grid slds-wrap">
+                        <template for:each={productShowList}
+                                for:item="product">
+                            <div class="slds-col slds-medium-size--3-of-12" key={product.productId}>
+                                    <!-- Product Tile Component here-->
+                                <c-b2b-product-card
+                                   
+                                     product={product}
+                                    page-number={pageNumber}
+                                    page-name={pageName}
+                                    effective-account-id={effectiveAccountId}
+                                    is-fav=true
+                                    class="slds-var-m-around_x-small"
+                                    onproductremove={refreshList}>
+                                </c-b2b-product-card>
+                                 
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </template>
+            <template if:false={productShowList.length}>
+                <h1 style="font-size: 20px;
+                            text-align: center;">{noProductMessage}</h1>
+            </template>
+        </template>
+    </div>
+
+    <!-- Product Pagination Component here-->
+    <template if:true={productCount}>
+        <c-b2b-pagination page-size={pageSize} record-count={productCount} oncallpagechange={pageChange}></c-b2b-pagination>
+    </template>
+</template>

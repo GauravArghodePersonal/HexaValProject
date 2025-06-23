@@ -1,0 +1,78 @@
+.vertical {
+    height: 100%;
+    border-left: 2px solid black;
+    position: absolute;
+    left: 50%;
+}
+
+.field-title{
+    font-weight: 600;
+}
+
+.custom-box {
+    background-color:white;
+    padding-left: initial;
+    padding-top: inherit;
+    padding-block: inherit
+}
+
+.tableheader{
+    background-color: #ddeef2;
+    font-size: 16px;
+    text-transform: none;
+    font-weight: 200;
+    padding: 8px 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+.tableChild{
+    font-size: 16px;
+    text-transform: none;
+    font-weight: 2px;
+    padding-left: 5px;
+    padding-top: 10px;
+    padding-bottom: 5px;
+
+}
+
+.smalltext{
+    font-size: 12px;
+    text-transform: none;
+    font-weight: 300;
+    padding-left: 1px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    color: rgb(3, 3, 3);
+}
+.verysmalltext{
+    font-size: 8px;
+    text-transform: none;
+    font-weight: 500;
+    padding-left: 1px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    color: rgb(116 116 116);
+}
+.imgdiv {
+    box-shadow: 0 2px 5px 0px #ccc;
+    border-radius: 144px;
+    margin: 1px;
+    height: 100px;
+    width: 100px;
+}
+.imgdiv img {
+    border-radius: 400px;
+    height: 100px;
+    margin-top: 10px;
+}
+
+.slds-context-bar{
+    display: none;
+}
+
+@media print{
+    body{ background-color:#FFFFFF; background-image:none; color:#000000 }
+    .bPageHeader{ display:none;} 
+    .footer{display:none;}
+    .bPageFooter{ display:none;}   
+  }

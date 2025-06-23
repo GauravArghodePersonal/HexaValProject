@@ -1,0 +1,42 @@
+<apex:page controller="RecordLockController">
+    <apex:form id="recordLockedMessageForm">
+        <apex:pageBlock title="Record is Locked!" mode="edit">
+            <br/>&nbsp;&nbsp;&nbsp;&nbsp;
+            <apex:outputText value="Record Locked - by: "/> 
+            <apex:outputField value="{!recordLock.recordLockRec.CreatedBy.Name}"/>
+
+            <apex:outputText value=" - at: "/>
+            <apex:outputField value="{!recordLock.recordLockRec.CreatedDate}"/><br/><br/>
+
+            <apex:actionStatus id="btnstat">
+                <apex:facet name="start">
+                    <apex:outputText styleClass="bold" value=" Please wait ...">
+                        <apex:image value="{!$Resource.spinner}"/>
+                    </apex:outputText>
+                </apex:facet>
+                <apex:facet name="stop">
+                    <apex:outputPanel styleClass="nowrap">
+                        &nbsp;&nbsp;&nbsp;
+                        <apex:commandButton value="Return to View Mode" 
+                                            action="{!returnToView}" 
+                                            rerender="recordLockedMessageForm" 
+                                            status="btnstat"/>&nbsp;&nbsp; 
+
+                        <apex:commandButton value="Manually Unlock" 
+                                            action="{!unlockRecord}"
+                                            rendered="{!renderUnlockBtn}" 
+                                            rerender="recordLockedMessageForm" 
+                                            status="btnstat"/><br/> 
+                    </apex:outputPanel>
+                </apex:facet>
+            </apex:actionStatus> 
+        </apex:pageBlock>
+    </apex:form> 
+    <style>
+        .bold   {font-weight: bold;}
+        .center {text-align: center;}
+        .left   {text-align: left;}
+        .right  {text-align: right;}
+        .nowrap {white-space: nowrap;}
+    </style>
+</apex:page>

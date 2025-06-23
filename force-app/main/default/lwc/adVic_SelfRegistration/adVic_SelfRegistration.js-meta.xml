@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <isExposed>true</isExposed>
+    <masterLabel>DELETE ME SELF REG</masterLabel>
+    <description>Self Registration form with validations</description>
+    <targets>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default">
+            <property label="Default Country" name="defaultCountry" type="String"/>
+            <property label="Show Vat?" name="showVat" type="Boolean" default="True"/>
+            <property label="Show KVK?" name="showKVK" type="Boolean" default="False"/>
+            <property label="Show SIRET?" name="showSIRET" type="Boolean" default="False"/>
+            <property label="Show CVR / EAN?" name="showEAN" type="Boolean" default="False"/>
+            <property label="Success Message" name="successMessage" type="String" default="{!Label.c.AdVic_Self_Registration_Success_Message}"/>
+            <property label="Loading Text" name="loadingText" type="String" default="{!Label.c.AdVic_Loading_Text}"/>
+            <property label="Register Text" name="registerText" type="String" default="{!Label.c.AdVic_Register_Text}"/>
+            <property label="Log In Here Text" name="logInHereText" type="String" default="{!Label.c.AdVic_Log_In_Here}"/>
+            <property label="Form Header" name="formHeader" type="String" default="{!Label.c.AdVic_Self_Registration_Form_Header}"/>
+            <property label="Required Fields Message" name="requiredFieldsMessage" type="String" default="{!Label.c.AdVic_Required_Fields_Message}"/>
+            <property label="Contact Info Header" name="contactInfoHeader" type="String" default="{!Label.c.AdVic_Contact_Info_Header}"/>
+            <property label="First Name" name="firstName" type="String" default="{!Label.c.AdVic_First_Name}"/>
+            <property label="Last Name" name="lastName" type="String" default="{!Label.c.AdVic_Last_Name}"/>
+            <property label="Phone Number" name="phoneNumber" type="String" default="{!Label.c.AdVic_Phone_Number}"/>
+            <property label="Email" name="email" type="String" default="{!Label.c.AdVic_Email}"/>
+            <property label="Bill To Address Header" name="billToAddressHeader" type="String" default="{!Label.c.AdVic_Bill_To_Address_Header}"/>
+            <property label="Ship To Address Header" name="shipToAddressHeader" type="String" default="{!Label.c.AdVic_Ship_To_Address_Header}"/>
+            <property label="Address" name="address" type="String" default="{!Label.c.AdVic_Address}"/>
+            <property label="City" name="city" type="String" default="{!Label.c.AdVic_City}"/>
+            <property label="Country" name="country" type="String" default="{!Label.c.AdVic_Country}"/>
+            <property label="State" name="state" type="String" default="{!Label.c.AdVic_State}"/>
+            <property label="Zip Code" name="postalCode" type="String" default="{!Label.c.AdVic_Postal_Code}"/>
+            <property label="Show State?" name="showState" type="Boolean" default="true"/>
+            <property label="Address Confirmation Header" name="addressConfirmationHeader" type="String" default="{!Label.c.AdVic_Address_Confirmation_Header}"/>
+            <property label="Suggested Label" name="suggestedLabel" type="String" default="{!Label.c.AdVic_Suggested_Label}"/>
+            <property label="Original Label" name="originalLabel" type="String" default="{!Label.c.AdVic_Original_Label}"/>
+            <property label="VAT Label" name="vatLabel" type="String" default="{!Label.c.AdVic_VAT_Label}"/>
+            <property label="Use Valid VAT Label" name="useValidVatLabel" type="String" default="{!Label.c.AdVic_Use_Valid_Vat_Label}"/>
+            <property label="Use Valid Address Label" name="useValidAddressLabel" type="String" default="{!Label.c.AdVic_Use_Valid_Address_Label}"/>
+            <property label="Duplicate Email Label" name="duplicateEmailLabel" type="String" default="{!Label.c.AdVic_Duplicate_Email}"/>
+            <property label="Company" name="company" type="String" default="{!Label.c.AdVic_Company}"/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

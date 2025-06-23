@@ -1,0 +1,34 @@
+<apex:page standardController="Pricing__c"  extensions="PricingController" sidebar="true"  tabstyle="Pricing__c">
+ <script type="text/javascript">
+var __sfdcSessionId = '{!GETSESSIONID()}';
+</script>
+<script src="/soap/ajax/46.0/connection.js"></script>
+<apex:includeScript value="/support/console/48.0/integration.js"/>
+<style>
+.frame{
+    width: 100%;
+    border: 0px;
+    height: 86vh;
+}
+#pnlId{
+    text-align: center;
+    padding-top: 20%;
+}
+</style>
+
+ <script type="text/javascript">
+   window.onload = function(){ 
+   
+   var Themstr= "{! $User.UIThemeDisplayed }";    
+   if(Themstr == "Theme4d")
+   {
+   window.location = "/apex/PricingUpdatePage1?Id={!Pricing__c.Id}";
+   }
+   else
+   {
+    window.location.href = "/apex/PricingUpdatePage1?Id="Pricing__c.Id;
+   }     
+}
+</script>
+ 
+</apex:page>

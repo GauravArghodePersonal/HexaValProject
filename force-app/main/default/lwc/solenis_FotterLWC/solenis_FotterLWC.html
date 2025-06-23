@@ -1,0 +1,61 @@
+<template>
+	<!-- FOOTER START -->
+	<div class="footer">
+		<div class="contain">
+			<div class="firstcol contactStyle borderRight1px">
+				<span class="centered-element">{label.solenis_Exp_Contact}</span>
+			</div>
+			<div class="col">
+				<div class="column marginBottom10px">
+					<h2 class="cursor" onclick={handleContactUsClick}>{label.solenis_Exp_Contact_Us}</h2>
+				</div>
+				<div class="column">
+					<h2 class="cursor" onclick={handleSalesContactClick}>{label.solenis_Exp_Sales_Contacts}</h2>
+				</div>
+			</div>
+			<div class="col borderRight1px">
+				<div class="column marginBottom10px">
+					<h2 class="contactsHeading cursor" onclick={handleCustomerServiceContactsClick}>
+						{label.solenis_Exp_Customer_Service_Contacts}</h2>
+				</div>
+				<div class="column">
+					<h2 class="contactsHeading cursor" onclick={handleCorporateDevelopmentClick}>
+						{label.solenis_Exp_Corporate_Development}</h2>
+				</div>
+			</div>
+			<div class="col">
+				<div class="column marginBottom10px">
+					<h2 class="cursor" onclick={handleDownloadEkitClick}>{label.solenis_Exp_Download_EKit}</h2>
+				</div>
+				<div class="column">
+					<h2 class="cursor" onclick={handleSustainabilityClick}>{label.solenis_Exp_Sustainability}</h2>
+				</div>
+			</div>
+			<div class="col borderRight1px">
+				<div class="column marginBottom10px">
+					<h2 class="contactsHeading cursor" onclick={handleResearchClick}>{label.solenis_Exp_Research_Development}</h2>
+				</div>
+				<div class="column">
+					<h2 class="contactsHeading cursor"></h2>
+				</div>
+			</div>
+			<div class="col social borderRight1px">
+				<div class="column marginBottom10px">
+					<h2>{label.solenis_Exp_Lets_get_social}</h2>
+				</div>
+				<div class="column">
+					<div class="socialFooter">
+						<a href="#" class="socialLink" onclick={handleLinkedInClick}>
+							<img src={FooterIconslinkedin} /></a>
+						<a href="#" class="socialLink" onclick={handleFacebookClick}>
+							<img src={FooterIconsfacebook} /></a>
+						<a href="#" class="socialLink" onclick={handleYoutubeClick}>
+							<img src={FooterIconsyoutube} /></a>
+					</div>
+				</div>
+			</div>
+			<div class="clearfix"></div>
+		</div>
+	</div>
+	<!-- END OF FOOTER -->
+</template>

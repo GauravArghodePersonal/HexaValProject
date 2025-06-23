@@ -1,0 +1,47 @@
+<template>
+    <div class="product-container">
+        <!-- Left navigation button -->
+        <template if:true={showNavigationButtons}>
+            <button class="nav-button left-nav" onclick={handleLeftClick}>
+                <svg class="nav-icon">
+                    <use xlink:href={leftButton}></use>
+                </svg>
+            </button>
+        </template>
+
+        <div class="product-carousel">
+            <template for:each={visibleProducts} for:item="product">
+                <div key={product.Id} class="product-card">
+                    <!-- Modified to include data-title for navigation -->
+                    <div class="product-image" onclick={navigateToProduct} data-id={product.Id} data-title={product.productTitle}>
+                        <img src={product.ImageUrl} alt={product.Title}/>
+                    </div>
+                    <div class="product-details">
+                        <!-- Modified to include data-title for navigation -->
+                        <h2 class="product-title" onclick={navigateToProduct} data-id={product.Id} data-title={product.productTitle}>{product.productTitle}</h2>
+                        <template for:each={product.Details} for:item="detail">
+                            <p key={detail.label}>{detail.label}: {detail.value}</p>
+                        </template>
+                        <p>Inventory: Placeholder</p>
+                        <p>Price: Placeholder</p>
+                        <button data-id={product.Id} class="add-to-cart-button" onclick={handleAddToCart}>
+                            Add to Cart 
+                            <svg class="button_icon">
+                                <use xlink:href={cartButton}></use>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <!-- Right navigation button -->
+        <template if:true={showNavigationButtons}>
+            <button class="nav-button right-nav" onclick={handleRightClick}>
+                <svg class="nav-icon">
+                    <use xlink:href={rightButton}></use>
+                </svg>
+            </button>
+        </template>
+    </div>
+</template>

@@ -1,0 +1,1755 @@
+<apex:page id="thePage" title="IRF Monthly Data" sidebar="false"
+           controller="IRF_Controller" action="{!initAction2}" lightningStylesheets="true" docType="html-5.0">
+
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-1.6.2.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-ui-1.8.16.custom.min.js')}" />
+    <style type="text/css">
+        @import "{!URLFOR($Resource.jQuery, 'css/redmond/jquery-ui-1.8.16.custom.css')}";
+    </style>
+
+    <apex:form id="form2A">
+        <script type="text/javascript">
+            var $j = jQuery.noConflict();
+
+            $j(function(){initForm1();});
+
+            function initForm1() {
+                //log('initForm1');
+            }
+            
+            function myFunction(){
+                //alert('Calling function');
+            }
+            
+        </script>
+        
+        <span id="focusPoint1" tabindex="-1"></span>
+        <apex:pageMessages escape="false" rendered="{!!renderEditBtn}"/>
+
+        <apex:variable var="decimals" value="2"/>
+        <apex:variable var="locale" value="{!userLocale}"/>
+
+        <apex:outputPanel rendered="{!renderImdOP}">
+        <apex:pageBlock id="pblock0" mode="edit">
+             <apex:facet name="header"><apex:outputPanel ><table class="tbl1">
+                <tr><td class="td1">
+                        <apex:outputText rendered="{!!renderEditBtn}">{!m_hdr.sobj.Name}</apex:outputText>
+                        <apex:outputLink rendered="{!renderEditBtn}" target="_blank"
+                                         value="/{!m_hdr.sobj.Id}">{!m_hdr.sobj.Name}</apex:outputLink>
+                        <apex:outputText >&nbsp;:&nbsp;{!d_hdr.sobj.Name}</apex:outputText></td>
+                    <td class="td2">&nbsp;</td><td class="td3">
+                    <apex:actionStatus id="topBtns">
+                        <apex:facet name="start">
+                            <apex:outputText styleClass="bold" value=" Please wait ...">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop">
+                            <apex:outputPanel styleClass="nowrap">
+                                <apex:commandButton action="{!setEditable}" value="Edit"
+                                                    rendered="{!renderEditBtn}"
+                                                    oncomplete="setfocus('focusPoint1');"
+                                                    rerender="form2A,form3A" status="topBtns"/>
+                                <apex:commandButton value="Update SO Number" action="{!IRF_SAP_Details}"/>   
+                                <apex:commandButton action="{!validateImd}" value="Validate"
+                                                    rendered="{!renderSaveBtn}"
+                                                    oncomplete="setfocus('focusPoint1');"
+                                                    rerender="form2A,form3A" status="topBtns"/>
+                                <apex:commandButton action="{!saveImd}" value="Save"
+                                                    rendered="{!renderSaveBtn}"
+                                                    disabled="{!!validImd}"
+                                                    oncomplete="setfocus('focusPoint1');"
+                                                    rerender="form2A,form3A" status="topBtns"/>
+                                <apex:commandButton action="{!saveAndSubmitImd}" value="Save and Submit"
+                                                    rendered="{!renderSubmBtn}"
+                                                    disabled="{!!validImd}"
+                                                    oncomplete="setfocus('focusPoint1');"
+                                                    rerender="form2A,form3A" status="topBtns"/>
+                                <apex:commandButton action="{!deleteImd}" value="Delete"
+                                                    rendered="{!renderDelImdBtn}"
+                                                    onclick="return getConfirm('{!deleteMsg}');"/>
+                                <apex:commandButton action="{!gotoRetUrl}" value="Cancel" immediate="true"
+                                                    rerender="form2A,form3A" status="topBtns"/>
+                                <apex:commandButton action="{!setDraftImd}" value="Set to Draft"
+                                                    rendered="{!renderSetDraftBtn}"
+                                                    onclick="return getConfirm('Set to Draft?');"/>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <apex:commandLink action="{!viewImdAsPdf}" value="View as PDF"
+                                                rendered="{!renderEditBtn}" target="_blank"/>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <apex:commandLink action="{!viewInvoicePdf}" value="Invoice PDF"
+                                               target="_blank"/>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <apex:commandLink action="{!viewImdApprovalHistory}"
+                                                value="View Approval History"
+                                                rendered="{!renderImdAprvlBtn}" target="_blank"/>
+                            </apex:outputPanel>
+                        </apex:facet>
+                    </apex:actionStatus>
+                </td></tr></table>
+             </apex:outputPanel></apex:facet>
+        </apex:pageBlock>
+
+        <apex:pageBlock id="pblock1" mode="edit">
+                <apex:facet name="header"><apex:outputPanel ><table class="tbl1">
+                    <tr><td class="td1">Monthly Data</td><td class="td2">
+                        </td><td class="td3">&nbsp;</td>
+                    </tr></table></apex:outputPanel></apex:facet>
+                <apex:outputPanel ><table class="tbl2">
+                    <colgroup>
+                        <col style="width: 130px;"/>
+                        <col style="width: 250px;"/>
+                        <col style="width: 130px;"/>
+                        <col style="width: 250px;"/>
+                        <col style="width: 130px;"/>
+                        <col style="width: 250px;"/>
+                    </colgroup>
+                    <tr>
+                        <td class="lbl">Ship To</td>
+                        <td class="val">
+                            <apex:outputText rendered="{!!renderEditBtn}">{!m_hdr.shipToStr}</apex:outputText>
+                            <apex:outputLink rendered="{!renderEditBtn}"
+                                             value="/{!m_hdr.shipTo.Id}">{!m_hdr.shipToStr}</apex:outputLink></td>
+
+                        <td class="lbl">Ship To Address</td>
+                        <td class="val">{!m_hdr.shipToAddress}</td>
+
+                        <td class="lbl">Status</td>
+                        <td class="val"><apex:outputField value="{!d_hdr.sobj.Status__c}"/></td>
+                    </tr><tr>
+                        <td class="lbl">Account Owner</td>
+                        <td class="val">{!m_hdr.shipToOwner}</td>
+
+                        <td class="lbl">Submitted By</td>
+                        <td class="val">{!d_hdr.submtdBy}</td>
+
+                        <td class="lbl">Submitted Time</td>
+                        <td class="val"><apex:outputField value="{!d_hdr.sobj.Submitted_DateTime__c}"/></td>
+                    </tr><tr>
+                        <td class="lbl">Sales Org</td>
+                        <td class="val">{!m_hdr.salesOrgStr}</td>
+
+                        <td class="lbl">SAP Contract Number</td>
+                        <td class="val">{!m_hdr.sobj.Contract_Number__c}</td>
+
+                        <td class="lbl reqd">Purchase Order Number</td>
+                        <td class="val"><apex:inputField rendered="{!AND(isEditable1, !m_hdr.sobj.PO_for_Billing_Period__c)}"
+                                                         value="{!d_hdr.sobj.Purchase_Order_Number__c}"
+                                                         styleClass="{!d_hdr.scPOnum}" style="width: 230px;"/>
+                                        <apex:outputField rendered="{!OR(!isEditable1, m_hdr.sobj.PO_for_Billing_Period__c)}"
+                                                          value="{!d_hdr.sobj.Purchase_Order_Number__c}"/></td>
+                    </tr>
+                    <tr>
+                        <td class="lbl">SAP Invoice Numbers</td>
+                        <td class="val"><apex:inputField rendered="{!isEditable1}"   value="{!d_hdr.sobj.Invoice_Numbers__c}" styleClass="txta2"/>
+                                        <apex:outputField rendered="{!!isEditable1}" value="{!d_hdr.sobj.Invoice_Numbers__c}"/></td>
+
+                        <td class="lbl reqd">Start Date
+                           <span class="CustomHelpTextExample" Style="color:black">
+                                <img  src="/img/s.gif" alt="Help" class="helpIcon" title="This date represents the ship date, not the delivery date" />
+                            </span> 
+                        </td>
+                        <td class="val">
+                                 
+                            <apex:outputPanel rendered="{!isEditable1}" styleClass="nowrap">
+                                <apex:inputField value="{!d_hdr.sobj.Start_Date__c}" styleClass="{!d_hdr.scDate1}" >
+                                    <apex:actionSupport event="onchange" action="{!onDateChange}"
+                                                        rerender="form2A" status="topBtns"/>
+                                </apex:inputField>
+                            </apex:outputPanel>
+                           <!-- <span class="CustomHelpTextExample" rendered="{!isEditable1}">
+                                <img src="/img/s.gif" alt="Help" class="helpIcon" title="This date represents the ship date, not the beginning of the month"/>
+                            </span>  --> 
+                                <apex:outputField rendered="{!!isEditable1}" value="{!d_hdr.sobj.Start_Date__c}" title="This date represents the ship date, not the delivery date"/>
+                           <!-- <span class="CustomHelpTextExample">
+                                <img  src="/img/s.gif" alt="Help" class="helpIcon" title="This date represents the ship date, not the beginning of the month" />
+                            </span>   -->  
+                         </td>
+
+                        <td class="lbl reqd">End Date
+                        <span class="CustomHelpTextExample" Style="color:black">
+                                <img  src="/img/s.gif" alt="Help" class="helpIcon" title="This date represents the ship date, not the delivery date" />
+                        </span> 
+                        </td>
+                        <td class="val">
+                            <apex:outputPanel rendered="{!isEditable1}" styleClass="nowrap">
+                                <apex:inputField value="{!d_hdr.sobj.End_Date__c}" styleClass="{!d_hdr.scDate1}">
+                                    <apex:actionSupport event="onchange" action="{!onDateChange}"
+                                                        rerender="form2A" status="topBtns"/>
+                                </apex:inputField>
+                            </apex:outputPanel>
+                            <apex:outputField rendered="{!!isEditable1}" value="{!d_hdr.sobj.End_Date__c}"/>
+                            <!--<span class="CustomHelpTextExample">
+                                <img src="/img/s.gif" alt="Help" class="helpIcon" title="This date represents the ship date, not the ending of the month"/>
+                            </span>-->
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td class="lbl">Sales Order Number</td>
+                        <td class="val"><apex:inputField rendered="{!isEditable1}"   value="{!d_hdr.sobj.Sales_OrderNum__c}" styleClass="txta2"/>
+                                        <apex:outputField rendered="{!!isEditable1}" value="{!d_hdr.sobj.Sales_OrderNum__c}"/></td>
+                         <td class="lbl reqd">Applicable Month</td>
+                        <td>                        
+                            <apex:outputPanel rendered="{!isEditable1}" >
+                                <apex:inputField value="{!d_hdr.sobj.Applicable_Month__c}" >
+                                    <!--<apex:actionSupport event="onchange" action="{!onDateChange}"
+                                                        rerender="form2A" status="topBtns"/>-->
+                                </apex:inputField>
+                            </apex:outputPanel>
+                                <apex:outputField rendered="{!!isEditable1}" value="{!d_hdr.sobj.Applicable_Month__c}" />
+                            <span class="CustomHelpTextExample">
+                                <!--<img src="/img/s.gif" alt="Help" class="helpIcon" title="This date represents the ship date, not the beginning of the month"/>-->
+                            </span> 
+                        
+                        </td>
+                        <td class="lbl reqd">Applicable Year</td>
+                        <td>                        
+                            <apex:outputPanel rendered="{!isEditable1}" >
+                                <apex:inputField value="{!d_hdr.sobj.Applicable_Year__c}" html-maxlength="4">
+                                
+                                </apex:inputField>
+                                
+                                
+                            </apex:outputPanel>
+                                <apex:outputField rendered="{!!isEditable1}" value="{!d_hdr.sobj.Applicable_Year__c}"/>
+                            <span class="CustomHelpTextExample">
+                                <!--<img src="/img/s.gif" alt="Help" class="helpIcon" title="This date represents the ship date, not the beginning of the month"/>-->
+                            </span> 
+                        
+                        </td>
+
+                    </tr>
+                    
+                    <tr>
+                        <td class="lbl">Comments</td>
+                        <td colspan="5">
+                            <apex:outputField value="{!m_hdr.sobj.Comments__c}"/></td>
+
+                </tr></table></apex:outputPanel>
+        </apex:pageBlock>
+<!-- ================================================ Materials ==================================================== -->
+        <apex:pageBlock id="pblock2" rendered="{!contractZPNC || !contractZTNC || !contractZPCC}" mode="edit">
+            <apex:facet name="header"><apex:outputPanel ><table class="tbl1">
+                <tr><td class="td1">Materials</td><td class="td2">
+                    <apex:actionStatus id="matBtns">
+                        <apex:facet name="start">
+                            <apex:outputText styleClass="bold" value=" Please wait ...">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop"><apex:outputPanel styleClass="nowrap">
+                                <apex:commandButton action="{!showHideMatsMFD}" value="{!matMfdLbl}"
+                                                    oncomplete="setfocus('focusPoint2');"
+                                                    rerender="form2A" status="matBtns"  rendered="{!!isEditable2}"/>
+                                <apex:commandButton action="{!showHideMatsMFDedit}" value="{!matMfdLbl}"
+                                                    oncomplete="setfocus('focusPoint2');"
+                                                    rerender="form2A" status="matBtns"  rendered="{!isEditable2}" />                    
+                                <apex:commandButton action="{!initAddImdMats}" value="Add Materials"
+                                                    rendered="{!renderAddMats1Btn}"
+                                                    oncomplete="setfocus('{!$Component.matSrchPB.matSrchString}');"
+                                                    rerender="form2A" status="matBtns"/>
+                                                    
+                                <apex:commandButton action="{!searchMaterials}" value="Add Materials"
+                                                    rendered="{!renderAddMats2Btn}"
+                                                    oncomplete="setfocus('{!$Component.matSrchPB.matSrchString}');"
+                                                    rerender="form2A" status="matBtns"/>
+                                <apex:commandButton action="{!deleteImdMats}" value="Delete Materials"
+                                                    rendered="{!AND(isEditable4, renderMatList)}"
+                                                    rerender="form2A" status="matBtns"/>
+                        </apex:outputPanel></apex:facet>
+                    </apex:actionStatus>
+                    </td>
+                    <td class="td3"><apex:outputPanel rendered="{!renderMatList}">
+                        <apex:outputText value="Records: {!pc4.recordFrom} - {!pc4.recordTo} of {!pc4.resultSize}"
+                                         styleClass="nowrap"/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                        <apex:actionStatus id="pc4Controls">
+                            <apex:facet name="start">
+                                <apex:outputText styleClass="bold" value=" Please wait ...">
+                                    <apex:image value="{!$Resource.spinner}"/>
+                                </apex:outputText>
+                            </apex:facet>
+                            <apex:facet name="stop">
+                            <apex:outputPanel >
+                            <apex:outputText value="Rows Per Page:"/>&nbsp;
+                            <apex:selectList value="{!pc4.pageSize}" size="1" title="Rows Per Page:">
+                                <apex:actionSupport event="onchange" action="{!pc4Size}"
+                                                rerender="pblock2" status="pc4Controls"/>
+                                <apex:selectOption itemLabel="10" itemValue="10"/>
+                                <apex:selectOption itemLabel="20" itemValue="20"/>
+                                <apex:selectOption itemLabel="40" itemValue="40"/>
+                                <apex:selectOption itemLabel="80" itemValue="80"/>
+                            </apex:selectList>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <apex:commandButton action="{!pc4Frst}" disabled="{!NOT(pc4.hasPrevious)}"
+                                                rerender="pblock2" status="pc4Controls"
+                                                title="First Page" value="<<"/>&nbsp;&nbsp;
+                            <apex:commandButton action="{!pc4Prev}" disabled="{!NOT(pc4.hasPrevious)}"
+                                                rerender="pblock2" status="pc4Controls"
+                                                title="Prev Page" value="<"/>
+
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                            <apex:commandButton action="{!pc4Next}" disabled="{!NOT(pc4.hasNext)}"
+                                                rerender="pblock2" status="pc4Controls"
+                                                title="Next Page" value=">"/>&nbsp;&nbsp;
+                            <apex:commandButton action="{!pc4Last}" disabled="{!NOT(pc4.hasNext)}"
+                                                rerender="pblock2" status="pc4Controls"
+                                                title="Last Page" value=">>"/>
+                            </apex:outputPanel>
+                            </apex:facet>
+                        </apex:actionStatus>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                        <apex:outputText value="Page: {!pc4.pageNumber} of {!pc4.lastPageNumber}"/>
+                    </apex:outputPanel></td>
+                    </tr></table></apex:outputPanel>
+            </apex:facet>
+            <span id="focusPoint2" tabindex="-1"></span>
+            <apex:pageBlockTable value="{!d_mats}" var="m" rendered="{!renderMatList}" styleClass="tbl4">
+            
+              <!--  <apex:column style="width: 20px" headerClass="number" styleClass="number {!m.styleClass}" rendered="{!!isEditable2}">
+                    <apex:facet name="header">&nbsp;&nbsp;&nbsp;&nbsp;#</apex:facet>
+                    <apex:outputText value="{!m.recNum}" />
+                    
+                </apex:column>
+                 <apex:column style="width: 20px" headerClass="number" styleClass="number {!m.styleClass}" rendered="{!isEditable2}">
+                    <apex:facet name="header">&nbsp;&nbsp;&nbsp;&nbsp;#</apex:facet>
+                    <apex:outputText value="{!m.recNum}" rendered="{!AND(isEditable2,OR(!m.sobj.IRF_Material__r.MFD__c,hideMatsMFDedit))}"/>             
+                </apex:column>-->
+                
+                <apex:column style="width: 100%;" styleClass="{!m.styleClass}">
+                    <apex:facet name="header">&nbsp;</apex:facet>
+                    <apex:outputText >&nbsp;</apex:outputText>
+                </apex:column>
+                
+                <apex:column style="width: 20px" headerClass="chkbx" styleClass="chkbx {!m.styleClass}"
+                             rendered="{!isEditable4}">
+                    <apex:facet name="header"><apex:outputPanel >
+                        <apex:inputCheckbox styleClass="allcb1" value="{!allMats}"
+                            onclick="onClick_AllChkbox('rowcb1', this);"/>
+                    </apex:outputPanel></apex:facet>
+                    <apex:inputCheckbox styleClass="rowcb1" value="{!m.selected}" rendered="{!m.newMat}"
+                        onclick="onClick_RowChkbox('rowcb1', 'allcb1');"/>
+                </apex:column>
+                <!--<apex:column style="width: 54px" headerClass="center" styleClass="center {!m.styleClass}">
+                    <apex:facet name="header">Marked<br/>for<br/>Deletion</apex:facet>
+                    <apex:outputField value="{!m.sobj.MFD__c}"
+                                   rendered="{!(m.recNum != null)}"/>
+                </apex:column>-->
+                <apex:column style="width: 50px" styleClass="{!m.scNohdr} {!m.styleClass}" rendered="{!!isEditable2}">
+                    <apex:facet name="header">Material<br/>Number</apex:facet>
+                    <apex:outputText value="{!m.matNum}"/>
+                </apex:column>
+                
+                 <apex:column style="width: 50px" styleClass="{!m.scNohdr} {!m.styleClass}" rendered="{!isEditable2}">
+                    <apex:facet name="header">Material<br/>Number</apex:facet>
+                    <apex:outputText value="{!m.matNum}" rendered="{!AND(isEditable2,OR(!m.sobj.IRF_Material__r.MFD__c,hideMatsMFDedit))}"/>
+                </apex:column>
+
+                <apex:column styleClass="matName {!m.scNohdr} {!m.styleClass}">
+                    <apex:facet name="header">
+                        <apex:actionStatus id="sortStatus">
+                            <apex:facet name="start">
+                                <apex:outputText styleClass="bold" value="">
+                                    <apex:image value="{!$Resource.spinner}"/>
+                                </apex:outputText>
+                            </apex:facet>
+                            <apex:facet name="stop">
+                                <apex:outputPanel styleClass="nowrap" >
+                                        <apex:commandLink action="{!sortMats}" rerender="form2A" status="sortStatus">
+                                        Material<br/>Description
+                                    </apex:commandLink>
+                                </apex:outputPanel>
+                            </apex:facet>
+                            
+                             
+                        </apex:actionStatus>
+                    </apex:facet>
+                    <div class="matName"><apex:outputLink value="/{!m.matId}" target="_blank" rendered="{!!isEditable2}">
+                        {!m.sobj.Material__r.Material_Desc__c}</apex:outputLink></div>
+                        
+                        
+                         <div class="matName"><apex:outputLink value="/{!m.matId}" target="_blank" rendered="{!AND(isEditable2,OR(!m.sobj.IRF_Material__r.MFD__c,hideMatsMFDedit))}">
+                        {!m.sobj.Material__r.Material_Desc__c}</apex:outputLink></div>
+                </apex:column>
+                
+                
+                
+                <apex:column style="width: 50px" headerClass="center" styleClass="{!m.styleClass}" rendered="{!!isEditable2}">
+                    <apex:facet name="header">Tank<br/>Number<br/>or Area</apex:facet>
+                    <apex:outputField value="{!m.sobj.Tank_Number__c}"/>
+                </apex:column>
+                
+                <apex:column style="width: 50px" headerClass="center" styleClass="{!m.styleClass}" rendered="{!isEditable2}">
+                    <apex:facet name="header">Tank<br/>Number<br/>or Area</apex:facet>
+                    <apex:outputField value="{!m.sobj.Tank_Number__c}" rendered="{!AND(isEditable2,OR(!m.sobj.IRF_Material__r.MFD__c,hideMatsMFDedit))}"/>
+                </apex:column>
+
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}" rendered="{!!isEditable2}">
+                    <apex:facet name="header">Beginning<br/>Inventory</apex:facet>
+                    <apex:outputPanel >
+                        <!-- apex:inputField rendered="{!AND(isEditable2, m.newMat)}"
+                                         value="{!m.sobj.Beginning_Inventory__c}"
+                                         styleClass="right {!m.scBegnv}" style="width: 50px;"
+                                         onkeypress="return numInp1(event, this, 8);"/ -->
+                        <apex:outputField value="{!m.sobj.Beginning_Inventory__c}"/>
+                    </apex:outputPanel>
+                </apex:column>
+                
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}" rendered="{!isEditable2}">
+                    <apex:facet name="header">Beginning<br/>Inventory</apex:facet>
+                    <apex:outputPanel >
+                        <!-- apex:inputField rendered="{!AND(isEditable2, m.newMat)}"
+                                         value="{!m.sobj.Beginning_Inventory__c}"
+                                         styleClass="right {!m.scBegnv}" style="width: 50px;"
+                                         onkeypress="return numInp1(event, this, 8);"/ -->
+                        <apex:outputField value="{!m.sobj.Beginning_Inventory__c}" rendered="{!AND(isEditable2,OR(!m.sobj.IRF_Material__r.MFD__c,hideMatsMFDedit))}"/>
+                    </apex:outputPanel>
+                </apex:column>
+
+                <apex:column style="width: 75px" headerClass="center clink" styleClass="number {!m.styleClass}">
+                    <apex:facet name="header">
+                        <apex:actionStatus id="recevdInvStat">
+                            <apex:facet name="start">
+                                <apex:outputText styleClass="bold" value="">
+                                    <apex:image value="{!$Resource.spinner}"/>
+                                </apex:outputText>
+                            </apex:facet>
+                            <apex:facet name="stop">
+                                <apex:outputPanel styleClass="nowrap">
+                                    <apex:commandLink action="{!showRecevdInvs}"
+                                                      rerender="form2A" status="recevdInvStat">
+                                        Received<br/>Inventory
+                                    </apex:commandLink>
+                                </apex:outputPanel>
+                            </apex:facet>
+                        </apex:actionStatus>
+                    </apex:facet>
+                    <apex:outputPanel >
+                        <apex:inputField rendered="{!AND(isEditable2, contractGrp, m.recNum != null,OR(!m.sobj.IRF_Material__r.MFD__c,hideMatsMFDedit))}"
+                            value="{!m.sobj.Received_Inventory__c}" styleClass="right f75"
+                            onkeypress="return numInp1(event, this, 8);"/>
+                            
+                    <apex:outputText value="{0, number, ###,###,###}" rendered="{!AND(OR(!isEditable2, !contractGrp, m.recNum == null),m.sobj.Received_Inventory__c!=null,m.sobj.Received_Inventory__c>= 0)}">
+                    <apex:param value="{!m.sobj.Received_Inventory__c}"/>
+                    </apex:outputText>
+                    <apex:outputText value="(-{0, number, ###,###,###})" rendered="{!AND(OR(!isEditable2, !contractGrp, m.recNum == null),m.sobj.Received_Inventory__c!=null && m.sobj.Received_Inventory__c< 0)}">
+                        <apex:param value="{!m.sobj.Received_Inventory__c* -1}"/>
+                    </apex:outputText>
+                            
+                       <!-- <apex:outputField rendered="{!OR(!isEditable2, !contractGrp, m.recNum == null)}"
+                            value="{!m.sobj.Received_Inventory__c}"/>-->
+                            
+                    </apex:outputPanel>
+                </apex:column>
+
+                <apex:column style="width: 75px" headerClass="center clink" styleClass="number {!m.styleClass}">
+                    <apex:facet name="header">
+                        <apex:actionStatus id="adjstdInvStat">
+                            <apex:facet name="start">
+                                <apex:outputText styleClass="bold" value="">
+                                    <apex:image value="{!$Resource.spinner}"/>
+                                </apex:outputText>
+                            </apex:facet>
+                            <apex:facet name="stop">
+                                <apex:outputPanel styleClass="nowrap">
+                                    <apex:commandLink action="{!showAdjstdInvs}"
+                                                      rerender="form2A" status="adjstdInvStat">
+                                        Adjust<br/>-ments
+                                    </apex:commandLink>
+                                </apex:outputPanel>
+                            </apex:facet>
+                        </apex:actionStatus>
+                    </apex:facet>
+                    <apex:outputPanel >
+                        <apex:inputField rendered="{!AND(isEditable2, m.recNum != null,OR(!m.sobj.IRF_Material__r.MFD__c,hideMatsMFDedit))}"
+                            value="{!m.sobj.Adjustment_Inventory__c}" styleClass="number f75 {!m.scAdjst}"
+                            onkeypress="return numInp4(event, this, 2);"/>
+                          <apex:outputPanel rendered="{!m.sobj.Adjustment_Inventory__c!=null && m.sobj.Adjustment_Inventory__c>= 0}">   
+                            <apex:outputField rendered="{!OR(!isEditable2, m.recNum == null)}"
+                                value="{!m.sobj.Adjustment_Inventory__c}"/>
+                          </apex:outputPanel>
+                          
+                          <apex:outputPanel rendered="{!m.sobj.Adjustment_Inventory__c!=null && m.sobj.Adjustment_Inventory__c<0}">   
+                            <apex:outputText rendered="{!OR(!isEditable2, m.recNum == null)}"
+                                value="(-{0, number, ###,###,###})">
+                                <apex:param value="{!m.sobj.Adjustment_Inventory__c* -1}"/>
+                    </apex:outputText>
+                          </apex:outputPanel>
+                          
+                    </apex:outputPanel>
+                </apex:column>
+
+                <apex:column style="width: 75px" headerClass="center reqd" styleClass="number {!m.styleClass}">
+                    <apex:facet name="header">Ending<br/>Inventory</apex:facet>
+                    <apex:outputPanel >
+                        <apex:inputField rendered="{!AND(isEditable2, m.recNum != null,OR(!m.sobj.IRF_Material__r.MFD__c,hideMatsMFDedit))}"
+                            value="{!m.sobj.Ending_Inventory__c}" styleClass="right f75 {!m.scEndnv}"
+                            onkeypress="return numInp1(event, this, 8);"/>
+                        <apex:outputField rendered="{!OR(!isEditable2, m.recNum == null)}"
+                            value="{!m.sobj.Ending_Inventory__c}"/>
+                    </apex:outputPanel>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass} {!m.scCnsnv}" rendered="{!!isEditable2}">
+                    <apex:facet name="header">Consumed<br/>Inventory</apex:facet>
+                    <apex:outputField value="{!m.sobj.Consumed_Inventory__c}"/>
+                </apex:column>
+                
+                 <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass} {!m.scCnsnv}" rendered="{!isEditable2}">
+                    <apex:facet name="header">Consumed<br/>Inventory</apex:facet>
+                    <apex:outputField value="{!m.sobj.Consumed_Inventory__c}" rendered="{!AND(isEditable2,OR(!m.sobj.IRF_Material__r.MFD__c,hideMatsMFDedit))}"/>
+                </apex:column>
+
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}"
+                             rendered="{!contractZCCC}">
+                    <apex:facet name="header">Price</apex:facet>
+                    <apex:outputPanel >
+                        <apex:inputField rendered="{!AND(isEditable2, m.newMat,OR(!m.sobj.IRF_Material__r.MFD__c,hideMatsMFDedit))}"
+                                         value="{!m.sobj.Price__c}"
+                                         styleClass="right {!m.scPrice}" style="width: 50px;"
+                                         onkeypress="return numInp3(event, this, 4);"/>
+                        <apex:outputField rendered="{!AND(!isEditable2, m.newMat)}" value="{!m.sobj.Price__c}"/>
+                        <apex:outputField rendered="{!!m.newMat}" value="{!m.sobj.Price__c}"/>
+                    </apex:outputPanel>
+                </apex:column>
+
+               
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}"
+                             rendered="{!AND(contractZCCC,!isEditable2)}">
+                    <apex:facet name="header">Discount<br/>Percent</apex:facet>
+                    <apex:outputField value="{!m.sobj.Discount_Percent__c}"/>
+                </apex:column>
+                
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}"
+                             rendered="{!AND(contractZCCC,isEditable2)}">
+                    <apex:facet name="header">Discount<br/>Percent</apex:facet>
+                    <apex:outputField value="{!m.sobj.Discount_Percent__c}" rendered="{!AND(isEditable2,OR(!m.sobj.IRF_Material__r.MFD__c,hideMatsMFDedit))}"/>
+                </apex:column>
+                
+                <!--apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}" rendered="{!isEditable2}">
+                    <apex:facet name="header">Flat<br/>Rate</apex:facet>
+                    <apex:inputField value="{!m.sobj.Flat_Rate__c}"/>
+                </apex:column>-->
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}" >
+                    <apex:facet name="header">Flat<br/>Rate</apex:facet>
+                    <apex:outputField value="{!m.sobj.Flat_Rate__c}"/>
+                    <!--<apex:outputtext value="{!m.sobj.Flat_Rate__c}"/>-->
+                </apex:column>
+
+                <apex:column style="width: 67px" headerClass="center" styleClass="number {!m.styleClass}"
+                             rendered="{!contractZCCC}">
+                    <apex:facet name="header">Other<br/>Charges</apex:facet>
+                    <apex:outputPanel >
+                        <apex:inputField rendered="{!AND(isEditable2, m.recNum != null,OR(!m.sobj.IRF_Material__r.MFD__c,hideMatsMFDedit))}"
+                            value="{!m.sobj.Other_Charges__c}" styleClass="right f67"
+                            onkeypress="return numInp3(event, this, 2);"/>
+                        <apex:outputField rendered="{!OR(!isEditable2, m.recNum == null)}"
+                            value="{!m.sobj.Other_Charges__c}"/>
+                    </apex:outputPanel>
+                </apex:column>
+
+                <apex:column style="width: 50px; color : #00ff55 !Important;" headerClass="center" styleClass="number {!m.styleClass}"
+                             rendered="{!!isEditable2}">
+                    <apex:facet name="header">Billing<br/>Amount</apex:facet>
+                    <apex:outputField value="{!m.sobj.Billing_Value__c}"/>
+                </apex:column>
+                
+                 <apex:column style="width: 50px; color : #00ff55 !Important;" headerClass="center" styleClass="number {!m.styleClass}"
+                             rendered="{!isEditable2}">
+                    <apex:facet name="header">Billing<br/>Amount</apex:facet>
+                    <apex:outputField value="{!m.sobj.Billing_Value__c}" rendered="{!OR(!m.sobj.IRF_Material__r.MFD__c,hideMatsMFDedit)}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}" rendered="{!!isEditable2}">
+                    <apex:facet name="header">Projected<br/>Monthly<br/>Average</apex:facet>
+                    <apex:outputField value="{!m.sobj.Projected_Monthly_Average__c}"/>
+                </apex:column>
+                
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}" rendered="{!isEditable2}">
+                    <apex:facet name="header">Projected<br/>Monthly<br/>Average</apex:facet>
+                    <apex:outputField value="{!m.sobj.Projected_Monthly_Average__c}" rendered="{!OR(!m.sobj.IRF_Material__r.MFD__c,hideMatsMFDedit)}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass} {!m.scVrnce}" rendered="{!!isEditable2}">
+                    <apex:facet name="header">Variance<br/>from<br/>Projected</apex:facet>
+                    <!--<apex:outputField value="{!if(m.sobj.Inventory_Variance__c<=0,true,false)}"/>
+                     <apex:outputField value="{!m.sobj.Inventory_Variance__c}"/>-->
+                    
+                    
+                  <apex:outputText value="{0, number, ###,###,###}" rendered="{!AND(m.sobj.Inventory_Variance__c!=null,m.sobj.Inventory_Variance__c>= 0,OR(!m.sobj.IRF_Material__r.MFD__c,hideMatsMFDedit))}">
+                        <apex:param value="{!m.sobj.Inventory_Variance__c}"/>
+                    </apex:outputText>
+                    <apex:outputText value="(-{0, number, ###,###,###})" rendered="{!AND(m.sobj.Inventory_Variance__c!=null,m.sobj.Inventory_Variance__c< 0,OR(!m.sobj.IRF_Material__r.MFD__c,hideMatsMFDedit))}">
+                        <apex:param value="{!m.sobj.Inventory_Variance__c* -1}"/>
+                    </apex:outputText>
+                    
+                    
+                </apex:column>
+                
+                 <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass} {!m.scVrnce}" rendered="{!isEditable2}">
+                    <apex:facet name="header">Variance<br/>from<br/>Projected</apex:facet>
+                    <!--<apex:outputField value="{!if(m.sobj.Inventory_Variance__c<=0,true,false)}"/>
+                     <apex:outputField value="{!m.sobj.Inventory_Variance__c}"/>-->
+                    
+                    
+                  <apex:outputText value="{0, number, ###,###,###}" rendered="{!m.sobj.Inventory_Variance__c!=null && m.sobj.Inventory_Variance__c>= 0}">
+                        <apex:param value="{!m.sobj.Inventory_Variance__c}"/>
+                    </apex:outputText>
+                    <apex:outputText value="(-{0, number, ###,###,###})" rendered="{!m.sobj.Inventory_Variance__c!=null && m.sobj.Inventory_Variance__c< 0}">
+                        <apex:param value="{!m.sobj.Inventory_Variance__c* -1}"/>
+                    </apex:outputText>
+                    
+                    
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}" rendered="{!!isEditable2}">
+                    <apex:facet name="header">Actual<br/>{!weightLbl}<br/>per Day</apex:facet>
+                    <apex:outputField value="{!m.sobj.Consumed_per_Day__c}"/>
+                </apex:column>
+                
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}" rendered="{!isEditable2}">
+                    <apex:facet name="header">Actual<br/>{!weightLbl}<br/>per Day</apex:facet>
+                    <apex:outputField value="{!m.sobj.Consumed_per_Day__c}" rendered="{!OR(!m.sobj.IRF_Material__r.MFD__c,hideMatsMFDedit)}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass} {!m.scNdays}" rendered="{!!isEditable2}">
+                    <apex:facet name="header">Days<br/>Inven<br/>-tory</apex:facet>
+                    <apex:outputField value="{!m.sobj.Days_Inventory__c}"/>
+                </apex:column>
+                
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass} {!m.scNdays}" rendered="{!isEditable2}">
+                    <apex:facet name="header">Days<br/>Inven<br/>-tory</apex:facet>
+                    <apex:outputField value="{!m.sobj.Days_Inventory__c}" rendered="{!OR(!m.sobj.IRF_Material__r.MFD__c,hideMatsMFDedit)}"/>
+                </apex:column>
+                
+                <!-- added by Vishnu till 635 -->
+                <!-- <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}" rendered="{!contractZPCC}">
+                    <apex:facet name="header">Contract<br/>Price</apex:facet>
+                   <apex:outputField rendered="{!!isEditable2}" value="{!m.sobj.Contract_Price__c}"/>
+                </apex:column>
+                -->
+                
+                <!-- added by Vishnu till 641 -->
+               <!--  <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}" rendered="{!contractZPCC}">
+                     <apex:facet name="header">Usage<br/>Variance<br/>$/month</apex:facet>
+                   <apex:outputField rendered="{!!isEditable2}" value="{!m.sobj.Variance_month__c}"/>
+                </apex:column>
+				-->
+
+                <apex:column style="width: 150px" headerClass="center" styleClass="{!m.styleClass}">
+                    <apex:facet name="header">Comments</apex:facet>
+                    <apex:outputPanel >
+                        <apex:inputText rendered="{!AND(isEditable2, m.recNum != null,OR(!m.sobj.IRF_Material__r.MFD__c,hideMatsMFDedit))}"
+                            value="{!m.sobj.Comments__c}" styleClass="txt3 {!m.scComnt}"/>
+                        <apex:outputField rendered="{!!isEditable2}" value="{!m.sobj.Comments__c}"/>
+                    </apex:outputPanel>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="{!m.styleClass}"
+                             rendered="{renderBatchesCol}">
+                    <apex:facet name="header">Batches</apex:facet>
+                    <apex:outputPanel >
+                        <apex:inputText rendered="{!AND(isEditable2, m.recNum != null,OR(!m.sobj.IRF_Material__r.MFD__c,hideMatsMFDedit))}"
+                            value="{!m.sobj.Batches__c}" styleClass="txt3"/>
+                        <apex:outputField rendered="{!!isEditable2}" value="{!m.sobj.Batches__c}"/>
+                    </apex:outputPanel>
+                </apex:column>
+                
+               
+                <!--<apex:column style="width: 54px" headerClass="center" styleClass="center {!m.styleClass}"
+                             rendered="{!!hideMatsMFD}">
+                    <apex:facet name="header">Marked<br/>for<br/>Deletion</apex:facet>
+                    <apex:outputField value="{!m.sobj.IRF_Material__r.MFD__c}"
+                                   rendered="{!(m.recNum != null)}"/>
+                </apex:column>
+                
+                <apex:column style="width: 54px" headerClass="center" styleClass="center {!m.styleClass}">
+                    <apex:facet name="header">Marked<br/>for<br/>Deletion in this IMD</apex:facet>
+                    <apex:outputField value="{!m.sobj.Handle_Marked_for_Deletion__c}"
+                                   rendered="{!(m.recNum != null)}"/>
+                </apex:column>
+                
+                <apex:column style="width: 54px" headerClass="center" styleClass="center {!m.styleClass}">
+                    <apex:facet name="header">Test<br/>for<br/>Deletion</apex:facet>
+                    <apex:outputField value="{!m.sobj.MFD__c}"
+                                   rendered="{!(m.recNum != null)}"/>
+                </apex:column>-->
+                
+                <apex:column style="width: 54px" headerClass="center" styleClass="center {!m.styleClass}"
+                             rendered="{!AND(!hideMFD,!isEditable2)}">
+                    <apex:facet name="header">Marked<br/>for<br/>Deletion</apex:facet>
+                    <apex:outputField value="{!m.sobj.IRF_Material__r.MFD__c}"
+                                   rendered="{!(m.recNum != null)}"/>
+                </apex:column>
+                
+                 <apex:column style="width: 54px" headerClass="center" styleClass="center {!m.styleClass}"
+                             rendered="{!AND(!hideMFD,isEditable2)}">
+                    <apex:facet name="header">Marked<br/>for<br/>Deletion</apex:facet>
+                    <apex:outputField value="{!m.sobj.IRF_Material__r.MFD__c}"
+                                   rendered="{!AND(m.recNum != null,OR(!m.sobj.IRF_Material__r.MFD__c,hideMatsMFDedit))}"/>
+                </apex:column>
+                
+                <!--<apex:column style="width: 54px" headerClass="center" styleClass="center {!m.styleClass}">
+                    <apex:facet name="header">Marked<br/>for<br/>Deletion in this IMD</apex:facet>
+                    <apex:outputField value="{!m.sobj.Handle_Marked_for_Deletion__c}"
+                                   rendered="{!(m.recNum != null)}"/>
+                </apex:column>-->
+                
+                <apex:column style="width: 54px" headerClass="center" styleClass="center {!m.styleClass}" rendered="{!!hideMFDIMD}">
+                    <apex:facet name="header">Marked<br/>for<br/>Deletion in this IMD</apex:facet>
+                    <apex:outputField value="{!m.sobj.MFD__c}"
+                                   rendered="{!(m.recNum != null)}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" styleClass="{!m.scNohdr} number {!m.styleClass}" rendered="{!!isEditable2}">
+                    <apex:facet name="header">Material<br/>Number</apex:facet>
+                    <apex:outputText value="{!m.matNum}"/>
+                </apex:column>
+                
+                       <apex:column style="width: 50px" styleClass="{!m.scNohdr} number {!m.styleClass}" rendered="{!isEditable2}">
+                    <apex:facet name="header">Material<br/>Number</apex:facet>
+                    <apex:outputText value="{!m.matNum}" rendered="{!OR(!m.sobj.IRF_Material__r.MFD__c,hideMatsMFDedit)}"/>
+                </apex:column>
+
+                <apex:column style="width: 100%;" styleClass="{!m.styleClass}">
+                    <apex:facet name="header">&nbsp;</apex:facet>
+                    <apex:outputText >&nbsp;</apex:outputText>
+                </apex:column>
+
+            </apex:pageBlockTable>
+
+        </apex:pageBlock>
+<!-- ================================================ Units ==================================================== -->
+        <apex:pageBlock id="pblock3" rendered="{!!contractZCCC}" mode="edit">
+            <apex:facet name="header"><apex:outputPanel ><table class="tbl1">
+                <tr><td class="td1">Units</td><td class="td2">
+                    <apex:actionStatus id="untBtns">
+                        <apex:facet name="start">
+                            <apex:outputText styleClass="bold" value=" Please wait ...">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop">
+                            <apex:outputPanel styleClass="nowrap">
+                                <!--<apex:commandButton action="{!showHideUntsMFD}" value="{!untMfdLbl}"
+                                                    oncomplete="setfocus('focusPoint3');"
+                                                    rerender="form2A" status="untBtns"/>-->
+                            </apex:outputPanel>
+                        </apex:facet>
+                    </apex:actionStatus>
+                    </td>
+                    <td class="td3"><apex:outputPanel rendered="{!renderUntList}">
+                        <apex:outputText value="Records: {!pc5.recordFrom} - {!pc5.recordTo} of {!pc5.resultSize}"
+                                         styleClass="nowrap"/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                        <apex:actionStatus id="pc5Controls">
+                            <apex:facet name="start">
+                                <apex:outputText styleClass="bold" value=" Please wait ...">
+                                    <apex:image value="{!$Resource.spinner}"/>
+                                </apex:outputText>
+                            </apex:facet>
+                            <apex:facet name="stop">
+                            <apex:outputPanel >
+                            <apex:outputText value="Rows Per Page:"/>&nbsp;
+                            <apex:selectList value="{!pc5.pageSize}" size="1" title="Rows Per Page:">
+                                <apex:actionSupport event="onchange" action="{!pc5Size}"
+                                                rerender="pblock3" status="pc5Controls"/>
+                                <apex:selectOption itemLabel="10" itemValue="10"/>
+                                <apex:selectOption itemLabel="20" itemValue="20"/>
+                                <apex:selectOption itemLabel="40" itemValue="40"/>
+                                <apex:selectOption itemLabel="80" itemValue="80"/>
+                            </apex:selectList>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <apex:commandButton action="{!pc5Frst}" disabled="{!NOT(pc5.hasPrevious)}"
+                                                rerender="pblock3" status="pc5Controls"
+                                                title="First Page" value="<<"/>&nbsp;&nbsp;
+                            <apex:commandButton action="{!pc5Prev}" disabled="{!NOT(pc5.hasPrevious)}"
+                                                rerender="pblock3" status="pc5Controls"
+                                                title="Prev Page" value="<"/>
+
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                            <apex:commandButton action="{!pc5Next}" disabled="{!NOT(pc5.hasNext)}"
+                                                rerender="pblock3" status="pc5Controls"
+                                                title="Next Page" value=">"/>&nbsp;&nbsp;
+                            <apex:commandButton action="{!pc5Last}" disabled="{!NOT(pc5.hasNext)}"
+                                                rerender="pblock3" status="pc5Controls"
+                                                title="Last Page" value=">>"/>
+                            </apex:outputPanel>
+                            </apex:facet>
+                        </apex:actionStatus>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                        <apex:outputText value="Page: {!pc5.pageNumber} of {!pc5.lastPageNumber}"/>
+                    </apex:outputPanel></td>
+                </tr></table></apex:outputPanel></apex:facet>
+            <span id="focusPoint3" tabindex="-1"></span>
+            <apex:pageBlockTable value="{!d_unts}" var="u" rendered="{!renderUntList}" styleClass="tbl4">
+                <apex:column style="width: 20px" headerClass="right" styleClass="number {!u.styleClass}">
+                    <apex:facet name="header">&nbsp;&nbsp;&nbsp;&nbsp;#</apex:facet>
+                    <apex:outputText value="{!u.recNum}"/>
+                </apex:column>
+                <!--<apex:column style="width: 120px" headerClass="center" styleClass="center {!u.styleClass}"
+                             rendered="{!!hideUntsMFD}">
+                    <apex:facet name="header">Marked for Deletion</apex:facet>
+                    <apex:outputField value="{!u.sobj.MFD__c}" rendered="{!(u.recNum != null)}"/>
+                </apex:column>-->
+                                
+                <!-- <apex:column style="width: 300px" styleClass="{!u.styleClass}">
+                    <apex:facet name="header">Unit Description</apex:facet>
+                    <div style="width: 300px"><apex:outputText value="{!u.untDesc}"/></div>
+                </apex:column> -->
+                
+                <apex:column style="width: 300px" styleClass="{!u.styleClass}">
+                    <apex:facet name="header">
+                        <apex:actionStatus id="sortStatus">
+                            <apex:facet name="start">
+                                <apex:outputText styleClass="bold" value="">
+                                    <apex:image value="{!$Resource.spinner}"/>
+                                </apex:outputText>
+                            </apex:facet>
+                            <apex:facet name="stop">
+                                <apex:outputPanel styleClass="nowrap">
+                                    <apex:commandLink action="{!sortUnts}" rerender="form2A" status="sortStatus">
+                                    Unit Description
+                                    </apex:commandLink>
+                                </apex:outputPanel>
+                            </apex:facet>
+                        </apex:actionStatus>
+                    </apex:facet>
+                    <div style="width: 300px"><apex:outputText value="{!u.untDesc}"/></div>
+                </apex:column>
+
+                <apex:column style="width: 90px" headerClass="center reqd" styleClass="number {!u.styleClass}">
+                    <apex:facet name="header">Current Month<br/>Production</apex:facet>
+                    <apex:outputPanel >
+                        <apex:inputField value="{!u.sobj.Production__c}" styleClass="number {!u.scProdn}"
+                                         style="width: 90px;" rendered="{!AND(isEditable3, u.recNum != null)}"
+                                         onkeypress="return numInp4(event, this, 4);"/>
+                        <apex:outputField value="{!u.sobj.Production__c}" rendered="{!!isEditable3}"/>
+                    </apex:outputPanel>
+                </apex:column>
+
+                <apex:column style="width: 90px" headerClass="center" styleClass="number {!u.styleClass}">
+                    <apex:facet name="header">Price<br/>per Unit</apex:facet>
+                    <apex:outputField value="{!u.sobj.Price__c}"/>
+                </apex:column>
+                
+                <!-- Added by Vishnu -->
+                <apex:column style="width: 90px" headerClass="center" styleClass="number {!u.styleClass}" rendered="{!contractZPNC || !contractZTNC || !contractZPCC}">
+                    <apex:facet name="header">Expected<br/>production </apex:facet>
+                    <apex:outputField value="{!u.sobj.Expected_production__c}"/>
+                </apex:column>
+                
+                  <!-- Added by Vishnu -->
+                 <apex:column style="width: 90px" headerClass="center" styleClass="number {!u.styleClass}" rendered="{!contractZPNC || !contractZTNC || !contractZPCC}">
+                    <apex:facet name="header">Expected<br/>monthly revenue</apex:facet>
+                    <apex:outputField value="{!u.sobj.Expected_monthly_revenue__c}"/>
+                </apex:column>
+                
+                <!-- Added by Vinu -->
+                
+                <apex:column style="width: 90px" headerClass="center" styleClass="number {!u.styleClass}">
+                    <apex:facet name="header">Sub Total</apex:facet>
+                    <apex:outputField value="{!u.sobj.Sub_Total__c}"/>
+                </apex:column>
+                
+                <apex:column style="width: 90px" headerClass="center" styleClass="number {!u.styleClass}">
+                    <apex:facet name="header">Discount Percent</apex:facet>
+                    <apex:outputField value="{!u.sobj.Discount_Percent__c}"/>
+                </apex:column>
+                
+                <apex:column style="width: 90px" headerClass="center" styleClass="number {!u.styleClass}">
+                    <apex:facet name="header">Flat Rate</apex:facet>
+                    <apex:outputField value="{!u.sobj.Flat_Rate__c}"/>
+                </apex:column>
+                
+                <!-- /////////  Added by Vinu   ///////// -->
+
+                <apex:column style="width: 90px" headerClass="center" styleClass="number {!u.styleClass}">
+                    <apex:facet name="header">Billing<br/>Amount</apex:facet>
+                    <apex:outputField value="{!u.sobj.Amount__c}"/>
+                </apex:column>
+
+                <!--<apex:column style="width: 120px" headerClass="center" styleClass="center {!u.styleClass}"
+                             rendered="{!!hideUntsMFD}">
+                    <apex:facet name="header">Marked for Deletion</apex:facet>
+                    <apex:outputField value="{!u.sobj.IRF_Unit__r.MFD__c}" rendered="{!(u.recNum != null)}"/>
+                </apex:column>-->
+                
+                <apex:column style="width: 120px" headerClass="center" styleClass="center {!u.styleClass}"
+                             rendered="{!!hideMFDUnit}">
+                    <apex:facet name="header">Marked for Deletion</apex:facet>
+                    <apex:outputField value="{!u.sobj.IRF_Unit__r.MFD__c}" rendered="{!(u.recNum != null)}"/>
+                </apex:column>
+                
+                <apex:column style="width: 120px" headerClass="center" styleClass="center {!u.styleClass}"
+                             rendered="{!!hideMFDUnitIMD}">
+                    <apex:facet name="header">Marked<br/>for<br/>Deletion in this IMD</apex:facet>
+                    <apex:outputField value="{!u.sobj.MFD__c}" rendered="{!(u.recNum != null)}"/>
+                </apex:column>
+
+                
+                <apex:column style="width: 100%;" styleClass="{!u.styleClass}">
+                    <apex:facet name="header">&nbsp;</apex:facet>
+                    <apex:outputText >&nbsp;</apex:outputText>
+                </apex:column>
+
+            </apex:pageBlockTable>
+
+        </apex:pageBlock>
+<!-- ================================================ Calculated Usage & Profitability ==================================================== -->
+      <!-- Added by Vishnu --> 
+    
+	  <apex:pageBlock id="pblock29" rendered="{!!contractZCCC}" mode="edit">
+            <apex:facet name="header"><apex:outputPanel ><table class="tbl1">
+                <tr><td class="td1">Calculated Usage and Profitability</td><td class="td2">
+                    <apex:actionStatus id="matBtns">
+                        <apex:facet name="start">
+                            <apex:outputText styleClass="bold" value=" Please wait ...">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                       <!-- <apex:facet name="stop"><apex:outputPanel styleClass="nowrap">
+                                <apex:commandButton action="{!showHideMatsMFD}" value="{!matMfdLbl}"
+                                                    oncomplete="setfocus('focusPoint2');"
+                                                    rerender="form2A" status="matBtns"  rendered="{!!isEditable2}"/>
+                                <apex:commandButton action="{!showHideMatsMFDedit}" value="{!matMfdLbl}"
+                                                    oncomplete="setfocus('focusPoint2');"
+                                                    rerender="form2A" status="matBtns"  rendered="{!isEditable2}" />                    
+                                <apex:commandButton action="{!initAddImdMats}" value="Add Materials"
+                                                    rendered="{!renderAddMats1Btn}"
+                                                    oncomplete="setfocus('{!$Component.matSrchPB.matSrchString}');"
+                                                    rerender="form2A" status="matBtns"/>
+                                                    
+                                <apex:commandButton action="{!searchMaterials}" value="Add Materials"
+                                                    rendered="{!renderAddMats2Btn}"
+                                                    oncomplete="setfocus('{!$Component.matSrchPB.matSrchString}');"
+                                                    rerender="form2A" status="matBtns"/>
+                                <apex:commandButton action="{!deleteImdMats}" value="Delete Materials"
+                                                    rendered="{!AND(isEditable4, renderMatList)}"
+                                                    rerender="form2A" status="matBtns"/>
+                        </apex:outputPanel></apex:facet> -->
+                    </apex:actionStatus>
+                    </td>
+                    <td class="td3"><apex:outputPanel rendered="{!renderMatList}">
+                        <apex:outputText value="Records: {!pc4.recordFrom} - {!pc4.recordTo} of {!pc4.resultSize}"
+                                         styleClass="nowrap"/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                        <apex:actionStatus id="pc4Controls">
+                            <apex:facet name="start">
+                                <apex:outputText styleClass="bold" value=" Please wait ...">
+                                    <apex:image value="{!$Resource.spinner}"/>
+                                </apex:outputText>
+                            </apex:facet>
+                            <apex:facet name="stop">
+                            <apex:outputPanel >
+                            <apex:outputText value="Rows Per Page:"/>&nbsp;
+                            <apex:selectList value="{!pc4.pageSize}" size="1" title="Rows Per Page:">
+                                <apex:actionSupport event="onchange" action="{!pc4Size}"
+                                                rerender="pblock29" status="pc4Controls"/>
+                                <apex:selectOption itemLabel="10" itemValue="10"/>
+                                <apex:selectOption itemLabel="20" itemValue="20"/>
+                                <apex:selectOption itemLabel="40" itemValue="40"/>
+                                <apex:selectOption itemLabel="80" itemValue="80"/>
+                            </apex:selectList>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <apex:commandButton action="{!pc4Frst}" disabled="{!NOT(pc4.hasPrevious)}"
+                                                rerender="pblock29" status="pc4Controls"
+                                                title="First Page" value="<<"/>&nbsp;&nbsp;
+                            <apex:commandButton action="{!pc4Prev}" disabled="{!NOT(pc4.hasPrevious)}"
+                                                rerender="pblock29" status="pc4Controls"
+                                                title="Prev Page" value="<"/>
+
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                            <apex:commandButton action="{!pc4Next}" disabled="{!NOT(pc4.hasNext)}"
+                                                rerender="pblock29" status="pc4Controls"
+                                                title="Next Page" value=">"/>&nbsp;&nbsp;
+                            <apex:commandButton action="{!pc4Last}" disabled="{!NOT(pc4.hasNext)}"
+                                                rerender="pblock29" status="pc4Controls"
+                                                title="Last Page" value=">>"/>
+                            </apex:outputPanel>
+                            </apex:facet>
+                        </apex:actionStatus>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                        <apex:outputText value="Page: {!pc4.pageNumber} of {!pc4.lastPageNumber}"/>
+                    </apex:outputPanel></td>
+                    </tr></table></apex:outputPanel>
+            </apex:facet>
+            <span id="focusPoint2" tabindex="-1"></span>
+            <apex:pageBlockTable value="{!d_mats}" var="m" rendered="{!renderMatList}" styleClass="tbl4">
+            
+                <apex:column style="width: 100%;" styleClass="{!m.styleClass}">
+                    <apex:facet name="header">&nbsp;</apex:facet>
+                    <apex:outputText >&nbsp;</apex:outputText>
+                </apex:column>
+                
+                <apex:column style="width: 20px" headerClass="chkbx" styleClass="chkbx {!m.styleClass}"
+                             rendered="{!isEditable4}">
+                    <apex:facet name="header"><apex:outputPanel >
+                        <apex:inputCheckbox styleClass="allcb1" value="{!allMats}"
+                            onclick="onClick_AllChkbox('rowcb1', this);"/>
+                    </apex:outputPanel></apex:facet>
+                    <apex:inputCheckbox styleClass="rowcb1" value="{!m.selected}" rendered="{!m.newMat}"
+                        onclick="onClick_RowChkbox('rowcb1', 'allcb1');"/>
+                </apex:column>
+                
+                <apex:column style="width: 50px" styleClass="{!m.scNohdr} {!m.styleClass}" rendered="{!!isEditable2}">
+                    <apex:facet name="header">Material<br/>Number</apex:facet>
+                    <apex:outputText value="{!m.matNum}"/>
+                    <div style="width: 100px"></div>
+                </apex:column>
+                
+                 <apex:column style="width: 50px" styleClass="{!m.scNohdr} {!m.styleClass}" rendered="{!isEditable2}">
+                    <apex:facet name="header">Material<br/>Number</apex:facet>
+                    <apex:outputText value="{!m.matNum}" rendered="{!AND(isEditable2,OR(!m.sobj.IRF_Material__r.MFD__c,hideMatsMFDedit))}"/>
+                	<div style="width: 100px"></div>
+                </apex:column>
+                
+                
+                <apex:column styleClass="matName {!m.scNohdr} {!m.styleClass}">
+                    <apex:facet name="header">
+                        <apex:actionStatus id="sortStatus">
+                            <apex:facet name="start">
+                                <apex:outputText styleClass="bold" value="">
+                                    <apex:image value="{!$Resource.spinner}"/>
+                                </apex:outputText>
+                            </apex:facet>
+                            <apex:facet name="stop">
+                                <apex:outputPanel styleClass="nowrap" >
+                                        <apex:commandLink action="{!sortMats}" rerender="form2A" status="sortStatus">
+                                        Material Description
+                                    </apex:commandLink>
+                                </apex:outputPanel>
+                            </apex:facet>
+                            
+                             
+                        </apex:actionStatus>
+                    </apex:facet>
+                    <div class="matName"><apex:outputLink value="/{!m.matId}" target="_blank" rendered="{!!isEditable2}">
+                        {!m.sobj.Material__r.Material_Desc__c}</apex:outputLink></div>
+                        
+                        
+                         <div class="matName"><apex:outputLink value="/{!m.matId}" target="_blank" rendered="{!AND(isEditable2,OR(!m.sobj.IRF_Material__r.MFD__c,hideMatsMFDedit))}">
+                        {!m.sobj.Material__r.Material_Desc__c}</apex:outputLink></div>
+                     <div style="width: 500px"></div>
+                </apex:column>
+                <!--
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass} {!m.scCnsnv}" rendered="{!!isEditable2}">
+                    <apex:facet name="header">Consumed Inventory</apex:facet>
+                    <apex:outputField value="{!m.sobj.Consumed_Inventory__c}"/>
+                </apex:column>
+                
+                 <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass} {!m.scCnsnv}" rendered="{!isEditable2}">
+                    <apex:facet name="header">Consumed Inventory</apex:facet>
+                    <apex:outputField value="{!m.sobj.Consumed_Inventory__c}" rendered="{!AND(isEditable2,OR(!m.sobj.IRF_Material__r.MFD__c,hideMatsMFDedit))}"/>
+                </apex:column>
+                -->
+                <!--
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}" rendered="{!!isEditable2}">
+                    <apex:facet name="header">Projected<br/>Monthly Average</apex:facet>
+                    <apex:outputField value="{!m.sobj.Projected_Monthly_Average__c}"/>
+                </apex:column>
+                
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}" rendered="{!isEditable2}">
+                    <apex:facet name="header">Projected<br/>Monthly Average</apex:facet>
+                    <apex:outputField value="{!m.sobj.Projected_Monthly_Average__c}" rendered="{!OR(!m.sobj.IRF_Material__r.MFD__c,hideMatsMFDedit)}"/>
+                </apex:column>
+            	-->
+                
+                 <!-- added by Vishnu till 635 -->
+                 <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}" rendered="{!contractZPNC || !contractZTNC || !contractZPCC}">
+                     <apex:facet name="header">Related Unit</apex:facet>
+                  <!-- <apex:outputField rendered="{!!isEditable2}" value="{!m.sobj.Related_Unit__c}"/> -->
+                     <apex:outputField value="{!m.sobj.Related_Unit__c}"/>
+                </apex:column>
+                
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}" rendered="{!!isEditable2}">
+                    <apex:facet name="header">Usage Actual<br/>({!weightLbl}s/ton)</apex:facet>
+                    <apex:outputField value="{!m.sobj.Usage_Actual_lbs_ton__c}"/>
+                </apex:column>
+                
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}" rendered="{!isEditable2}">
+                    <apex:facet name="header">Usage Actual<br/>({!weightLbl}s/ton)</apex:facet>
+                    <apex:outputField value="{!m.sobj.Usage_Actual_lbs_ton__c}" rendered="{!OR(!m.sobj.IRF_Material__r.MFD__c,hideMatsMFDedit)}"/>
+                </apex:column>
+				
+                
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}" rendered="{!!isEditable2}">
+                    <apex:facet name="header">Usage Expected<br/>({!weightLbl}s/ton)</apex:facet>
+                    <apex:outputField value="{!m.sobj.Usage_Expected_lbs_ton__c}"/>
+                </apex:column>
+                
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}" rendered="{!isEditable2}">
+                    <apex:facet name="header">Usage Expected<br/>({!weightLbl}s/ton)</apex:facet>
+                    <apex:outputField value="{!m.sobj.Usage_Expected_lbs_ton__c}" rendered="{!OR(!m.sobj.IRF_Material__r.MFD__c,hideMatsMFDedit)}"/>
+                </apex:column>
+				
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}" rendered="{!!isEditable2}">
+                    <apex:facet name="header">Usage Variance<br/>({!weightLbl}s/ton)</apex:facet>
+                    <apex:outputField value="{!m.sobj.Usage_Variance_lbs_ton__c}"/>
+                </apex:column>
+                
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}" rendered="{!isEditable2}">
+                    <apex:facet name="header">Usage Variance<br/>({!weightLbl}s/ton)</apex:facet>
+                    <apex:outputField value="{!m.sobj.Usage_Variance_lbs_ton__c}" rendered="{!OR(!m.sobj.IRF_Material__r.MFD__c,hideMatsMFDedit)}"/>
+                </apex:column>
+                
+                  <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass} {!m.scVrnce}" rendered="{!!isEditable2}">
+                      <apex:facet name="header">Usage Variance<br/>({!weightLbl}s/month)</apex:facet>
+                    <!--<apex:outputField value="{!if(m.sobj.Inventory_Variance__c<=0,true,false)}"/>
+                     <apex:outputField value="{!m.sobj.Inventory_Variance__c}"/>-->
+                    <!-- <apex:outputField rendered="{!!isEditable2}" value="{!m.sobj.Variance_Inv__c}"/> -->
+                      <apex:outputField value="{!m.sobj.Variance_Inv__c}"/>
+				<div style="width: 100px"></div>                    
+                </apex:column>
+                
+                 <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass} {!m.scVrnce}" rendered="{!isEditable2}">
+                    <apex:facet name="header">Usage Variance<br/>({!weightLbl}s/month)</apex:facet>
+                    <!--<apex:outputField value="{!if(m.sobj.Inventory_Variance__c<=0,true,false)}"/>
+                     <apex:outputField value="{!m.sobj.Inventory_Variance__c}"/>-->
+                    <!--  <apex:outputField rendered="{!!isEditable2}" value="{!m.sobj.Variance_Inv__c}"/> -->              
+                     <apex:outputField value="{!m.sobj.Variance_Inv__c}"/>        
+                    <div style="width: 100px"></div>
+                </apex:column>
+
+ 
+                <!-- added by Vishnu till 635 -->
+                 <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}" rendered="{!contractZPNC || !contractZTNC || !contractZPCC}">
+                     <apex:facet name="header">Contract Price<br/>({!priceLbl}/{!weightLbl}s)</apex:facet>
+                   <!-- <apex:outputField rendered="{!!isEditable2}" value="{!m.sobj.Contract_Price__c}"/> -->
+                      <div style="text-align:center;" >
+                   		<apex:outputField value="{!m.sobj.Contract_Price__c}"/>
+                     </div>
+                </apex:column>
+                
+                <!-- added by Vishnu till 641 -->
+              <!--   <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}" rendered="{!contractZPCC}">
+                     <apex:facet name="header">Usage Variance<br/>($/month)</apex:facet>
+                   <apex:outputField rendered="{!!isEditable2}" value="{!m.sobj.Variance_month__c}"/>
+                     <div style="width: 100px"></div>
+                </apex:column>
+                -->
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}" rendered="{!contractZPNC || !contractZTNC || !contractZPCC}">
+                    <apex:facet name="header">Usage Variance<br/>({!priceLbl}/month)</apex:facet>
+                   <!-- <apex:outputField rendered="{!!isEditable2}" value="{!m.sobj.Dollar_per_month__c}"/> -->
+                     <apex:outputField value="{!m.sobj.Dollar_per_month__c}"/>
+                     <div style="width: 100px"></div>
+                </apex:column>
+
+                <apex:column style="width: 150px" headerClass="center" styleClass="{!m.styleClass}">
+                    <apex:facet name="header">Comments</apex:facet>
+                    <apex:outputPanel >
+                        <apex:inputText rendered="{!AND(isEditable2, m.recNum != null,OR(!m.sobj.IRF_Material__r.MFD__c,hideMatsMFDedit))}"
+                            value="{!m.sobj.Comments_Usage__c}" styleClass="txt3 {!m.scComnt}"/>
+                        <apex:outputField rendered="{!!isEditable2}" value="{!m.sobj.Comments_Usage__c}"/>
+                    </apex:outputPanel>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="{!m.styleClass}"
+                             rendered="{renderBatchesCol}">
+                    <apex:facet name="header">Batches</apex:facet>
+                    <apex:outputPanel >
+                        <apex:inputText rendered="{!AND(isEditable2, m.recNum != null,OR(!m.sobj.IRF_Material__r.MFD__c,hideMatsMFDedit))}"
+                            value="{!m.sobj.Batches__c}" styleClass="txt3"/>
+                        <apex:outputField rendered="{!!isEditable2}" value="{!m.sobj.Batches__c}"/>
+                    </apex:outputPanel>
+                </apex:column>
+                
+                <apex:column style="width: 100%;" styleClass="{!m.styleClass}">
+                    <apex:facet name="header">&nbsp;</apex:facet>
+                    <apex:outputText >&nbsp;</apex:outputText>
+                </apex:column>
+
+            </apex:pageBlockTable>
+
+        </apex:pageBlock>                
+
+            <!-- ==  -->
+            
+        <apex:pageBlock id="pblock4" mode="edit">
+            <table class="tbl3"><tr>
+                <td style="width: 160px;" class="lbl">Customer Site operating<br/>at Normal capacity?</td>
+                <td style="width: 60px;">
+                    <apex:outputPanel rendered="{!isEditable1}" styleClass="nowrap">
+                        <apex:actionStatus id="site1Stat">
+                            <apex:facet name="start">
+                                <apex:outputText styleClass="bold" value=" Please wait ...">
+                                    <apex:image value="{!$Resource.spinner}"/>
+                                </apex:outputText>
+                            </apex:facet>
+                            <apex:facet name="stop">
+                                <apex:outputPanel styleClass="nowrap">
+                                    <apex:selectList size="1" styleClass="slist"
+                                                     value="{!d_hdr.sobj.Operating_at_Normal__c}">
+                                        <apex:actionSupport event="onchange" action="{!onSiteOper1Change}"
+                                                            rerender="pblock4" status="site1Stat"/>
+                                        <apex:selectOptions value="{!ynOpts}"/>
+                                    </apex:selectList>
+                                </apex:outputPanel>
+                            </apex:facet>
+                        </apex:actionStatus>
+                    </apex:outputPanel>
+                    <apex:outputField rendered="{!!isEditable1}" value="{!d_hdr.sobj.Operating_at_Normal__c}"/></td>
+
+                <td style="width: 80px;" class="lbl">If No, Explain</td>
+                <td style="width: 540px;">
+                    <apex:inputField rendered="{!isEditable1}" value="{!d_hdr.sobj.Operating_Comments__c}"
+                                     styleClass="txta4 {!d_hdr.scOpcmt}"/>
+                    <apex:inputTextarea rendered="{!!isEditable1}" value="{!d_hdr.sobj.Operating_Comments__c}"
+                                     styleClass="txta4" disabled="true"/></td>
+
+                <td style="width: 180px;" class="lbl">Do you foresee the customer site<br/>operating at normal capacity next month?</td>
+                <td style="width: 60px;"><apex:outputPanel rendered="{!isEditable1}" styleClass="nowrap">
+                        <apex:actionStatus id="site2Stat">
+                            <apex:facet name="start">
+                                <apex:outputText styleClass="bold" value=" Please wait ...">
+                                    <apex:image value="{!$Resource.spinner}"/>
+                                </apex:outputText>
+                            </apex:facet>
+                            <apex:facet name="stop">
+                                <apex:outputPanel styleClass="nowrap">
+                                    <apex:selectList size="1" styleClass="slist"
+                                                     value="{!d_hdr.sobj.Foresee_at_Normal__c}">
+                                        <apex:actionSupport event="onchange" action="{!onSiteOper2Change}"
+                                                            rerender="pblock4" status="site2Stat"/>
+                                        <apex:selectOptions value="{!ynOpts}"/>
+                                    </apex:selectList>
+                                </apex:outputPanel>
+                            </apex:facet>
+                        </apex:actionStatus>
+                    </apex:outputPanel>
+                    <apex:outputField rendered="{!!isEditable1}" value="{!d_hdr.sobj.Foresee_at_Normal__c}"/></td>
+                <td style="width: 100px;">&nbsp;</td>
+            </tr><apex:outputPanel rendered="{!contractZCCC}"><tr>
+                <td style="width: 160px;" class="lbl">Current Month Production</td>
+                <td style="width: 120px;" colspan="2">
+                    <apex:inputField rendered="{!isEditable1}" value="{!d_hdr.sobj.Current_Month_Production__c}"
+                                     style="width: 120px;" onkeypress="return numInp1(event, this, 8);"/>
+                    <apex:outputField rendered="{!!isEditable1}" value="{!d_hdr.sobj.Current_Month_Production__c}"/></td>
+            </tr></apex:outputPanel><tr>
+                <td style="width: 160px;" class="lbl">General Comments</td>
+                <td style="width: 980px;" colspan="5">
+                    <apex:inputField rendered="{!isEditable1}" value="{!d_hdr.sobj.General_Comments__c}"
+                                     styleClass="txta5 {!d_hdr.scGncmt}"/>
+                    <apex:inputTextarea rendered="{!!isEditable1}" value="{!d_hdr.sobj.General_Comments__c}"
+                                     styleClass="txta5" disabled="true"/></td>
+            </tr><tr>
+                <td style="width: 160px;" class="lbl">Known Upcoming<br/>Changes</td>
+                <td style="width: 980px;" colspan="5">
+                    <apex:inputField rendered="{!isEditable1}" value="{!d_hdr.sobj.Upcoming_Changes__c}"
+                                     styleClass="txta5 {!d_hdr.scUpchg}"/>
+                    <apex:inputTextarea rendered="{!!isEditable1}" value="{!d_hdr.sobj.Upcoming_Changes__c}"
+                                     styleClass="txta5" disabled="true"/></td>
+            </tr></table>
+
+        </apex:pageBlock>
+
+        <apex:pageBlock id="pblock5" mode="edit">
+            <apex:facet name="header"><apex:outputPanel ><table class="tbl1">
+                <tr><td class="td1">
+                        <apex:outputText rendered="{!!renderEditBtn}">{!m_hdr.sobj.Name}</apex:outputText>
+                        <apex:outputLink rendered="{!renderEditBtn}" target="_blank"
+                                         value="/{!m_hdr.sobj.Id}">{!m_hdr.sobj.Name}</apex:outputLink>
+                        <apex:outputText >&nbsp;:&nbsp;{!d_hdr.sobj.Name}</apex:outputText></td>
+                    <td class="td2">&nbsp;</td><td class="td3">
+                    <apex:actionStatus id="botBtns">
+                        <apex:facet name="start">
+                            <apex:outputText styleClass="bold" value=" Please wait ...">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop">
+                            <apex:outputPanel styleClass="nowrap">
+                                <apex:commandButton action="{!setEditable}" value="Edit"
+                                                    rendered="{!renderEditBtn}"
+                                                    oncomplete="setfocus('focusPoint1');"
+                                                    rerender="form2A" status="botBtns"/>
+                                <apex:commandButton action="{!validateImd}" value="Validate"
+                                                    rendered="{!renderSaveBtn}"
+                                                    oncomplete="setfocus('focusPoint1');"
+                                                    rerender="form2A,form3A" status="botBtns"/>
+                                <apex:commandButton action="{!saveImd}" value="Save"
+                                                    rendered="{!renderSaveBtn}"
+                                                    disabled="{!!validImd}"
+                                                    oncomplete="setfocus('focusPoint1');"
+                                                    rerender="form2A,form3A" status="botBtns"/>
+                                <apex:commandButton action="{!saveAndSubmitImd}" value="Save and Submit"
+                                                    rendered="{!renderSubmBtn}"
+                                                    disabled="{!!validImd}"
+                                                    oncomplete="setfocus('focusPoint1');"
+                                                    rerender="form2A,form3A" status="botBtns"/>
+                                <apex:commandButton action="{!deleteImd}" value="Delete"
+                                                    rendered="{!renderDelImdBtn}"
+                                                    onclick="return getConfirm('{!deleteMsg}');"/>
+                                <apex:commandButton action="{!gotoRetUrl}" value="Cancel" immediate="true"
+                                                    rerender="form2A,form3A" status="botBtns"/>
+                                <apex:commandButton action="{!setDraftImd}" value="Set to Draft"
+                                                    rendered="{!renderSetDraftBtn}"
+                                                    onclick="return getConfirm('Set to Draft?');"/>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <apex:commandLink action="{!viewImdAsPdf}" value="View as PDF"
+                                                  rendered="{!renderEditBtn}" target="_blank"/>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <apex:commandLink action="{!viewImdApprovalHistory}"
+                                                  value="View Approval History"
+                                                  rendered="{!renderImdAprvlBtn}" target="_blank"/>
+                            </apex:outputPanel>
+                        </apex:facet>
+                    </apex:actionStatus>
+                    </td>
+                </tr></table>
+            </apex:outputPanel></apex:facet>
+        </apex:pageBlock>
+        <span id="focusPoint4" tabindex="-1"></span>
+        </apex:outputPanel>
+        <apex:pageMessages escape="false" rendered="{!!renderEditBtn}"/>
+
+<!-- ================================================ Deliveries ==================================================== -->
+        <apex:outputPanel rendered="{!renderSodOP}">
+        <apex:pageBlock id="pblock6" mode="edit">
+            <apex:facet name="header"><apex:outputPanel ><table class="tbl1">
+                <tr><td class="td1">{!dlvryLbl}</td><td class="td2">
+                    <apex:actionStatus id="sodBtns">
+                        <apex:facet name="start">
+                            <apex:outputText styleClass="bold" value=" Please wait ...">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop"><apex:outputPanel styleClass="nowrap">
+                                <apex:commandButton action="{!showIMD}" value="Go Back"
+                                                    oncomplete="setfocus('focusPoint2');"
+                                                    rerender="form2A" status="sodBtns"/>
+                        </apex:outputPanel></apex:facet>
+                    </apex:actionStatus>
+                    </td>
+                    <td class="td3"><apex:outputPanel rendered="{!renderSodList}">
+                        <apex:outputText value="Records: {!pc6.recordFrom} - {!pc6.recordTo} of {!pc6.resultSize}"
+                                         styleClass="nowrap"/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                        <apex:actionStatus id="pc6Controls">
+                            <apex:facet name="start">
+                                <apex:outputText styleClass="bold" value=" Please wait ...">
+                                    <apex:image value="{!$Resource.spinner}"/>
+                                </apex:outputText>
+                            </apex:facet>
+                            <apex:facet name="stop">
+                            <apex:outputPanel >
+                            <apex:outputText value="Rows Per Page:"/>&nbsp;
+                            <apex:selectList value="{!pc6.pageSize}" size="1" title="Rows Per Page:">
+                                <apex:actionSupport event="onchange" action="{!pc6Size}"
+                                                rerender="pblock2" status="pc6Controls"/>
+                                <apex:selectOption itemLabel="100" itemValue="100"/>
+                                <apex:selectOption itemLabel="200" itemValue="200"/>
+                            </apex:selectList>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <apex:commandButton action="{!pc6Frst}" disabled="{!NOT(pc6.hasPrevious)}"
+                                                rerender="pblock6" status="pc6Controls"
+                                                title="First Page" value="<<"/>&nbsp;&nbsp;
+                            <apex:commandButton action="{!pc6Prev}" disabled="{!NOT(pc6.hasPrevious)}"
+                                                rerender="pblock6" status="pc6Controls"
+                                                title="Prev Page" value="<"/>
+
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                            <apex:commandButton action="{!pc6Next}" disabled="{!NOT(pc6.hasNext)}"
+                                                rerender="pblock6" status="pc6Controls"
+                                                title="Next Page" value=">"/>&nbsp;&nbsp;
+                            <apex:commandButton action="{!pc6Last}" disabled="{!NOT(pc6.hasNext)}"
+                                                rerender="pblock6" status="pc6Controls"
+                                                title="Last Page" value=">>"/>
+                            </apex:outputPanel>
+                            </apex:facet>
+                        </apex:actionStatus>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                        <apex:outputText value="Page: {!pc6.pageNumber} of {!pc6.lastPageNumber}"/>
+                    </apex:outputPanel></td>
+                    </tr></table></apex:outputPanel>
+            </apex:facet>
+
+            <apex:pageBlockTable value="{!dlvrys}" var="m" rendered="{!renderSodList}" styleClass="tbl4">
+                <apex:column style="width: 50px" styleClass="number {!m.styleClass}">
+                    <apex:facet name="header">Material<br/>Number</apex:facet>
+                    <apex:outputText value="{!m.matNum}"/>
+                </apex:column>
+
+                <apex:column style="width: 230px" styleClass="nowrap {!m.styleClass}">
+                    <apex:facet name="header">Material<br/>Description</apex:facet>
+                    <apex:outputField value="{!m.dlvr.Material__r.Material_Desc__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}">
+                    <apex:facet name="header">Delivery<br/>Number</apex:facet>
+                    <apex:outputField value="{!m.dlvr.Delivery_Number__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}">
+                    <apex:facet name="header">Sales Order<br/>Number</apex:facet>
+                    <apex:outputField value="{!m.dlvr.Sales_Order_Number__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}">
+                    <apex:facet name="header">Line Item<br/>Number</apex:facet>
+                    <apex:outputField value="{!m.dlvr.Sales_Order_Item__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}">
+                    <apex:facet name="header">Reference<br/>Document</apex:facet>
+                    <apex:outputField value="{!m.dlvr.Reference_Document__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}">
+                    <apex:facet name="header">PGI<br/>Date</apex:facet>
+                    <apex:outputField value="{!m.dlvr.Actual_Goods_Issue_Date__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}">
+                    <apex:facet name="header">Quantity<br/>in KG</apex:facet>
+                    <apex:outputField value="{!m.dlvr.Quantity_Shipped_in_BU__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}">
+                    <apex:facet name="header">Quantity<br/>in LB</apex:facet>
+                    <apex:outputField value="{!m.dlvr.Quantity_Shipped_in_LB__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 100%" styleClass="{!m.styleClass}">
+                    <apex:facet name="header">&nbsp;</apex:facet>
+                    <apex:outputText >&nbsp;</apex:outputText>
+                </apex:column>
+
+            </apex:pageBlockTable>
+
+        </apex:pageBlock>
+        </apex:outputPanel>
+
+<!-- ================================================ Material Search ==================================================== -->
+        <apex:outputPanel layout="none" rendered="{!renderMatOP}">
+        <apex:pageBlock id="matSrchPB" mode="edit">
+            <apex:facet name="header">
+                <apex:outputPanel layout="block">
+                <table class="bold" style="font-size: 91%;">
+
+                    <tr class="pbtr1">
+                        <td class="pbtd11">Material Search</td>
+                        <td class="left" colspan="2" style="vertical-align: middle;">
+                        <apex:actionStatus id="matSrchBtns">
+                            <apex:facet name="start">
+                                <apex:outputText styleClass="bold" value=" Please wait ...">
+                                    <apex:image value="{!$Resource.spinner}"/>
+                                </apex:outputText>
+                            </apex:facet>
+                            <apex:facet name="stop">
+                                <apex:outputPanel styleClass="nowrap">
+                                &nbsp;&nbsp;
+                                <apex:inputText id="matSrchString" value="{!matSrchString}"
+                                                styleClass="txt1"/>&nbsp;
+                                <apex:commandButton action="{!searchMaterials}"
+                                                    value="Search for Materials"
+                                                    rerender="form2A" status="matSrchBtns"/>
+                                &nbsp;&nbsp;
+                                <apex:commandButton action="{!selectMatsAndReturn}"
+                                                    rerender="form2A" status="matSrchBtns"
+                                                    oncomplete="setfocus('focusPoint2');"
+                                                    value="Select and Return"/>
+                                &nbsp;&nbsp;
+                                <apex:commandButton action="{!selectMats}"
+                                                    rerender="form2A" status="matSrchBtns"
+                                                    value="Select"/>
+                                &nbsp;&nbsp;
+                                <apex:commandButton action="{!showIMD}"
+                                                    rerender="form2A" status="matSrchBtns"
+                                                    oncomplete="setfocus('focusPoint2');"
+                                                    value="Return"/>
+                                </apex:outputPanel>
+                            </apex:facet>
+                        </apex:actionStatus>
+                        </td>
+                    </tr>
+
+                    <tr><td colspan="3">&nbsp;</td></tr>
+
+                    <tr><td class="center" width="15%">
+                        <apex:outputText value="Records: {!pc1.recordFrom} - {!pc1.recordTo} of {!pc1.resultSize}"
+                                         styleClass="nowrap"/>
+                    </td>
+
+                    <td class="center" width="70%">
+                            <apex:actionStatus id="matSrchPC">
+                                <apex:facet name="start">
+                                    <apex:outputText styleClass="bold" value=" Please wait ...">
+                                        <apex:image value="{!$Resource.spinner}"/>
+                                    </apex:outputText>
+                                </apex:facet>
+                                <apex:facet name="stop">
+                                <apex:outputPanel >
+                                <apex:outputText value="Rows Per Page:"/>&nbsp;
+                                <apex:selectList value="{!pc1.pageSize}" size="1" title="Rows Per Page:">
+                                    <apex:actionSupport event="onchange" action="{!pc1Size}"
+                                                    rerender="matSrchPB" status="matSrchPC"/>
+                                    <apex:selectOption itemLabel="20" itemValue="20"/>
+                                    <apex:selectOption itemLabel="50" itemValue="50"/>
+                                    <apex:selectOption itemLabel="100" itemValue="100"/>
+                                    <apex:selectOption itemLabel="200" itemValue="200"/>
+                                </apex:selectList>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <apex:commandButton action="{!pc1Frst}" disabled="{!NOT(pc1.hasPrevious)}"
+                                                    rerender="matSrchPB" status="matSrchPC"
+                                                    title="First Page" value="<<"/>&nbsp;&nbsp;
+                                <apex:commandButton action="{!pc1Prev}" disabled="{!NOT(pc1.hasPrevious)}"
+                                                    rerender="matSrchPB" status="matSrchPC"
+                                                    title="Prev Page" value="<"/>
+
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                                <apex:commandButton action="{!pc1Next}" disabled="{!NOT(pc1.hasNext)}"
+                                                    rerender="matSrchPB" status="matSrchPC"
+                                                    title="Next Page" value=">"/>&nbsp;&nbsp;
+                                <apex:commandButton action="{!pc1Last}" disabled="{!NOT(pc1.hasNext)}"
+                                                    rerender="matSrchPB" status="matSrchPC"
+                                                    title="Last Page" value=">>"/>
+                                </apex:outputPanel>
+                            </apex:facet>
+                        </apex:actionStatus>
+                    </td>
+
+                    <td class="center" width="15%">
+                        <apex:outputText value="Page: {!pc1.pageNumber} of {!pc1.lastPageNumber}"/>
+                    </td>
+                    </tr>
+                    </table>
+                </apex:outputPanel>
+            </apex:facet>
+
+            <apex:pageBlockTable value="{!mats}" var="m" rendered="{!renderSrchMats}"
+                columnsWidth="20,20,100,100%">
+                <apex:column headerClass="right" styleClass="number">
+                    <apex:facet name="header">&nbsp;&nbsp;&nbsp;&nbsp;#</apex:facet>
+                    <apex:outputText value="{!m.recNum}" styleClass="{!m.styleClass}" style="width: 40px;"/>
+                </apex:column>
+                <apex:column headerClass="chkbx" styleClass="chkbx">
+                    <apex:facet name="header">
+                        <apex:inputCheckbox styleClass="allcb3" value="{!allMats}"
+                            onclick="onClick_AllChkbox('rowcb3', this);"/>
+                    </apex:facet>
+                    <apex:inputCheckbox styleClass="rowcb3" disabled="{!m.disabled}" value="{!m.selected}"
+                        onclick="onClick_RowChkbox('rowcb3', 'allcb3');"/>
+                </apex:column>
+
+                <apex:column >
+                    <apex:facet name="header">Material Number</apex:facet>
+                    <apex:outputText value="{!m.matNum}" styleClass="number {!m.styleClass}"/>
+                </apex:column>
+
+                <apex:column >
+                    <apex:facet name="header">Material Name</apex:facet>
+                    <apex:outputText value="{!m.matName}" styleClass="{!m.styleClass}"/>
+                </apex:column>
+            </apex:pageBlockTable>
+
+            <apex:outputPanel rendered="{!!renderSrchMats}" layout="block" styleClass="center">
+                <span class="msg">No Materials found</span>
+            </apex:outputPanel>
+
+        </apex:pageBlock>
+        </apex:outputPanel>
+
+    </apex:form>
+    <!---------------------------
+    
+    
+    fix page
+    
+    ----------------------------------------------------------------------->
+    
+
+    <apex:outputPanel style="display: none;">
+        <div id="waitMsgDiv">
+            <apex:outputPanel layout="block">
+                <apex:outputText styleClass="bold" value=" Please wait ... ">
+                    <apex:image value="{!$Resource.spinner}"/>
+                </apex:outputText>
+            </apex:outputPanel>
+        </div>
+    </apex:outputPanel>
+
+    <script type="text/javascript">
+        var $j = jQuery.noConflict();
+
+        $j(function(){init1();});
+
+        function init1() {
+            setfocus('focusPoint1fix');
+        }
+
+        function log(msg) {if(window.console){console.log(msg);}}
+
+        function onClick_AllChkbox(rowCbClass, allChkbox) {
+            $j("."+rowCbClass).each(function() {
+                if (this.disabled == false) {
+                    this.checked = allChkbox.checked;
+                }
+            });
+        }
+
+        function onClick_RowChkbox(rowCbClass, allCbClass) {
+            var allChkbox = $j("."+allCbClass).get(0);
+            allChkbox.checked = true;
+            $j("."+rowCbClass).each(function() {
+                if (!this.checked) {
+                    allChkbox.checked = false;
+                    return false;
+                }
+            });
+        }
+
+        function setfocus(fid) {
+            log('setfocus : fid = ' + fid);
+            var fld = document.getElementById(fid);
+            //log('setfocus : fld = ' + fld);
+            if (fld != null) {fld.focus();}
+        }
+
+        function oncomplete(fld) {
+            //log('oncomplete : fld = ' + fld);
+        }
+
+        function validateDate(fld) {
+            d1 = new Date((new Date()).setHours(0, 0, 0, 0));
+            //d2 = new Date(fld.value);
+            d2 = new Date(DateUtil.getDateFromUserLocale(fld.value).setHours(0, 0, 0, 0));
+            //log('d1 = ' + d1);
+            //log('d2 = ' + d2);
+            if(d2 < d1) {fld.value = '';}
+        }
+
+        // +ve Integer with max n digits
+        function numInp1(e, tb, n) {
+            var re1 = "^[0-9]$";
+            var re2 = "^[0-9]{0," + n + "}$";
+            return numInp(e, tb, re1, re2);
+        }
+
+        // any Integer with max n digits
+        function numInp2(e, tb, n) {
+            var re1 = "^([-]|[0-9])$";
+            var re2 = "^[-]?[0-9]{0," + n + "}$";
+            return numInp(e, tb, re1, re2);
+        }
+
+        // +ve Number with max n decimals
+        function numInp3(e, tb, n) {
+            var re1 = "^([\\.,]|[0-9])$";
+            var re2 = "^([0-9]*[\\.,]?[0-9]{0," + n + "})$";
+            return numInp(e, tb, re1, re2);
+        }
+
+        // any Number with max n decimals
+        function numInp4(e, tb, n) {
+            var re1 = "^([-\\.,]|[0-9])$";
+            var re2 = "^[-]?([0-9]*[\\.,]?[0-9]{0," + n + "})$";
+            return numInp(e, tb, re1, re2);
+        }
+
+        function numInp(e, tb, re1, re2) {
+            var re; var k; var s; var val;
+            if (window.event) {k = e.keyCode;}
+            else if (e.which) {k = e.which;} else {return;}
+            if (k == 8) {return true;}
+
+            s = String.fromCharCode(k); //log(k); log(s);
+            re = new RegExp(re1);
+            if (!re.test(s)) {return false;}
+
+            val = tb.value + s; //log(val);
+            re = new RegExp(re2);
+            if (re.test(val)) {return true;}
+            return false;
+        }
+
+        function getConfirm(q) {
+            answer = confirm(q);
+            if (answer != 0) {openWaitMsg(); return true;} return false;
+        }
+
+        $j("#waitMsgDiv").dialog({
+            modal: true, autoOpen: false, dialogClass: "no-title",
+            height: 30, width: 40, resizable: false
+        });
+
+        function openWaitMsg() {$j("#waitMsgDiv").dialog("open");}
+
+        function closeWaitMsg() {$j("#waitMsgDiv").dialog("close");}
+
+        function onAddMatsBtnClick() {
+            openWaitMsg(); searchMaterials();
+        }
+
+        function onMatReturnClick() {
+            openWaitMsg(); showIRF();
+        }
+
+    </script>
+
+    <style>
+        .theForm       {background-color: #f8f8f8; width: 100%;}
+        .bold          {font-size: 91%; font-weight: bold;}
+        .boldblue      {color: blue; font-size: 91%; font-weight: bold;}
+        .boldgrey      {color: grey; font-size: 91%; font-weight: bold;}
+        .center        {text-align: center;}
+        .left          {text-align: left;}
+        .right         {text-align: right;}
+        .nowrap        {white-space: nowrap;}
+        .number        {text-align: right; white-space: nowrap;}
+        .reqd          {color: red !important;}
+        .hili          {background-color: #ccffcc !important; border: 1px solid #e0e3e5;}
+        .hil2          {background-color: #add8e6 !important; border: 1px solid #e0e3e5;}
+        .clink         {text-decoration: underline;}
+        .tbl1,
+        .tbl2,
+        .tbl3,
+        .tbl4          {width: 1140px;}
+        .tbl1 td,
+        .tbl2 td,
+        .tbl3 td       {width: 50px; height: 20px; padding: 4px; vertical-align: top;}
+        .tbl1 .td1     {width: 10%; font-size: 110%; font-weight: bold; white-space: nowrap;}
+        .tbl1 .td2     {width: 30%; white-space: nowrap;}
+        .tbl1 .td3     {width: 60%; font-size: 91%; font-weight: bold; white-space: nowrap;}
+        .tbl2 .lbl     {width: 130px; font-size: 91%; font-weight: bold; text-align: right; white-space: nowrap;}
+        .tbl2 .val     {width: 250px;}
+        .tbl2 th       {font-size: 91%; padding: 4px;}
+        .tbl2 td.reqd  {color: red;}
+        .tbl3 .lbl     {font-size: 91%; font-weight: bold; text-align: right; white-space: nowrap;}
+        .tbl4 td,
+        .tbl4 input    {font-size: 1em; padding-right: 2px; margin-right: 0px;}
+        .tbl4 td .f50  {width: 50px;}
+        .tbl4 td .f67  {width: 67px;}
+        .tbl4 td .f75  {width: 75px;}
+        .tbl4 td .txt3 {width: 100px;}
+        .tbl4 td.totl  {font-size: 105%; font-weight: bold; background-color: #f2f3f3;}
+        /* .tbl4 tr:last-child {background-color: #f2f3f3;} */
+        .txta1         {height: 60px; width: 1000px; resize: none; overflow: auto;}
+        .txta2         {height: 30px; width:  230px; resize: none; overflow: auto;}
+        .txta3         {height:  1em; width:  100px; resize: none; overflow: auto;}
+        .txta4         {height: 60px; width:  540px; resize: none; overflow: auto;}
+        .txta5         {height: 60px; width:  980px; resize: none; overflow: auto;}
+        .chkbx1        {margin-left: 0px; padding-left: 0px; width: 10px; height: 20px;}
+        .matName       {width: 17em; overflow: hidden; text-overflow: ellipsis;}
+
+        .pbBody table input,
+        .pbBody table textarea {border: 1px solid #e0e3e5;}
+
+        .pbBody table.list .dateFormat {display: none !important;}
+        .pbBody table.list tr.headerRow th.chkbx {padding-left: 4px;}
+        .pbBody table.list tr.headerRow th.reqd  {color: red;}
+        .no-title .ui-dialog-titlebar {display: none;}
+    </style>
+</apex:page>

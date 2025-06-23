@@ -1,0 +1,2 @@
+<apex:page standardcontroller="Opportunity" sidebar="false" showHeader="true" >
+</apex:page>

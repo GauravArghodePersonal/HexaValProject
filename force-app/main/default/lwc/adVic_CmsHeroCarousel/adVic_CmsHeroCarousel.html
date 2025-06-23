@@ -1,0 +1,37 @@
+<template>
+    <div class="slds-size_4-of-4 hero-container" style="width: 100%; max-width: 100%;">
+        <div class="carousel-slider">
+            <template for:each={carouselImages} for:item="img" for:index="index">
+                <!-- Added data-key for each slide for easy identification -->
+                <div data-key={index} key={img.src} class="slide" style={img.style}></div>
+            </template>
+        </div>
+        <div class="hero-content slds-grid slds-grid_vertical-align-center slds-grid_align-center slds-wrap" style="transform: scale(2);">
+            <div class="slds-col slds-size_1-of-1 slds-text-align_center">
+                <h1>{currentImage.header}</h1>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-text-align_center">
+                <button class="slds-button slds-button_brand" onclick={navigateToLink} data-link={currentImage.buttonLink}>
+                    {currentImage.buttonText}
+                </button>
+            </div>
+        </div>
+        <div class="controls">
+            <button class="slds-button slds-button_icon slds-button_icon-small slds-button_icon-inverse" title="Left" onclick={onLeft}>
+                <svg class="button_icon">
+                    <use xlink:href={leftButton}></use>
+                </svg>
+            </button>
+            <button class="slds-button slds-button_icon slds-button_icon-small slds-button_icon-inverse" title="Pause" onclick={onPause}>
+                <svg class="button_icon">
+                    <use xlink:href={pauseButton}></use>
+                </svg>
+            </button>
+            <button class="slds-button slds-button_icon slds-button_icon-small slds-button_icon-inverse" title="Right" onclick={onRight}>
+                <svg class="button_icon">
+                    <use xlink:href={rightButton}></use>
+                </svg>
+            </button>
+        </div>        
+    </div>
+</template>

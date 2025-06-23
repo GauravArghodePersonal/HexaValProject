@@ -1,0 +1,4 @@
+<apex:page standardController="Sample_Material_CMC__c" sidebar="false"
+           extensions="Sample_Request_Controller"
+           tabStyle="Sample_Material_CMC__c" action="{!gotoSObjectPage}">
+</apex:page>

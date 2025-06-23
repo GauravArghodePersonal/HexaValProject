@@ -1,0 +1,45 @@
+/* myComponent.css */
+.center-align-table th, .center-align-table td {
+    text-align: center;
+}
+
+.bold-label {
+    font-weight: bold;
+}
+
+.slds-button-group {
+    margin: 20px;
+}
+
+.center-align-table {
+    overflow-y: visible;
+}
+
+/* Custom CSS to increase the height of table header */
+.slds-table thead th {
+    height: 50px; /* Adjust the height value as needed */
+    line-height: 50px; /* Ensures vertical alignment */
+    border: 2px solid black; /* Adjust the border width and color as needed */
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+table.slds-table th,
+table.slds-table td {
+  border-right: 1px solid black; /* Add a solid border to the right of each cell */
+}
+
+table.slds-table th:last-child,
+table.slds-table td:last-child {
+  border-right: none; /* Remove the border from the last column to prevent double borders */
+}
+
+tr {
+    border-bottom: 1px solid black; /* Add a solid black border at the bottom of each row */
+}
+
+/* Apply a thick border to the table header */
+table.slds-table td {
+     height: 30px;
+}

@@ -1,0 +1,97 @@
+<apex:page controller="Sample_Request_Controller" sidebar="false" lightningStylesheets="true">
+    <div class="p1h-div1">
+    <apex:slds />
+    <apex:panelGrid columns="6" width="100%" cellpadding="4px" 
+                    columnClasses="p1h-col1,p1h-col2">
+
+        <!-- row 1 -->
+        <apex:panelGroup ><apex:outputText rendered="{!NOT(ISBLANK(sampleRequest.Name))}"
+            value="Sample Request :"/></apex:panelGroup>
+        <apex:outputLink value="/{!sampleRequest.Id}">{!sampleRequest.Name}</apex:outputLink>
+        <apex:outputText value=""/><apex:outputText value=""/>
+        <apex:panelGroup ><apex:outputText rendered="{!NOT(ISBLANK(sampleRequest.Status__c))}"
+            value="Sample Request Status :"/></apex:panelGroup>
+        <apex:outputText value="{!sampleRequest.Status__c}"/>
+        
+        <!-- row 2 -->
+        <apex:outputText value="Account Name :"/>
+        <apex:outputLink value="/{!sampleRequest.Account__c}" id="AcctLink" target="_blank">{!accName}</apex:outputLink>
+        <!--Commented by Vinu for a prod fix - if you want to add the same - add it in the SOQL query of cotroller class-->
+        <!--<apex:outputText value="EndUse Customer :"/>
+        <apex:outputLink value="/{!sampleRequest.EndUse_Customer__c}" id="EndUseCustLink" target="_blank">{!endUseCust}</apex:outputLink>-->
+        <apex:panelGroup ><apex:outputText rendered="{!renderLeadName}"
+            value="Lead :"/></apex:panelGroup>
+        <apex:outputText value="{!leadName}"/>
+        
+        <!-- row 3 -->
+        <apex:outputText value="Account Number :"/>
+        <apex:outputText value="{!accNum}"/>
+        <apex:outputText value="Sales District :"/>
+        <apex:outputText value="{!salesDistrict}"/>
+        <apex:panelGroup ><apex:outputText rendered="{!renderOppName}" 
+            value="Opportunity :"/></apex:panelGroup>
+        <apex:panelGroup >
+            <apex:outputText rendered="{!ISBLANK(sampleRequest.Opportunity__c)}" value="{!oppName}"/>
+            <apex:outputLink rendered="{!!ISBLANK(sampleRequest.Opportunity__c)}" 
+                             value="/{!sampleRequest.Opportunity__c}" id="OppLink" 
+                             target="_blank">{!oppName}</apex:outputLink>
+        </apex:panelGroup>            
+        
+        <!-- row 4 -->
+        <apex:outputText value="Sales Area :"/>
+        <apex:outputText value="{!salesArea}"/>
+        <apex:outputText value="Sales Office :"/>
+        <apex:outputText value="{!salesOffice}"/>
+        <apex:panelGroup ><apex:outputText rendered="{!renderTsrName}" 
+            value="{!caseLabel} :"/></apex:panelGroup>
+        <apex:outputText value="{!tsrName}"/>
+        
+        <!-- row 5 -->
+        <apex:outputText value="Sales Rep :"/>
+        <apex:outputText value="{!sellerName}"/>
+        <apex:outputText value="Sales Group :"/>
+        <apex:outputText value="{!salesGroup}"/>
+        <!--<apex:panelGroup ><apex:outputText rendered="{!renderSampleCenter}" 
+            value="Sample Center :"/></apex:panelGroup>
+        <apex:outputText value="{!sampleRequest.Sample_Center__c}"/>-->
+        
+        <!-- row 6 -->
+        <apex:panelGroup ><apex:outputText rendered="{!renderVcpRating}" 
+            value="VCP Rating :"/></apex:panelGroup>
+        <apex:panelGroup ><apex:outputText rendered="{!renderVcpRating}" 
+            value="{!vcpRating}"/></apex:panelGroup>
+        <apex:outputText value="Customer Group :"/>
+        <apex:outputText value="{!custGroup}"/>
+        <apex:panelGroup ><apex:outputText rendered="{!renderLabContactOutput}" 
+            value="Lab Contact :"/></apex:panelGroup>
+        <apex:outputText value="{!labContactName}"/>
+
+        <!-- row 7 -->
+        <apex:panelGroup ><apex:outputText rendered="{!renderContactName}" 
+            value="Contact :"/></apex:panelGroup>
+        <apex:panelGroup >
+        <apex:outputLink value="/{!sampleRequest.Contact__c}" id="ContactLink" target="_blank">{!contactName}</apex:outputLink><br/>
+                          <apex:outputText value="{!contactPhone}"/><br/>
+                          <apex:outputText value="{!contactEmail}"/></apex:panelGroup>
+
+        <apex:panelGroup ><apex:outputText rendered="{!renderSampleAddress}" 
+            value="Shipping Address :"/></apex:panelGroup>
+        <apex:outputText escape="false" value="{!sampleRequestAddress}"/>
+
+        <apex:panelGroup ><apex:outputText rendered="{!renderRequestReason}"> 
+            Reason for Sample :</apex:outputText></apex:panelGroup>
+        <apex:outputText escape="false" value="{!requestReason}"/>
+
+    </apex:panelGrid>
+    </div>
+    <style>
+        .bold {font-weight: bold;}
+        .center {text-align: center;}
+        .nowrap {white-space: nowrap;}
+        .p1h-div1 {font-size: 91%; text-align: center; border-bottom: 1px solid #dbdbdb;}
+        .p1h-col1 {color: #4a4a56 !important; font-weight: bold; vertical-align: top;
+                   text-align: right; white-space: nowrap; min-width: 130px;}
+        .p1h-col2 {text-align: left; white-space: wrap; min-width: 200px;
+                   vertical-align: top;}
+    </style>
+</apex:page>

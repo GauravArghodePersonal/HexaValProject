@@ -1,0 +1,46 @@
+.box {
+    box-shadow: 0px 2px 10px 2px #ddd;
+    padding: 10px;
+    margin: 0px auto 25px;
+    border-radius: 3px;
+}
+.imgdiv {
+   box-shadow: 0 2px 5px 0px #ccc;
+    border-radius: 144px;
+    margin: 10px;
+    height: 120px;
+    width: 120px;
+        text-align: center;
+}
+.imgdiv img {
+    border-radius: 400px;
+    height: 100px;
+    margin-top: 10px;
+}
+.title {
+    font-size: 13px;
+    font-weight: bold;
+}
+.hr {
+    clear: both; 
+    margin:5px 0;
+}
+.right {
+    text-align: right;
+}
+.reorder{
+    color: #17b;
+    font-size: 14px;
+    margin: 5px 0 0 5px;
+    float: left;
+    font-weight: bold;
+}
+.tdate {
+    margin: 8px 5px 0 0;
+    float: right;
+    font-weight: bold;
+}
+.txt {
+    background: #e8eefc;
+    border: none;
+}

@@ -1,0 +1,278 @@
+h3{
+    color:#666666;
+    margin-bottom:10px;
+}
+
+#nav{
+    visibility:hidden;
+}
+
+ #modalContainer{
+    width:610px !important;
+}
+
+.star{
+    color:red;
+}
+
+p{
+    margin:0;
+    padding:0;
+    margin-bottom:12px;
+
+}
+
+/**** INDEX ****/
+#content-index{
+    height:530px;
+    width:590px;
+    background: #fff url(../img/background-gray-gradient2.jpg) repeat-x 0 190px;
+}
+
+#content-index form{
+    width:300px;
+}
+
+
+#content-index form#new-user-group{
+    float: left;
+    height: 340px;
+}
+
+#content-index form#return-user-group{
+
+}
+
+#content-index form#return-user-group *{
+    position:relative;
+    left: 20px;
+}
+
+#content-index input, #content-index select{
+    width:240px;
+    margin-top:5px;
+    margin-bottom:10px;
+    margin-right:10px;
+}
+
+#content-index input{
+    height:13px;
+    line-height:13px;
+    color: #00000;
+    font-size:10px;
+}
+
+#content-index input.submit{
+    height:20px;
+    line-height:20px;
+}
+
+#content-index select {
+    width:255px;
+    margin-right:5px;
+}
+
+#content-index label{
+    width:250px;
+    height:201px;   
+}
+
+#content-index form a{
+    float:left; 
+    margin-right: 40px;
+}
+
+#content-index form a:hover{
+    text-decoration: underline;
+}
+
+#content-index form a.submit{
+    cursor: pointer;
+    background: url(../img/button-sprite.gif)  -224px 0;
+    height:16px;
+    width:66px;
+    text-indent:-9999px;
+}
+
+#content-index a.submit:hover{
+    background-position: -224px -54px;
+    cursor: pointer;
+}
+
+/**** MISSING INFO ****/
+
+#content-missing-info{
+    width:590px;
+    position:relative;  
+}
+
+#content-missing-info div.group{
+    position:relative;
+    height:155px;
+    padding-top:20px
+}
+
+#content-missing-info fieldset{
+    border: none;
+}
+
+#content-missing-info input, #content-missing-info select{
+    width:200px;
+    margin-top:5px;
+    margin-bottom:10px;
+    margin-right:400px;
+    margin-left:20px;
+    border:1px solid #000;
+}
+
+#content-missing-info input#return-user-group3-newsletter{
+    width:20px;
+    border: none;
+    z-index:99;
+}
+
+#content-missing-info #return-user-group3-newsletter-label{
+    position:absolute;
+    top:105px;
+    left:20px;
+}
+
+#content-missing-info .select-label{
+    position:relative;
+    top:20px;
+    font-weight: bold;  
+    left:40px;
+}
+
+#content-missing-info #return-user-group1-emailaddress{
+    position:absolute;
+    top:35px;
+    left:350px;
+    margin-right:0px;
+}
+
+#content-missing-info #return-user-group1-emailaddress-label{
+    position:absolute;
+    top:20px;
+    left:350px;
+    margin-right:0px;
+}
+
+#return-user-group1-facilityphone{
+    position:absolute;
+    top:80px;
+    left:350px;
+    margin-right:0px;
+}
+
+#content-missing-info #return-user-group1-facilityphone-label{
+    position:absolute;
+    top:70px;
+    left:350px;
+    margin-right:0px;
+}
+
+#return-user-group2, #return-user-group3{
+    background: #fff url(../img/background-gray-gradient1.jpg) repeat-x;
+}
+
+#content-missing-info #return-user-group2-facilitystate{
+    position:absolute;
+    top:35px;
+    left:350px;
+    margin-right:0px;
+}
+
+#content-missing-info #return-user-group2-facilitystate-label{
+    position:absolute;
+    top:20px;
+    left:350px;
+    margin-right:0px;
+}
+
+
+#return-user-group2-facilityzip{
+    position:absolute;
+    top:85px;
+    left:350px;
+    margin-right:0px;
+}
+
+#content-missing-info #return-user-group2-facilityzip-label{
+    position:absolute;
+    top:70px;
+    left:350px;
+    margin-right:0px;
+}
+
+
+#content-missing-info #return-user-group3-channel{
+    position:absolute;
+    top:35px;
+    left:350px;
+    margin-right:0px;
+}
+
+#content-missing-info #return-user-group3-channel-label{
+    position:absolute;
+    top:20px;
+    left:350px;
+    margin-right:0px;
+}
+
+#content-missing-info #return-user-group3-vehicles{
+    position:absolute;
+    top:85px;
+    left:350px;
+    margin-right:0px;
+}
+
+#content-missing-info #return-user-group3-vehicles-label{
+    position:absolute;
+    top:70px;
+    left:350px;
+    margin-right:0px;
+}
+#content-missing-info #return-user-group1-iif_account{
+    color: #777
+}
+
+#content-missing-info label{
+    width:250px;
+    margin-left:20px;
+}
+
+
+#content-missing-info  a.submit{
+    cursor: pointer;
+    background: url(../img/button-sprite.gif)  -224px 0;
+    height:16px;
+    width:66px;
+    text-indent:-9999px;
+    display:block;
+}
+
+#content-missing-info  a.submit:hover{
+    background-position: -224px -54px;
+    cursor: pointer;
+}
+
+#content-missing-info  #return-user-group3-vehicles-label, 
+#content-missing-info #return-user-group3-vehicles{
+    display:none;
+
+}
+
+/****ERROR MESSAGES ****/
+#errormsg{
+        display: none;
+}
+
+#errormsg a{
+    display: none;
+    
+}
+
+#errormsg ol li {
+    color:#000000;
+}

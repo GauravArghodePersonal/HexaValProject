@@ -1,0 +1,85 @@
+<template>
+    <div class="slds-clearfix">
+        <div class="slds-float_right"> 
+            <lightning-button label="Equipment Reuse" onclick={showModalBox}></lightning-button>
+        </div>
+    </div>
+    <template if:true={isShowModal}>        
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <!-- Lightning Spinner -->
+                <template if:true={isShowSpinner}>
+                    <lightning-spinner variant="brand" size="large"> </lightning-spinner>
+                </template>
+                <!-- modal header start -->
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={hideModalBox}>
+                        <lightning-icon icon-name="utility:close"
+                            alternative-text="close"
+                            variant="inverse"
+                            size="small" ></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Equipment Reuse</h2>
+                </header>
+            
+                <!-- modal body start -->
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    
+                    <span>
+                        <c-solenis-commercial-multi-lookup  class="firstLookup"
+                                                            label ="Repair/Upgrade Equipment 1"
+                                                            required="false"
+                                                            placeholder="Enter EQ Number / EQ Name"
+                                                            scroll-after-n-items="10"                                                         
+                                                            onsearch={handleFirstEquipmentSearch}
+                                                            onselectionchange={handleFirstEquipmentSelectionChange}>
+                        </c-solenis-commercial-multi-lookup>
+                    </span>
+
+                    <c-solenis-commercial-multi-lookup  class="secondLookup"
+                                                        label ="Repair/Upgrade Equipment 2"
+                                                        required="false"
+                                                        placeholder="Enter EQ Number / EQ Name"
+                                                        scroll-after-n-items="10"                                                         
+                                                        onsearch={handleSecondEquipmentSearch}
+                                                        onselectionchange={handleSecondEquipmentSelectionChange}>
+                    </c-solenis-commercial-multi-lookup>
+                    
+                    <c-solenis-commercial-multi-lookup  class="thirdLookup"
+                                                        label ="Repair/Upgrade Equipment 3"
+                                                        required="false"
+                                                        placeholder="Enter EQ Number / EQ Name"
+                                                        scroll-after-n-items="10"                                                         
+                                                        onsearch={handleThirdEquipmentSearch}
+                                                        onselectionchange={handleThirdEquipmentSelectionChange}>
+                    </c-solenis-commercial-multi-lookup>
+
+                    <c-solenis-commercial-multi-lookup  class="fourLookup"
+                                                        label ="Repair/Upgrade Equipment 4"
+                                                        required="false"
+                                                        placeholder="Enter EQ Number / EQ Name"
+                                                        scroll-after-n-items="10"                                                         
+                                                        onsearch={handleFourEquipmentSearch}
+                                                        onselectionchange={handleFourEquipmentSelectionChange}>
+                    </c-solenis-commercial-multi-lookup>
+
+                    <c-solenis-commercial-multi-lookup  class="fiveLookup"
+                                                        label ="Repair/Upgrade Equipment 5"
+                                                        required="false"
+                                                        placeholder="Enter EQ Number / EQ Name"
+                                                        scroll-after-n-items="10"                                                         
+                                                        onsearch={handleFiveEquipmentSearch}
+                                                        onselectionchange={handleFiveEquipmentSelectionChange}>
+                    </c-solenis-commercial-multi-lookup>
+
+                    <div class="slds-float_right slds-p-around_medium">
+                        <lightning-button label="Cancel" title="Cancel" onclick={hideModalBox} class="slds-m-left_x-small"></lightning-button>
+                        <lightning-button variant="brand" type="submit" label="Save" onclick={handleSave} class="slds-p-left_small"></lightning-button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

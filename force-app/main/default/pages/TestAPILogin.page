@@ -1,0 +1,6 @@
+<apex:page >
+ <c:SWFObject id="App_TestAPILogin_WebApp" 
+              height="1000" width="100%" 
+              src="{!$Resource.App_TestAPILogin_WebApp}" 
+              flashvars="sessionid={!$Api.Session_Id}&serverurl={!$Api.Partner_Server_URL_280}&username={!$User.Username}"/>
+</apex:page>

@@ -1,0 +1,9 @@
+<apex:page showHeader="false">
+
+    <apex:pageBlock >
+
+        <apex:iframe src="https://www.kompyte.pro/api/salesforce-iframe/?organization={!$Organization.Id}&session={!$Api.Session_ID}&url={!$Api.Partner_Server_URL_500}" scrolling="true" id="kompyteFrame" html-style="height: calc(100vh - 40px)"/>
+
+    </apex:pageBlock>
+
+</apex:page>

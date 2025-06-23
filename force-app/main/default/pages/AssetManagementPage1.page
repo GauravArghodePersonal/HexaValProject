@@ -1,0 +1,642 @@
+<apex:page id="thePage" standardController="Asset" 
+           extensions="AssetManagementController"
+           action="{!initAssetList}" sidebar="false"
+           lightningStylesheets="true">
+ 
+    <apex:includeScript value="{!$Resource.PendingApprovalFunctions}" />
+
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-1.6.2.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-ui-1.8.16.custom.min.js')}" />
+    <style type="text/css">
+        @import "{!URLFOR($Resource.jQuery, 'css/redmond/jquery-ui-1.8.16.custom.css')}";
+    </style>
+
+    <apex:form id="theForm">
+      <apex:pageBlock id="pblock1">
+        <apex:pageMessages id="pagemsgs" rendered="true"/>
+
+        <apex:facet name="header">
+            <apex:outputPanel >
+            <table bgcolor="#f8f8f8" style="font-size: 110%; font-weight:bold;" width="100%"><tr>
+                <td align="left">&nbsp;&nbsp;Loan Equipment Assets</td>
+                <td align="right">Plant Name:&nbsp;
+                    <apex:outputLink value="/{!plant1.Id}">
+                        <apex:outputText value="{!plant1.Name}" style="color: blue;"/>
+                    </apex:outputLink>&nbsp;&nbsp;</td>
+            </tr></table></apex:outputPanel>
+        </apex:facet>
+          
+        <apex:outputPanel layout="block">
+          <apex:actionStatus id="astatus1">
+                      <apex:facet name="start">
+                        <apex:outputText escape="false" style="font-weight: bold;" 
+                                         value="&nbsp;{!$Label.Please_Wait}...">
+                          <apex:image value="{!$Resource.spinner}"/>
+                        </apex:outputText>
+                      </apex:facet>
+
+            <apex:facet name="stop">
+              <apex:outputPanel >
+
+                <table bgcolor="#f8f8f8" class="bold" width="100%">
+
+    <tr><td align="center">
+      <apex:commandButton action="{!initCreateForm}" rendered="{!renderCreateBtn}"
+            rerender="theForm" status="astatus1" value="Create Assets"/>&nbsp;
+      <apex:commandButton action="{!getAssetsToAssign}" rendered="{!renderAssignBtn}" 
+            rerender="theForm" status="astatus1" value="Assign to Account"/>&nbsp;
+      <apex:commandButton action="{!getAssetsToReturn}" rendered="{!renderReturnBtn}"
+            rerender="theForm" status="astatus1" value="Return to Plant"/>&nbsp;
+      <apex:commandButton action="{!getAssetsToRetire}" rendered="{!renderRetireBtn}" 
+            rerender="theForm" status="astatus1" value="Retire"/>&nbsp;
+      <apex:commandButton action="{!getAssetsToTransfer}" rendered="{!renderTrnsfrBtn}" 
+            rerender="theForm" status="astatus1" value="Transfer to Another Plant"/>&nbsp;
+      <apex:commandButton action="{!getAssetsToDelete}" rendered="{!renderDeleteBtn}" 
+            rerender="theForm" status="astatus1" value="Delete"/>&nbsp;
+      <apex:commandButton action="{!getAssetsToUpdate}" rendered="{!renderUpdateBtn}" 
+            rerender="theForm" status="astatus1" value="Edit"/>&nbsp;
+      <apex:commandButton action="{!updateAssets}" rendered="{!renderSubmitBtn}" 
+            rerender="theForm" status="astatus1" value="{!submitBtnValue}"/>&nbsp;
+      <apex:commandButton action="{!createAssets}" rendered="{!renderCreateAssetsForm}" 
+            rerender="theForm" status="astatus1" value="Create Assets"/>&nbsp;
+      <apex:commandButton action="{!initCreateForm}" immediate="true" rendered="{!renderCreateAssetsForm}"
+            rerender="createAssetsForm" status="astatus1" value="Clear"/>&nbsp;
+      <apex:commandButton action="{!goBack}" immediate="true" rendered="{!renderCancelBtn}"
+            rerender="theForm" status="astatus1" value="Go Back"/>&nbsp;
+    </td></tr>
+          
+    <tr><td align="center">
+      <apex:outputPanel rendered="{!renderAccountLkup}">
+        <apex:outputText value="Assign to Account:"/>&nbsp;
+        <apex:outputPanel styleClass="requiredInput">
+            <div class="requiredBlock"></div>
+            <input type="text" id="assignedAccNameTxt"
+                   value="{!newAsset.assignedAccName}"
+                   disabled="disabled" readonly="readonly" 
+                   class="txtbox1"/>&nbsp; 
+            <apex:image alt="Lookup (New Window)" title="Lookup (New Window)"
+                        style="cursor: pointer;" styleClass="lookupIcon"
+                      onclick="accountLookup(); return false;" 
+                      onmouseover="this.className = 'lookupIconOn';" 
+                      onmouseout="this.className = 'lookupIcon';" 
+                      url="/s.gif" id="accountLkupImg"/>
+        </apex:outputPanel>
+        <apex:inputHidden id="assignedAccName" value="{!newAsset.assignedAccName}"/>
+        <apex:inputHidden id="assignedAccId" value="{!newAsset.assignedAccId}"/>
+      </apex:outputPanel>
+
+      <apex:outputPanel rendered="{!renderPlantLkup}">
+        <apex:outputText value="Transfer to Plant:"/>&nbsp;
+        <apex:outputPanel styleClass="requiredInput">
+            <div class="requiredBlock"></div>
+            <input type="text" id="plantNameTxt"
+                   value="{!plant2.Name}"
+                   disabled="disabled" readonly="readonly" 
+                   class="txtbox1"/>&nbsp; 
+            <apex:image alt="Lookup (New Window)" title="Lookup (New Window)"
+                        style="cursor: pointer;" styleClass="lookupIcon"
+                      onclick="plantLookup(); return false;" 
+                      onmouseover="this.className = 'lookupIconOn';" 
+                      onmouseout="this.className = 'lookupIcon';" 
+                      url="/s.gif" id="plantLkupImg"/>
+        </apex:outputPanel>
+        <apex:inputHidden id="plantName" value="{!plant2.Name}"/>
+        <apex:inputHidden id="plantId" value="{!plant2.Id}"/>
+      </apex:outputPanel>
+      
+      <apex:outputPanel rendered="{!renderSubmitBtn}">&nbsp;&nbsp;&nbsp;&nbsp;
+          <apex:outputText value="Transaction Date:"/>&nbsp;
+          <apex:outputPanel styleClass="requiredInput">
+              <div class="requiredBlock"></div>
+              <apex:inputField value="{!newAsset.a.Transaction_Date__c}"/>
+          </apex:outputPanel>
+      </apex:outputPanel>
+      
+      <apex:outputPanel rendered="{!renderRevenueTxtBox}">&nbsp;&nbsp;&nbsp;&nbsp;
+          <apex:outputText value="Revenue from Sale:"/>&nbsp;
+          <apex:inputField value="{!newAsset.a.Revenue_from_Sale__c}"/>
+      </apex:outputPanel>
+      
+    </td></tr>
+
+    <tr><td align="right">
+        <apex:outputPanel rendered="{!renderInputFlds}">
+            <apex:commandButton action="{!copyChangesToAll}"
+                rerender="theForm" status="astatus1" 
+                value="Copy First Row Changes to All Rows"/>
+        </apex:outputPanel>
+    </td></tr>
+    
+    <tr><td align="center"><apex:outputPanel rendered="{!renderSearchBtn}">
+          <apex:outputLabel value="Equipment: "/>
+          <apex:inputText value="{!newAsset.equipmentName}" size="16"/>&nbsp;&nbsp;
+
+          <apex:outputLabel value="Account: "/>
+          <apex:inputText value="{!newAsset.assignedAccName}" size="16"/>&nbsp;&nbsp;
+
+          <apex:outputLabel value="Asset #: "/>
+          <apex:inputText value="{!newAsset.assetNum}" size="8"/>&nbsp;&nbsp;
+
+          <apex:outputLabel value="Status: "/>
+          <apex:selectList value="{!newAsset.a.Status}" size="1">
+            <apex:selectOptions value="{!statSelOps}"/>
+          </apex:selectList>&nbsp;&nbsp;
+
+          <apex:outputLabel value="Sort By: "/>
+          <apex:selectList value="{!sortBy}" size="1">
+            <apex:selectOptions value="{!sortSelOps}"/>
+          </apex:selectList>&nbsp;&nbsp;
+
+          <apex:commandButton action="{!searchAssets}"
+                    rerender="theForm" status="astatus1"
+                    value="Search"/>
+          </apex:outputPanel>
+    </td></tr>
+       
+                  </table>
+                </apex:outputPanel>
+              </apex:facet>
+            </apex:actionStatus>
+          </apex:outputPanel>
+
+        <apex:outputPanel layout="block" id="createAssetsForm">
+            <apex:pageBlockSection columns="3" rendered="{!renderCreateAssetsForm}">
+
+                <!-- column 1 -->
+                <apex:pageBlockSectionItem labelStyleClass="nowrap">
+                    <apex:outputText value="PO Number:"/>
+                    <apex:inputField value="{!newAsset.a.PO_Number__c}" styleClass="txtbox2"/>
+                </apex:pageBlockSectionItem>
+    
+                <!-- column 2 -->
+                <apex:pageBlockSectionItem labelStyleClass="nowrap">
+                    <apex:outputText value="Invoice Number:"/>
+                    <apex:inputField value="{!newAsset.a.Invoice_Number__c}" styleClass="txtbox2"/>
+                </apex:pageBlockSectionItem>
+    
+                <!-- column 3 -->
+                <apex:pageBlockSectionItem labelStyleClass="nowrap">
+                    <apex:outputText value="AFE Number:"/>
+                    <apex:inputField value="{!newAsset.a.AFE_Number__c}" styleClass="txtbox2"/>
+                </apex:pageBlockSectionItem>
+    
+                <!-- column 1 -->
+                <apex:pageBlockSectionItem labelStyleClass="nowrap">
+                    <apex:outputText value="Equipment Name:"/>
+                    <apex:outputPanel styleClass="requiredInput">
+                        <div class="requiredBlock"></div>
+                        <input type="text" id="equipmentNameTxt"
+                               value="{!newAsset.equipmentName}"
+                               disabled="disabled" readonly="readonly" 
+                               class="txtbox1"/>&nbsp; 
+                        <apex:image alt="Lookup (New Window)" title="Lookup (New Window)"
+                                    style="cursor: pointer;" styleClass="lookupIcon"
+                                    onclick="equipmentLookup(); return false;" 
+                                    onmouseover="this.className = 'lookupIconOn';" 
+                                    onmouseout="this.className = 'lookupIcon';" 
+                                    url="/s.gif" id="equipmntLkupImg"/>
+                        <apex:inputHidden id="equipmentName" value="{!newAsset.equipmentName}"/>
+                        <apex:inputHidden id="equipmentId" value="{!newAsset.equipmentId}"/>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+    
+                <!-- column 2 -->
+                <apex:pageBlockSectionItem labelStyleClass="nowrap">
+                    <apex:outputText value="Acquisition Date:"/>
+                    <apex:inputField value="{!newAsset.a.PurchaseDate}" styleClass="txtbox2"/>
+                </apex:pageBlockSectionItem>
+    
+                <!-- column 3 -->
+                <apex:pageBlockSectionItem labelStyleClass="nowrap">
+                    <apex:outputText value="Quantity:"/>
+                    <apex:selectList value="{!newAsset.quantity}" size="1">
+                        <apex:selectOptions value="{!qtysops}"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+    
+                <!-- column 1 -->
+                <apex:pageBlockSectionItem labelStyleClass="nowrap">
+                    <apex:outputText value="Acquisition Cost:"/>
+                    <apex:inputField value="{!newAsset.a.Price}" styleClass="txtbox2"/>
+                </apex:pageBlockSectionItem>
+    
+                <!-- column 2 -->
+                <apex:pageBlockSectionItem labelStyleClass="nowrap">
+                    <apex:outputText value="Market Value:"/>
+                    <apex:inputField value="{!newAsset.a.Market_Value__c}" styleClass="txtbox2"/>
+                </apex:pageBlockSectionItem>
+    
+                <!-- column 3 -->
+                <apex:pageBlockSectionItem labelStyleClass="nowrap">
+                    <apex:outputText value="New/Used:"/>
+                    <apex:inputField value="{!newAsset.a.New_Used__c}"/>
+                </apex:pageBlockSectionItem>
+    
+                <!-- column 1 -->
+                <apex:pageBlockSectionItem labelStyleClass="nowrap">
+                    <apex:outputText value="Assign to Account:"/>
+                    <apex:outputPanel >
+                        <input type="text" id="assignedAccNameTxt"
+                               value="{!newAsset.assignedAccName}"
+                               disabled="disabled" readonly="readonly" 
+                               class="txtbox1"/>&nbsp; 
+                        <apex:image alt="Lookup (New Window)" title="Lookup (New Window)"
+                                    style="cursor: pointer;" styleClass="lookupIcon"
+                                    onclick="accountLookup(); return false;" 
+                                    onmouseover="this.className = 'lookupIconOn';" 
+                                    onmouseout="this.className = 'lookupIcon';" 
+                                    url="/s.gif" id="accountLkupImg"/>
+                        <apex:inputHidden id="assignedAccName" value="{!newAsset.assignedAccName}"/>
+                        <apex:inputHidden id="assignedAccId" value="{!newAsset.assignedAccId}"/>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+    
+                <!-- column 2 -->
+                <apex:pageBlockSectionItem labelStyleClass="nowrap">
+                    <apex:outputText value="Transaction Date:"/>
+                    <apex:inputField value="{!newAsset.a.Transaction_Date__c}" styleClass="txtbox2"/>
+                </apex:pageBlockSectionItem>
+    
+                <!-- column 3 -->
+                <apex:pageBlockSectionItem labelStyleClass="nowrap">
+                    <apex:outputText value="Serial Number:"/>
+                    <apex:inputField value="{!newAsset.a.SerialNumber}" styleClass="txtbox2"/>
+                </apex:pageBlockSectionItem>
+    
+            </apex:pageBlockSection>
+          </apex:outputPanel>
+
+        </apex:pageBlock>
+
+        <apex:pageBlock id="assetList">
+            <apex:pageBlockTable value="{!assetList}" var="ac" rendered="{!renderAssetsList}">
+                <apex:column headerClass="right" styleClass="right" width="20px">
+                    <apex:facet name="header">#</apex:facet>
+                    <apex:outputText value="{!ac.recNum}"/>
+                </apex:column>
+                <apex:column rendered="{!renderSelectCBs}">
+                    <apex:facet name="header">
+                        <apex:inputCheckbox id="allcb" value="{!allSelected}"
+                            onclick="paf_checkAll(this.form, this, 'rowcb')"/>
+                    </apex:facet>
+                    <apex:inputCheckbox id="rowcb" value="{!ac.selected}"
+                        onclick="paf_toggleAllCheckbox(this.form, this);"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Asset<br/>Number</apex:facet>
+                    <apex:outputLink value="/{!ac.a.Id}">
+                        <apex:outputText value="{!ac.a.Asset_Number__c}"/>
+                    </apex:outputLink>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Equipment Name</apex:facet>
+                    <apex:outputLink value="/{!ac.a.Product2.Id}">
+                        <apex:outputText value="{!ac.a.Equipment_Name__c}"/>
+                    </apex:outputLink>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Serial #</apex:facet>
+                    <apex:outputText value="{!ac.a.SerialNumber}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">New /<br/>Used</apex:facet>
+                    <apex:outputPanel >
+                        <apex:inputField value="{!ac.a.New_Used__c}" rendered="{!renderInputFlds}"/>
+                        <apex:outputText value="{!ac.a.New_Used__c}" rendered="{!!renderInputFlds}"/>
+                    </apex:outputPanel>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Transaction<br/>Date</apex:facet>
+                    <apex:outputField value="{!ac.a.Transaction_Date__c}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Aquisition<br/>Date</apex:facet>
+                    <apex:outputField value="{!ac.a.PurchaseDate}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Aquisition<br/>Cost</apex:facet>
+                    <apex:outputPanel >
+                        <apex:inputField value="{!ac.a.Price}" rendered="{!renderInputFlds}"/>
+                        <apex:outputField value="{!ac.a.Price}" rendered="{!!renderInputFlds}"/>
+                    </apex:outputPanel>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Market<br/>Value</apex:facet>
+                    <apex:outputPanel >
+                        <apex:inputField value="{!ac.a.Market_Value__c}" rendered="{!renderInputFlds}"/>
+                        <apex:outputField value="{!ac.a.Market_Value__c}" rendered="{!!renderInputFlds}"/>
+                    </apex:outputPanel>
+                </apex:column>
+                <apex:column rendered="{!isAutoNation}">
+                    <apex:facet name="header">Points to Own<br/>Equipment</apex:facet>
+                    <apex:outputPanel >
+                        <apex:outputField value="{!ac.a.AutoNation_Points__c}"/>
+                    </apex:outputPanel>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Assigned Account</apex:facet>
+                    <apex:outputLink value="/{!ac.a.Assigned_Account__r.Id}">
+                        <apex:outputText value="{!ac.assignedAccName}"/>
+                    </apex:outputLink>
+                </apex:column>
+            </apex:pageBlockTable>
+
+            <apex:outputPanel rendered="{!NOT(renderAssetsList)}" styleClass="center">
+                <table width="100%"><tr><td align="center">
+                    <apex:outputText value="No Assets found" styleClass="bold"/>
+                </td></tr></table>
+            </apex:outputPanel>
+
+            <apex:facet name="header">
+                <apex:outputPanel layout="block" rendered="{!renderPaginationBtns}">
+                <table bgcolor="#f8f8f8" class="bold" width="100%"><tr>
+                    <td class="center" width="15%">
+                        <apex:outputText value="{!$Label.Records}: {!pc.recordFrom} - {!pc.recordTo} {!$Label.of} {!pc.resultSize}" 
+                                         styleClass="nowrap"/>
+                    </td>
+
+                    <td class="center" width="70%">
+                            <apex:actionStatus id="pageControls">
+                                <apex:facet name="start">
+                                    <apex:outputText escape="false" style="font-weight: bold;" 
+                                                     value="&nbsp;{!$Label.Please_Wait}...">
+                                        <apex:image value="{!$Resource.spinner}"/>
+                                    </apex:outputText>
+                                </apex:facet>
+                                <apex:facet name="stop">
+                                <apex:outputPanel >
+                                <apex:outputText value="{!$Label.Records_Per_Page}:"/>&nbsp;
+                                <apex:selectList id="pageSize" value="{!pc.pageSize}" size="1" title="{!$Label.Records_Per_Page}">
+                                    <apex:actionSupport event="onchange"
+                                                    rerender="assetList" status="pageControls"/>
+                                    <apex:selectOption itemLabel="10" itemValue="10"/>
+                                    <apex:selectOption itemLabel="25" itemValue="25"/>
+                                    <apex:selectOption itemLabel="50" itemValue="50"/>
+                                    <apex:selectOption itemLabel="100" itemValue="100"/>
+                                    <apex:selectOption itemLabel="200" itemValue="200"/>
+                                </apex:selectList>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <apex:commandButton action="{!pc.first}" disabled="{!NOT(pc.hasPrevious)}" 
+                                                    rerender="assetList" status="pageControls"
+                                                    title="{!$Label.First_Page}" value="<<"/>&nbsp;&nbsp;
+                                <apex:commandButton action="{!pc.previous}" disabled="{!NOT(pc.hasPrevious)}" 
+                                                    rerender="assetList" status="pageControls"
+                                                    title="{!$Label.Prev_Page}" value="<"/>
+                                                    
+                                {!$label.Previous}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{!$label.Next}&nbsp;
+                                
+                                <apex:commandButton action="{!pc.next}" disabled="{!NOT(pc.hasNext)}" 
+                                                    rerender="assetList" status="pageControls"
+                                                    title="{!$Label.Next_Page}" value=">"/>&nbsp;&nbsp;
+                                <apex:commandButton action="{!pc.last}" disabled="{!NOT(pc.hasNext)}" 
+                                                    rerender="assetList" status="pageControls"
+                                                    title="{!$Label.Last_Page}" value=">>"/>
+                                </apex:outputPanel>
+                            </apex:facet>
+                        </apex:actionStatus>
+                    </td>
+
+                    <td class="center" width="15%">
+                        <apex:outputText value="{!$Label.Page}: {!pc.pageNumber} {!$Label.of} {!pc.lastPageNumber}"/>
+                    </td>
+                    </tr></table>
+                </apex:outputPanel>
+            </apex:facet>
+        </apex:pageBlock>
+    </apex:form>
+    
+    <apex:outputPanel style="display: none;">
+        <div id="accountLkupDiv" title="Account Lookup">
+        <apex:form >
+            <apex:outputPanel layout="block">
+                <apex:outputLabel value="Account Name:" for="txtsearch1"/>&nbsp;
+                <apex:inputText value="{!newAsset.assignedAccName}" id="txtsearch1" size="30"/>&nbsp;&nbsp;
+                <apex:outputLabel value="Account Number:" for="txtsearch2"/>&nbsp;
+                <apex:inputText value="{!newAsset.assignedAccNum}" id="txtsearch2" size="10"/>&nbsp;&nbsp;
+                <apex:actionStatus id="accSearchStat">
+                    <apex:facet name="start">
+                        <apex:outputText escape="false" style="font-weight: bold;" 
+                                         value="&nbsp;{!$Label.Please_Wait}...">
+                            <apex:image value="{!$Resource.spinner}"/>
+                        </apex:outputText>
+                    </apex:facet>
+                    <apex:facet name="stop">
+                        <apex:commandButton value="Search" action="{!setAccounts}"
+                                            oncomplete="accountLookup();" reRender="accounts" 
+                                            timeout="60000" status="accSearchStat"/>
+                    </apex:facet>
+                </apex:actionStatus>
+            </apex:outputPanel>
+            <br/><br/>
+            <apex:outputPanel layout="block" id="accounts">
+                <apex:outputPanel layout="block" rendered="{!renderMsgs}">
+                    <apex:repeat value="{!msgs}" var="m">
+                        <apex:outputText styleClass="warning" value="{!m}"/><br/><br/>
+                    </apex:repeat>
+                </apex:outputPanel>
+                <apex:Pageblock >
+                    <apex:pageBlockTable value="{!accounts}" var="a">
+                        <apex:column headerValue="Account Name" width="70%">
+                            <a href="#" onClick="setAccount('{!a.Id}','{!JSENCODE(a.Name)}');">
+                            {!a.Name}</a>
+                        </apex:column>
+                        <apex:column headerValue="AccountNum" width="10%">
+                            {!a.AccountNumber}</apex:column>
+                        <apex:column headerValue="SalesOrg" width="10%">
+                            {!a.SAP_Sales_Org__c}</apex:column>
+                        <apex:column headerValue="SalesGrp" width="10%">
+                            {!a.SAP_Sales_Group_Desc__c}</apex:column>
+                    </apex:pageBlockTable>
+                </apex:Pageblock>
+            </apex:outputPanel>
+            
+        </apex:form>
+        </div>
+    </apex:outputPanel>
+
+    <apex:outputPanel style="display: none;">
+        <div id="equipmntLkupDiv" title="Equipment Lookup">
+        <apex:form >
+            <apex:outputPanel layout="block">
+                <apex:outputLabel value="Equipment Name:" for="txtsearch3"/>&nbsp;
+                <apex:inputText value="{!newAsset.equipmentName}" id="txtsearch3" size="30"/>&nbsp;&nbsp;
+                <apex:actionStatus id="eqpSearchStat">
+                    <apex:facet name="start">
+                        <apex:outputText escape="false" style="font-weight: bold;" 
+                                         value="&nbsp;{!$Label.Please_Wait}...">
+                            <apex:image value="{!$Resource.spinner}"/>
+                        </apex:outputText>
+                    </apex:facet>
+                    <apex:facet name="stop">
+                        <apex:commandButton value="Search" action="{!setEquipments}"
+                                            oncomplete="equipmentLookup();" reRender="equipments" 
+                                            timeout="60000" status="eqpSearchStat"/>
+                    </apex:facet>
+                </apex:actionStatus>
+            </apex:outputPanel>
+            <br/><br/>
+            <apex:outputPanel layout="block" id="equipments">
+                <apex:outputPanel layout="block" rendered="{!renderMsgs}">
+                    <apex:repeat value="{!msgs}" var="m">
+                        <apex:outputText styleClass="warning" value="{!m}"/><br/><br/>
+                    </apex:repeat>
+                </apex:outputPanel>
+                <apex:Pageblock >
+                    <apex:pageBlockTable value="{!equipments}" var="e">
+                        <apex:column headerValue="Equipment Name">
+                            <a href="#" onClick="setEquipment('{!e.Id}','{!JSENCODE(e.Name)}');">
+                                {!e.Make__c} - {!e.Model__c} - {!e.Name}
+                            </a>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:Pageblock>
+            </apex:outputPanel>
+            
+        </apex:form>
+        </div>
+    </apex:outputPanel>
+
+    <apex:outputPanel style="display: none;">
+        <div id="plantLkupDiv" title="Plant Lookup">
+        <apex:form >
+            <apex:outputPanel layout="block">
+                <apex:outputLabel value="Plant Name:" for="txtsearch4"/>&nbsp;
+                <apex:inputText value="{!plant2.Name}" id="txtsearch4" size="30"/>&nbsp;&nbsp;
+                <apex:outputLabel value="Plant Number:" for="txtsearch5"/>&nbsp;
+                <apex:inputText value="{!plant2.AccountNumber}" id="txtsearch5" size="10"/>&nbsp;&nbsp;
+                <apex:actionStatus id="plantSearchStat">
+                    <apex:facet name="start">
+                        <apex:outputText escape="false" style="font-weight: bold;" 
+                                         value="&nbsp;{!$Label.Please_Wait}...">
+                            <apex:image value="{!$Resource.spinner}"/>
+                        </apex:outputText>
+                    </apex:facet>
+                    <apex:facet name="stop">
+                        <apex:commandButton value="Search" action="{!setPlants}"
+                                            oncomplete="plantLookup();" reRender="plants" 
+                                            timeout="60000" status="plantSearchStat"/>
+                    </apex:facet>
+                </apex:actionStatus>
+            </apex:outputPanel>
+            <br/><br/>
+            <apex:outputPanel layout="block" id="plants">
+                <apex:outputPanel layout="block" rendered="{!renderMsgs}">
+                    <apex:repeat value="{!msgs}" var="m">
+                        <apex:outputText styleClass="warning" value="{!m}"/><br/><br/>
+                    </apex:repeat>
+                </apex:outputPanel>
+                <apex:Pageblock >
+                    <apex:pageBlockTable value="{!plants}" var="a">
+                        <apex:column headerValue="Plant Name" width="70%">
+                            <a href="#" onClick="setPlant('{!a.Id}','{!JSENCODE(a.Name)}');">
+                            {!a.Name}</a>
+                        </apex:column>
+                        <apex:column headerValue="PlantNum" width="10%">
+                            {!a.AccountNumber}</apex:column>
+                        <apex:column headerValue="SalesOrg" width="10%">
+                            {!a.SAP_Sales_Org__c}</apex:column>
+                        <apex:column headerValue="SalesGrp" width="10%">
+                            {!a.SAP_Sales_Group_Desc__c}</apex:column>
+                    </apex:pageBlockTable>
+                </apex:Pageblock>
+            </apex:outputPanel>
+            
+        </apex:form>
+        </div>
+    </apex:outputPanel>
+
+    <script>
+        var $j = jQuery.noConflict();
+        
+        $j("#accountLkupDiv").dialog({
+            autoOpen: false,
+            height: 450,
+            width: 700,
+            modal: true,
+            buttons: {
+                Cancel: function() {
+                    $j( this ).dialog( "close" );
+                }
+            },
+            close: function() {}
+        });
+        
+        function accountLookup() {
+            $j("#accountLkupDiv").dialog("open");
+        }
+
+        function setAccount(accid, accname) {
+            $j("[id$=assignedAccId]").val(accid);
+            $j("[id$=assignedAccName]").val(accname);
+            $j('#assignedAccNameTxt').val(accname);
+            $j("#accountLkupDiv").dialog("close");
+        }
+
+        $j("#equipmntLkupDiv").dialog({
+            autoOpen: false,
+            height: 450,
+            width: 700,
+            modal: true,
+            buttons: {
+                Cancel: function() {
+                    $j( this ).dialog( "close" );
+                }
+            },
+            close: function() {}
+        });
+        
+        function equipmentLookup() {
+            $j("#equipmntLkupDiv").dialog("open");
+        }
+
+        function setEquipment(eqpid, eqpname) {
+            $j("[id$=equipmentId]").val(eqpid);
+            $j("[id$=equipmentName]").val(eqpname);
+            $j('#equipmentNameTxt').val(eqpname);
+            $j("#equipmntLkupDiv").dialog("close");
+        }
+
+        $j("#plantLkupDiv").dialog({
+            autoOpen: false,
+            height: 450,
+            width: 700,
+            modal: true,
+            buttons: {
+                Cancel: function() {
+                    $j( this ).dialog( "close" );
+                }
+            },
+            close: function() {}
+        });
+        
+        function plantLookup() {
+            $j("#plantLkupDiv").dialog("open");
+        }
+
+        function setPlant(accid, accname) {
+            $j("[id$=plantId]").val(accid);
+            $j("[id$=plantName]").val(accname);
+            $j('#plantNameTxt').val(accname);
+            $j("#plantLkupDiv").dialog("close");
+        }
+
+        function validateForm(f, s) {
+            var msg = '';
+            if (!paf_checkForAtleastOneRowSelection(f, 'rowcb')) {
+                msg += '*** Select at least one ***\n\n';
+            }
+            if (msg != '') {alert(msg); return false;}
+            return true;
+        }
+    </script>
+    
+    <style>
+        .bold {font-weight: bold;}
+        .center {text-align: center;}
+        .right {text-align: right;}
+        .nowrap {white-space: nowrap;}
+        .warning {font-color: red; font-weight: bold;}
+        .txtbox1 {background-color: #f8f8f8; border: 1px solid #7f9db9; 
+                  width: 14em;}
+        .txtbox2 {width: 14em;}
+    </style>
+</apex:page>

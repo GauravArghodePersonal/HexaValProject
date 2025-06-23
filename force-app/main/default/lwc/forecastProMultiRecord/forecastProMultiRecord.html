@@ -1,0 +1,66 @@
+<template>
+     <div class="slds-card slds-p-left_large"> 
+        <div class="slds-grid slds-no-flex">
+            <div class="slds-col slds-size_1-of-1 slds-p-right_large">
+                <c-forcast-pro-reusable-lookup label="SAP Sales Group" selected-icon-name="standard:account" object-label="SAP Sales Group" object-api-name="SAP_Sales_Group__c" 
+                        field-api-name="Sales_Group_Name__c" other-field-api-name="Sales_Group_Code__c" required="true" onvalueselected={handleValueSelectedOnSapSalesGroup}>
+                </c-forcast-pro-reusable-lookup>
+            </div>
+        </div>
+    </div>
+    <br /><br />
+    <template for:each={arrForcastProRecord} for:item="item" for:index="index">
+        <div class="slds-grid slds-no-flex" key={item.index} >
+            <div class="slds-col slds-size_11-of-12">
+                <div class="slds-card slds-p-left_large">
+                    <div class="slds-grid slds-no-flex">
+                        <div class="slds-col slds-size_1-of-6 slds-p-right_large">
+                            <lightning-combobox name="Forecast_Fiscal_Year__c" label="Forecast Fiscal Year" data-index={item.index} class="validate" value={forcastFiscalYear} placeholder="Select Fiscal Year" required options={fiscalYearOptions} onchange={handleFiscalYearChange} ></lightning-combobox>
+                        </div>
+                        <div class="slds-col slds-size_1-of-6 slds-p-right_large">
+                            <lightning-input name="Name" data-index={item.index} label="Forecast Name" required class="validate" onchange={handleChange}></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-6 slds-p-right_large">
+                            <lightning-combobox name="Forecast_Month__c" label="Forecast Month" data-index={item.index} class="validate" placeholder="Select Month" required options={item.lstMonthOptions} onchange={handleChange} ></lightning-combobox>
+                            <!--<lightning-input-field field-name={forecastMonth} value={lstMonthOptions} placeholder="Select Month" class="slds-form-element slds-form-element_stacked"></lightning-input-field>-->
+                        </div>
+                        <div class="slds-col slds-size_1-of-6 slds-p-right_large">
+                            <lightning-input name="Monthly_Revenue_Estimated__c" label="Monthly Revenue Estimated" class="validate" data-index={item.index} type="number" formatter="currency" required onchange={handleChange}></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-6 slds-p-right_large">
+                            <lightning-input name="Monthly_GP_Estimated__c" label="Monthly GP Estimated" class="validate" data-index={item.index} type="number" formatter="currency" required onchange={handleChange}></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-6 slds-p-right_large">
+                            <lightning-textarea name="Note__c" label="Note" data-index={item.index} class="validate" onchange={handleChange}></lightning-textarea>
+                        </div>
+                    </div>            
+                </div>
+            </div>
+            <div class="slds-col slds-size_1-of-12 alignMiddle" >
+                <lightning-icon icon-name="utility:delete" alternative-text="Delete" data-index={index} size="small" variant="brand" onclick={deleteNewRow} ></lightning-icon>
+                <lightning-icon icon-name="utility:add" alternative-text="Add" size="small" variant="brand" onclick={addNewRow} ></lightning-icon>
+            </div>
+        </div>
+        
+    </template>
+    <div class="footer slds-p-bottom_large">
+        <lightning-button type="button" name="cancel" label="Cancel" onclick={closeAction} class="slds-m-left_large"></lightning-button>
+        <lightning-button type="submit" name="submit" label="Save" onclick={handleSubmit} variant="brand" class="slds-m-left_large"></lightning-button>
+    </div>
+</template>
+    <!--<template for:each={numberOfRows} for:item="index">
+        <div class="slds-grid slds-no-flex" key={index} >
+            <div class="slds-col slds-size_11-of-12">
+                <c-forecast-pro-data-new key-index={index} onparentmethodcall={handleOnSuccess} ></c-forecast-pro-data-new>
+            </div>
+            <div class="slds-col slds-size_1-of-12 alignMiddle" >
+                <lightning-icon icon-name="utility:delete" alternative-text="Delete" data-index={index} size="small" variant="brand" onclick={deleteNewRow} ></lightning-icon>
+                <lightning-icon icon-name="utility:add" alternative-text="Add" size="small" variant="brand" onclick={addNewRow} ></lightning-icon>
+            </div>
+        </div>
+    </template>
+     <div class="footer slds-p-bottom_large">
+        <lightning-button type="button" name="cancel" label="Cancel" onclick={closeAction} class="slds-m-left_large"></lightning-button>
+        <lightning-button type="submit" name="submit" label="Save" onclick={handleSubmit} variant="brand" class="slds-m-left_large"></lightning-button>
+    </div>-->
+    <!--<c-forecast-pro-data-new onparentmethodcall={handleOnSuccess} ></c-forecast-pro-data-new>-->

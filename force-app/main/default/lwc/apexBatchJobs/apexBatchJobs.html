@@ -1,0 +1,97 @@
+<template>
+    <lightning-card>
+        <h3 slot="title">
+            <lightning-icon icon-name="standard:job_profile" size="small"></lightning-icon>
+            &NonBreakingSpace;Apex Batch Jobs
+        </h3>
+
+        <div class="slds-card__body slds-card__body_inner">
+            <div class="slds-grid slds-grid--pull-padded">
+                <div class="slds-col--padded slds-size_2-of-5">
+                    <div class="slds-form-element__group">
+                        <div class="slds-grid slds-grid--pull-padded">
+                            <div class="slds-col--padded slds-form-element slds-size_8-of-12">
+                                    <label class="slds-form-element__label" for="viewOptions">Available Job View:</label>
+                                    <select class="slds-select" id="viewOptions" onchange={handleViewChange}>
+                                        <template for:each={viewOptions} for:item="viewItem">
+                                            <option key={viewItem.value} value={viewItem.value}>
+                                                {viewItem.label}
+                                            </option>
+                                        </template>
+                                    </select>
+                            </div>
+                            <div class="slds-col--padded slds-form-element slds-size_4-of-12 horizontal-with-select">
+                                <lightning-button label="Go" 
+                                    title="Non-primary action" 
+                                    class="slds-m-left_x-small"
+                                    onclick={handleViewClick}></lightning-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col--padded slds-size_2-of-5">
+                    <div class="slds-form-element__group">
+                        <div class="slds-grid slds-grid--pull-padded">
+                            <div class="slds-col--padded slds-form-element slds-size_8-of-12">
+                                    <label class="slds-form-element__label" for="viewOptions">Avaialable Job List:</label>
+                                    <select class="slds-select" id="jobOptions" onchange={handleJobChange} name="jobToSubmit">
+                                        <template for:each={jobOptions} for:item="jobItem">
+                                           <option key={jobItem.value} value={jobItem.value}>
+                                                {jobItem.label}
+                                            </option>
+                                        </template>
+                                   </select>
+                            </div>
+                            <div class="slds-col--padded slds-form-element slds-size_4-of-12 horizontal-with-select">
+                                <lightning-button label="Submit Job" 
+                                    title="Non-primary action" 
+                                    onclick={handleJobClick}
+                                    class="slds-m-left_x-small"
+                                    disabled={enableSubmitJobButton}></lightning-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col--padded slds-size_1-of-5 slds-align--absolute-center">
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__control">
+                            <label class="slds-form-element__label" for="viewOptions">Data Will refresh in :</label>
+                            <p class="">{counter} seconds. &NonBreakingSpace;<lightning-progress-ring value={percentage}></lightning-progress-ring></p>
+                        </div>
+
+                    </div>
+                </div>  
+            </div>
+            <hr>
+            <div class="slds-grid slds-grid--pull-padded">
+                <div class="slds-col--padded slds-size_1-of-1">
+                    <template if:true={isLoading}>
+                        <div class="loader">
+                            <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+                        </div>
+                    </template>   
+                    <template if:false={isLoading}>
+                        <template if:false={jobListLargerThanZero}>
+                            <div class="slds-text-heading_medium slds-text-align_center">There is no data available for this view.</div>
+                            <br/>
+                        </template>
+                        <template if:true={jobListLargerThanZero}>
+                            <c-extended-lightning-datatable
+                                key-field="id"
+                                data={jobsData}
+                                columns={columns}>
+                            </c-extended-lightning-datatable>
+                            <!-- <lightning-datatable
+                                    key-field="id"
+                                    data={jobsData}
+                                    columns={columns}>
+                            </lightning-datatable> -->
+                            <br/>
+                            <br/>
+                        </template>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </lightning-card>
+</template>

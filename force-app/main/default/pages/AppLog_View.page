@@ -1,0 +1,39 @@
+<apex:page standardController="AppLog__c" extensions="AppLog_View_Extension">
+    <apex:form >
+
+        <apex:sectionHeader title="App Log - {!applog.Name}" subtitle="{!applog.Application_Name__c} - {!applog.Log_Category__c} - {!applog.Log_Type__c}"/>
+        <apex:pageBlock title="" mode="maindetail">
+            <apex:commandButton action="{!list}" value="Back to View List"/>
+      
+            <apex:pageBlockSection title="" columns="1" collapsible="false">
+                <!-- Show Detail Section -->
+                <apex:detail subject="{!AppLog__c.Id}" relatedList="true" title="false"/>
+            </apex:pageBlockSection>
+      
+            <apex:pageBlockSection title="Related App Logs" rendered="{!showRelatedAppLogs}" columns="1" collapsible="false">
+                <!-- Show Related AppLog Records based on related To Key -->
+                <apex:pageBlockTable value="{!relatedAppLogs}" var="item">
+                    <apex:column title="App Log Name">
+                        <apex:outputLink value="/{!item.Id}">{!item.Name}</apex:outputLink>
+                    </apex:column>
+        
+                    <apex:column value="{!item.User__c}"/> 
+                    <apex:column value="{!item.Application_Name__c}"/> 
+                    <apex:column value="{!item.Log_Type__c}"/> 
+                    <apex:column value="{!item.Log_Category__c}"/> 
+                    <apex:column value="{!item.Log_Date_Time__c}"/> 
+                    <apex:column value="{!item.Log__c}"/> 
+                    <apex:column value="{!item.Record_Key__c}"/> 
+                    <apex:column value="{!item.Version_Info__c}"/> 
+                </apex:pageBlockTable> 
+            </apex:pageBlockSection> 
+    
+            <apex:pageBlockSection title="Snapshot at Time of Error" rendered="{!showSnapshot}" columns="1" collapsible="false">
+                <!-- Show Snapshot.png Attachment if it exists -->
+                <apex:outputPanel >
+                    <img src="data:{!snapshotAttachment.ContentType};base64,{!snapshot}" width="100%"/>
+                </apex:outputPanel>
+            </apex:pageBlockSection> 
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

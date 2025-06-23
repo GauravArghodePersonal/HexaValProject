@@ -1,0 +1,25 @@
+<template>
+    <div class="product-grid">
+        <template for:each={productsInfo} for:item="product">
+            <div key={product.Id} class="product-card">
+                <div class="product-image" onclick={navigateToProduct} data-id={product.Id} data-title={product.productTitle}>
+                    <img src={product.ImageUrl} alt={product.Title}/>
+                </div>
+                <div class="product-title" onclick={navigateToProduct} data-id={product.Id} data-title={product.productTitle}>
+                    {product.productTitle}
+                </div>
+                <ul class="product-details">
+                    <template for:each={product.Details} for:item="detail">
+                        <li key={detail.label}>{detail.label}: {detail.value}</li>
+                    </template>
+                </ul>
+                <button data-id={product.Id} class="add-to-cart-button" onclick={handleAddToCart}>
+                    Add to Cart 
+                    <svg class="button_icon">
+                        <use xlink:href={cartButton}></use>
+                    </svg>
+                </button>
+            </div>
+        </template>
+    </div>
+</template>

@@ -1,0 +1,267 @@
+<apex:page standardController="Service_Provider_Profile__c" extensions="Service_Provider_Profile_Extension">
+    <apex:stylesheet value="{!$Resource.tableFormatting}"/>
+
+	<apex:outputText value="{!Service_Provider_Profile__c.id} {!Service_Provider_Profile__c.name}" rendered="false"/>
+
+	<apex:sectionHeader title="Valvoline Service Provider Profile"/>
+    	<apex:form >
+
+        	<apex:pageBlock title="">
+			    <apex:pageBlockButtons >
+					<apex:commandButton action="{!edit}" value="Edit"/>
+					<apex:commandButton action="{!generatePDF}" value="Generate PDF"/>
+			<!-- 		<apex:commandButton action="{!generateXLS}" value="Generate XLS"/>  -->
+				</apex:pageBlockButtons>	
+
+			<apex:panelGrid columns="4" id="StoreNameContactGrid" width="100%" styleClass="TableStyleClass" captionClass="TableCaptionClass" headerClass="TableHeaderClass" rowClasses="TableRowClasses_odd,TableRowClasses_even" columnClasses="GeneralInfo_Label_ColumnFormat,GeneralInfo_Label_DataFormat">
+			
+				<apex:outputText value="Store Name:"/>
+               	<apex:outputField value="{!serviceProviderProfile.DIFM_Installer_Data__r.Account__c}"/>
+				<apex:outputText value="Contact:"/>
+               	<apex:outputField value="{!serviceProviderProfile.DIFM_Installer_Data__r.Contact__c}"/>
+
+				<apex:outputText value="Effective Date:"/>
+               	<apex:outputField value="{!serviceProviderProfile.Effective_Date__c}"/>
+				<apex:outputText value="Expiry Date:"/>
+				<apex:outputField value="{!serviceProviderProfile.Expiry_Date__c}"/>
+
+			</apex:panelGrid>
+
+			<p/>
+
+			<apex:tabPanel switchType="client" selectedTab="name2" id="theTabPanel">
+
+				<apex:tab label="General Information" name="generalInformation" id="generalInformation">
+    	
+					<apex:panelGrid columns="4" id="GeneralInformationGrid" width="935px" styleClass="TableStyleClass" captionClass="TableCaptionClass" headerClass="TableHeaderClass" rowClasses="TableRowClasses_odd,TableRowClasses_even" columnClasses="GeneralInfo_Label_ColumnFormat,GeneralInfo_Label_DataFormat">
+                        <apex:facet name="caption">General Information</apex:facet>
+					
+						<apex:outputText value="Store Name:"/>
+	                	<apex:outputField value="{!serviceProviderProfile.DIFM_Installer_Data__r.Account__c}"/>
+						<apex:outputText value=""/>
+						<apex:outputText value=""/>
+
+						<apex:outputText value="Contact:"/>
+	                	<apex:outputField value="{!serviceProviderProfile.DIFM_Installer_Data__r.Contact__c}"/>
+						<apex:outputText value=""/>
+						<apex:outputText value=""/>
+
+						<apex:outputText value="Title:"/>
+	                	<apex:outputField value="{!serviceProviderProfile.DIFM_Installer_Data__r.Contact__r.Title}"/>
+						<apex:outputText value=""/>
+						<apex:outputText value=""/>
+
+						<apex:outputText value="Address:"/>
+						<apex:outputField value="{!serviceProviderProfile.DIFM_Installer_Data__r.Contact__r.MailingStreet}"/>
+						<apex:outputText value=""/>
+						<apex:outputText value=""/>
+
+						<apex:outputText value="City:"/>
+						<apex:outputField value="{!serviceProviderProfile.DIFM_Installer_Data__r.Contact__r.MailingCity}"/>
+						<apex:outputText value=""/>
+						<apex:outputText value=""/>
+
+						<apex:outputText value="State:"/>
+						<apex:outputField value="{!serviceProviderProfile.DIFM_Installer_Data__r.Contact__r.MailingState}"/>
+						<apex:outputText value="Zip Code:"/>
+						<apex:outputField value="{!serviceProviderProfile.DIFM_Installer_Data__r.Contact__r.MailingPostalCode}"/>
+
+           				<apex:outputText value="Phone:"/>
+						<apex:outputField value="{!serviceProviderProfile.DIFM_Installer_Data__r.Contact__r.Phone}"/>
+						<apex:outputText value="Cell Phone:"/>
+						<apex:outputField value="{!serviceProviderProfile.DIFM_Installer_Data__r.Contact__r.MobilePhone}"/>
+
+						<apex:outputText value="Email:"/>
+						<apex:outputField value="{!serviceProviderProfile.DIFM_Installer_Data__r.Contact__r.Email}"/>
+						<apex:outputText value=""/>
+						<apex:outputText value=""/>
+
+						<apex:outputText value="SAP Number:"/>
+						<apex:outputField value="{!serviceProviderProfile.DIFM_Installer_Data__r.Account__r.AccountNumber}"/>
+						<apex:outputText value=""/>
+						<apex:outputText value=""/>
+					</apex:panelGrid>
+
+			</apex:tab>
+
+					<apex:tab label="Service Provider Profile" name="serviceProviderProfile" id="serviceProviderProfile">
+
+                <apex:pageBlockSection columns="2" collapsible="false" showHeader="false">
+				    <apex:dataTable value="{!serviceProviderQuestions}" var="lines" id="ServiceProviderProfileGrid" width="625px" styleClass="TableStyleClass" captionClass="TableCaptionClass" headerClass="TableHeaderClass" rowClasses="TableRowClasses_odd,TableRowClasses_even" columnClasses="ServiceProviderProfileQuestions_QuestionNumberFormat,ServiceProviderProfileQuestions_ColumnFormat,ServiceProviderProfileAnswers_ColumnFormat">
+                        <apex:facet name="caption">Services Provider Questions</apex:facet>
+						<apex:column >
+ 						    <apex:outputText escape="false" value="{!lines.listPosition_Formatted}"/> 
+						</apex:column>
+						<apex:column >
+ 						    <apex:outputText escape="false" value="{!lines.question_Formatted}"/> 
+						</apex:column>
+						<apex:column >
+  						    <apex:outputText escape="false" value="{!lines.fieldValue_Formatted}"/>&nbsp
+<!-- 
+							<apex:commandButton action="{!save}" value="Save" id="theButton"/>
+							<apex:commandButton action="{!save}" value="Save" id="theButton"/>
+							<apex:commandButton action="{!save}" value="Save" id="theButton"/>  						    
+							<apex:commandButton action="{!save}" value="Save" id="theButton"/>
+							<apex:commandButton action="{!save}" value="Save" id="theButton"/>
+							<apex:commandButton action="{!save}" value="Save" id="theButton"/>
+							
+							<apex:image value="{!$Resource.HelpQuestionMark}" onmouseover="" onmouseout="" rerender="OilChangeVolVerificationGrid" rendered="{!if(lines.question_Formatted='What is the average annual lubricant volume per store?','true','false)}"/>  
+  						    <apex:image value="{!$Resource.HelpQuestionMark}" onmouseover="" onmouseout="" rerender="PremiumVerificationGrid" rendered="{!if(lines.question_Formatted='What is the percentage of premium oil sales?','true','false)}"/>  
+  						    <apex:image value="{!$Resource.HelpQuestionMark}" onmouseover="" onmouseout="" rerender="CPROVolVerificationGrid" rendered="{!if(lines.question_Formatted='What is the Average Monthly CPRO Volume?','true','false)}"/>  
+ -->  						      						    
+						</apex:column>
+					</apex:dataTable>
+
+					<apex:panelGroup >
+						<apex:panelGrid columns="2" id="OilChangeVolVerificationGrid" rendered="{!ShowOilChangeVerification}" width="300px" styleClass="TableStyleClass" captionClass="TableCaptionClass" headerClass="TableHeaderClass" rowClasses="TableRowClasses_odd,TableRowClasses_even,TableRowClasses_odd,TableRowClasses_even,TableRowClasses_odd,VerificationFooterLine" columnClasses="OCVV_Col1,OCVV_Col2">
+	                        <apex:facet name="caption">Oil Change Vol Verification</apex:facet>
+							<apex:outputText value="Annual Lube Gallons"/>
+							<apex:outputText value="{!Avg_Annual_Lubricant_Volume_per_Store_Formatted}"/>
+							
+							<apex:outputText value="Oil Changes @ {!serviceProviderProfile.Average_Gallons_of_Oil_per_Oil_Change__c} GAL"/>
+							<apex:outputText value="{!Annual_Oil_Changes_based_on_Avg_Gallons_Formatted}"/>
+	
+							<apex:outputText value="Workdays/year"/>
+							<apex:outputText value="{!Workdays_in_a_Year_Formatted}"/>
+	
+							<apex:outputText value="Months"/>
+							<apex:outputText value="{!Oil_Change_Volume_Number_of_Months_Formatted}"/>
+	
+							<apex:outputText value="Oil Changes / Mon"/>
+							<apex:outputText value="{!Oil_Changes_Month_Formatted}"/>
+	
+							<apex:outputText value="Oil Changes / Day"/>
+							<apex:outputText value="{!Oil_Changes_Day_Formatted}"/>
+						</apex:panelGrid>
+						<BR>
+						<apex:panelGrid columns="2" id="PremiumVerificationGrid" rendered="{!ShowPremiumVerification}" width="300px" styleClass="TableStyleClass" captionClass="TableCaptionClass" headerClass="TableHeaderClass" rowClasses="TableRowClasses_odd,TableRowClasses_even" columnClasses="OCVV_Col1,OCVV_Col2">
+	                        <apex:facet name="caption">Premium Verification</apex:facet>
+							<apex:outputText value="Prem. Penetration"/>
+							<apex:outputText value="{!Percentage_of_Premium_Oil_Sales_Formatted}"/>
+							
+							<apex:outputText value="Premium Oil Changes/Day"/>
+							<apex:outputText value="{!Premium_Oil_Changes_Day_Formatted}"/>
+						</apex:panelGrid>
+						<BR>
+						<apex:panelGrid columns="2" id="CPROVolVerificationGrid" rendered="{!ShowCPROVolVerification}" width="300px" styleClass="TableStyleClass" captionClass="TableCaptionClass" headerClass="TableHeaderClass" rowClasses="TableRowClasses_odd,TableRowClasses_even,TableRowClasses_odd,TableRowClasses_even,VerificationFooterLine" columnClasses="OCVV_Col1,OCVV_Col2">
+	                        <apex:facet name="caption">CPRO Vol Verification</apex:facet>
+							<apex:outputText value="Avg Daily Car Count"/>
+							<apex:outputText value="{!Average_Daily_Total_Car_Count_per_Store_Formatted}"/>
+							
+							<apex:outputText value="Workdays/year"/>
+							<apex:outputText value="{!Workdays_in_a_Year_Formatted}"/>
+	
+							<apex:outputText value="Annual Car Count"/>
+							<apex:outputText value="{!Annual_Car_Count_Formatted}"/>
+	
+							<apex:outputText value="Months"/>
+							<apex:outputText value="{!Oil_Change_Volume_Number_of_Months_Formatted}"/>
+	
+							<apex:outputText value="Pot'l CPRO's / Mon"/>
+							<apex:outputText value="{!Potential_CPRO_s_Month_Formatted}"/>
+						</apex:panelGrid>
+					</apex:panelGroup>
+					    
+				</apex:pageBlockSection>
+
+			</apex:tab>
+
+					<apex:tab label="Services Profile" name="servicesProfile" id="servicesProfile">
+
+                <apex:pageBlockSection columns="2" collapsible="false" showHeader="false">
+                    <apex:dataTable value="{!serviceProfileQuestions}" var="lines" id="serviceProfileQuestionsGrid" border="1" width="775px" styleClass="TableStyleClass" captionClass="TableCaptionClass" headerClass="TableHeaderClass" rowClasses="TableRowClasses_odd,TableRowClasses_even" columnClasses="GQ_Question_ColumnFormat,Buying_Valvoline_Value_ColumnFormat,Average_Daily_Service_Volume_Value_ColumnFormat,Retail_Price_Value_ColumnFormat,Current_Installer_Product_Cost_Value_ColumnFormat,Include_Labor_Rate_Value_ColumnFormat,Percent_of_Hours_to_Complete_Value_ColumnFormat,Total_Labor_Costs_Value_ColumnFormat">
+                        <apex:column styleClass="{!if(lines.isBlankLine=='true','formatBlankColumn',if(lines.isHeaderLine=='true','formatHeaderColumn',''))}">
+                            <apex:facet name="header">Services Profile</apex:facet>
+                            <apex:outputText escape="false" value="{!lines.GQ_Question_Formatted}" rendered="{!lines.isQuestion}" />
+                            <apex:outputText escape="false" value="&nbsp" rendered="{!lines.isBlankLine}" styleClass="formatBlankLine"/>
+                            <apex:outputText escape="false" value="{!lines.GQ_Question_Formatted}" rendered="{!lines.isHeaderLine}" styleClass="formatHeaderLine"/>
+                        </apex:column>
+                        <apex:column styleClass="{!if(lines.isBlankLine=='true','formatBlankColumn',if(lines.isHeaderLine=='true','formatHeaderColumn',''))}">
+                            <apex:facet name="header">Buying<BR>Valvoline?</CENTER></apex:facet>
+                            <apex:outputText escape="false" value="{!lines.Buying_Valvoline_Value_Formatted}" rendered="{!lines.isQuestion}"/>  
+                            <apex:outputText escape="false" value="&nbsp" rendered="{!lines.isBlankLine}" styleClass="formatBlankLine"/>
+                            <apex:outputText escape="false" value="&nbsp" rendered="{!lines.isHeaderLine}" styleClass="formatHeaderLine"/>
+                        </apex:column>
+                        <apex:column styleClass="{!if(lines.isBlankLine=='true','formatBlankColumn',if(lines.isHeaderLine=='true','formatHeaderColumn',''))}">
+                            <apex:facet name="header">Average<BR>Daily<BR>Service<BR>Volume</CENTER></apex:facet>
+                            <apex:outputText escape="false" value="{!lines.Average_Daily_Service_Volume_Value_Formatted}" rendered="{!lines.isQuestion}"/>  
+                            <apex:outputText escape="false" value="&nbsp" rendered="{!lines.isBlankLine}" styleClass="formatBlankLine"/>
+                            <apex:outputText escape="false" value="&nbsp" rendered="{!lines.isHeaderLine}" styleClass="formatHeaderLine"/>
+                        </apex:column>
+                        <apex:column styleClass="{!if(lines.isBlankLine=='true','formatBlankColumn',if(lines.isHeaderLine=='true','formatHeaderColumn',''))}">
+                            <apex:facet name="header">Retail<BR>Price</apex:facet>
+                            <apex:outputText escape="false" value="{!lines.Retail_Price_Value_Formatted}" rendered="{!lines.isQuestion}"/>  
+                            <apex:outputText escape="false" value="&nbsp" rendered="{!lines.isBlankLine}" styleClass="formatBlankLine"/>
+                            <apex:outputText escape="false" value="&nbsp" rendered="{!lines.isHeaderLine}" styleClass="formatHeaderLine"/>
+                        </apex:column>
+                        <apex:column styleClass="{!if(lines.isBlankLine=='true','formatBlankColumn',if(lines.isHeaderLine=='true','formatHeaderColumn',''))}">
+                            <apex:facet name="header">Current<BR>Installer<BR>Product<BR>Cost</apex:facet>
+                            <apex:outputText escape="false" value="{!lines.Current_Installer_Product_Cost_Value_Formatted}" rendered="{!lines.isQuestion}"/>  
+                            <apex:outputText escape="false" value="&nbsp" rendered="{!lines.isBlankLine}" styleClass="formatBlankLine"/>
+                            <apex:outputText escape="false" value="&nbsp" rendered="{!lines.isHeaderLine}" styleClass="formatHeaderLine"/>
+                        </apex:column>
+                        <apex:column styleClass="{!if(lines.isBlankLine=='true','formatBlankColumn',if(lines.isHeaderLine=='true','formatHeaderColumn',''))}">
+                            <apex:facet name="header">Include<BR>Labor<BR>Rate?</apex:facet>
+                            <apex:outputText escape="false" value="{!lines.Include_Labor_Rate_Value_Formatted}" rendered="{!lines.isQuestion}"/>  
+                            <apex:outputText escape="false" value="&nbsp" rendered="{!lines.isBlankLine}" styleClass="formatBlankLine"/>
+                            <apex:outputText escape="false" value="&nbsp" rendered="{!lines.isHeaderLine}" styleClass="formatHeaderLine"/>
+                        </apex:column>
+                        <apex:column styleClass="{!if(lines.isBlankLine=='true','formatBlankColumn',if(lines.isHeaderLine=='true','formatHeaderColumn',''))}">
+                            <apex:facet name="header"><apex:outputText escape="false" value="{!PercentofHourtoCompleteHeader}"/></apex:facet>
+                            <apex:outputText escape="false" value="{!lines.Percent_of_Hours_to_Complete_Value_Formatted}" rendered="{!lines.isQuestion}"/>  
+                            <apex:outputText escape="false" value="&nbsp" rendered="{!lines.isBlankLine}" styleClass="formatBlankLine"/>
+                            <apex:outputText escape="false" value="&nbsp" rendered="{!lines.isHeaderLine}" styleClass="formatHeaderLine"/>
+                        </apex:column>
+                        <apex:column styleClass="{!if(lines.isBlankLine=='true','formatBlankColumn',if(lines.isHeaderLine=='true','formatHeaderColumn',''))}">
+                            <apex:facet name="header">Total</CENTER></apex:facet>
+                            <apex:outputText escape="false" value="{!lines.Total_Labor_Costs_Value_Formatted}" rendered="{!lines.isQuestion}"/>  
+                            <apex:outputText escape="false" value="&nbsp" rendered="{!lines.isBlankLine}" styleClass="formatBlankLine"/>
+                            <apex:outputText escape="false" value="&nbsp" rendered="{!lines.isHeaderLine}" styleClass="formatHeaderLine"/>
+                        </apex:column>
+                    </apex:dataTable>
+  
+                      <apex:dataTable value="{!serviceProfileQuestions}" rows="4" var="lines" id="QuartCalculatorGrid" border="1" width="150px" styleClass="TableStyleClass" captionClass="TableCaptionClass" headerClass="TableHeaderClass" rowClasses="TableRowClasses_odd,TableRowClasses_even" columnClasses="Quart_Cost_Label_Value_ColumnFormat,Quart_Costs_Value_ColumnFormat">
+                        <apex:facet name="caption">Quart Costs</apex:facet>
+                        <apex:column >
+                            <apex:outputText escape="false" value="{!lines.Quart_Cost_Label_Value_Formatted}"/>  
+                        </apex:column>
+                        <apex:column >
+                            <apex:outputText escape="false" value="{!lines.Quart_Costs_Value_Formatted}"/>  
+                        </apex:column>
+                    </apex:dataTable>
+  
+                        
+                </apex:pageBlockSection>
+
+			</apex:tab>
+					<apex:tab label="Comments" name="comments" id="comments">
+
+
+                <apex:pageBlockSection columns="1" collapsible="false" showHeader="false">
+
+					<apex:panelGrid columns="1" id="GeneralInformationGrid" width="935px" styleClass="TableStyleClass" captionClass="TableCaptionClass" headerClass="TableHeaderClass" rowClasses="TableRowClasses_even" columnClasses="GeneralInfo_Label_DataFormat">
+                        <apex:facet name="caption">Comments</apex:facet>
+					
+	                	<apex:outputField value="{!serviceProviderProfile.Comments__c}" styleClass="Comments_Format"/>
+
+					</apex:panelGrid>
+				</apex:pageBlockSection>
+			
+			</apex:tab>
+			</apex:tabPanel>
+		
+			</apex:pageBlock>
+
+				<apex:tabPanel switchType="client" selectedTab="name2" id="theTabPanel">
+			
+					<apex:tab label="Product Economics" name="productEconomics" id="productEconomics"></apex:tab>
+					<apex:tab label="Marketing Solutions" name="marketingSolutions" id="marketingSolutions"></apex:tab>
+					<apex:tab label="Plans of Action" name="plansofAction" id="plansofAction"></apex:tab>
+					<apex:tab label="Follow-up" name="followup" id="followup"></apex:tab>
+					
+				</apex:tabPanel>
+			
+
+
+		</apex:form>
+ </apex:page>

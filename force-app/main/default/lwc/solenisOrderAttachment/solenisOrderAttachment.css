@@ -1,0 +1,28 @@
+.Main {
+    
+   
+    padding: 10px;
+    margin: auto;
+    
+    
+  }
+  td{
+    padding: 10px;
+  }
+
+  
+  .smalldevice {
+    display:none;
+  }
+  .smalldeviceHidden {
+    display:block;
+  }
+
+@media screen and (max-width: 768px) {
+  .smalldevice {
+    display:block;
+  }
+  .smalldeviceHidden {
+    display:none;
+  }
+}

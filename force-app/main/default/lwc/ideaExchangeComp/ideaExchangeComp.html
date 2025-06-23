@@ -1,0 +1,162 @@
+<template>
+    <div class="slds-m-around_large">
+        <div if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading..." variant="brand">
+            </lightning-spinner>
+        </div>
+    </div>
+    <div>
+        <lightning-layout horizontal-align="start" multiple-rows="true">
+            <lightning-layout-item flexibility="no-grow" size="12" small-device-size="12" large-device-size="3" medium-device-size="3" padding="around-small">
+                <div>
+                    <lightning-card>
+                        <div>
+                            <lightning-vertical-navigation selected-item={selectedCategories}
+                                onselect={handleCateoriesChange}>
+                                <lightning-vertical-navigation-section label="Category">
+                                    <lightning-vertical-navigation-item label="All Ideas" name="All_Ideas">
+                                    </lightning-vertical-navigation-item>
+                                    <template for:each={categories} for:item="item" for:index="index">
+                                        <lightning-vertical-navigation-item label={item.value} name={item.key}
+                                            key={item.key}>
+                                        </lightning-vertical-navigation-item>
+                                    </template>
+                                </lightning-vertical-navigation-section>
+                            </lightning-vertical-navigation>
+                        </div>
+                    </lightning-card>
+                </div>
+            </lightning-layout-item>
+            <lightning-layout-item flexibility="no-grow" size="12" small-device-size="12" large-device-size="9" medium-device-size="9" padding="around-small">
+                <lightning-layout class="slds-m-bottom_small" horizontal-align="center" multiple-rows="true">
+                    <lightning-layout-item size="12" large-device-size="2" medium-device-size="2" small-device-size="12" class="slds-p-right_small">
+                        <lightning-input type="search" label="Search" onchange={handleSearchChange}
+                            data-item="searchInput">
+                        </lightning-input>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="12" large-device-size="2" medium-device-size="2" small-device-size="12" class="slds-p-right_small">
+                        <lightning-combobox name="sortFilter" label="Sort" value={selectedSortFilter}
+                            options={sortOptions} onchange={handleSortChange} data-item="sortInput">
+                        </lightning-combobox>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="12" large-device-size="3" medium-device-size="3" small-device-size="12" class="slds-p-right_small">
+                        <lightning-combobox name="statusFilter" label="Status Filter" data-item="statusInput"
+                            options={status} onchange={handleStatusChange}>
+                        </lightning-combobox>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="12" large-device-size="3" medium-device-size="3" small-device-size="12" class="slds-p-right_small">
+                        <lightning-combobox name="ideaFilter" label="Idea Filter" data-item="ideaInput"
+                            options={ideaFilterOption} onchange={handleIdeaFilterChange}>
+                        </lightning-combobox>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="12" large-device-size="2" medium-device-size="2" small-device-size="12" class="slds-text-align_right slds-m-top_large">
+                        <lightning-button variant="brand" label="Post a New Idea" onclick={handlePostAnIdea} title="Post an Idea"></lightning-button>
+                    </lightning-layout-item>
+                </lightning-layout>
+
+                <template if:false={hasData}>
+                    <div>
+                        No idea found
+                    </div>
+                </template>
+
+                <template for:each={ideas} for:item="item" for:index="index">
+                    <div class="slds-m-bottom_medium" key={item.oIdea.id}>
+                        <lightning-card>
+                            <lightning-layout horizontal-align="center" multiple-rows="true">
+                                <lightning-layout-item size="12" large-device-size="8" medium-device-size="8" small-device-size="12">
+                                    <a onclick={handleIdeaDetail} name={item.oIdea.Id} id={item.oIdea.Id} style="padding-left:1rem; padding-right:1rem; font-size:16px">
+                                        {item.oIdea.Name}
+                                    </a>
+                                    <div
+                                        style="margin-top: 1rem; padding-left:1rem; padding-right:1rem; ">
+                                        <lightning-formatted-rich-text value={item.oIdea.What_problem_does_your_idea_address__c}>
+                                        </lightning-formatted-rich-text>
+                                        <br/>
+                                        <lightning-formatted-rich-text value={item.oIdea.What_is_your_Idea_Solution__c}>
+                                        </lightning-formatted-rich-text>
+                                    </div>
+                                     
+                                   
+                                    <div style="padding-top: .6rem; padding-left:1rem; padding-right:1rem;">
+                                        <a onclick={handleIdeaDetail} name={item.oIdea.Id} id={item.oIdea.Id}>{item.oIdea.Total_Comments__c}
+                                            comments</a>&nbsp; | &nbsp;Posted on &nbsp;
+                                        <lightning-formatted-date-time value={item.oIdea.CreatedDate} year="numeric"
+                                            day="2-digit" month="long" hour="2-digit" minute="2-digit"   hour12="true" class="fs-12 font-normal"  >
+                                        </lightning-formatted-date-time>
+                                    </div>
+                                </lightning-layout-item>
+                                <lightning-layout-item size="12" large-device-size="4" medium-device-size="4" small-device-size="12">
+                                    <div style="border-left:.1rem solid lightgray; height:8rem;">
+                                        <lightning-layout class="slds-p-around_large">
+                                            <lightning-layout-item size="8" class="slds-text-align_center">
+                                                <lightning-layout>
+                                                    <lightning-layout-item size="2">
+                                                        <template if:false={item.hasVoted}> 
+                                                            <lightning-button-icon-stateful icon-name="utility:like"
+                                                                alternative-text="Vote"  
+                                                                data-item={item.oIdea.Id} onclick={applyLikeVote}>
+                                                            </lightning-button-icon-stateful>
+                                                            Vote
+                                                        </template>
+                                                        <template if:true={item.hasVoted}>
+                                                            <template if:true={item.hasVotedUp}>
+                                                                <lightning-icon size="small" icon-name="utility:like"
+                                                                    alternative-text="Liked" title="Liked"
+                                                                    variant="success">
+                                                                </lightning-icon>
+                                                            </template>
+                                                        </template>
+                                                    </lightning-layout-item>
+                                                    <lightning-layout-item size="6">
+                                                        <div style="text-align:center;">
+                                                            <div>
+                                                                <lightning-formatted-number
+                                                                    value={item.oIdea.Total_Vote_Points__c}>
+                                                                </lightning-formatted-number>&nbsp;Points
+                                                            </div> 
+                                                        </div>
+                                                    </lightning-layout-item>
+                                                    <!--
+                                                    <lightning-layout-item size="3">
+                                                        <template if:false={item.hasVoted}>
+                                                            <lightning-button-icon icon-name="utility:dislike"
+                                                                onclick={applyDisLikeVote} alternative-text="dislike"
+                                                                size="large" data-item={item.oIdea.Id}>
+                                                            </lightning-button-icon>
+                                                        </template>
+                                                        <template if:true={item.hasVoted}>
+                                                            <template if:true={item.hasVotedDown}>
+                                                                <lightning-icon size="small" icon-name="utility:dislike"
+                                                                    alternative-text="dislike" title="Dislike"
+                                                                    variant="error">
+                                                                </lightning-icon>
+                                                            </template>
+                                                        </template>
+                                                    </lightning-layout-item>
+                                                    -->
+                                                </lightning-layout>
+                                                <lightning-layout class="padding03">
+                                                    <lightning-layout-item size="12">
+                                                        <lightning-badge label={item.oIdea.Status__c} class="cBadge">
+                                                        </lightning-badge>
+                                                    </lightning-layout-item>
+                                                </lightning-layout>
+                                            </lightning-layout-item>
+                                            <lightning-layout-item size="4">
+                                                <lightning-avatar variant="circle" size="large"
+                                                    src={item.oIdea.CreatedBy.FullPhotoUrl}
+                                                    fallback-icon-name="standard:person_account"  alternative-text={item.oIdea.CreatedBy.Name}
+                                                    class="slds-m-right_small"></lightning-avatar>
+                                            </lightning-layout-item>
+                                        </lightning-layout>
+                                    </div>
+                                </lightning-layout-item>
+                            </lightning-layout>
+                        </lightning-card>
+                    </div>
+                </template>
+            </lightning-layout-item>
+        </lightning-layout>
+    </div>
+</template>

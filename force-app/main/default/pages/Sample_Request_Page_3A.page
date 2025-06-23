@@ -1,0 +1,114 @@
+<apex:page controller="Sample_Request_Controller" sidebar="false" 
+           tabStyle="Sample_Request__c" action="{!init3A}" lightningStylesheets="true" >
+           <apex:slds />
+    <apex:stylesheet value="{!$Resource.SampleRequestStyles}"></apex:stylesheet>
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-1.6.2.min.js')}" />
+
+    <apex:sectionHeader title="{!$Label.New_Sample_Request}" 
+        subtitle="Step 2 of 5 - Contact"/>
+
+    <apex:pageMessages escape="false"/>
+
+    <apex:form >
+
+        <center>
+            <apex:commandButton action="{!gotoPage2A}" value="{!$Label.Previous}" immediate="true"/>&nbsp;
+            <apex:commandButton action="{!gotoPage4A}" value="{!$Label.Next}" styleClass="btn"/>&nbsp;
+            <apex:commandButton action="{!cancel}" value="Cancel" immediate="true" />
+        </center><br/>
+
+        <apex:pageBlock title="{!$Label.Sample_Information}" mode="edit">
+            <apex:include pageName="Sample_Request_Page_1H"/>
+        </apex:pageBlock>
+
+        <apex:pageBlock title="{!$Label.Who_Requested}" mode="edit">
+
+            <apex:pageBlockSection id="relatedContacts" title="{!$Label.Contacts_Related_to_Account}:" columns="1" collapsible="false">
+                <!--<apex:dataTable value="{!contacts}" var="c" cellPadding="4" border="1" styleClass="list">-->
+                <apex:pageBlockTable value="{!contacts}" var="c" cellPadding="4" border="1" styleClass="list">
+                    <apex:column ><apex:facet name="header"><strong class="blink_me">Select</strong>&nbsp;</apex:facet>
+                        <input type="radio" name="contacts" value="{!c.Id}"
+                               onclick="selectContact(this.value)" class="radio"/> 
+                    </apex:column>
+                    
+                    <apex:column ><apex:facet name="header"><strong >Contact Name</strong></apex:facet>
+                        <apex:outputLink value="/{!c.Id}" target="_blank">{!c.Name}</apex:outputLink>&nbsp;
+                    </apex:column>
+                    
+                    <apex:column ><apex:facet name="header"><strong>{!$Label.Phone}</strong></apex:facet>
+                        <apex:outputText value="{!c.Phone}"></apex:outputText>&nbsp;
+                    </apex:column>
+                    
+                    <apex:column style="word-wrap: break-word;"><apex:facet name="header"><strong>Email</strong></apex:facet>
+                        <apex:outputText value="{!c.Email}"></apex:outputText>&nbsp;
+                    </apex:column>
+                    
+                    <apex:column style="word-wrap: break-word;"><apex:facet name="header"><strong>{!$Label.Mailing_Street}</strong></apex:facet>
+                        <apex:outputText value="{!c.MailingStreet}"></apex:outputText>&nbsp;
+                    </apex:column>
+                                        
+                    <apex:column ><apex:facet name="header"><strong>{!$Label.Mailing_City}</strong></apex:facet>
+                        <apex:outputText value="{!c.MailingCity}"></apex:outputText>&nbsp;
+                    </apex:column>
+                                        
+                    <apex:column ><apex:facet name="header"><strong>{!$Label.Mailing_State}</strong></apex:facet>
+                        <apex:outputText value="{!c.MailingState}"></apex:outputText>&nbsp;
+                    </apex:column>
+                                        
+                    <apex:column ><apex:facet name="header"><strong>{!$Label.Mailing_Postal_Code}</strong></apex:facet>
+                        <apex:outputText value="{!c.MailingPostalCode}"></apex:outputText>&nbsp;
+                    </apex:column>
+                                        
+                    <apex:column ><apex:facet name="header"><strong>{!$Label.Mailing_Country}</strong></apex:facet>
+                        <apex:outputText value="{!c.MailingCountry}"></apex:outputText>&nbsp;
+                    </apex:column>
+                    </apex:pageBlockTable>
+               <!-- </apex:dataTable>-->
+
+                <apex:inputHidden value="{!contactSelected}" id="SelectedContact"/>
+                &nbsp;
+                <input type="radio" name="contacts" id="New Contact" value="New Contact" 
+                       onclick="selectContact(this.value)" class="radio" />
+                &nbsp;&nbsp;<B>{!$Label.Create_Contact}</B>&nbsp;&nbsp;
+                
+                <script>
+                    function selectContact(selectedId) {
+                        document.getElementById('{!$Component.SelectedContact}').value=selectedId;
+                    }
+                </script>
+
+            </apex:pageBlockSection> 
+
+        </apex:pageBlock> 
+
+        <center>
+            <apex:commandButton action="{!gotoPage2A}" value="{!$Label.Previous}" immediate="true"/>&nbsp;
+            <apex:commandButton action="{!gotoPage4A}" value="{!$Label.Next}" id="nextBtn2"/>&nbsp;
+            <apex:commandButton action="{!cancel}" value="Cancel" immediate="true" />
+        </center><br/>
+
+    </apex:form>
+    <span class="pageid">3A</span>
+    <script type="text/javascript">
+        var $j = jQuery.noConflict();
+        
+        $j(function () {
+            var nb2 = $j('[id$=nextBtn2]'); nb2.focus();
+            $j("input:radio[name='contacts']").filter('[value={!contactSelected}]')
+                                              .attr('checked', true);
+        });
+    </script>
+
+    <style>
+        .col1 {text-align: right; font-weight: bold; padding-right: 1.2em;}
+        .col2 {text-align: left;}
+        .pageid {font-size: 70%; float: right;}
+        .radio {background-color: black;}
+        .blink_me {animation: blinker 1s linear infinite; color: red}
+		@keyframes blinker {
+  		50% {
+    			opacity: 0;
+  			}
+		}
+    </style>
+</apex:page>

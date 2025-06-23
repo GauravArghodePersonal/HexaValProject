@@ -1,0 +1,7 @@
+<apex:page showheader="false" sidebar="false">
+ 
+    <script type="text/javascript"> 
+        window.location="/00U/c?cType=1&cal=Public&cal_lkid=02350000000aVmp";
+    </script>
+ 
+</apex:page>

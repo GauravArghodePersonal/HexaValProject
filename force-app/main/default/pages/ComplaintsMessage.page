@@ -1,0 +1,40 @@
+<apex:page doctype="HTML" showheader="false" sidebar="false" standardController="Case">
+
+<style>
+
+.boxshadow 
+{
+  -moz-box-shadow: 3px 3px 5px #535353;
+  -webkit-box-shadow: 3px 3px 5px #535353;       
+  box-shadow: 3px 3px 5px #535353;
+  
+}
+.roundbox
+{  
+  -moz-border-radius: 6px 6px 6px 6px;
+  -webkit-border-radius: 6px;  
+  border-radius: 6px 6px 6px 6px;
+  
+}
+.boxcontenttext
+{
+  font-size:16px;
+  color:steelblue;
+  padding-left:25px;
+  padding-right:25px;
+  
+}
+a.link {font-weight:bold;
+        color:red}
+
+</style>
+<body >
+<div class="roundbox boxshadow" style="width: 70%; border: solid 2px steelblue" >
+    <div class="boxcontenttext">
+        <p>Please note - This internal complaint system has been designed to alert management to concerns or issues that are impeding the growth of our business. DO NOT enter customer complaints in this form.
+        
+        <br></br><br></br>Customer complaints requiring a formal response need to be entered into the SIRS Complaints System (requires a sales order), OTC can enter or you can enter it by clicking here:<a class="link" href="Notes://LPAPP61/8525751300523654/" target="_blank">Solenis Incident Reporting System</a></p>
+    </div>
+</div>
+</body>
+</apex:page>

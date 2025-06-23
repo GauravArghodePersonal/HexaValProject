@@ -1,0 +1,11 @@
+<apex:page standardController="ART_Release__c" extensions="ReleaseRequestReview_Ext">
+
+	<apex:form id="mainForm">
+       	<c:AdvancedDataTable id="requestReviewTable" 
+                                dataTableDefinitionName="Release Requests"
+                                tableHeading="Release Requests for {!release.Name}"
+                                startingId="{!release.Id}" 
+           />
+    </apex:form>
+
+</apex:page>

@@ -1,0 +1,64 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+   <!--
+     <a class="tile" href="https://solenis.sharepoint.com/teams/it/sfdcteam/SFDC%20Trainning%20Documents/Forms/AllItems.aspx" target="_blank">    
+    	<div class="tile">
+         	<p class="tile" style=" margin-top: 60px; margin-left: 20px;color:	#ffffff;float:left">All</p>    
+    	</div>
+     </a>
+    
+    
+    <a class="tile" href="https://solenis.sharepoint.com/teams/it/sfdcteam/SFDC%20Trainning%20Documents/New%20Order%20Reorder%20Process%20Training" target="_blank">    
+    	<div class="tile" style="float:left;">
+         	<p class="tile" style=" margin-top: 40px; margin-left: 20px;color:	#ffffff;">New Order Reorder Process</p>    
+        </div>
+    </a>
+    
+	   
+    <a class="tile" href="https://solenis.sharepoint.com/teams/it/sfdcteam/SFDC%20Trainning%20Documents/Customer%20Creation%20Process%20Training" target="_blank">    
+    	<div class="tile">
+         	<p class="tile" style=" margin-top: 40px; margin-left: 20px;color:	#ffffff;">Customer Creation Process</p>    
+    	</div>
+     </a>--> 
+    <br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href="https://solenis.sharepoint.com/teams/it/sfdcteam/SFDC%20Trainning%20Documents/Forms/AllItems.aspx" target="_blank">All</a><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href="https://solenis.sharepoint.com/teams/it/sfdcteam/SFDC%20Trainning%20Documents/Forms/AllItems.aspx?RootFolder=%2Fteams%2Fit%2Fsfdcteam%2FSFDC%20Trainning%20Documents%2FVoice%20of%20Customer" target="_blank">VOC Survey Training</a><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href="https://solenis.sharepoint.com/teams/it/sfdcteam/SFDC%20Trainning%20Documents/New%20Order%20Reorder%20Process%20Training" target="_blank">New Order Reorder Process</a><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href="https://solenis.sharepoint.com/teams/it/sfdcteam/SFDC%20Trainning%20Documents/Customer%20Creation%20Process%20Training" target="_blank">Customer Creation Process</a><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href="https://solenis.sharepoint.com/teams/it/sfdcteam/SFDC%20Trainning%20Documents/Sentinel%20%20Chemical%20Inventory%20Process%20in%20SFDC%20Training" target="_blank">Sentinel Chemical Inventory Process </a><br/>
+   
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href="https://solenis.sharepoint.com/teams/it/sfdcteam/SFDC%20Trainning%20Documents/SFDC%20LIGHTNING%20INTRODUCTION" target="_blank">Sfdc Lightning Introduction
+ </a><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href="https://solenis.sharepoint.com/teams/it/sfdcteam/SFDC%20Trainning%20Documents/Solenis%20Ideation%20Portal" target="_blank">Solenis Ideation Portal 
+ </a><br/>
+     &nbsp;&nbsp;&nbsp;&nbsp;<a href="https://solenis.sharepoint.com/teams/it/sfdcteam/SFDC%20Trainning%20Documents/Solenis%20Ideation%20Portal" target="_blank">Equipment Pricing Request process
+ </a><br/>
+     &nbsp;&nbsp;&nbsp;&nbsp;<a href="https://solenis.sharepoint.com/teams/it/sfdcteam/SFDC%20Trainning%20Documents/Customer%20Change%20Request" target="_blank">Customer Change Request 
+ </a><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href="https://solenis.sharepoint.com/teams/it/sfdcteam/SFDC%20Trainning%20Documents/ValueAdvantage" target="_blank">Value Advantage Training
+ </a><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href="https://solenis.sharepoint.com/teams/it/sfdcteam/SFDC%20Trainning%20Documents/Opportunity%20Update%20Training" target="_blank">Opportunity Update Training
+ </a><br/>
+     &nbsp;&nbsp;&nbsp;&nbsp;<a href="https://solenis.sharepoint.com/teams/it/sfdcteam/SFDC%20Trainning%20Documents/GEER" target="_blank">GEER
+ </a><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href="https://solenis.sharepoint.com/teams/it/sfdcteam/SFDC%20Trainning%20Documents/Lab%20Work%20Request%20(LWR)" target="_blank">Lab Work Request (LWR)
+ </a><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href="https://solenis.sharepoint.com/:f:/r/teams/it/sfdcteam/SFDC%20Trainning%20Documents/LSTP?" target="_blank">LSTP</a><br/>
+     &nbsp;&nbsp;&nbsp;&nbsp;<a href="https://solenis.sharepoint.com/:f:/r/teams/it/sfdcteam/SFDC%20Trainning%20Documents/Forecast-Pro?" target="_blank">Forecast-Pro</a><br/>
+     &nbsp;&nbsp;&nbsp;&nbsp;<a href="https://solenis.sharepoint.com/:f:/r/teams/it/sfdcteam/SFDC%20Trainning%20Documents/Hexeva?" target="_blank">Hexeval</a><br/>
+     &nbsp;&nbsp;&nbsp;&nbsp;<a href="https://solenis.sharepoint.com/:f:/r/teams/it/sfdcteam/SFDC%20Trainning%20Documents/Account%20Stability%20Audits?" target="_blank">ASA</a><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href="https://solenis.sharepoint.com/:f:/r/teams/it/sfdcteam/SFDC%20Trainning%20Documents/Caminex%20%E2%80%93%20corporate%20accounts?" target="_blank">Caminex – corporate accounts</a><br/>
+     &nbsp;&nbsp;&nbsp;&nbsp;<a href="https://solenis.sharepoint.com/teams/it/sfdcteam/SFDC%20Trainning%20Documents/SFDC%20Bronze%20Training" target="_blank">SFDC Bronze Training
+ </a><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href="https://solenis.sharepoint.com/teams/it/sfdcteam/SFDC%20Trainning%20Documents/Customer%20Information%20Packet" target="_blank">Customer Information Packet
+ </a><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href="https://solenis.sharepoint.com/teams/it/sfdcteam/SFDC%20Trainning%20Documents/Forecast%20Tool" target="_blank">Forecast Tool
+ </a><br/>
+     &nbsp;&nbsp;&nbsp;&nbsp;<a href="https://solenis.sharepoint.com/teams/it/sfdcteam/SFDC%20Trainning%20Documents/Quote%20Configurator%20Training" target="_blank">Quote Configurator Training
+ </a><br/>
+     &nbsp;&nbsp;&nbsp;&nbsp;<a href="https://solenis.sharepoint.com/:f:/r/teams/it/sfdcteam/SFDC%20Trainning%20Documents/FSL?" target="_blank">Field Service Lightning
+ </a><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href="https://solenis.sharepoint.com/teams/it/sfdcteam/SFDC%20Trainning%20Documents/SBU%20Multi%20process" target="_blank">SBU Multi process 
+   </a><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href="https://solenis.sharepoint.com/teams/it/sfdcteam/SFDC%20Trainning%20Documents/Barcode%20Application%20(Equipment)" target="_blank">Barcode Application (Equipment)
+    </a><br/>
+</aura:component>

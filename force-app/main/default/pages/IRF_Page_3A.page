@@ -1,0 +1,474 @@
+<apex:page renderAs="{!vtype}" showHeader="false" applyHtmlTag="false"
+           title="IRF Monthly Data Pdf" controller="IRF_Controller" action="{!initAction3}">
+
+<html><head>
+    <style type="text/css">
+        @page {
+            size: 16in 11in; margin: 0.25in;
+
+            @bottom-center {content: "Page " counter(page) " of " counter(pages);}
+        }
+
+        body           {font-family: "Arial Unicode MS";}
+
+        table          {border-collapse:collapse; width: 100%;}
+
+        table, th, td  {border: 1px solid black;}
+
+        th, td         {padding: 5px;}
+
+        th             {font-weight: bold;}
+
+        .bold          {font-size: 91%; font-weight: bold;}
+        .boldblue      {color: blue; font-size: 91%; font-weight: bold;}
+        .boldgrey      {color: grey; font-size: 91%; font-weight: bold;}
+        .center        {text-align: center;}
+        .left          {text-align: left;}
+        .right         {text-align: right;}
+        .nowrap        {white-space: nowrap;}
+        .number        {text-align: right; white-space: nowrap;}
+        .hili          {background-color: #ccffcc !important;}
+        .hil2          {background-color: #add8e6 !important;}
+
+        .tbl2 td.td1,
+        .tbl4 th       {font-weight: bold; background-color: #f2f3f3;}
+
+        .tbl2 td.lbl,
+        .tbl2 td.lbl,
+        .tbl4 td.totl  {font-weight: bold; background-color: #f2f3f3; text-align: right;}
+        .matName       {width: 17em; overflow: hidden; text-overflow: ellipsis;}
+    </style>
+</head><body>
+
+    <apex:variable var="decimals" value="2"/>
+    <apex:variable var="locale" value="{!userLocale}"/>
+
+    <div>
+
+    <table class="tbl2">
+        <tr><td class="td1">IRF Monthly Data</td>
+            <td class="lbl">{!m_hdr.sobj.Name} : {!d_hdr.sobj.Name}</td></tr>
+    </table><br/>
+
+    <table class="tbl2">
+           <colgroup>
+               <col style="width: 130px;"/>
+               <col style="width: 250px;"/>
+               <col style="width: 130px;"/>
+               <col style="width: 250px;"/>
+               <col style="width: 130px;"/>
+               <col style="width: 250px;"/>
+           </colgroup>
+           <tr>
+               <td class="lbl">Ship To</td>
+               <td class="val">{!m_hdr.shipToStr}</td>
+
+               <td class="lbl">Ship To Address</td>
+               <td class="val">{!m_hdr.shipToAddress}</td>
+
+               <td class="lbl">Status</td>
+               <td class="val"><apex:outputField value="{!d_hdr.sobj.Status__c}"/></td>
+           </tr><tr>
+               <td class="lbl">Account Owner</td>
+               <td class="val">{!m_hdr.shipToOwner}</td>
+
+               <td class="lbl">Submitted By</td>
+               <td class="val">{!d_hdr.submtdBy}</td>
+
+               <td class="lbl">Submitted Time</td>
+               <td class="val"><apex:outputField value="{!d_hdr.sobj.Submitted_DateTime__c}"/></td>
+           </tr><tr>
+               <td class="lbl">Sales Org</td>
+               <td class="val">{!m_hdr.salesOrgStr}</td>
+
+               <td class="lbl">SAP Contract Number</td>
+               <td class="val">{!m_hdr.sobj.Contract_Number__c}</td>
+
+               <td class="lbl">Purchase Order Number</td>
+               <td class="val"><apex:outputField rendered="{!OR(!isEditable1, m_hdr.sobj.PO_for_Billing_Period__c)}"
+                                                 value="{!d_hdr.sobj.Purchase_Order_Number__c}"/></td>
+           </tr><tr>
+               <td class="lbl">SAP Invoice Numbers</td>
+               <td class="val"><apex:outputField rendered="{!!isEditable1}" value="{!d_hdr.sobj.Invoice_Numbers__c}"/></td>
+
+               <td class="lbl">Start Date</td>
+               <td class="val"><apex:outputField rendered="{!!isEditable1}" value="{!d_hdr.sobj.Start_Date__c}"/></td>
+
+               <td class="lbl">End Date</td>
+               <td class="val"><apex:outputField rendered="{!!isEditable1}" value="{!d_hdr.sobj.End_Date__c}"/></td>
+
+           </tr><tr>
+               <td class="lbl">Comments</td>
+               <td colspan="5"><apex:outputField value="{!m_hdr.sobj.Comments__c}"/></td>
+
+           </tr>
+    </table></div><br/>
+
+    <div >
+            <table class="tbl2"><tr>
+                <td style="width: 160px;" class="lbl">Customer Site operating<br/>at Normal?</td>
+                <td style="width: 60px;">
+                    <apex:outputField rendered="{!!isEditable1}" value="{!d_hdr.sobj.Operating_at_Normal__c}"/></td>
+
+                <td style="width: 80px;" class="lbl">If No, Explain</td>
+                <td style="width: 540px;">
+                    <apex:outputField rendered="{!!isEditable1}" value="{!d_hdr.sobj.Operating_Comments__c}"
+                                     styleClass="txta4"/></td>
+
+                <td style="width: 180px;" class="lbl">Do you foresee the customer site<br/>operating at normal capacity next?</td>
+                <td style="width: 60px;">
+                    <apex:outputField rendered="{!!isEditable1}" value="{!d_hdr.sobj.Foresee_at_Normal__c}"/></td>
+            </tr><apex:outputPanel rendered="{!contractZCCC}"><tr>
+                <td style="width: 160px;" class="lbl">Current Month Production</td>
+                <td style="width: 120px;" colspan="2">
+                    <apex:outputField rendered="{!!isEditable1}" value="{!d_hdr.sobj.Current_Month_Production__c}"/></td>
+            </tr></apex:outputPanel><tr>
+                <td style="width: 160px;" class="lbl">General Comments</td>
+                <td style="width: 980px;" colspan="5">
+                    <apex:outputField rendered="{!!isEditable1}" value="{!d_hdr.sobj.General_Comments__c}"
+                                     styleClass="txta5" /></td>
+            </tr><tr>
+                <td style="width: 160px;" class="lbl">Known Upcoming<br/>Changes</td>
+                <td style="width: 980px;" colspan="5">
+                    <apex:outputField rendered="{!!isEditable1}" value="{!d_hdr.sobj.Upcoming_Changes__c}"
+                                     styleClass="txta5" /></td>
+            </tr></table></div>
+
+<!-- ================================================ Materials ==================================================== -->
+   <!-- <apex:outputPanel rendered="{!!contractZPNC}" layout="block" style="page-break-before: always;"> -->
+    <apex:outputPanel rendered="{!contractZPNC || !contractZTNC || !contractZPCC}" layout="block" style="page-break-before: always;">
+
+        <table class="tbl2">
+            <tr><td class="td1">IRF Monthly Data</td>
+                <td class="lbl">{!m_hdr.sobj.Name} : {!d_hdr.sobj.Name}</td></tr>
+        </table><br/>
+
+            <table class="tbl2"><tr><td class="td1">Materials</td></tr></table><br/>
+
+            <apex:dataTable value="{!d_mats}" var="m" rendered="{!renderMatList}" styleClass="tbl4">
+                <apex:column style="width: 20px" headerClass="number" styleClass="number {!m.styleClass}">
+                    <apex:facet name="header">&nbsp;&nbsp;&nbsp;&nbsp;#</apex:facet>
+                    <apex:outputText value="{!m.recNum}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" styleClass="{!m.styleClass}">
+                    <apex:facet name="header">Material<br/>Number</apex:facet>
+                    <apex:outputText value="{!m.matNum}"/>
+                </apex:column>
+
+                <apex:column styleClass="matName {!m.styleClass}">
+                    <apex:facet name="header">Material<br/>Description</apex:facet><div class="matName">
+                    <apex:outputText value="{!m.sobj.Material__r.Material_Desc__c}"/></div>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="{!m.styleClass}">
+                    <apex:facet name="header">Tank<br/>Number<br/>or Area</apex:facet>
+                    <apex:outputField value="{!m.sobj.Tank_Number__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}">
+                    <apex:facet name="header">Beginning<br/>Inventory</apex:facet>
+                    <apex:outputField rendered="{!!isEditable4}" value="{!m.sobj.Beginning_Inventory__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center clink" styleClass="number {!m.styleClass}">
+                    <apex:facet name="header">Received<br/>Inventory</apex:facet>
+                    <apex:outputField rendered="{!OR(!isEditable2, m.recNum == null)}"
+                                         value="{!m.sobj.Received_Inventory__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center clink" styleClass="number {!m.styleClass}">
+                    <apex:facet name="header">Adjust-<br/>ments</apex:facet>
+                    <apex:outputField rendered="{!OR(!isEditable2, m.recNum == null)}"
+                                         value="{!m.sobj.Adjustment_Inventory__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}">
+                    <apex:facet name="header">Ending<br/>Inventory</apex:facet>
+                    <apex:outputField rendered="{!OR(!isEditable2, m.recNum == null)}"
+                                         value="{!m.sobj.Ending_Inventory__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass} {!m.scCnsnv}">
+                    <apex:facet name="header">Consumed<br/>Inventory</apex:facet>
+                    <apex:outputField value="{!m.sobj.Consumed_Inventory__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}"
+                             rendered="{!contractZCCC}">
+                    <apex:facet name="header">Price</apex:facet>
+                    <apex:outputField value="{!m.sobj.Price__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}"
+                             rendered="{!contractZCCC}">
+                    <apex:facet name="header">Discount<br/>Percent</apex:facet>
+                    <apex:outputField value="{!m.sobj.Discount_Percent__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}"
+                             rendered="{!contractZCCC}">
+                    <apex:facet name="header">Other<br/>Charges</apex:facet>
+                    <apex:outputField rendered="{!OR(!isEditable2, m.recNum == null)}"
+                                         value="{!m.sobj.Other_Charges__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}"
+                             rendered="{!contractZCCC}">
+                    <apex:facet name="header">Billing<br/>Value</apex:facet>
+                    <apex:outputField value="{!m.sobj.Billing_Value__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}">
+                    <apex:facet name="header">Projected<br/>Monthly<br/>Average</apex:facet>
+                    <apex:outputField value="{!m.sobj.Projected_Monthly_Average__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass} {!m.scVrnce}">
+                    <apex:facet name="header">Variance</apex:facet>
+                    <apex:outputField value="{!m.sobj.Inventory_Variance__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}">
+                    <apex:facet name="header">{!weightLbl} per<br/>Day</apex:facet>
+                    <apex:outputField value="{!m.sobj.Consumed_per_Day__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass} {!m.scNdays}">
+                    <apex:facet name="header">Days<br/>Inven<br/>-tory</apex:facet>
+                    <apex:outputField value="{!m.sobj.Days_Inventory__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="{!m.styleClass}">
+                    <apex:facet name="header">Comments</apex:facet>
+                    <apex:outputField rendered="{!!isEditable2}" value="{!m.sobj.Comments__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="{!m.styleClass}"
+                             rendered="{!renderBatchesCol}">
+                    <apex:facet name="header">Batches</apex:facet>
+                    <apex:outputField rendered="{!!isEditable2}" value="{!m.sobj.Batches__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="center {!m.styleClass}"
+                             rendered="{!!hideMatsMFD}">
+                    <apex:facet name="header">Marked<br/>for<br/>Deletion</apex:facet>
+                    <apex:outputField value="{!m.sobj.IRF_Material__r.MFD__c}" rendered="{!(m.recNum != null)}"/>
+                </apex:column>
+
+                <apex:column style="width: 100%;" styleClass="{!m.styleClass}">
+                    <apex:facet name="header">&nbsp;</apex:facet>
+                    <apex:outputText >&nbsp;</apex:outputText>
+                </apex:column>
+
+            </apex:dataTable>
+
+    </apex:outputPanel>
+
+<!-- ========================================= Materials Received ============================================== -->
+
+    <apex:outputPanel rendered="{!!contractZPNC}" layout="block" style="page-break-before: always;">
+
+        <table class="tbl2">
+            <tr><td class="td1">IRF Monthly Data</td>
+                <td class="lbl">{!m_hdr.sobj.Name} : {!d_hdr.sobj.Name}</td></tr>
+        </table><br/>
+
+            <table class="tbl2"><tr><td class="td1">Received Materials</td></tr></table><br/>
+
+            <apex:dataTable value="{!dlvrys}" var="m" rendered="{!renderSodList}" styleClass="tbl4">
+                <apex:column style="width: 50px" styleClass="number {!m.styleClass}">
+                    <apex:facet name="header">Material<br/>Number</apex:facet>
+                    <apex:outputText value="{!m.matNum}"/>
+                </apex:column>
+
+                <apex:column style="width: 230px" styleClass="nowrap {!m.styleClass}">
+                    <apex:facet name="header">Material Description</apex:facet>
+                    <apex:outputField value="{!m.dlvr.Material__r.Material_Desc__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}">
+                    <apex:facet name="header">Delivery<br/>Number</apex:facet>
+                    <apex:outputField value="{!m.dlvr.Delivery_Number__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}">
+                    <apex:facet name="header">Sales Order<br/>Number</apex:facet>
+                    <apex:outputField value="{!m.dlvr.Sales_Order_Number__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}">
+                    <apex:facet name="header">Line Item<br/>Number</apex:facet>
+                    <apex:outputField value="{!m.dlvr.Sales_Order_Item__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}">
+                    <apex:facet name="header">Reference<br/>Document</apex:facet>
+                    <apex:outputField value="{!m.dlvr.Reference_Document__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}">
+                    <apex:facet name="header">PGI<br/>Date</apex:facet>
+                    <apex:outputField value="{!m.dlvr.Actual_Goods_Issue_Date__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}">
+                    <apex:facet name="header">Quantity<br/>in KG</apex:facet>
+                    <apex:outputField value="{!m.dlvr.Quantity_Shipped_in_BU__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass}">
+                    <apex:facet name="header">Quantity<br/>in LB</apex:facet>
+                    <apex:outputField value="{!m.dlvr.Quantity_Shipped_in_LB__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 100%" styleClass="{!m.styleClass}">
+                    <apex:facet name="header">&nbsp;</apex:facet>
+                    <apex:outputText >&nbsp;</apex:outputText>
+                </apex:column>
+
+            </apex:dataTable>
+
+    </apex:outputPanel>
+
+<!-- ================================================ Units ==================================================== -->
+
+    <apex:outputPanel rendered="{!!contractZCCC}" layout="block" style="page-break-before: always;">
+        <table class="tbl2">
+            <tr><td class="td1">IRF Monthly Data</td>
+                <td class="lbl">{!m_hdr.sobj.Name} : {!d_hdr.sobj.Name}</td></tr>
+        </table><br/>
+
+            <table class="tbl2"><tr><td class="td1">Units</td></tr></table><br/>
+
+            <apex:dataTable value="{!d_unts}" var="u" rendered="{!renderUntList}" styleClass="tbl4">
+
+                <apex:column style="width: 20px" headerClass="number" styleClass="number {!u.styleClass}">
+                    <apex:facet name="header">&nbsp;&nbsp;&nbsp;&nbsp;#</apex:facet>
+                    <apex:outputText value="{!u.recNum}"/>
+                </apex:column>
+
+                <apex:column style="width: 300px" styleClass="{!u.styleClass}">
+                    <apex:facet name="header">Unit Description</apex:facet>
+                    <div style="width: 300px"><apex:outputText value="{!u.untDesc}"/></div>
+                </apex:column>
+
+                <apex:column style="width: 80px" headerClass="center" styleClass="number {!u.styleClass}">
+                    <apex:facet name="header">Current Month<br/>Production</apex:facet>
+                    <apex:outputField value="{!u.sobj.Production__c}" rendered="{!!isEditable3}"/>
+                </apex:column>
+
+                <apex:column style="width: 80px" headerClass="center" styleClass="number {!u.styleClass}">
+                    <apex:facet name="header">Price per Unit</apex:facet>
+                    <apex:outputField value="{!u.sobj.Price__c}"/>
+                </apex:column>
+                
+                <apex:column style="width: 80px" headerClass="center" styleClass="number {!u.styleClass}">
+                    <apex:facet name="header">Expected Production</apex:facet>
+                   <apex:outputField value="{!u.sobj.Expected_production__c}"/>
+                </apex:column> <!-- added vishnu -->
+                
+                <apex:column style="width: 80px" headerClass="center" styleClass="number {!u.styleClass}">
+                    <apex:facet name="header">Expected Monthly Revenue</apex:facet>
+                   <apex:outputField value="{!u.sobj.Expected_monthly_revenue__c}"/>
+                </apex:column> <!-- added vishnu -->
+                
+                <apex:column style="width: 80px" headerClass="center" styleClass="number {!u.styleClass}">
+                    <apex:facet name="header">Amount</apex:facet>
+                    <apex:outputField value="{!u.sobj.Amount__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 120px" headerClass="center" styleClass="center {!u.styleClass}"
+                             rendered="{!!hideUntsMFD}">
+                    <apex:facet name="header">Marked for Deletion</apex:facet>
+                    <apex:outputField value="{!u.sobj.IRF_Unit__r.MFD__c}" rendered="{!(u.recNum != null)}"/>
+                </apex:column>
+
+                <apex:column style="width: 100%;" styleClass="{!u.styleClass}">
+                    <apex:facet name="header">&nbsp;</apex:facet>
+                    <apex:outputText >&nbsp;</apex:outputText>
+                </apex:column>
+
+            </apex:dataTable>
+
+        </apex:outputPanel>
+    
+<!-- ================================================ Calculated Usage & Profitability ==================================================== -->
+      <!-- Added by Vishnu -->
+    <apex:outputPanel rendered="{!!contractZCCC}" layout="block" style="page-break-before: always;">
+
+        <table class="tbl2">
+            <tr><td class="td1">IRF Monthly Data</td>
+                <td class="lbl">{!m_hdr.sobj.Name} : {!d_hdr.sobj.Name}</td></tr>
+        </table><br/>
+
+            <table class="tbl2"><tr><td class="td1">Calculated Usage and Profitability</td></tr></table><br/>
+
+            <apex:dataTable value="{!d_mats}" var="m" rendered="{!renderMatList}" styleClass="tbl4">
+                <apex:column style="width: 20px" headerClass="number" styleClass="number {!m.styleClass}">
+                    <apex:facet name="header">&nbsp;&nbsp;&nbsp;&nbsp;#</apex:facet>
+                    <apex:outputText value="{!m.recNum}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" styleClass="{!m.styleClass}">
+                    <apex:facet name="header">Material<br/>Number</apex:facet>
+                    <apex:outputText value="{!m.matNum}"/>
+                </apex:column>
+
+                <apex:column styleClass="matName {!m.styleClass}">
+                    <apex:facet name="header">Material<br/>Description</apex:facet><div class="matName">
+                    <apex:outputText value="{!m.sobj.Material__r.Material_Desc__c}"/></div>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass} {!m.scVrnce}">
+                    <apex:facet name="header">Related Unit</apex:facet>
+                    <apex:outputField value="{!m.sobj.Related_Unit__c}"/>
+                </apex:column>
+                
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass} {!m.scVrnce}">
+                	<apex:facet name="header">Usage Actual ({!weightLbl}s/ton)</apex:facet>
+                	<apex:outputField value="{!m.sobj.Usage_Actual_lbs_ton__c}"/>
+				</apex:column>
+                
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass} {!m.scVrnce}">
+                 	<apex:facet name="header">Usage Expected ({!weightLbl}s/ton)</apex:facet>
+                 	<apex:outputField value="{!m.sobj.Usage_Expected_lbs_ton__c}"/>
+                </apex:column>
+                
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass} {!m.scVrnce}">
+                 	<apex:facet name="header">Usage Variance ({!weightLbl}s/ton)</apex:facet>
+                 	<apex:outputField value="{!m.sobj.Usage_Variance_lbs_ton__c}"/>
+                </apex:column>
+                
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass} {!m.scVrnce}">
+                 	<apex:facet name="header">Usage Variance ({!weightLbl}s/month)</apex:facet>
+                 	<apex:outputField value="{!m.sobj.Variance_Inv__c}"/>
+                </apex:column>
+                
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass} {!m.scVrnce}">
+                 	<apex:facet name="header">Contract Price ({!priceLbl}/{!weightLbl}s)</apex:facet>
+                 	<apex:outputField value="{!m.sobj.Contract_Price__c}"/>
+                </apex:column>
+                 
+                <apex:column style="width: 50px" headerClass="center" styleClass="number {!m.styleClass} {!m.scVrnce}">
+                 	<apex:facet name="header">Usage Variance<br/>({!priceLbl}/month)</apex:facet>
+                 	<apex:outputField value="{!m.sobj.Dollar_per_month__c}"/>
+                </apex:column>
+                
+                <apex:column style="width: 50px" headerClass="center" styleClass="{!m.styleClass}">
+                    <apex:facet name="header">Comments</apex:facet>
+                    <apex:outputField rendered="{!!isEditable2}" value="{!m.sobj.Comments_Usage__c}"/>
+                </apex:column>
+
+                
+                <apex:column style="width: 100%;" styleClass="{!m.styleClass}">
+                    <apex:facet name="header">&nbsp;</apex:facet>
+                    <apex:outputText >&nbsp;</apex:outputText>
+                </apex:column>
+
+            </apex:dataTable>
+
+    </apex:outputPanel>
+    
+</body></html>
+</apex:page>

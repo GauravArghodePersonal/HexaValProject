@@ -1,0 +1,108 @@
+<apex:page StandardController="Sample_Test_Information__c" extensions="LWR_EMEAPALRequestFormPrintCtrl" applyBodyTag="false" renderAs="pdf">
+    <head>   
+        <style type="text/css"> 
+            @page {
+            @top-center {
+                content: element(header);
+            }
+
+            @bottom-left {
+                content: element(footer);
+            }
+          }
+
+          * {
+            margin: 0px;
+            padding: 0px;
+          }
+
+          div.header {
+            margin-top: 30px;
+            height: 130px;
+            width: 715px;
+            text-align: center;
+            position: running(header);
+          }
+
+          div.content {
+            padding-top: 30px;
+          }
+
+          div.footer {
+            display: block;
+            padding: 5px;
+              position: running(footer);
+          }
+
+          div.subfooter {
+            display: inline-block;
+          }
+
+          div.right {
+            float: right;
+          }
+
+          .pagenumber:before {
+              content: counter(page);
+          }
+
+          .pagecount:before {
+            content: counter(pages);
+          }
+
+          .formName {
+            text-align: center;
+            font-weight: bold;
+            font-size: 20pt;
+            margin-bottom: 30px;
+          }
+
+          table {
+            width: 100%;
+          }
+
+          .tableHeader {
+            border-width: 0px 0px 1px 0px;
+            border-color: #000;
+            border-style: solid;
+          }
+
+          .sectionHeader {
+            width: 100%;
+            background-color: #eee;
+            font-size: 16pt;
+            padding: 5px;
+            margin: 20px 0px;
+            font-weight: bold;
+          }
+            
+        </style>             
+    </head> 
+    <div class="header"></div>
+    <div class="content">
+      <h1 class="formName">{!sampleTestInformation.Name}</h1>
+      <apex:pageBlock >
+          <div class="sectionHeader">Sample Test Information</div>
+          <apex:pageBlockSection columns="1">
+              <apex:outputText value="{!sampleTestInformation.SBU_Area__c}" />
+              <apex:outputText value="{!sampleTestInformation.SBU_Area_Contact_Person__c}" />
+              <apex:outputText value="{!sampleTestInformation.Additional_Comments__c}" />
+          </apex:pageBlockSection>
+          <apex:repeat value="{!requestFormsByArea}" var="area">
+            <div class="sectionHeader">{!area}</div>
+            <apex:pageBlockSection columns="1">
+                <apex:pageBlockTable value="{!requestFormsByArea[area]}" var="reference" headerClass="tableHeader">
+                    <apex:column value="{!reference.Addl_References__c}" /> 
+                    <apex:column value="{!reference.Information__c}" />
+                </apex:pageBlockTable>
+              </apex:pageBlockSection>
+          </apex:repeat>
+      </apex:pageBlock>
+    </div>
+  <div class="footer">
+    <div>
+        <div class="subfooter">{!NOW()}</div>
+        <div class="subfooter right">Page <span class="pagenumber"/> of <span class="pagecount"/></div>
+    </div>
+  </div>
+</apex:page>

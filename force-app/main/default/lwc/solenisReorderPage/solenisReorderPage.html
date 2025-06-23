@@ -1,0 +1,387 @@
+<template>
+    
+    <template if:true={isModalOpen}>
+        <!-- Modal/Popup Box LWC starts here -->
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-02" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <!-- Modal/Popup Box LWC header here -->
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                        <lightning-icon icon-name="utility:close"
+                            alternative-text="close"
+                            variant="inverse"
+                            size="small" onclick={closeModal1}></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 id="modal-heading-03" class="slds-text-heading_medium slds-hyphenate">Warning</h2>
+                </header>
+                <!-- Modal/Popup Box LWC body starts here -->
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <p><b>If you proceed to previous tab selected material and details will not be saved</b></p>
+                 
+                </div>
+                <!-- Modal/Popup Box LWC footer starts here -->
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_brand" onclick={closeModal1} title="Cancel">Cancel</button>
+                    <button class="slds-button slds-button_brand" onclick={submitDetails} title="OK">OK</button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+    <template if:true={isLoading}>
+        <div>
+            <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+        </div>
+    </template>
+    <template if:true={flag_Pilotuser}>
+    <div class="alignment">   
+        <template if:true={reorderRedirectflag}>           
+        <lightning-button variant="brand" label="Next" onclick={Next} title="Next"  class="slds-m-left_x-small"></lightning-button>  
+        </template>
+        <template if:true={flg_Next}> 
+            <lightning-button variant="brand" label="Next" onclick={orderselect} title="Next" class="slds-m-left_x-small"></lightning-button>
+            </template>
+        <template if:true={reorderflag}> 
+        <lightning-button variant="brand" label="Previous" onclick={openModal} title="Previous" class="slds-m-left_x-small"></lightning-button>       
+      </template>
+      <template if:true={cancelflag}> 
+        <lightning-button variant="brand" label="Cancel" onclick={closeQuickAction} title="Cancel" class="slds-m-left_x-small"></lightning-button>           
+     </template>
+     <template if:false={cancelflag}> 
+        <lightning-button variant="brand" label="Submit" onclick={closeQuickAction} title="Submit" class="slds-m-left_x-small"></lightning-button>           
+     </template>
+     
+    </div>
+     
+     <template if:true={reorderRedirectflag}>
+        
+        <div class="Main">
+            <lightning-datatable class="slds-max-medium-table_stacked"
+                        data-id="relatedFiles"
+                        key-field="Id"                                    
+                        sorted-by={sortBy}
+                        sorted-direction={sortDirection}
+                        onsort={handleSortdata}               
+                        data={openOrderList}
+                        columns={filesListColumnss}                
+                        onrowselection={getSelectedRows}>
+                    </lightning-datatable>
+                    <div if:true={openOrder_flag} style="color:red">No Records Found</div>
+            </div>  
+           
+         </template>
+
+
+    <template if:true={reorderMainflag} >
+    <template if:true={reorderflag}>
+    <lightning-record-edit-form object-api-name="Open_Orders__c"  onsuccess={handleResponse}>
+        <lightning-messages></lightning-messages> 
+        <lightning-card  title="Order Details" >  
+            <template if:true={errormsg}>
+                <p class="error">{errormsg}</p>
+            </template>
+            <table class="Table">
+                <tr>
+                    <td>
+                        Sold To
+                    </td>
+                    <td>                    
+                        <lightning-input-field data-id="SoldTo" variant="label-hidden" value={SoldToName} field-name="SoldTo__c" disabled="True"></lightning-input-field>
+                    
+                    </td>
+                    <td>
+                        Ship To   
+                    </td>
+                    <td>
+                        <lightning-input-field data-id="ShipTo" variant="label-hidden" value={Shipto} field-name="ShipTo__c" disabled="True"></lightning-input-field>   
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    </td>
+                    <td>
+
+                    </td>
+                    <td>
+                        Street
+                    </td>
+                    <td>
+                        {Street}
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        City
+                    </td>
+                    <td>
+                        {City}
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        Postal / Zip Code
+                    </td>
+                    <td>
+                        {PostalCode}
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>Country</td>
+                    <td>
+                        {Country}
+                    </td>
+                </tr>
+            </table>
+        </lightning-card> 
+        <div class="slds-section slds-is-open">
+            <h3 class="slds-section__title slds-theme_shade">
+              <span class="slds-truncate slds-p-horizontal_small" title="Section Title">Order Header</span>
+            </h3>   
+           
+            <table>
+                <tr><div style="color:red">*</div>
+                    <td style="width: 25%;">Order Type</td>
+                    <td style="width: 25%;">
+                        <div style="color: red;" if:true={ordertypereq}>Complete this field. </div>  
+                        <lightning-combobox variant="label-hidden"               
+                        data-id="OrderType" onchange={OnchangeReordertype} options={genericNumberPicklist} value={roderypSelecte} disabled></lightning-combobox>
+                        </td>
+                        <template if:true={ordertypeflag}> 
+                        <td >Contract Number (Must be Numeric)</td>
+                        <td><lightning-input data-id="ContractNumber" type="number" name="input1" value={Ins_ContractNumberSelect} disabled></lightning-input></td>
+                        </template> 
+                        <template if:false={ordertypeflag}> 
+                            <td ></td>
+                            <td></td>
+                            </template> 
+                </tr>
+            </table>
+         </div>
+         <div class="slds-section slds-is-open">
+            <h3 class="slds-section__title slds-theme_shade">
+              <span class="slds-truncate slds-p-horizontal_small" title="Section Title">Requested Delivery Dates</span>
+            </h3>  <br/>
+            <template if:true={errormsg}>
+                <p class="error">{errormsg}</p>
+            </template>
+            <table>
+                <tr>
+                    <th class="datestd"></th>
+                    <th class="datestd">PO NUMBER
+                        <div style="color: red;" if:true={Ponumberreq}>Complete this field. </div>  
+                    </th>
+                    <th class="datestd">REQUESTED DELIVERY DATE</th>
+                    <th class="datestd">ESTIMATED SHIP DATE</th>
+                    <th class="datestd">SPECIAL INSTRUCTIONS</th>
+
+                </tr>
+                   
+                    <template for:each={orderdeliverydateList} for:item="orList" for:index="index">
+                        <tr key={orList.Id}>
+                            <td class="datestd"><lightning-input  data-id="flag" type="checkbox" value={orList.flag}></lightning-input></td>
+                            <td class="datestd">  <div style="color:red">*</div>                                                            
+                                <lightning-input onfocus={runOnceLeadtime}  data-id="ponumber" type="text" value={orList.PONUMBER}></lightning-input>                      
+                            </td>
+                            <td class="datestd">  
+                                <div style="color:red">*</div>                            
+                                <lightning-input  type="date" data-id='requestDeliveryDate' value={orList.REQUESTEDDELIVERYDATE}></lightning-input>
+                            </td>
+                            <td class="datestd"><br/>
+                                <lightning-input type="date" data-id='estimateShipDate' value={orList.ESTIMATEDSHIPDATE} disabled></lightning-input>
+                                
+                            </td>
+                            <td class="datestd">
+                                <lightning-textarea data-id='specificIns' value={orList.SPECIALINSTRUCTIONS}></lightning-textarea>
+                            </td>                           
+                        </tr>                            
+                    </template>    
+                
+        </table>
+       
+        
+        <!--<lightning-button variant="brand" label="Request Additional Dates" onclick={addOrderDeliveryDate} title="Successful action" class="slds-m-left_x-small"></lightning-button>-->
+        <!--<lightning-button variant="destructive" label="Remove Selected Dates" onclick={removeOrderdeliveryDate} title="Destructive action" class="slds-m-left_x-small"></lightning-button>-->
+        </div>    
+        
+        <div class="slds-section slds-is-open">
+            <h3 class="slds-section__title slds-theme_shade">
+              <span class="slds-truncate slds-p-horizontal_small" title="Section Title">Line Items</span>
+            </h3> 
+                <!--<h1 class="blink"><span class="spanblink"> QTY is amount to ship in Bulk or Package size. For example: Material selected is a Drum, then Qty should be amount of drums and UOM should be Drums. Please enter QTY/UOM carefully.</span></h1>-->
+                <div class="isa_warning">
+                    <i class="fa fa-warning"></i>
+                    QTY is amount to ship in Bulk or Package size. For example: Material selected is a Drum, then Qty should be amount of drums and UOM should be Drums. Please enter QTY/UOM carefully.
+               </div>   
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                    <tr class="slds-line-height_reset">
+                        <th class="" style="width: 2%;"> <div class="slds-truncate"></div></th>
+                        <th class="" style="width: 10%;"> <div class="slds-truncate">Quantity</div>
+                            <div style="color: red;" if:true={Quantityreq}>Complete this field. </div>
+                        </th>
+                        <th class="" style="width: 12%;"><div class="slds-truncate">UOM</div>
+                            <div style="color: red;" if:true={uomreq}>Complete this field. </div></th>
+                        <th class="" style="width: 4%;"><div class="slds-truncate">Material Number</div></th>
+                        <th class="" style="width: 55%;"><div class="slds-truncate">Plant</div></th>
+                        <th class="" style="width: 3%;"><div class="slds-truncate">Required <br/>Lead Time <br/>in Days</div></th>
+                        <th class="" style="width: 15%;"><div class="slds-truncate"></div>Tank <br/>Number</div></th>   
+                    </tr>
+                    <template for:each={SelectedMatList} for:item="matlist" for:index="index">
+                        <tr key={matlist.Id}>
+                            <td class="datestd"><lightning-input  data-id="Selectedflag" type="checkbox"></lightning-input></td>
+                            <td><div style="color:red">*</div><lightning-input  data-id="Quantity" type="text" value={matlist.qty} ></lightning-input></td>
+                            <td> <div style="color:red">*</div>  <br/>                             
+                                <lightning-combobox variant="label-hidden" 
+                                name="Laminated Label Quantity	" 
+                                placeholder="None"
+                                data-id="selectedPlant"
+                                options={UMOPicklist}
+                                value={matlist.umoval}
+                                  >
+                             </lightning-combobox></td>
+                            <td><br/>
+                                <lightning-input  data-id="SelectedMaterialNumber" type="hidden" value={matlist.matname} disabled></lightning-input>
+                                <div class="slds-cell-wrap slds-text-body_small" style="width: 100px">
+                                <lightning-formatted-url target="_blank" value={matlist.matnameLink} label={matlist.matDesc} ></lightning-formatted-url><br/>
+                                </div>
+                            </td>
+                            <td class="slds-form-element__control slds-grow"><br/>
+                                <lightning-input type="hidden" data-id='msId' value={matlist.msId} disabled></lightning-input>
+                                <lightning-combobox variant="label-hidden" 
+                                        name="Laminated Label Quantity	" 
+                                        data-id="Plant" 
+                                        class="slds-select_container"
+                                        placeholder="Select Plant"
+                                        options={matlist.plants}
+                                        onchange={Leadtime} 
+                                        value={matlist.plantval}
+                                        
+                                        ></lightning-combobox>
+                                
+                                
+                                
+                                
+                                <!--<c-solenis-plant-list mat-id={matlist.Id}></c-solenis-plant-list>--></td>
+                            <td><br/>
+                                <lightning-input  data-id="leadtime" value={matlist.leadTime} type="hidden" ></lightning-input>
+                                <div align='Center'>{matlist.leadTime}</div> </td>
+                            <td><br/><lightning-input  data-id="TankNumber" value={matlist.TankNumber} type="text"></lightning-input></td>
+                        </tr>
+
+                     </template>   
+
+                    </table><br/>
+                    <table style="width: 70%;">
+                        <tr>
+                            <td>
+                                <lightning-input data-id="SearchMaterial" placeholder="Search Material Number" type="Text" class="lastName" variant="label-hidden" value={SerachMaterial}></lightning-input>
+                            </td>
+                            <td>
+                                <lightning-button variant="brand" label="Add New Material" onclick={openAddMaterial} title="Successful action" class="slds-m-left_x-small"></lightning-button>
+                            </td>
+                            <td>
+                                <lightning-button variant="destructive" label="Remove Selected Materials" title="Destructive action" onclick={removeMaterial} class="slds-m-left_x-small"></lightning-button>
+                            </td>
+                        </tr>
+                    </table>
+                    <lightning-button variant="brand" label="Next" onclick={insertorder} title="Successful action" class="slds-m-left_x-small"></lightning-button>
+        </div>  
+
+    </lightning-record-edit-form>    
+</template>
+<template if:true={openmodel}>
+    <template if:true={isLoading}>
+        <div class="exampleHolder" >
+            <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+        </div>
+    </template>
+    <div class="demo-only" >
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                        <lightning-icon icon-name="utility:close" size="medium">
+                        </lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <br/>
+                    <div class="isa_warning">
+                        <i class="fa fa-warning"></i>
+                        Enter at least first 3 digits of Material Number or Name, 000 to retrieve all the Priced materials
+                   </div>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Search Material</h2><br/>
+                    <lightning-input data-id='SearchMatValue' placeholder="Search Material Number" type="Text" class="lastName" variant="label-hidden" value={SerachMaterial}></lightning-input><br/>
+                    <lightning-button variant="brand" label="Search" class="slds-m-left_x-small" onclick={getMaterialSearchDetail}></lightning-button>
+                    
+
+                </header>  
+                <div class={exampleHolder} if:true={isLoading}>
+                    
+                    <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+                </div>
+                <div class="modal-body">
+                        <lightning-datatable                
+                        data-id="relatedFiles"
+                        key-field="Id"                                                     
+                        data={MatrialList}
+                        columns={filesListColumns}                
+                        onrowselection={getSelectedRows}
+                        >
+                        </lightning-datatable>
+
+                </div>
+            <footer class="slds-modal__footer">
+                <lightning-button variant="brand" label="Add Material" title="Add Material"  class="slds-m-left_x-small" onclick={addMatrial}></lightning-button>  
+                <lightning-button variant="destructive" label="Cancel" onclick={closeModal} title="Cancel" class="slds-m-left_x-small"></lightning-button>
+            </footer>
+            </div>                
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </div>
+</template>   
+</template>
+<template if:true={attachflag} >
+    <c-solenis-order-attachment reorder-ids={atachReorderIds}></c-solenis-order-attachment>
+</template>     
+</template>
+    <template if:false={isLoading}>
+    <template if:false={flag_Pilotuser}>
+        <div>You do not have access. Please Contact System Administrator</div>
+    </template>
+    </template>
+    <template if:true={flg_orderShw}>
+       
+        <table>
+           <!-- <tr>
+                <td></td>    
+                <td></td>           
+                <td>
+                    <lightning-button variant="brand" label="Next" onclick={orderselect} title="Primary action with lighter look" class="slds-m-left_x-small"></lightning-button>
+                </td>
+                <td></td>
+                <td></td>
+            </tr>-->
+            <tr>
+                <td style="width: 25%;">Order Type</td>
+                <td style="width: 25%;"><div style="color:red">*</div><lightning-combobox variant="label-hidden"               
+                    data-id="OrderTypeselect" onchange={OnchangeReordertype} options={genericNumberPicklist} required></lightning-combobox>
+                    <div if:true={err_orderSlect} style="color:red">Please Select order Type</div>    
+                </td>
+                    <template if:true={ordertypeflag}> 
+                    <td >Contract Number (Must be Numeric)</td>
+                    <td><lightning-input data-id="ContractNumberselect" type="number" name="input1" ></lightning-input></td>
+                    </template> 
+                    <template if:false={ordertypeflag}> 
+                        <td ></td>
+                        <td></td>
+                    </template> 
+            </tr>
+        </table>
+    </template>
+</template>

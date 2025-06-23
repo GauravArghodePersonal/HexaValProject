@@ -1,0 +1,353 @@
+<apex:page id="thePage" standardController="Sample_Material_Catalog__c" 
+           title="Sample Material Catalog" extensions="Sample_Material_Catalog" 
+           sidebar="false">
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-1.6.2.min.js')}" />
+
+    <apex:form id="theForm">
+        <script type="text/javascript">
+            var $j = jQuery.noConflict();
+            
+            $j(function() {
+                var f = $j('form[id$=theForm]');
+                $j(f).keypress(function(e) {
+                    var k = e.charCode || e.keyCode || e.which;
+                    if (k == 13 && e.target.tagName != 'TEXTAREA') {
+                        //e.preventDefault(); return false;
+                    }
+                });
+            });
+        </script>
+
+        <apex:pageMessages />
+        <apex:pageBlock title="Sample Material Catalog">
+
+            <apex:outputPanel layout="block" rendered="{!renderPage1}">
+            <table class="tbl">
+
+                <tr class="scenterRow"><td class="hdr center" colspan="99">
+                    <apex:outputLabel value="Sample Center : "/>
+	                <apex:actionStatus id="scenterStat">
+	                    <apex:facet name="start">
+	                        <apex:outputText styleClass="bold" value=" Please wait ...">
+	                            <apex:image value="{!$Resource.spinner}"/>
+	                        </apex:outputText>
+	                    </apex:facet>
+	                    <apex:facet name="stop">
+	                        <apex:outputPanel >
+	                        <apex:inputField value="{!sreq.Sample_Center__c}">
+	                            <apex:actionSupport event="onchange" action="{!setRecPC}" 
+	                                                status="scenterStat" rerender="theForm" />
+	                        </apex:inputField>
+	                        </apex:outputPanel>
+	                    </apex:facet>
+	                </apex:actionStatus></td></tr>
+                    
+                <tr><td class="hdr center" colspan="3">
+                    <apex:outputText value="Records: {!pc1.recordFrom} - {!pc1.recordTo} of {!pc1.resultSize}" 
+                                     styleClass="nowrap"/></td>
+                    <td class="hdr center" colspan="4">                 
+                    <apex:actionStatus id="pageControls">
+                        <apex:facet name="start">
+                            <apex:outputText styleClass="bold" value=" Please wait ...">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop">
+                        <apex:outputPanel >
+                        <apex:outputText value="Rows Per Page:"/>&nbsp;
+                        <apex:selectList id="pageSize" value="{!pc1.pageSize}" size="1" title="Rows Per Page:">
+                            <apex:actionSupport event="onchange" action="{!pc1Size}" 
+                                            rerender="theForm" status="pageControls"/>
+                            <apex:selectOption itemLabel="10" itemValue="10"/>
+                            <apex:selectOption itemLabel="50" itemValue="50"/>
+                            <apex:selectOption itemLabel="100" itemValue="100"/>
+                            <apex:selectOption itemLabel="200" itemValue="200"/>
+                        </apex:selectList>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <apex:commandButton action="{!pc1Frst}" disabled="{!NOT(pc1.hasPrevious)}" 
+                                            rerender="theForm" status="pageControls"
+                                            title="First Page" value="<<"/>&nbsp;&nbsp;
+                        <apex:commandButton action="{!pc1Prev}" disabled="{!NOT(pc1.hasPrevious)}" 
+                                            rerender="theForm" status="pageControls"
+                                            title="Prev Page" value="<"/>
+                                            
+                        Previous&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Next&nbsp;
+                        
+                        <apex:commandButton action="{!pc1Next}" disabled="{!NOT(pc1.hasNext)}" 
+                                            rerender="theForm" status="pageControls"
+                                            title="Next Page" value=">"/>&nbsp;&nbsp;
+                        <apex:commandButton action="{!pc1Last}" disabled="{!NOT(pc1.hasNext)}" 
+                                            rerender="theForm" status="pageControls"
+                                            title="Last Page" value=">>"/>
+                        </apex:outputPanel>
+                        </apex:facet>
+                    </apex:actionStatus></td>
+
+                    <td class="hdr center" colspan="2">                 
+                    <apex:outputText value="Page: {!pc1.pageNumber} of {!pc1.lastPageNumber}"/></td>
+                </tr>
+
+                <tr class="headerRow">
+                    <td class="alinks" colspan="3">
+                        <apex:actionStatus id="multiStat">
+                            <apex:facet name="start">
+                                <apex:outputText styleClass="bold" value="">
+                                    <apex:image value="{!$Resource.spinner}"/>
+                                </apex:outputText>
+                            </apex:facet>
+                            <apex:facet name="stop">
+                                <apex:outputPanel >Selected :&nbsp;
+                                    <apex:commandLink action="{!reviewRecs}" status="multiStat" 
+                                                      rerender="theForm">Delete
+                                    </apex:commandLink>&nbsp;
+                                    <apex:commandLink action="{!editRecs}" status="multiStat" 
+                                                      rerender="theForm">Edit
+                                    </apex:commandLink>&nbsp;
+                                    <apex:commandLink action="{!undoRecs}" status="multiStat" 
+                                                      rerender="theForm">Undo
+                                    </apex:commandLink>&nbsp;
+                                    <apex:commandLink action="{!saveRecs}" status="multiStat" 
+                                                      rerender="theForm">Save
+                                    </apex:commandLink>
+                                </apex:outputPanel>
+                            </apex:facet>
+                        </apex:actionStatus></td>
+                        
+                    <td ><apex:inputField value="{!smc.Product_Name__c}"
+                                        styleClass="txtFld1"/></td>
+                    <td ><apex:inputField value="{!smc.Product_Code__c}"
+                                        styleClass="txtFld1"/></td>
+                    <td ><apex:inputField value="{!smc.Sample_Size__c}"
+                                        styleClass="txtFld1"/></td>
+                    <td class="center"><apex:inputField value="{!smc.Out_of_Stock__c}"
+                                        styleClass="txtFld1"/></td>
+
+                    <td class="alinks" colspan="2">
+                        <apex:actionStatus id="srchStat">
+                            <apex:facet name="start">
+                                <apex:outputPanel layout="block" styleClass="left">
+                                    <apex:image value="{!$Resource.spinner}"/>
+                                </apex:outputPanel>
+                            </apex:facet>
+                            <apex:facet name="stop">
+                                <apex:outputPanel layout="block" styleClass="left">
+                                    <apex:commandLink action="{!setRecPC}" status="srchStat" 
+                                                      rerender="theForm">Search
+                                    </apex:commandLink>&nbsp;&nbsp;
+                                    <apex:commandLink action="{!newSMC}" status="srchStat" 
+                                                      rerender="theForm">Reset
+                                    </apex:commandLink>
+                                </apex:outputPanel>
+                            </apex:facet>
+                        </apex:actionStatus></td>
+                </tr>
+
+                <tr class="headerRow">
+                    <td width="4%" class="hdr rnum">#</td>
+                    <td width="2%" class="hdr chkbx"><apex:inputCheckbox styleClass="acb1" value="{!allRecs}"
+                                              onclick="onClick_AllChkbox('rcb1', this);"/></td>
+                    <td width="15%" class="hdr center">Action</td>
+                    <td width="25%" class="hdr">Product Name</td>
+                    <td width="9%" class="hdr">Product Code</td>
+                    <td width="8%" class="hdr">Sample Size</td>
+                    <td width="8%" class="hdr center">Out of Stock</td>
+                    <td width="9%" class="hdr center">Record #</td>
+                    <td width="20%" class="hdr center">Comments</td>
+                </tr>
+
+                <apex:repeat value="{!reclist}" var="r">
+                <tr class="dataRow" onmouseout="if (window.hiOff){hiOff(this);}" 
+                                    onmouseover="if (window.hiOn){hiOn(this);}">
+                    <td class="rnum"><apex:outputText value="{!r.recNum}"/></td>
+                    <td class="chkbx"><apex:inputCheckbox styleClass="rcb1" value="{!r.selected}"
+                        onclick="onClick_RowChkbox('rcb1', 'acb1');"/></td>
+                    <td class="alinks">
+			            <apex:actionStatus id="alinkStat">
+			                <apex:facet name="start">
+			                    <apex:outputText styleClass="bold" value="">
+			                        <apex:image value="{!$Resource.spinner}"/>
+			                    </apex:outputText>
+			                </apex:facet>
+			                <apex:facet name="stop">
+			                    <apex:outputPanel >
+			                        <apex:commandLink action="{!blankRec}" status="alinkStat" 
+			                                          rerender="theForm">New
+			                            <apex:param name="p1" value="{!r.recNum}" assignTo="{!recNum}"/>
+			                        </apex:commandLink>&nbsp;
+
+                                    <apex:commandLink action="{!cloneRec}" status="alinkStat" 
+                                                      rerender="theForm">Copy
+			                            <apex:param name="p1" value="{!r.recNum}" assignTo="{!recNum}"/>
+			                        </apex:commandLink>&nbsp;
+
+                                    <apex:commandLink action="{!deleteRec}" status="alinkStat" 
+                                                      rerender="theForm">Del
+			                            <apex:param name="p1" value="{!r.recNum}" assignTo="{!recNum}"/>
+			                        </apex:commandLink>&nbsp;
+
+                                    <apex:commandLink action="{!editRec}" status="alinkStat"
+                                                      rendered="{!!r.isNewRec}" 
+                                                      rerender="theForm">{!r.editUndo}
+                                        <apex:param name="p1" value="{!r.recNum}" assignTo="{!recNum}"/>
+                                    </apex:commandLink>
+
+                                    <apex:outputPanel rendered="{!r.isNewRec}">&nbsp;&nbsp;&nbsp;&nbsp;
+                                    </apex:outputPanel>&nbsp;
+                                    <apex:commandLink action="{!saveRec}" status="alinkStat" 
+                                                      rerender="theForm">Save
+                                        <apex:param name="p1" value="{!r.recNum}" assignTo="{!recNum}"/>
+                                    </apex:commandLink>
+			                    </apex:outputPanel>
+			                </apex:facet>
+			            </apex:actionStatus></td>
+			            
+                    <td><apex:inputField value="{!r.smc.Product_Name__c}"
+                                         rendered="{!r.editable}"
+                                         styleClass="txtFld1"/>
+                        <apex:outputField value="{!r.smc.Product_Name__c}"
+                                          rendered="{!!r.editable}"
+                                          styleClass="txtFld1"/></td>
+                    <td><apex:inputField value="{!r.smc.Product_Code__c}"
+                                         rendered="{!r.editable}"
+                                         styleClass="txtFld1"/>
+                        <apex:outputField value="{!r.smc.Product_Code__c}"
+                                          rendered="{!!r.editable}"
+                                          styleClass="txtFld1"/></td>
+                    <td><apex:inputField value="{!r.smc.Sample_Size__c}"
+                                         rendered="{!r.editable}"
+                                         styleClass="txtFld1"/>
+                        <apex:outputField value="{!r.smc.Sample_Size__c}"
+                                          rendered="{!!r.editable}"
+                                          styleClass="txtFld1"/></td>
+                    <td class="center">
+                         <apex:inputField value="{!r.smc.Out_of_Stock__c}"
+                                          rendered="{!r.editable}"
+                                          styleClass="txtFld1"/>
+                        <apex:outputField value="{!r.smc.Out_of_Stock__c}"
+                                          rendered="{!!r.editable}"
+                                          styleClass="txtFld1"/></td>
+                    <td><apex:outputLink value="/{!r.smc.Id}" target="_blank"
+                                         styleClass="txtFld1">{!r.smc.Name}
+                        </apex:outputLink></td>
+                    <td class="lcol"><apex:outputText value="{!r.comments}"
+                                         styleClass="txtFld1" escape="false"/></td>
+                </tr>
+                </apex:repeat>
+
+            </table></apex:outputPanel><br/>
+
+            <apex:outputPanel layout="block" rendered="{!renderPage2}">
+            <center>
+            <apex:actionStatus id="delBtnStat">
+                <apex:facet name="start">
+                    <apex:outputText styleClass="bold" value=" Please wait ...">
+                        <apex:image value="{!$Resource.spinner}"/>
+                    </apex:outputText>
+                </apex:facet>
+                <apex:facet name="stop">
+                    <apex:outputPanel >
+                        <apex:commandButton value="Delete"
+                                            rerender="theForm" status="delBtnStat" 
+                                            action="{!deleteRecs}"/>&nbsp;
+                        <apex:commandButton action="{!setRecPC}" value="Cancel" 
+                                            rerender="theForm" status="delBtnStat" 
+                                            immediate="true" />
+                    </apex:outputPanel>
+                </apex:facet>
+            </apex:actionStatus>
+            </center><br/>
+
+            <table class="tbl">
+
+                <tr class="headerRow">
+                    <td width="4%" class="hdr rnum">#</td>
+                    <td width="25%" class="hdr">Product Name</td>
+                    <td width="9%" class="hdr">Product Code</td>
+                    <td width="8%" class="hdr">Sample Size</td>
+                    <td width="8%" class="hdr center">Out of Stock</td>
+                    <td width="9%" class="hdr center">Record #</td>
+                    <td width="37%" class="hdr center">&nbsp;</td>
+                </tr>
+
+                <apex:repeat value="{!dlist}" var="r">
+                <tr class="dataRow" onmouseout="if (window.hiOff){hiOff(this);}" 
+                                    onmouseover="if (window.hiOn){hiOn(this);}">
+                    <td class="rnum"><apex:outputText value="{!r.recNum}"/></td>
+
+                    <td><apex:outputField value="{!r.smc.Product_Name__c}"
+                                          styleClass="txtFld1"/></td>
+                    <td><apex:outputField value="{!r.smc.Product_Code__c}"
+                                          styleClass="txtFld1"/></td>
+                    <td><apex:outputField value="{!r.smc.Sample_Size__c}"
+                                          styleClass="txtFld1"/></td>
+                    <td class="center">
+                        <apex:outputField value="{!r.smc.Out_of_Stock__c}"
+                                          styleClass="txtFld1"/></td>
+                    <td><apex:outputLink value="/{!r.smc.Id}" target="_blank"
+                                         styleClass="txtFld1">{!r.smc.Name}
+                        </apex:outputLink></td>
+                    <td>&nbsp;</td>
+                </tr>
+                </apex:repeat>
+
+            </table></apex:outputPanel><br/>
+
+        </apex:pageBlock>
+    </apex:form>
+    
+    <script type="text/javascript">
+        var $j = jQuery.noConflict();
+        
+        function onClick_AllChkbox(rowCbClass, allChkbox) {
+            $j("."+rowCbClass).each(function() {
+                if (this.disabled == false) {
+                    this.checked = allChkbox.checked;
+                }
+            });
+        }
+
+        function onClick_RowChkbox(rowCbClass, allCbClass) {
+            var allChkbox = $j("."+allCbClass).get(0);
+            allChkbox.checked = true;
+            $j("."+rowCbClass).each(function() {
+                if (!this.checked) {
+                    allChkbox.checked = false;
+                    return false;
+                }
+            });
+        }
+        
+    </script>
+
+    <style>
+        .bold {font-weight: bold;}
+        .nowrap {white-space: nowrap;}
+        .tbl {border-spacing: 0; border-collapse: collapse; width: 100%;
+              empty-cells: show; border: 1px solid #C0C0C0;}
+        .tbl td {padding: 4px 6px 4px 2px; vertical-align: middle; text-align: left;
+                 font-family: Arial,Helvetica,sans-serif;}
+        .tbl td a {color: blue;}
+        /* .tbl td a:hover {text-decoration: underline;} */
+        .tbl td.caption {font-size: 120%; font-weight: bold;}
+        .tbl td.center, .center {text-align: center;}
+        .tbl td.left, .left {text-align: left;}
+        .tbl td.right, .right {text-align: right;}
+        .tbl td.hdr {color: #4a4a56; font-size: 91%; font-weight: bold; 
+                     border: 1px solid #C0C0C0; background-color: #F2F3F3;}
+        .tbl td.rnum {text-align: right; white-space: nowrap;
+                      border-right: 1px solid #C0C0C0;}
+        .tbl td.chkbx {text-align: center; margin: 0px; padding-top: 6px;
+                       border-right: 1px solid #C0C0C0;}
+        .tbl td.alinks {text-align: center; white-space: nowrap;
+                        font-size: 90%; font-family: monospace;
+                        border-right: 1px solid #C0C0C0;}
+        .tbl td.lbl, .lbl {color: #4a4a56; font-size: 91%; font-weight: bold; 
+                           text-align: right; width: 25%;}
+        .tbl td.cs2       {color: #4a4a56; font-size: 91%; font-weight: bold;
+                           text-align: right;}
+        .tbl td.lcol {border-right: 1px solid #C0C0C0;}
+        .tbl td .txtArea1 {height: 60px; width: 100%; resize: none; overflow: auto;}
+        .tbl td .txtFld1 {width: 100%;}
+        .tbl tr.scenterRow {line-height: 30px;}
+        .pbtcaption {font-weight: bold;}
+    </style>
+</apex:page>

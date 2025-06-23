@@ -1,0 +1,202 @@
+<apex:page id="thePage" standardController="Sample_Request__c" 
+           title="Sample Request Feedback" extensions="Sample_Request_Feedback" 
+           sidebar="false" lightningStylesheets="true">
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-1.6.2.min.js')}" />
+
+    <apex:form id="theForm">
+        <script type="text/javascript">
+            var $j = jQuery.noConflict();
+            
+            $j(function() {
+                var f = $j('form[id$=theForm]');
+                $j(f).keypress(function(e) {
+                    var k = e.charCode || e.keyCode || e.which;
+                    if (k == 13 && e.target.tagName != 'TEXTAREA') {
+                        //e.preventDefault(); return false;
+                    }
+                });
+            });
+        </script>
+        <apex:pageMessages />
+        <apex:pageBlock >
+            <center>
+            <apex:actionStatus id="topBtnStat">
+                <apex:facet name="start">
+                    <apex:outputText styleClass="bold" value=" Please wait ...">
+                        <apex:image value="{!$Resource.spinner}"/>
+                    </apex:outputText>
+                </apex:facet>
+                <apex:facet name="stop">
+                    <apex:outputPanel >
+                        <apex:commandButton rendered="{!!readonly}" value="Save"
+                                            rerender="theForm" status="topBtnStat" 
+                                            action="{!save}"/>&nbsp;
+                        <apex:commandButton action="{!cancel}" value="Cancel" 
+                                            rerender="theForm" status="topBtnStat" 
+                                            immediate="true" />
+                    </apex:outputPanel>
+                </apex:facet>
+            </apex:actionStatus>
+            </center>
+
+            <apex:outputPanel layout="block">
+            <table class="tbl">
+                <tr><td class="caption" colspan="9">Sample Request - Followup / Feedback</td></tr>
+                <tr><td>&nbsp;</td>
+                    <td class="lbl"><apex:outputLabel value="{!techAssistHelp}"/></td>
+                    <td class="fld"><apex:outputPanel >
+                        <apex:inputField value="{!sampleRequest.Technical_Assistance__c}"
+                                         rendered="{!!readonly}"/>
+                        <apex:outputField value="{!sampleRequest.Technical_Assistance__c}"
+                                          rendered="{!readonly}"/>
+                        </apex:outputPanel></td>
+                    <td class="cs2" colspan="2"><apex:outputLabel value="Sample Request :"/></td>
+                    <td class="fld" colspan="2"><apex:outputLink value="/{!sampleRequest.Id}">
+                                                    {!sampleRequest.Name}</apex:outputLink></td></tr>
+
+                <tr><td>&nbsp;</td>
+                    <td class="lbl"><apex:outputLabel value="{!spFollowupHelp}"/></td>
+                    <td class="fld"><apex:outputPanel >
+                        <apex:inputField value="{!sampleRequest.Salesperson_Followup__c}"
+                                         rendered="{!!readonly}"/>
+                        <apex:outputField value="{!sampleRequest.Salesperson_Followup__c}"
+                                          rendered="{!readonly}"/>
+                    </apex:outputPanel></td>
+                    <td class="cs2" colspan="2"><apex:outputLabel value="Status :"/></td>
+                    <td class="fld" colspan="2">{!sampleRequest.Status__c}</td></tr>
+
+                <tr><td>&nbsp;</td>
+                    <td class="lbl"><apex:outputLabel value="{!csFollowupHelp}"/></td>
+                    <td class="fld"><apex:outputPanel >
+                        <apex:inputField value="{!sampleRequest.CustomerService_Followup__c}"
+                                         rendered="{!!readonly}"/>
+                        <apex:outputField value="{!sampleRequest.CustomerService_Followup__c}"
+                                          rendered="{!readonly}"/>
+                    </apex:outputPanel></td>
+                    <td class="cs2" colspan="2"><apex:outputLabel value="Feedback Completed?"/></td>
+                    <td class="fld" colspan="2"><apex:outputPanel >
+                        <apex:actionStatus id="completeStat">
+                            <apex:facet name="start">
+                                <apex:outputText styleClass="bold" value=" Please wait ...">
+                                    <apex:image value="{!$Resource.spinner}"/>
+                                </apex:outputText>
+                            </apex:facet>
+                            <apex:facet name="stop">
+                                <apex:outputPanel >
+                                    <apex:inputField value="{!tempObject.Technical_Assistance__c}"
+                                                     rendered="{!!readonly}">
+                                        <apex:actionSupport event="onclick" action="{!validate}" 
+                                                            rerender="theForm" status="completeStat"/>
+                                    </apex:inputField>
+                                    <apex:outputField value="{!tempObject.Technical_Assistance__c}"
+                                                      rendered="{!readonly}"/>
+                                </apex:outputPanel>
+                            </apex:facet>
+                        </apex:actionStatus></apex:outputPanel></td></tr>
+
+                <tr><td>&nbsp;</td>
+                    <td class="lbl"><apex:outputLabel value="{!evalPeriodHelp}"/></td>
+                    <td class="fld"><apex:outputPanel >
+                        <apex:inputField value="{!sampleRequest.Evaluation_Period__c}"
+                                         rendered="{!!readonly}"/>
+                        <apex:outputField value="{!sampleRequest.Evaluation_Period__c}"
+                                          rendered="{!readonly}"/>
+                    </apex:outputPanel></td></tr>
+
+                <tr><td>&nbsp;</td>
+                    <td class="lbl"><apex:outputLabel value="Customer Feedback"/><br/><br/>
+                        <apex:outputPanel ><apex:actionStatus id="cfbStat">
+                            <apex:facet name="start">
+                                <apex:outputText styleClass="bold" value=" Please wait ...">
+                                    <apex:image value="{!$Resource.spinner}"/>
+                                </apex:outputText>
+                            </apex:facet>
+                            <apex:facet name="stop">
+                                <apex:outputPanel >
+                                    <apex:commandButton action="{!copyFeedbackToMaterials}" 
+                                                        rendered="{!!readonly}"
+                                                        rerender="theForm" status="cfbStat" 
+                                                        value="Copy Feedback to Materials"/>
+                                </apex:outputPanel>
+                            </apex:facet></apex:actionStatus>
+                        </apex:outputPanel></td>
+                    <td width="30%"><apex:outputPanel >
+                        <apex:inputField value="{!sampleRequest.Customer_Feedback__c}"
+                                rendered="{!!readonly}" styleClass="txtArea1"/>
+                        <apex:outputField value="{!sampleRequest.Customer_Feedback__c}"
+                                rendered="{!readonly}" styleClass="txtArea1"/>
+                        </apex:outputPanel></td></tr>
+
+                <tr><td>&nbsp;</td></tr>
+                <tr><td class="caption" colspan="9">Sample Materials</td></tr>
+
+                <tr class="headerRow">
+                    <td class="hdr rnum">#</td>
+                    <td class="hdr">Material Name</td>
+                    <td class="hdr">Customer Feedback</td>
+                    <td class="hdr">Wt / Vol</td>
+                    <td class="hdr">UOM</td>
+                    <td class="hdr">Quantity</td>
+                    <td class="hdr">Status</td>
+                </tr>
+                <apex:repeat value="{!materials}" var="m">
+                <tr class="dataRow" onmouseout="if (window.hiOff){hiOff(this);}" 
+                                    onmouseover="if (window.hiOn){hiOn(this);}">
+                    <td width="3%" class="rnum"><apex:outputText value="{!m.recNum}"/></td>
+                    <td width="30%"><apex:outputField value="{!m.sm.name}"/></td>
+                    <td width="30%"><apex:inputField value="{!m.sm.Customer_Feedback__c}" 
+                                          rendered="{!!readonly}" styleClass="txtArea1"/>
+                                      <apex:outputField value="{!m.sm.Customer_Feedback__c}" 
+                                          rendered="{!readonly}" styleClass="txtArea1"/></td>
+                    <td width="7%"><apex:outputField value="{!m.sm.Sample_Size__c}"/></td>
+                    <td width="12%"><apex:outputField value="{!m.sm.Sample_UOM__c}"/></td>
+                    <td width="6%"><apex:outputField value="{!m.sm.Sample_Quantity__c}"/></td>
+                    <td width="12%" class="lcol"><apex:outputField value="{!m.sm.Record_Status__c}"/></td>
+                </tr>
+                </apex:repeat>
+                
+            </table></apex:outputPanel><br/>
+            <center>
+            <apex:actionStatus id="botBtnStat">
+                <apex:facet name="start">
+                    <apex:outputText styleClass="bold" value=" Please wait ...">
+                        <apex:image value="{!$Resource.spinner}"/>
+                    </apex:outputText>
+                </apex:facet>
+                <apex:facet name="stop">
+                    <apex:outputPanel >
+                        <apex:commandButton rendered="{!!readonly}" value="Save"
+                                            rerender="theForm" status="botBtnStat" 
+                                            action="{!save}"/>&nbsp;
+                        <apex:commandButton action="{!cancel}" value="Cancel" 
+                                            rerender="theForm" status="botBtnStat" 
+                                            immediate="true" />
+                    </apex:outputPanel>
+                </apex:facet>
+            </apex:actionStatus>
+            </center>
+
+        </apex:pageBlock>
+    </apex:form>
+    
+    <style>
+        .bold {font-weight: bold;}
+        .right {text-align: right;}
+        .tbl {border-spacing: 0; border-collapse: collapse; width: 100%;
+              empty-cells: show;}
+        .tbl td {padding: 4px; vertical-align: middle; text-align: left; 
+                 font-family: Arial,Helvetica,sans-serif;}
+        .tbl td.lbl, .lbl {color: #4a4a56; font-size: 91%; font-weight: bold; 
+                           text-align: right; width: 25%;}
+        .tbl td.cs2       {color: #4a4a56; font-size: 91%; font-weight: bold;
+                           text-align: right;}
+        .tbl td.caption {font-size: 120%; font-weight: bold;}
+        .tbl td.hdr {color: #4a4a56; font-size: 91%; font-weight: bold;
+                     border: 1px solid #C0C0C0; background-color: #F2F3F3;}
+        .tbl td.rnum {text-align: right; border-right: 1px solid #C0C0C0;}
+        .tbl td.lcol {border-right: 1px solid #C0C0C0;}
+        .tbl tr.dataRow {border: 1px solid #C0C0C0;}
+        .txtArea1 {height: 60px; width: 100%; resize: none; overflow: auto;}
+        .pbtcaption {font-weight: bold;}
+    </style>
+</apex:page>

@@ -1,0 +1,64 @@
+<apex:page controller="FlintSiteHomeController" >
+<!--
+    <apex:includeScript value="{!URLFOR($Resource.VIResources, 'js/jquery-1.4.2.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.VIResources, 'js/utils.js')}" />
+
+    <script type="text/javascript">
+    
+        jQuery.noConflict();
+    
+    </script>
+
+    <apex:pageMessages rendered="{!OR(ISBLANK(currentStep), currentStep < 1)}" />
+
+    <apex:outputPanel layout="none" rendered="{!currentStep = 1}">
+
+        <script type="text/javascript">
+            jQuery(function() {
+                disableButtonsOnSubmit("{!$Component.step1}");
+            });
+        </script>
+
+        <apex:form id="step1">
+            <apex:pageBlock title="Locations" mode="edit">
+
+                <apex:pageBlockButtons >
+                    <apex:commandButton value=" Go to AdWizard " action="{!step2}" />
+                </apex:pageBlockButtons>
+
+                <apex:pageMessages />
+                
+                <apex:pageBlockTable value="{!locations}" var="location" rendered="{!locations.size > 0}">
+                    <apex:column headerValue="Action" headerClass="actionColumn" styleClass="actionColumn">
+                        <apex:outputLink value="{!$Page.VILocationEdit}" styleClass="actionLink">
+                            <apex:param name="id" value="{!location.Id}" />
+                            <apex:param name="facilityId" value="{!facilityId}" />
+                            <apex:param name="retURL" value="{!URLENCODE(thisURL)}" />
+                            <apex:outputText value="Edit" rendered="{!canEditLocation}" />
+                            <apex:outputText value="View" rendered="{!NOT(canEditLocation)}" />
+                        </apex:outputLink>
+                    </apex:column>
+                    <apex:column headerValue="Location Name">
+                        <apex:outputField value="{!location.Name}" />
+                    </apex:column>
+                    <apex:column headerValue="Address">
+                        <apex:outputText value="{0}, {1}, {2} {3}">
+                            <apex:param value="{!location.BillingStreet}" />
+                            <apex:param value="{!location.BillingCity}" />
+                            <apex:param value="{!location.BillingState}" />
+                            <apex:param value="{!location.BillingPostalCode}" />
+                        </apex:outputText>
+                    </apex:column>
+                    <apex:column headerValue="Inactive" headerClass="booleanColumn" styleClass="booleanColumn">
+                        <apex:outputField value="{!location.Inactive_Account__c}" />
+                    </apex:column>
+                </apex:pageBlockTable>
+                
+                <apex:outputPanel layout="none" rendered="{!locations.size = 0}">
+                    <p>There are no locations to display.</p>
+                </apex:outputPanel>
+            </apex:pageBlock>
+        </apex:form>
+    </apex:outputPanel>
+    -->
+</apex:page>

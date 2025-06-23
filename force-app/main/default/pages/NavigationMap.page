@@ -1,0 +1,6 @@
+<apex:page docType="html-5.0" standardController="Case" extensions="MapController">
+ <!-- Display the address on a map -->
+            <apex:map width="100%" height="350px" mapType="roadmap" zoomLevel="17"
+            center="{!address}">
+            </apex:map>
+</apex:page>

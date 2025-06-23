@@ -1,0 +1,91 @@
+<apex:page controller="Pricing_Rebate_Approval_Controller" 
+           sidebar="false" tabStyle="Pricing_Rebate__c">
+    <apex:includeScript value="{!$Resource.PendingApprovalFunctions}" />
+    <apex:pageMessages />
+    <apex:form id="actionForm">
+        <apex:pageBlock Title="Pricing Rebates pending Approval">
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Approve Selected Rows"
+                    onclick="return paf_validateForm1(this.form);"
+                    action="{!approveSelectedList}" />
+                <apex:commandButton value="Reject Selected Rows"
+                    onclick="return paf_validateForm2(this.form);"
+                    action="{!rejectSelectedList}" />
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection columns="1">
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Approve / Reject Comments"/>
+                    <apex:inputTextArea title="Approve / Reject Comments" 
+                                        id="userComments" value="{!userComments}" 
+                                        rows="1" cols="100"/>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:pageBlockTable value="{!pricingRebates}" var="p"
+                                         rowClasses="row1,row2">
+                        <apex:column >
+                            <apex:facet name="header">
+                                <apex:inputCheckbox id="allcb" value="{!allSelected}"
+                                    onclick="paf_checkAll(this.form, this, 'rowcb')" />
+                            </apex:facet>
+                            <apex:inputCheckbox id="rowcb" value="{!p.selected}"
+                                onclick="paf_toggleAllCheckbox(this.form, this);" />
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Rebate<br/>Number</apex:facet>
+                            <apex:outputLink value="/{!p.pr.Id}" target="_blank"> 
+                                <apex:outputText value="{!p.pr.Name}"/>
+                            </apex:outputLink>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Rebate Recipient<br/>Name and Number</apex:facet>
+                            <apex:outputLink value="/{!p.rr.Id}" target="_blank"> 
+                                <apex:outputField value="{!p.rr.Name}"/>&nbsp;-&nbsp; 
+                                <apex:outputText value="{!p.recipientNum}"/>
+                            </apex:outputLink>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Agreement Type</apex:facet>
+                            <apex:outputField value="{!p.pr.Rebate_Agreement_Type__c}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Condition Type</apex:facet>
+                            <apex:outputField value="{!p.pr.Condition_Type__c}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Tables</apex:facet>
+                            <apex:outputField value="{!p.pr.Tables__c}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Rebate<br/>Start Date</apex:facet>
+                            <apex:outputField value="{!p.pr.Rebate_Start_Date__c}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Rebate<br/>End Date</apex:facet>
+                            <apex:outputField value="{!p.pr.Rebate_End_Date__c}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">SAP Agreement<br/>Number</apex:facet>
+                            <apex:outputField value="{!p.pr.SAP_Rebate_Agreement_Number__c}"/>
+                        </apex:column>
+                        <apex:column breakBefore="true" colspan="99">
+                            <apex:outputPanel rendered="{!NOT(ISBLANK(p.pr.Internal_Comments__c))}">
+                            <apex:outputText styleClass="bold" value="Internal Comments : "/>
+                            <apex:outputField value="{!p.pr.Internal_Comments__c}"/>
+                            </apex:outputPanel>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+
+        </apex:pageBlock>
+    </apex:form>
+    <style>
+        .bold {font-weight: bold;}
+        .right {text-align: right;}
+        .row1 {background-color: #f3f3ec;}
+        .row2 {background-color: #f8f8f8;}
+        .warn {background-color: #f3f3ec;}
+    </style>
+</apex:page>

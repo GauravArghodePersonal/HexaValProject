@@ -1,0 +1,7 @@
+<apex:page standardController="Active_Pricing__c"  tabStyle="Active_Pricing__c" recordSetvar="activePricingRecs" sidebar="false" title="Add New Pricing Wizard">
+
+  <apex:form >
+	<c:App_PricingWizard_WebApp id="Pricing_Wizard" accountId="{!id}" cancelURL="/{!id}" returnURL="/{!id}"/>
+  </apex:form>
+
+</apex:page>

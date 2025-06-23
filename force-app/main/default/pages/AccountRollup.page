@@ -1,0 +1,127 @@
+<apex:page standardController="Account" tabStyle="Account" extensions="AccountRollupExtension" id="accountRollupsPage">
+
+    <script>
+        if (!window.console) window.console = {};   
+        if (!window.console.log) window.console.log = function () { };
+    </script>
+
+    <!-- https://{!$Label.SFDC_URL}/apex/AccountRollup?id=001W0000006FVMP -->
+
+    <head>
+        <apex:includeScript value="{!URLFOR($Resource.jQuery1x,'jQuery/jquery-1.8.0.min.js')}" />
+        <!-- 
+        <apex:includeScript value="{!URLFOR($Resource.AccountRollupResources,'js/general.js')}" />
+         -->  
+        <apex:stylesheet value="{!URLFOR($Resource.AccountRollupResources,'css/style.css')}" />
+    
+        <apex:includeScript value="{!URLFOR($Resource.jQuery1x,'jQueryPlugins/log4javascript/log4javascript.js')}" />  
+        <script type="text/javascript">
+            var log = log4javascript.getDefaultLogger();
+            log4javascript.setEnabled(false);
+        </script>
+    
+        <style type="text/css">body{background:#F8F8F8;}</style>
+    
+        <script type="text/javascript">
+            var j$= jQuery.noConflict();
+            j$(document).ready(function(){
+                initPage();
+            });
+            
+            function initPage() {
+                AccountRollup_ApplyJQueryStyling();
+                resizeIframe();
+                AccountRollup_ActivateEventListeners();
+            }
+            
+            function AccountRollup_ApplyJQueryStyling() {
+                j$('.pbSubheader').css('background-color','#1797C0');
+               console.log('test4');
+                j$(window).resize(function() {AccountRollup_resizeIframe();});
+            }
+    
+            function AccountRollup_ActivateEventListeners() {
+                j$('#AdvancedTabbarEvents').on('refresh', function(e) {
+                    console.log('AccountRollup - AdvancedTabbarEvents Refresh Event captured');
+                    console.log('AccountRollup - AdvancedTabbarEvents Refresh Event minWidth = ' + e.minWidth);
+                    AccountRollup_resizeIframe(e.minWidth);
+                    console.log('test2');
+                    AccountRollup_ApplyJQueryStyling();
+                    console.log('test3');
+                });
+            }
+            
+            var currWidth = 1024;
+            var alreadyResizing = false;
+            
+            function AccountRollup_resizeIframe(widthParam) {
+                console.log('In AccountRollup_resizeIframe');
+                console.log('resizeIframe - alreadyResizing = ' + alreadyResizing);
+            
+                if (!alreadyResizing) {
+                    alreadyResizing = true;
+            
+                    var minHeight = 0;
+                    var maxHeight = 9999;
+                    var extraHeight = 30;
+
+                    var minWidth = 1024;
+                    var maxWidth = 9999;
+                    
+                    if (widthParam != '' && widthParam != null) {
+                        currWidth = widthParam;
+                    }
+                    if (currWidth > minWidth) {minWidth = currWidth;}
+                    
+                    var thisWindow = window.name;
+                    console.log('resizeIframe - thisWindow.Name = ' + thisWindow);
+                    if(thisWindow) {        
+                        var iframes = parent.document.getElementsByName(thisWindow);
+                        if (iframes) {            
+                            //var height = document.body.scrollHeight;
+                            var height = j$(document.body).height();
+                            console.log('document.body.scrollHeight = ' + document.body.scrollHeight);
+                            console.log('jquery document.height = ' + j$(document).height());
+                            console.log('jquery document.body.height = ' + j$(document.body).height());
+        
+                            height += extraHeight;
+        
+                            if (height < minHeight) {height = minHeight;}
+                            if (height > maxHeight) {height = maxHeight;} 
+
+                            console.log('height = ' + height);
+                            console.log('document.body.scrollHeight = ' + document.body.scrollHeight);
+        
+                            iframes[0].style.height = height + "px";
+                            iframes[0].scrolling="auto";
+        
+                            //var width = document.body.scrollWidth;
+                            var width = currWidth;
+
+                            if (width < minWidth) {width = minWidth;}
+                            if (width > maxWidth) {width = maxWidth;} 
+        
+                            console.log('width = ' + width);
+                            console.log('document.body.scrollWidth = ' + document.body.scrollWidth);
+        
+                            iframes[0].style.width = width + "px";
+        
+                        }   
+                    }
+                    alreadyResizing = false;
+                }
+            }
+
+        </script>
+    </head>
+
+    <apex:form id="mainForm">
+        <c:AdvancedTabbar id="mainTabbar"
+                          rollupDefinitionName="UltimateParent" 
+                          startingId="{!account.Id}"
+                          recordTypeName="{!account.RecordType.Name}"
+                          startingSection="{!startingSection}"
+                          focusId="{!focusId}"
+                          />
+    </apex:form>
+</apex:page>

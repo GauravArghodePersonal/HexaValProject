@@ -1,0 +1,200 @@
+	.toolbar {
+		background-color: #1797C0;
+		background-image: none;
+		background-position: left top;
+		background-repeat: repeat-x;
+		border: 1px solid #C0C0C0;
+		padding: 0;
+	}
+	
+	.sectionHeader {
+		background-color: #1797C0;
+	}
+	
+	.sectionHeaderAdmin {
+		background-color: #D12B1F;
+	}
+	
+	.toolbarItem {
+		padding: 4px 0;
+	}
+	
+	.toolbarItemTabBar {
+		padding: 4px 0px 0px 0px;
+	}
+	
+	.toolbarGroup {
+		padding: 4px 0;
+		/* height: 30px; */
+		height: 120px;
+		vertical-align:middle;
+	}
+	
+	.mainPanel {
+		padding: 0px 0px 0px 0px;
+	}
+	
+	.toolbarGroup-left-side {
+		width: 25%;
+		float: left;
+		text-align: left;
+		margin: 0px 0px 0px 0px;
+		background-color: inherit;
+	}
+	
+	.toolbarGroup-center-column {
+		width: 50%;
+		float: left;
+		text-align: center;
+		margin: 0px 0px 0px 0px;
+		background-color: inherit;
+	}
+	
+	.toolbarGroup-right-side {
+		width: 25%;
+		float: left;
+		text-align: right;
+		margin: 0px 0px 0px 0px;
+		background-color: inherit;
+	}
+	
+	.fullWidthToolbar-centered {
+		width: 100%;
+		float: left;
+		text-align: center;
+		background-color: inherit;
+	}
+	
+	.filterToolbar {
+		background-color: #1797C0;
+		height: 40px; 
+		vertical-align:middle;
+	}
+	
+	.filterToolbar-left-side {
+		width: 25%;
+		text-align: center;
+		white-space: nowrap;
+		overflow:visible;
+	}
+	
+	.filterToolbar-center {
+		width: 50%;
+		white-space: nowrap;
+		overflow:visible;
+	}
+	
+	.filterToolbar-right-side {
+		width: 25%;
+		white-space: nowrap;
+		overflow:visible;
+	}
+	
+	.pageStatusToolbarText {
+		background-color: #1797C0;
+		font-size: 125%;
+		font-weight:bold;
+		color:white;
+	}
+	
+	.filterToolbarText {
+		background-color: #1797C0;
+		font-size: 125%;
+		font-weight:bold;
+		color:white;
+	}
+	
+	.filterToolbarText-right-side {
+		background-color: #1797C0;
+		font-size: 75%;
+		font-weight:bold;
+		color:white;
+	}
+	
+	.pageNavigationToolbar {
+		background-color: #FFFFFF;
+	}
+	
+	.filterToolbarButtons {
+		font-size: 70%;
+		font-weight:bold;
+	}
+
+	input.filterToolbarButton {
+	}
+
+	input.filterToolbarButton-unselected {
+	}
+	
+	input.filterToolbarButton-selected {
+		opacity:0.75;
+		font-weight:bold;
+	}
+
+	input.toolbarTabButton {
+		display:block;
+		float:left;
+		padding:5px 5px;
+		background:#aaa;
+		border:1px solid #777;
+		border-bottom:none;
+		border-radius:15px 15px 0 0;
+		margin-right:1px;
+		color:#fff;
+		text-decoration:none;
+		font-size: 115%;
+	}
+
+	input.toolbarTabButton-unselected {
+		display:block;
+		float:left;
+		padding:5px 5px;
+		background:#aaa;
+		border:1px solid #777;
+		border-bottom:none;
+		border-radius:15px 15px 0 0;
+		margin-right:1px;
+		color:#fff;
+		text-decoration:none;
+		font-size: 115%;
+	}
+	
+	input.toolbarTabButton-mouseover {
+		display:block;
+		float:left;
+		padding:5px 5px;
+		background:#C5C6A0;
+		border-style: inset;
+		border:1px solid #777;
+		border-bottom:none;
+		border-radius:15px 15px 0 0;
+		margin-right:1px;
+		color:#fff;
+		text-decoration:none;
+		font-size: 115%;
+	}
+	
+	input.toolbarTabButton-selected {
+		font-weight:bold;
+		display:block;
+		float:left;
+		padding:5px 5px;
+		background:#6CC4E6;
+		border-style: outset;
+		border:1px solid #777;
+		border-bottom:none;
+		border-radius:15px 15px 0 0;
+		margin-right:1px;
+		color:#fff;
+		text-decoration:none;
+		font-size: 115%;
+	}
+/*
+    .headerSortUp div {
+        background-image: url(asc.gif);
+    }
+    
+    .headerSortDown div {
+        background-image: url(desc.gif);
+    }
+*/

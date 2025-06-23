@@ -1,0 +1,222 @@
+.product-card {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    margin: 1rem 0rem 0rem 1rem;
+    height: auto;
+    background-color: #fff;
+    padding: 15px;
+    width: 100%;
+}
+
+.product-list-container {
+    width: 100%;
+}
+
+.product-details-section {
+    flex: 7;
+    overflow: hidden;
+    padding-top: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.product-image-section {
+    flex: 2;
+    margin-right: 1rem;
+}
+
+.product-image {
+    max-height: 200px;
+    display: block;
+    object-fit: contain;  /* This ensures the image scales properly */
+}
+
+h2 {
+    font-weight: 600;
+    font-size: 20px;
+    margin-bottom: .5rem;
+}
+
+.product-sku, .product-inventory, .product-description {
+    margin-bottom: 0.1rem;
+}
+
+.button_icon {
+    fill: white;
+    height: 20px;
+    width: 20px;
+    margin-left: 5px; /* Added space between text and icon */
+}
+
+.product-price {
+    /* Remove absolute positioning */
+    text-align: right; /* Align text to the right */
+}
+
+.list-price {
+    text-decoration: line-through;
+}
+
+.sale-price {
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.quantity-selector {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 180px;
+    height: 30px;  /* Increased height for a better look */
+    text-align: center;
+    align-self: flex-end;
+    border-radius: 5px;  /* Rounded corners */
+}
+
+.quantity-button {
+    width: 30px;
+    height: 100%;
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    text-align: center;
+    border-radius: 5px;
+}
+
+.quantity-input {
+    width: 50px;
+    height: 100%;
+    text-align: center;
+    font-size: 14px;
+    border: none;
+}
+
+.add-to-cart-button {
+    color: white;
+    align-self: flex-end;
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+    padding: 5px 10px;
+    width: 180px;
+    justify-content: space-between;
+    margin-top: 4px;
+    border: none;
+}
+
+.product-right-section {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.quantity-and-atc-buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* Align items to the bottom of the container */
+}
+
+@media (max-width: 47.9375em) {
+    .product-card {
+        flex-direction: column;
+        height: auto;
+        margin: 0 auto;
+    }
+    .product-image {
+        max-height: 200px;
+        margin: 0 auto;
+    }
+
+    .product-title {
+        text-align: center;
+    }
+
+    p { 
+        font-size: 15px;
+    }
+
+    .product-text {
+        background-color: #f9f9f9;
+        padding: 10px; /* Reduced padding for a more compact look */
+        border-radius: 5px;
+    }
+
+    .quantity-selector {
+        width: 100%;
+    }
+
+    .add-to-cart-button {
+        width: 100%;
+    }
+
+    .product-price {
+        text-align: center;
+    }
+
+    .quantity-and-atc-buttons {
+        align-items: center;
+        justify-content: center;
+        margin: 1rem auto;
+    }
+
+    .product-right-section {
+        margin: .5rem 0 0 .5rem;
+    }
+}
+
+.product-text ul {
+    list-style-type: disc; /* For bullet points */
+    padding-left: 20px; /* Adjust as needed for proper alignment */
+    margin: 0; /* Adjust as needed */
+}
+
+.product-text li {
+    margin-bottom: 0.1rem; /* Your existing margin */
+}
+
+.nav-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+button:disabled {
+    background-color: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
+}
+
+.pagination-text {
+    text-align: center;
+    font-size: 16px;
+    line-height: 2;
+}
+
+.product-image-section {
+    cursor: pointer;
+}
+
+.important-product-data {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.important-product-data span {
+    margin-right: 10px; /* Adds spacing between elements */
+}
+
+.data-separator {
+    margin-left: 10px; /* Adds spacing after the separator */
+}
+
+.in-stock {
+    color: #0dcf0d; /* Light green color */
+}

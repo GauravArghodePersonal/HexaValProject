@@ -1,0 +1,20 @@
+<template>
+    <template if:true={showForm}>
+        <!-- Here should be the forms -->
+        <template if:true={isCustomerInformationPacket}>
+            <c-customer-request-form record-id={tokenInfo.Id} onfinish={handleFormFinish}></c-customer-request-form>
+        </template>
+    </template>
+    <template if:true={showMessageCard}>
+        <lightning-card title={messageCardTitle}>
+            <div class="slds-p-around_small">
+                <p>
+                    <lightning-formatted-rich-text value={messageCardText}></lightning-formatted-rich-text>
+                </p>
+            </div>
+        </lightning-card>
+    </template>
+    <template if:true={isLoading}>
+        <lightning-spinner alternative-text="Loading..."></lightning-spinner>
+    </template>
+</template>

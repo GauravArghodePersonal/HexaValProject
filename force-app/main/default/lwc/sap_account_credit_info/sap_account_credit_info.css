@@ -1,0 +1,13 @@
+.m-width{
+    width: 100%;
+}
+.m-white-space{
+    margin-top:10px;
+}
+.m-error{
+    color:red;
+}
+.slds-form-element__control{
+    border-bottom: 1px solid grey !important;
+    width: 90% !important;
+}

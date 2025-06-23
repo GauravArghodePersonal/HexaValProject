@@ -1,0 +1,94 @@
+<template>
+    <div class="slds-m-around_large">
+        <div if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading..." variant="brand">
+            </lightning-spinner>
+        </div>
+    </div>
+    <div style="margin-left:5%; margin-right: 5%;">
+        <lightning-card style="padding:5%">
+            <lightning-layout style="padding-left:5%;padding-right:5%">
+                <lightning-layout-item size="12" padding="around-small">
+                    <lightning-layout class="slds-m-bottom_small">
+                        <lightning-layout-item size="12" class="slds-p-right_small">
+                            <lightning-input type="search" label="Search existing ideas" onchange={handleSearchChange}
+                                data-item="searchInput">
+                            </lightning-input>
+                        </lightning-layout-item>
+                    </lightning-layout>
+
+                    <template if:true={showSearchMsg}>
+                        <div>
+                            No idea found for matching search criteria
+                        </div>
+                    </template>
+                    
+                    <lightning-layout if:true={showSearchResult} class="slds-show_small">
+                        <lightning-layout-item size="12">
+                            <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                                <thead>
+                                    <tr class="slds-line-height_reset">
+                                        <th class="" style="width:10%" scope="col" ></th>
+                                        <th class="" scope="col">Idea Title</th>
+                                        <th class="" scope="col">Status</th> 
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template for:each={ideas} for:item="item" for:index="index">
+                                        <tr key={item.oIdea.id}>
+                                            <th scope="col">
+                                                <div class="slds-truncate" title="">
+                                                    <lightning-input class="checkbox" name={index} onchange={rowSelected} type="radio" data-id="checkbox" label="" ></lightning-input>
+                                                </div>
+                                            </th>
+                                            <th scope="col">
+                                                <a onclick={viewClicked} name={item.oIdea.Id}>{item.oIdea.Name}</a>
+                                            </th>
+                                            <th scope="col">
+                                                <div>{item.oIdea.Status__c}</div>
+                                            </th> 
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </lightning-layout-item>
+                    </lightning-layout>
+
+                    <lightning-layout if:true={showSearchResult} class="slds-hide_small">
+                        <lightning-layout-item size="12">
+                            <template for:each={ideas} for:item="item" for:index="index">
+                                <lightning-layout key={item.oIdea.id}>
+                                    <lightning-layout-item size="1">
+                                        <lightning-input class="checkbox" name={index} onchange={rowSelected} type="radio" data-id="checkbox" label="" ></lightning-input>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="11">
+                                        <lightning-layout>
+                                            <lightning-layout-item size="12">
+                                                <b>Idea Title:</b>&nbsp;<a onclick={viewClicked} name={item.oIdea.Id}>{item.oIdea.Name}</a>
+                                                <br />
+                                                <b>Status:</b> {item.oIdea.Status__c}
+                                            </lightning-layout-item>
+                                        </lightning-layout>
+                                    </lightning-layout-item>
+                                    <hr />
+                                </lightning-layout>
+                            </template>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </lightning-layout-item>
+            </lightning-layout>
+
+            <lightning-layout horizontal-align="start" multiple-rows="true" style="padding-left:5%;padding-right:5%">
+                <lightning-layout-item flexibility="no-grow" padding="around-small">
+                    <lightning-button variant="brand" label="Merge Idea" title="Merge Idea" onclick={handleMerge}></lightning-button>
+                </lightning-layout-item>
+                <lightning-layout-item flexibility="no-grow" padding="around-small">
+                    <lightning-button variant="brand" label="Mark as Duplicate Idea" title="Duplicate Idea" onclick={handleDuplicate}></lightning-button>
+                </lightning-layout-item>
+                <lightning-layout-item flexibility="no-grow" padding="around-small">
+                    <lightning-button variant="brand" label="Cancel" title="Cancel" onclick={handleCancel}></lightning-button>
+                </lightning-layout-item>
+            </lightning-layout>
+        </lightning-card>
+    </div>
+</template>

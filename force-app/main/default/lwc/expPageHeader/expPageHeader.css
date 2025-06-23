@@ -1,0 +1,17 @@
+.dummy{
+	color : black;
+}
+.bgColor {
+	height:115px;
+}
+.fontWhite{
+	color:#ffffff !important;
+}
+.titleStyle{
+	font-size:52px;
+	color:#ffffff !important;
+}
+.breadcrumbStyle{
+	font-size:14px;
+	color:#ffffff !important;
+}

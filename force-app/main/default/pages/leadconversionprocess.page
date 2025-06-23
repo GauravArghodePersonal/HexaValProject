@@ -1,0 +1,129 @@
+<apex:page controller="leadconversionprocessclass" tabStyle="lead" sidebar="false">
+<apex:pageMessages ></apex:pageMessages>
+<apex:sectionHeader title="Convert Lead" subtitle="{!custom.lastname}"/>
+<p>
+Leads can be converted to accounts, contacts, opportunities, and followup tasks.<br/>
+You should only convert a lead once you have identified it as qualified.<br/>
+After this lead has been converted, it can no longer be viewed or edited as a lead, but can be viewed in lead reports.</p>
+<p>
+Make sure that if you don't wish to create new opportunity for this account, select the "Do not create a new opportunity upon conversion" Checkbox.
+</p>
+<apex:form id="thefrm">
+                      
+<apex:pageBlock id="theblock" >
+   <apex:pageBlockButtons >
+      <apex:commandButton value="Convert" action="{!ConvertToAccount}" onclick="return work();"/>
+      <apex:commandButton value="Cancel" action="{!BackToLead}"/>
+   </apex:pageBlockButtons>
+
+   <apex:pageBlockSection title="Convert Lead" columns="1" collapsible="false" id="thesec">
+      <apex:pageBlockSectionItem >
+         <apex:outputLabel >Record Owner</apex:outputLabel>
+         <apex:inputField value="{!custom.ownerid}" />
+      </apex:pageBlockSectionItem>
+      
+      <apex:pageBlockSectionItem >
+          <apex:outputLabel >Send Email to The Owner</apex:outputLabel>
+          <apex:inputCheckbox value="{!sendemail}"/>
+      </apex:pageBlockSectionItem>
+      <apex:pageBlockSectionItem id="tt" >
+        <apex:outputLabel >Account Name</apex:outputLabel>
+        <apex:outputPanel layout="block">
+        <apex:outputPanel styleClass="requriedblock"/>
+            <apex:actionStatus id="text" >
+               <apex:facet name="start">
+                  <apex:outputText styleClass="bold" value=" Please wait ...">
+                         <apex:image value="{!$Resource.spinner}"/>
+                  </apex:outputText>
+                  </apex:facet>
+                  <apex:facet name="stop">
+                  <apex:selectList value="{!app}" size="1">
+                  <apex:selectOptions value="{!adding}"/>
+                  <apex:actionSupport event="onchange" action="{!getcontact}" reRender="pageB1" status="text"/>
+                  </apex:selectList>
+                  </apex:facet>
+            </apex:actionstatus>
+        </apex:outputPanel>
+    </apex:pageBlockSectionItem>
+    <apex:pageBlockSectionItem rendered="{!show}" >
+          <apex:outputLabel >Contact Name</apex:outputLabel>
+          <apex:selectList value="{!convalue}" size="1" style="width:35%">
+             <apex:selectOptions value="{!convalues}"/>
+          </apex:selectList>
+      </apex:pageBlockSectionItem>
+      <apex:pageBlockSectionItem >
+          <apex:outputLabel >Opportunity Name</apex:outputLabel>
+          <apex:outputPanel layout="block" id="pan">
+          <apex:outputPanel styleClass="requriedblock"/>
+          <script>
+              var red;
+              function work(){
+              red = document.getElementById('{!$Component.ex}').value;
+              if(red!=""){
+              alert("Don'"+"t forget to edit and complete the opportunity after conversion"); }  }
+          </script>
+          <apex:actionStatus id="counterStatus">
+            <apex:facet name="start">
+                <apex:outputText styleClass="bold" value=" Please wait ...">
+                   <apex:image value="{!$Resource.spinner}"/>
+                </apex:outputText>
+            </apex:facet>
+            <apex:facet name="stop">
+            <apex:inputText id="ex" disabled="{!IF(custom.DoNotCall==true,true,false)}" value="{!opp}" style="width:35%"/>
+            </apex:facet>
+          </apex:actionStatus>
+          </apex:outputPanel>
+      </apex:pageBlockSectionItem> 
+      <apex:pageBlockSectionItem >
+        <apex:outputLabel >Do not create a new opportunity upon conversion</apex:outputLabel>
+        <apex:outputpanel layout="block">
+        <apex:inputField value="{!custom.DoNotCall}">
+          <apex:actionSupport event="onchange" rerender="pan" status="counterStatus" />
+        </apex:inputfield>&nbsp;&nbsp;&nbsp;&nbsp;
+          <apex:pageBlockSectionItem rendered="{!show}" >
+           <apex:inputCheckbox value="{!lsource}"/>
+           <apex:outputLabel >Replace existing Lead Source with the value from this lead</apex:outputLabel>
+          </apex:pageBlockSectionItem> 
+          </apex:outputpanel>
+        </apex:pageBlockSectionItem>
+      </apex:pageBlockSection>
+ 
+   <!--<apex:pageBlockSection title="AHWT Task Information" collapsible="false"  columns="1" id="pageB2">
+      <apex:pageBlockSectionItem >
+          <Apex:outputLabel >Create Task</Apex:outputLabel>
+          <apex:inputCheckbox value="{!createtask}"/>
+      </apex:pageBlockSectionItem>
+           <apex:inputField value="{!t.subject}" style="width:55%; "/>
+       
+   </apex:pageBlockSection>
+
+    <apex:pageBlockSection title="Task Details" collapsible="false" columns="2" id="pageB3">
+       <apex:inputField value="{!t.ActivityDate}"/> 
+       <apex:inputField value="{!t.Pricing_Coordinator_Group__c}"/>
+       <apex:inputField value="{!t.Status}"/>
+       <apex:inputField value="{!t.Notify_Pricing_Coordinator__c}"/>
+       <apex:inputField value="{!t.Priority}"/>
+       <apex:inputField value="{!t.Total_Hours__c}"/>
+       <apex:inputField value="{!t.Contract__c}"/>
+   </apex:pageBlockSection> -->
+   <apex:pageBlockSection title="Description Information" collapsible="false" id="pageB4" >
+       <apex:pageBlockSectionItem >
+       <apex:outputLabel >Comments</apex:outputLabel>
+       <apex:inputTextarea value="{!descrip}" rows="10" cols="100"/>
+       </apex:pageBlockSectionItem>
+ 
+   </apex:pageBlockSection>
+  
+   <apex:pageBlockSection title="System Information" collapsible="false" id="pageB5">
+       <apex:outputLabel > Task Record Type &nbsp;&nbsp;&nbsp;&nbsp;Water Task</apex:outputLabel>
+   </apex:pageBlockSection>
+   
+   <apex:pageBlockSection title="Reminder" collapsible="false" id="pageB6">
+       <apex:inputField value="{!t.ReminderDateTime}"/>
+   </apex:pageBlockSection>  
+   <apex:actionStatus ></apex:actionStatus>
+</apex:pageblock>
+
+</apex:form>
+
+</apex:page>

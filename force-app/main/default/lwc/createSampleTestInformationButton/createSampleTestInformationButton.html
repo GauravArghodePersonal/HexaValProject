@@ -1,0 +1,35 @@
+<template>
+    <lightning-button label="Create Sample Test Information"
+                      class="right-aligned"
+                      onclick={handleButtonClick}>
+    </lightning-button>
+    <template if:true={displayLightningSpinner}>
+        <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+    </template>
+    
+     <!-- used if:true directive to conditionally render the child component class="slds-float_right"-->
+     <template if:true={callLWRCreateSampleTest}>
+    <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open slds-modal_large">
+        <div class="slds-modal__container">
+            <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" onclick={closePage}>
+                <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                  <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#close"></use>
+                </svg>
+                <span class="slds-assistive-text">Cancel and close</span>
+              </button>
+
+        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+            <c-l-w-r-_-create-sample-test-information record-id={recordId}
+                                                      oncancel={closePage}>
+
+            </c-l-w-r-_-create-sample-test-information>
+        </div>
+            <div class="slds-modal__footer">
+            <button class="slds-button slds-button_neutral" aria-label="Cancel and close" onclick={closePage}>Cancel</button>
+           <!-- <button class="slds-button slds-button_brand">Next</button> -->
+          </div>
+    </div>
+</section>
+<div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+</template>

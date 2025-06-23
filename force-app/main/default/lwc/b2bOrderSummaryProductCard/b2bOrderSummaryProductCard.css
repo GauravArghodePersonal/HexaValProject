@@ -1,0 +1,113 @@
+.box {
+    /*box-shadow: 0px 2px 10px 2px #ddd;*/
+    padding: 10px;
+    margin: 0px auto 5px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+.imgdiv {
+    box-shadow: 0 2px 5px 0px #ccc;
+    border-radius: 144px;
+    margin: 10px;
+    height: 120px;
+    width: 120px;
+    text-align: center;
+}
+.imgdiv img {
+    border-radius: 400px;
+    height: 75px;
+    margin-top: 10px;
+}
+.title {
+    font-size: 13px;
+    font-weight: bold;
+}
+.hr {
+    clear: both; 
+    margin:5px 0;
+}
+.right {
+    text-align: right;
+}
+.reorder{
+    color: #fff;
+    font-weight: bold;
+    margin: 4px 0 0px 15px;
+    float: left;
+    padding: 5px 20px;
+    border-radius: 4px;
+    background: #17344c;
+}
+.tdate {
+    margin: 8px 5px 0 0;
+    float: right;
+    font-weight: bold;
+}
+
+.vertical {
+    height: 100%;
+    border-left: 2px solid black;
+    position: absolute;
+    left: 50%;
+}
+
+.field-title{
+    font-weight: 600;
+}
+
+.custom-box {
+    background-color:white;
+    padding-left: inherit;
+    padding-top: inherit;
+    padding-block: inherit
+}
+
+.tableheader{
+    background-color: #ddeef2;
+    font-size: 16px;
+    text-transform: none;
+    font-weight: 200;
+    padding: 8px 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+.tableChild{
+    font-size: 16px;
+    text-transform: none;
+    font-weight: 2px;
+    padding-left: 5px;
+    padding-top: 10px;
+    padding-bottom: 5px;
+
+}
+
+.smalltext{
+    font-size: 12px;
+    text-transform: none;
+    font-weight: 300;
+    padding-left: 1px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    color: rgb(3, 3, 3);
+}
+.verysmalltext{
+    font-size: 8px;
+    text-transform: none;
+    font-weight: 500;
+    padding-left: 1px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    color: rgb(116 116 116);
+}
+.imgdiv {
+    box-shadow: 0 2px 5px 0px #ccc;
+    border-radius: 144px;
+    margin: 1px;
+    height: 100px;
+    width: 100px;
+}
+.imgdiv img {
+    border-radius: 400px;
+    height: 75px;
+    margin-top: 10px;
+}

@@ -1,0 +1,17 @@
+<!-- Modify the template to include a modal with radio buttons -->
+<template>
+    <lightning-card title="File Upload with Option">
+        <div class="container">  
+            <input type="file" accept=".txt,.pdf,.doc,.docx" onchange={handleFile}></input>
+        </div>
+        <template if:true={showOptions}>
+            <!-- Modal for selecting option -->
+            <div class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick={closeModal}>&times;</span>
+                    <lightning-radio-group options={options} value={selectedOption} onchange={handleChange}></lightning-radio-group>
+                </div>
+            </div>
+        </template>
+    </lightning-card>
+</template>

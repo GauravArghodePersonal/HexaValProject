@@ -1,0 +1,8 @@
+<apex:page standardController="Active_Pricing__c"  tabStyle="Active_Pricing__c" sidebar="false" title="Add New Pricing Wizard">
+
+  <apex:includeScript value="{!$Resource.FlexAppJavascriptFunctions}" />
+
+  <apex:form >
+	  <c:App_PricingWizard_WebApp id="Pricing_Wizard" accountId="{!id}" cancelURL="/{!id}" returnURL="/{!id}"/>
+ </apex:form>
+</apex:page>

@@ -1,0 +1,409 @@
+<apex:page controller="vdpSearchController" sidebar="false" showHeader="False" tabStyle="Account" lightningStylesheets="true" >
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"/>  
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+    <!--<script src="{!$Resource.jqueryfixheadertable}"></script>
+   <apex:stylesheet value="{!$Resource.base}" />
+   <apex:stylesheet value="{!$Resource.themefile}" />-->
+    <style type="text/css">
+        .ui-state-active{
+        border: 1px solid #fbd850;
+        background: rgb(199,199,199);
+        font-weight: bold;
+        color: #eb8f00;
+        }
+
+    .pbTitle {
+        white-space: nowrap
+    }
+    
+    .oddrow{
+        background-color: #A9A9A9;
+        }
+    .evenrow{
+        background-color: #DCDCDC;
+        }    
+        .bPageBlock .pbTitle {
+        width: 100%;    
+        text-align: center;
+</style>
+    <style>
+            .table {
+                //max-width:980px;
+                table-layout:fixed;
+                margin:auto;
+            }
+            .th, .td {
+                padding:5px 10px;
+               // border:1px solid #000;
+              // border: 1px solid #dddddd;
+            }
+            .thead{
+                background:#f9f9f9;
+                display:table;
+                   width:100%;
+                   overflow: scroll;
+                overflow-x:hidden;
+               // width:calc(100% - 18px);
+            }
+            .tbody {
+                height:570px;
+               // overflow:auto;
+                overflow: scroll;
+                overflow-x:hidden;
+                display:block;
+                width:100%;
+            }
+            .tbody tr {
+                display:table;
+                width:100%;
+                table-layout:fixed;
+            }
+            .tbody tr:nth-child(even) {
+              background-color: #dddddd;
+              }
+             .disableclass{
+                 disabled="true";
+             } 
+    </style>
+    <style>
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 24px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+</style>
+
+    <script>  
+    function highlightRow(row){  
+        $('tr').removeClass('ui-state-active');  
+        $(row).parent().addClass('ui-state-active');  
+    }  
+
+    </script>  
+  <apex:form >
+  
+   <script>
+    $(document).ready(function() {
+        $('.fixme').fixheadertable({             
+             height  : 500
+        });
+    });
+    </script>  
+   
+  
+  
+  <apex:pageMessages id="errors" />
+  
+  <apex:pageBlock title="ValueAdvantage Global Search" mode="edit" id="Main">
+  
+ <!-- <img src="/resource/1553087723000/SolenisLogowithcaption" style="margin-top: -2%; width: 100px;" /><br/>
+  <apex:outputLink value="/home/home.jsp">
+  <apex:image id="Home" title="Home" value="{!$Resource.SalesforceLogo}" width="70" height="70" alt="Description of image here" style="margin-left: 50%; " /><br/>
+    </apex:outputLink>-->
+    
+    
+
+  <b style="margin-left: 40%">Key words:<apex:inputText value="{!searchString}" title="Search by a word, group of words, the product name or number or subject you are interested in"/></b>
+    <apex:commandButton value="Search" action="{!MainSearch}"/> 
+    <B  style="margin-left:3%;color:blue;">OR</B>
+    <label class="switch" title="Using “OR” to find all documents with either of the Key Words in the search bar. Using “AND” will find only documents where both Key Words are together">
+       <apex:inputCheckbox label="strict search" title="Using “OR” to find all documents with either of the Key Words in the search bar. Using “AND” will find only documents where both Key Words are together" value="{!strictSearch}" style="margin-top: 40%;"/>     
+      <span class="slider"></span>
+    </label>&nbsp;<B style="color:blue;">AND</B>
+    
+    <br/><br/>
+    
+    
+    
+    <b style="margin-left: 50%">    
+    
+     <apex:outputPanel rendered="{!PdfXlsflagBW}"> 
+     
+     
+     <apex:image id="theImagepdfBw" title="External Use" value="{!$Resource.PdfDownloadBW}" width="25" height="30" alt="Description of image here" rendered="{!PdfXlsflagBW}"/>&nbsp;&nbsp;
+     </apex:outputPanel> 
+     <apex:outputPanel rendered="{!XlsflagBW}"> 
+     <apex:image id="theImagexlsBw" title="Internal Use Only" value="{!$Resource.XlsDownloadBW}" width="28" height="32" alt="Description of image here" rendered="{!PdfXlsflagBW}"/>
+      </apex:outputPanel> 
+     <apex:outputPanel rendered="{!PdfXlsflag}"> 
+     <apex:outputLink value="/apex/ValueAdvantageRedirect?id={!param}&type=pdf" target="_blank">
+     <apex:image id="theImage" title="External Use" value="{!$Resource.PdfDownload}" width="25" height="30" alt="Description of image here" rendered="true"/>
+     </apex:outputLink> &nbsp;&nbsp;
+     </apex:outputPanel>
+     <apex:outputPanel rendered="{!Xlsflag}">
+    <apex:outputLink value="/apex/VDPMultiXLS?id={!param}&type=xls" target="_blank">
+    <apex:image id="theImagee" title="Internal Use Only" value="{!$Resource.XlsDownload}" width="28" height="32" alt="Description of image here" rendered="true"/>
+        <div style="margin-left: 30%;margin-right: 20%"><apex:pageMessages id="showmsg" /></div>
+    </apex:outputLink>   
+    </apex:outputPanel>
+        
+    
+     
+    </b><br/><br/>
+
+    
+    </apex:pageBlock>
+  <table width="100%" border="0">
+  <tr>  
+      <apex:outputPanel rendered="{!Filterflag}">
+    <td width="250" valign="top">
+
+      <!--<apex:pageBlock mode="edit" title="Project Status" id="ProjectStatus" rendered="{!PageFlag}" >-->
+
+<apex:pageBlock mode="edit" id="ProjectStatus" rendered="{!PageFlag}" >
+         &nbsp;&nbsp;<apex:inputCheckbox value="{!ProjectStatusflag}" id="Projectstatuslbl" title="Project Status" label="Project Status"> 
+          <apex:actionSupport event="onclick" action="{!SelectProjectStatus}" rerender="ProjectStatus,DateilPb" />
+         </apex:inputCheckbox>
+         <apex:outputLabel value="Project Status" for="Projectstatuslbl" style="font-weight:800"/>
+        <apex:pageblockTable value="{!ProjectStatusList}" var="f" id="PSLpb">
+             
+            <apex:column >
+                
+                <apex:inputCheckbox value="{!f.CheckFlag}" >
+                    <apex:actionSupport event="onclick" action="{!filterSearch}" rerender="DateilPb,ProjectStatus,DateilPbP" />
+                </apex:inputCheckbox>
+                <apex:outputText value="{!f.picklistvalue}"/>
+            </apex:column>        
+        </apex:pageblockTable>      
+      </apex:pageBlock>
+    
+     <!-- <apex:pageBlock title="Cost Avoidance" mode="edit" id="SavingsType" rendered="{!PageFlag}">
+       &nbsp;&nbsp;<apex:inputCheckbox /> Select All
+        <apex:pageblockTable value="{!SavingsTypeList}" var="f" >
+            <apex:column >
+                <apex:inputCheckbox value="{!f.CheckFlag}" >
+                    <apex:actionSupport event="onclick" action="{!filterSearch}" rerender="DateilPb" />
+                </apex:inputCheckbox>
+                <apex:outputText value="{!f.picklistvalue}"/>
+            </apex:column>        
+        </apex:pageblockTable>      
+      </apex:pageBlock>-->
+      
+     <!--  <apex:pageBlock title="Cost Savings" mode="edit" id="SavingsList" rendered="{!PageFlag}">
+       &nbsp;&nbsp;<apex:inputCheckbox /> Select All       
+        <apex:pageblockTable value="{!CostSavingsList}" var="f" >
+            <apex:column >
+                <apex:inputCheckbox value="{!f.CheckFlag}" >
+                    <apex:actionSupport event="onclick" action="{!filterSearch}" rerender="DateilPb" />
+                </apex:inputCheckbox>
+                <apex:outputText value="{!f.picklistvalue}"/>
+            </apex:column>        
+        </apex:pageblockTable>      
+      </apex:pageBlock>-->
+      
+      <apex:pageBlock mode="edit" id="Region" rendered="{!PageFlag}">
+        &nbsp;&nbsp;<apex:inputCheckbox value="{!regionTypeflag}" id="RegionTypelbl" label="Region"> 
+         <apex:actionSupport event="onclick" action="{!SelectRegionType}" rerender="Region,DateilPb" />
+         </apex:inputCheckbox>    
+        <apex:outputLabel value="Region"  for="RegionTypelbl" style="font-weight:800"/>       
+        <apex:pageblockTable value="{!RegionList}" var="f">
+            <apex:column >
+                <apex:inputCheckbox value="{!f.CheckFlag}" >
+                    <apex:actionSupport event="onclick" action="{!filterSearch}" rerender="DateilPb,Region,DateilPbP" />
+                </apex:inputCheckbox>
+                <apex:outputText value="{!f.picklistvalue}"/>
+            </apex:column>        
+        </apex:pageblockTable>           
+      </apex:pageBlock> 
+      
+      <apex:pageBlock mode="edit" id="BusinessType" rendered="{!PageFlag}">
+        &nbsp;&nbsp;<apex:inputCheckbox value="{!businessTypeflag}" id="businessTypelbl" label="businessType"> 
+         <apex:actionSupport event="onclick" action="{!SelectBusinessType}" rerender="BusinessType,DateilPb" />
+         </apex:inputCheckbox>    
+        <apex:outputLabel value="Business Type"  for="businessTypelbl" style="font-weight:800"/>       
+        <apex:pageblockTable value="{!BusinessTypeList}" var="f">
+            <apex:column >
+                <apex:inputCheckbox value="{!f.CheckFlag}" >
+                    <apex:actionSupport event="onclick" action="{!filterSearch}" rerender="DateilPb,BusinessType,DateilPbP" />
+                </apex:inputCheckbox>
+                <apex:outputText value="{!f.picklistvalue}"/>
+            </apex:column>        
+        </apex:pageblockTable>           
+      </apex:pageBlock> 
+      
+      <apex:pageBlock mode="edit" id="ValueFocusArea" rendered="{!PageFlag}">
+
+      <!--<apex:pageBlock mode="edit" Title="Value Focus Area"  id="ValueFocusArea" rendered="{!PageFlag}">-->
+    
+&nbsp;&nbsp;<apex:inputCheckbox value="{!ValueFocusAreaflag}" id="ValueFocusArealbl" label="ValueFocusArea"> 
+         <apex:actionSupport event="onclick" action="{!SelectValueFocusArea}" rerender="ValueFocusArea,DateilPb" />
+         </apex:inputCheckbox>    
+        <apex:outputLabel value="Value Focus Area"  for="ValueFocusArealbl" style="font-weight:800"/> 
+        <div style="overflow: scroll; width: 100%; height: 200px;"> 
+        <apex:pageblockTable value="{!ValueFocusAreaList}" var="f">
+            <apex:column >
+                <apex:inputCheckbox value="{!f.CheckFlag}" >
+                    <apex:actionSupport event="onclick" action="{!filterSearch}" rerender="DateilPb,DateilPbP,ValueFocusArealbl" />
+                </apex:inputCheckbox>
+                <apex:outputText value="{!f.picklistvalue}"/>
+            </apex:column>        
+        </apex:pageblockTable>  
+        </div>    
+      </apex:pageBlock>
+    
+     <!-- <apex:pageBlock title="Customer Value Type" mode="edit" id="CustomerValueType" rendered="{!PageFlag}">
+       &nbsp;&nbsp;<apex:inputCheckbox /> Select All      
+        <apex:pageblockTable value="{!CustomerValueTypeList}" var="f">
+            <apex:column >
+                <apex:inputCheckbox value="{!f.CheckFlag}" >
+                    <apex:actionSupport event="onclick" action="{!filterSearch}" rerender="DateilPb" />
+                </apex:inputCheckbox>
+                <apex:outputText value="{!f.picklistvalue}"/>
+            </apex:column>        
+        </apex:pageblockTable>      
+      </apex:pageBlock>-->
+      
+      
+      
+     
+  
+    </td>
+    
+    </apex:outputPanel>
+    <td valign="top" style="position: fixed;"><apex:commandlink action="{!AccordianHide}" rendered="{!leftflag}"><apex:image title="Hide" alt="Solenis Logo" styleClass="logo_size" url="{!URLFOR($Resource.ArrowLeft)}" width="15" height="15"  /></apex:commandlink></td>&nbsp;&nbsp;
+    <td valign="top" style="position: fixed;"><apex:commandlink action="{!AccordianHide}" rendered="{!rightflag}"><apex:image title="Hide" alt="Solenis Logo" styleClass="logo_size" url="{!URLFOR($Resource.ArrowRight)}" width="15" height="15" /></apex:commandlink></td>
+    <td valign="top">
+    <apex:outputPanel rendered="{!PageFlag}" id="DateilPbP">
+   
+    <apex:pageBlock mode="edit" id="DateilPb" rendered="{!PageFlag}">          
+        <p Style="color: Green"> &nbsp;&nbsp;&nbsp;&nbsp;{!VdpList.size} results found </p>     
+        <!-- <div style="overflow: scroll; width: 100%; height: 500px;">  -->
+        <table class="table">
+             <thead class="thead">
+            <tr style="border: 1px solid #dddddd;color : #394CAB">
+                <th bgcolor="#8baee5" class="th" style="width:10px;border: 1px solid #dddddd;"> <apex:inputCheckbox title="You can select below 150 Rows only" value="{!Masterflag}" selected="false" disabled="{!NOT(VdpList.size<150)}"> 
+             <apex:actionSupport event="onclick" action="{!mastercheck}" rerender="DateilPb,Main,DateilPbP" />             
+             </apex:inputCheckbox> </th>
+             
+             <th bgcolor="#8baee5" class="th" style="width:110px;border: 1px solid #dddddd;">Title</th>
+             <th bgcolor="#8baee5" class="th" style="width:95px;border: 1px solid #dddddd;">Cost <br/> Savings</th>
+             <th bgcolor="#8baee5" class="th" style="width:88px;border: 1px solid #dddddd;">Cost <br/> Avoidance</th>
+             <th bgcolor="#8baee5" class="th" style="width:120px;border: 1px solid #dddddd;">Opportunity <br/>Statement</th>
+             <th bgcolor="#8baee5" class="th" style="width:122px;border: 1px solid #dddddd;">Solenis <br/>Recommendation</th>
+             <th bgcolor="#8baee5" class="th" style="width:120px;border: 1px solid #dddddd;">Value <br/> Proposition</th>
+             <th bgcolor="#8baee5" class="th" style="width:120px;border: 1px solid #dddddd;">Value <br/> Focus Area</th>
+             <th bgcolor="#8baee5" class="th" style="width:50px;border: 1px solid #dddddd;">Total <br/>Cost Savings</th>
+             
+             
+             <!--<th bgcolor="#8baee5" class="th" style="width:122px;border: 1px solid #dddddd;">Project<br/>status</th>
+             <th bgcolor="#8baee5" class="th" style="width:120px;border: 1px solid #dddddd;">Region</th>
+             <th bgcolor="#8baee5" class="th" style="width:120px;border: 1px solid #dddddd;">Business<br/>Type</th>
+             <th bgcolor="#8baee5" class="th" style="width:50px;border: 1px solid #dddddd;">Value<br/>_Focus Area</th>-->
+             
+            </tr>
+            </thead>
+          <tbody class="tbody">
+        <apex:repeat value="{!VdpList}" var="vdp" id="theRepeat">
+           
+            <tr style="vertical-align: top;">
+                <td class="td" style="width:15px">
+                     <apex:inputCheckbox value="{!vdp.Check__c}">
+                     <apex:actionSupport event="onclick" action="{!GridReset}" rerender="Main" />             
+                     </apex:inputCheckbox> 
+                </td>
+                <td class="td" style="width:95px;">
+                    <apex:outputLink value="/apex/VdfDetailPage?id={!vdp.Id}" target="_blank">{!vdp.name}</apex:outputLink>
+                </td>
+                <td class="td" style="width:80px">
+                    {!vdp.Customer_Value_Type_Cost_Savings__c}
+                </td>
+                <td class="td" style="width:75px">
+                    {!vdp.Customer_Value_Type_Cost_Avoidance__c}
+                </td>
+                <td class="td" style="width:105px">
+                    {!vdp.Problem_Statement__c}
+                </td>
+                <td class="td" style="width:105px;">
+                    {!vdp.Solenis_Recommendation__c}
+                </td>
+                <td class="td" style="width:100px">
+                    {!vdp.Value_Proposition__c}
+                </td>
+                <td class="td" style="width:100px">
+                    {!vdp.Value_Focus_Area__c}
+                </td> 
+                <td class="td" style="width:50px">
+                   <apex:outputText value="{0, number, ###,###,##0.00}" > <apex:param value="{!vdp.Total_Cost_Savings__c}"/> </apex:outputText>
+                </td>      
+                
+               <!-- <td class="td" style="width:50px">
+                    {!vdp.Project_Status__c}
+                </td> 
+                <td class="td" style="width:50px">
+                    {!vdp.Customer__r.SAP_Sales_Org_Region_value__c}
+                </td> 
+                <td class="td" style="width:50px">
+                    {!vdp.Business_Type__c}
+                </td> 
+                <td class="td" style="width:50px">
+                    {!vdp.Value_Focus_Area__c}
+                </td>     -->       
+            </tr>
+        
+        
+        
+        </apex:repeat>
+        </tbody>
+        </table>
+        <!--</div> -->
+             
+                
+    </apex:pageBlock> 
+     
+   </apex:outputPanel>
+    </td>
+  </tr>
+  </table>  
+  <apex:pageBlock mode="edit" id="ErrorMsg" rendered="{!Not(PageFlag)}">
+  <p >No Records Found </p>
+  </apex:pageBlock>   
+  
+
+  </apex:form>
+</apex:page>

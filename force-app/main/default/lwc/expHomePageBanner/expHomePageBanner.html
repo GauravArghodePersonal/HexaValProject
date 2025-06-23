@@ -1,0 +1,26 @@
+<template>
+  <div>
+    <div class="parentBox">
+      <template for:each={imageSlider} for:item="SingleSlide">
+        <div class={SingleSlide.visiblity} key={SingleSlide.image} data-id={SingleSlide.position}
+          onclick={handleNavigate}>
+          
+          <div  class="imgBanner" ><lightning-formatted-rich-text value={SingleSlide.image}></lightning-formatted-rich-text></div>
+          <div class="childText slds-text-align_center" data-id={SingleSlide.position} >
+            {SingleSlide.textOnImage}
+          </div>
+        </div>
+      </template>
+      <div class="backArrow" onclick={backArrowClick}> &#10094;
+      </div>
+      <div class="nextArrow" onclick={nextArrowClick}> &#10095;</div>
+
+      <div class="slds-text-align_center circle">
+        <template for:each={imageSlider} for:item="SingleSlide">
+          <span class={SingleSlide.dotCheck} data-id={SingleSlide.position} key={SingleSlide.image}
+            onclick={dotHandler}></span>
+        </template>
+      </div>
+    </div>
+  </div>
+</template>

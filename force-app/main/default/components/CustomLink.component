@@ -1,0 +1,8 @@
+<apex:component controller="CustomComponentController" access="global">
+    <apex:attribute name="linkParam" type="String" description="" 
+                    access="global" assignTo="{!linkParam}"/>
+    <apex:attribute name="linkLabel" type="String" description="" 
+                    access="global" assignTo="{!linkLabel}"/>
+
+    <apex:outputLink value="{!linkURL}">{!linkLabel}</apex:outputLink>
+</apex:component>

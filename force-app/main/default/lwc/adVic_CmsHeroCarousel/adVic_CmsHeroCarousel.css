@@ -1,0 +1,57 @@
+.hero-container {
+    position: relative;
+    height: 600px;
+    overflow: hidden;
+    width: 100%;
+}
+
+/* Class to hide the header */
+.hidden {
+    top: -50px; /* Adjust based on the actual height of your header */
+}
+
+.carousel-slider {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 2s ease;
+}
+
+.slide[data-key="0"] {
+    opacity: 1;
+}
+
+.hero-content {
+    position: absolute;
+    top: 50%; /* Center on the Y-axis */
+    left: 50%;
+    transform: translate(-50%, -50%); /* Adjusted for X and Y axis centering */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Vertically center the content */
+    align-items: center; /* Horizontally center the content */
+    color: white;
+    font-size: 2.5rem;
+}
+
+.controls {
+    position: absolute; /* Absolute positioning to be relative to hero-content */
+    bottom: 15px; /* Distance from the bottom */
+    left: 50%; /* Centering on the X-axis */
+    transform: translateX(-50%); /* Shift it left by half its width for centering */
+    display: flex;
+    justify-content: space-between;
+    width: 60%; /* If you want to change the width of the controls, adjust this */
+}

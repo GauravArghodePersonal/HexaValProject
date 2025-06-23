@@ -1,0 +1,26 @@
+<template>
+  <article class="slds-card" style="padding:20px">
+    <lightning-card variant="Narrow" title="Files List" icon-name="doctype:attachment" >
+      <div class="slds-grid">
+        <div class="slds-col slds-size_4-of-12" style="padding-right: 40px;">
+          <lightning-combobox  disabled={disableAll} options={objOptions} name="Object" value={objName} label="Select Object" onchange={changeHadler}></lightning-combobox>
+        </div>
+        <div class="slds-col slds-size_4-of-12" style="padding-right: 40px;">
+          <p style="color:rgb(0, 0, 0);font-size:18px">Select</p>
+          <!-- <c-custom-lookup obj-name= {objName} search-placeholder="Search record here..." icon-name="standard:user_role" onlookupselected={lookupRecord}> </c-custom-lookup> -->
+        </div>
+        <div class="slds-col slds-size_4-of-12" style="padding-top: 18px;">
+            <lightning-button class ="slds-p-right_small slds-float_left" variant="brand"  title="Search" label="Search" onclick={getRelatedFilesByRecordId}></lightning-button>
+        </div>
+      </div>
+      <template for:each={filesList} for:item="file" for:index="index"> 
+        <span class="slds-grid slds-p-left_x-large slds-p-bottom_small" key={file.fileURL}>
+            <lightning-layout-item size="6" class="slds-p-top_xx-small  slds-p-left_small">
+              <lightning-icon class="slds-p-around_small" icon-name={file.iconName}></lightning-icon>
+                <a href={file.fileURL} download>{file.fileName}</a>
+              </lightning-layout-item>
+        </span> 
+      </template>
+    </lightning-card>
+  </article>
+</template>

@@ -1,0 +1,29 @@
+<template>  
+    <lightning-card title="">
+        
+        <div >
+            <!--<lightning-input
+                type="checkbox"
+                label="Is mutli entry lookup"
+                checked={isMultiEntry}
+                onchange={handleLookupTypeChange} value="True" >
+            </lightning-input>-->
+
+            <c-solenis-commercial-multi-lookup
+                selection={initialSelection}
+                errors={errors}
+                onsearch={handleSearch}
+                onselectionchange={handleSelectionChange}
+                label="Search"
+                placeholder="Search Salesforce"
+                is-multi-entry="True"
+                required                                
+            >
+            </c-solenis-commercial-multi-lookup>
+            <lightning-input type="Email" name="input1" label="Addt'l Address:" 
+            data-id='otheremail' ></lightning-input>
+            <lightning-button variant="brand" label="Submit" onclick={handleSubmit}></lightning-button>
+        </div>
+    </lightning-card>
+    
+</template>

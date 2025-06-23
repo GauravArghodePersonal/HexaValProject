@@ -1,0 +1,4 @@
+<apex:page standardController="Sample_Request__c" sidebar="false"
+           extensions="Sample_Request_Controller"
+           tabStyle="Sample_Request__c" action="{!gotoPage1A}" lightningStylesheets="true">
+</apex:page>

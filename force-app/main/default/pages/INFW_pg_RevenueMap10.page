@@ -1,0 +1,46 @@
+<apex:page title="Infowelders Revenue Map 1.0" id="INFW_res_RevenueMap10" cache="true">
+
+<style type="text/css">
+    body {overflow:auto;margin:0;backgroundColor:#FFFFFF;}
+</style>
+<script language="javascript">
+    function goBack() {history.go(-1);}
+</script>
+<table width="100%" height="650" border="0" cellspacing="0" cellpadding="0"><tr><td valign="top" align="center">
+<SPAN id="INFW:Map" style="display:block;width:100%;height:650;">
+<OBJECT id="INFW:Map:flash" codeBase="https://fpdownload.macromedia.com/get/flashplayer/current/swflash.cab"
+        height="650" width="100%" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">
+<PARAM NAME="FlashVars" VALUE="session_id={!$Api.Session_ID}&server_url={!$Api.Partner_Server_URL_130}"/>
+<PARAM NAME="Movie" VALUE="{!$Resource.INFW_res_RevenueMap10}"/>
+<PARAM NAME="Src" VALUE="{!$Resource.INFW_res_RevenueMap10}"/>
+<PARAM NAME="WMode" VALUE="Window"/>
+<PARAM NAME="Play" VALUE="1"/>
+<PARAM NAME="Loop" VALUE="0"/>
+<PARAM NAME="Quality" VALUE="High"/>
+<PARAM NAME="SAlign" VALUE="LT"/>
+<PARAM NAME="Menu" VALUE="-1"/>
+<PARAM NAME="AllowScriptAccess" VALUE="always"/>
+<PARAM NAME="Scale" VALUE="NoScale"/>
+<PARAM NAME="DeviceFont" VALUE="0"/>
+<PARAM NAME="EmbedMovie" VALUE="0"/>
+<PARAM NAME="BGColor" VALUE="FFFFFF"/>
+<PARAM NAME="SeamlessTabbing" VALUE="1"/>
+<PARAM NAME="Profile" VALUE="-1"/>
+<PARAM NAME="ProfileAddress" VALUE=""/>
+<PARAM NAME="ProfilePort" VALUE="790768162"/>
+<PARAM NAME="AllowNetworking" VALUE="all"/>
+<PARAM NAME="AllowFullScreen" VALUE="false"/>
+<embed src="{!$Resource.INFW_res_RevenueMap10}" play="true" bgcolor="#FFFFFF" width="100%" height="650"
+       name="INFW:Map:flash" align="middle" quality="best"
+       flashvars="session_id={!$Api.Session_ID}&server_url={!$Api.Partner_Server_URL_80}"
+       loop="false" allowScriptAccess="always" type="application/x-shockwave-flash"
+       pluginspage="https://www.adobe.com/go/getflashplayer"></embed>
+</OBJECT>
+<script>
+    var flashObject = (navigator.appName.indexOf ("Microsoft") !=-1)  ? window["INFW:Map:flash"] : document["INFW:Map:flash"];
+    var flashElement = document.getElementById("INFW:Map:flash");
+    flashElement.parentNode.flash = flashObject;
+</script>
+</SPAN>
+</td></tr></table>
+</apex:page>

@@ -1,0 +1,97 @@
+<apex:component controller="ConfirmDialogController">
+    <apex:attribute name="p1" assignTo="{!param}"
+                    type="ConfirmDialogParam" description=""/>
+
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-1.6.2.min.js')}" />
+    
+    <apex:form id="cdcForm">
+    <apex:pageBlock rendered="{!param.renderComp}" mode="edit">
+    <apex:pageMessages escape="false"/>
+    <apex:pageBlockSection columns="1">
+    
+    <apex:pageBlockSectionItem rendered="{!param.renderContinueCancelPanel}" >
+    
+    <apex:outputPanel >
+        <apex:actionStatus id="btns">
+            <apex:facet name="start">
+                <apex:outputText styleClass="bold" value=" Please wait ...">
+                    <apex:image value="{!$Resource.spinner}"/>
+                </apex:outputText>
+            </apex:facet>
+            <apex:facet name="stop">
+                <apex:outputPanel styleClass="nowrap">
+                    <apex:commandButton action="{!gotoContinue}" value="Continue"
+                                        rendered="{!param.renderContinueBtn}"  
+                                        rerender="cdcForm" status="btns"
+                                        oncomplete="onConfirmComplete(); return false;"/>
+                    <apex:commandButton action="{!gotoCancel}" value="Cancel" 
+                                        rerender="cdcForm" status="btns"
+                                        oncomplete="onConfirmComplete(); return false;"/>
+                </apex:outputPanel>
+            </apex:facet>
+        </apex:actionStatus>
+    </apex:outputPanel>
+
+    </apex:pageBlockSectionItem>
+    
+    <apex:pageBlockSectionItem rendered="{!param.renderYesNoPanel}" >
+    <apex:outputPanel >
+        <apex:actionStatus id="btnsYN">
+            <apex:facet name="start">
+                <apex:outputText styleClass="bold" value=" Please wait ...">
+                    <apex:image value="{!$Resource.spinner}"/>
+                </apex:outputText>
+            </apex:facet>
+            <apex:facet name="stop">
+                <apex:outputPanel styleClass="nowrap">
+                    <apex:commandButton action="{!gotoYes}" value="Yes"
+                                        rerender="cdcForm" status="btnsYN"
+                                        oncomplete="onConfirmComplete(); return false;"/>
+                    <apex:commandButton action="{!gotoNo}" value="No"
+                                        rendered="{!param.renderContinueBtn}"  
+                                        rerender="cdcForm" status="btnsYN"
+                                        oncomplete="onConfirmComplete(); return false;"/>                                        
+                </apex:outputPanel>
+            </apex:facet>
+        </apex:actionStatus>
+    </apex:outputPanel> 
+           
+    </apex:pageBlockSectionItem>    
+    
+    <apex:pageBlockSectionItem rendered="{!param.renderYesNoCancelPanel}"  >
+    <apex:outputPanel >
+        <apex:actionStatus id="btnsYNC">
+            <apex:facet name="start">
+                <apex:outputText styleClass="bold" value=" Please wait ...">
+                    <apex:image value="{!$Resource.spinner}"/>
+                </apex:outputText>
+            </apex:facet>
+            <apex:facet name="stop">
+                <apex:outputPanel styleClass="nowrap">
+                    <apex:commandButton action="{!gotoYes}" value="Yes"
+                                        rerender="cdcForm" status="btnsYNC"
+                                        oncomplete="onConfirmComplete(); return false;"/>
+                    <apex:commandButton action="{!gotoNo}" value="No" 
+                                        rerender="cdcForm" status="btnsYNC"
+                                        oncomplete="onConfirmComplete(); return false;"/>                                        
+                    <apex:commandButton action="{!gotoCancel}" value="Cancel" 
+                                        rerender="cdcForm" status="btnsYNC"
+                                        oncomplete="onConfirmComplete(); return false;"/>
+                </apex:outputPanel>
+            </apex:facet>
+        </apex:actionStatus>
+    </apex:outputPanel>    
+        
+    </apex:pageBlockSectionItem>       
+    
+    </apex:pageBlockSection></apex:pageBlock></apex:form>
+
+    <style>
+        .bold         {font-size: 91%; font-weight: bold;}
+        .center       {text-align: center;}
+        .left         {text-align: left;}
+        .right        {text-align: right;}
+        .nowrap       {white-space: nowrap;}
+    </style>
+    
+</apex:component>

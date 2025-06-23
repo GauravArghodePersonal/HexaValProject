@@ -1,0 +1,88 @@
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.errorMessage {
+   color:red;
+}
+.login-button {
+    background-color: #5b89b4 !important;
+    font-weight: normal !important;
+    font-family: inherit !important;
+    border-radius: 4px !important;
+    width: 50% !important;
+    margin-left: 25% !important;
+    font-size: 14px !important;
+    background-color: #115d93;
+    color: #f7f7f7;
+    text-align: center;
+    width: 100%;
+    display: block;
+    padding: 0.5rem;
+}
+.sub-heading {
+    font-size: 14px;
+    color:black;
+}
+.text-align-center {
+    text-align: center;
+}
+.register-heading {
+    max-width: 25rem;
+    font-weight: 700;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+.slds-grid_vertical .slds-col {
+    padding-top: 0.3rem;
+    padding-bottom: 0.3rem;
+}
+.account-Search-close {
+    float: right;
+    border: 2px solid rgba(255,255,255,0.5);
+}
+.account-Search-header, .account-Search-body {  
+    background-color: #115d93;
+    color: white;
+    border: 2px solid rgba(255,255,255,0.5);
+}
+.account-Search-headerError, .account-Search-bodyError {  
+    background-color: #f33404;
+    color: white;
+    border: 2px solid rgba(255,255,255,0.5);
+}
+.account-Search-header {
+    border-bottom: none;
+}
+.account-Search-body {
+    border-top: none;
+}
+.account-Search-heading {
+    color: white;
+    font-weight: 700;
+    pointer-events: none;
+}
+.account-Search-button:hover, .account-Search-button:focus {
+    background-color: white;
+} 
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: -4px;
+    margin-left: -6px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+    transform: rotate(90deg);
+}
+.account-Search-link {
+    color: black;
+    text-decoration: underline;
+}
+.input input[type="text"] {
+    background-color: #ffffff !important;
+    border: 3px solid #e6e6e6 !important;
+    border-radius: 4px !important;
+}

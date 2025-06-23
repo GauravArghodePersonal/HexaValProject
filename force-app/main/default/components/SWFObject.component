@@ -1,0 +1,36 @@
+<apex:component id="flash">
+  <apex:attribute name="src" required="true" type="String" description="The path to the movie displayed, expressed as a URL."/>
+  <apex:attribute name="width" required="true" type="String" description="The width at which this movie is displayed."/>
+  <apex:attribute name="height" required="true" type="String" description="The height at which this movie is displayed."/>
+  <apex:attribute name="flashvars" type="String" description="The flashvars attribute can be used to import root level variables to the movie."/>
+  <apex:attribute name="codebase" type="String" description="The path to the download url for the flash player"/>
+  <apex:attribute name="wmode" type="String" default="opaque" description="sets whether the background is transparent or not.  Values are 'opaque' or 'transparent'"/>
+<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+  id="{!$Component.flash}" width="{!width}" height="{!height}"
+  codebase="{!codebase}">
+  <param name="movie" value="{!src}" />
+  <param name="FlashVars" value="{!flashvars}" />
+  <param name="quality" value="high" />
+  <param name="bgcolor" value="#FFFFFF" />
+  <param name="allowScriptAccess" value="sameDomain" />
+  <!-- 
+  //Having this in causes problems with the mousewheel events being sent into the Flex App - Known issue - JHK 2013-10-30
+  <param name="wmode" value="{!wmode}" />
+  wmode="{!wmode}"
+   -->
+  <embed src="{!src}" FlashVars="{!flashvars}" quality="high" bgcolor="#FFFFFF" 
+    width="{!width}" height="{!height}" name="{!$Component.flash}" align="middle"
+    play="false"
+    loop="false"
+    quality="high"
+    allowScriptAccess="sameDomain"
+    type="application/x-shockwave-flash"
+    pluginspage="http://www.adobe.com/go/getflashplayer">
+  </embed>
+</object>
+<script>
+var flashObject = (navigator.appName.indexOf ("Microsoft") !=-1)  ? window["{!$Component.flash}"] : document["{!$Component.flash}"];
+var flashElement = document.getElementById("{!$Component.flash}");
+flashElement.parentNode.flash = flashObject;
+</script>
+</apex:component>

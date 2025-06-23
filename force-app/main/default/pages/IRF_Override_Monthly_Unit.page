@@ -1,0 +1,4 @@
+<apex:page id="thePage" standardController="IRF_Monthly_Unit__c" 
+           title="IRF Monthly Unit" extensions="IRF_Controller" 
+           sidebar="false" action="{!initActionImu}">
+</apex:page>

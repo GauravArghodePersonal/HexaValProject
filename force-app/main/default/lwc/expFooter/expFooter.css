@@ -1,0 +1,66 @@
+.topFooter{
+    background: #7aa5ba;
+    padding: 15px 30px;
+    color: #fff;
+}
+a {
+    color: #fff;
+}
+.center {
+    text-align: center;
+}
+.slds-list_horizontal {
+    display: inline-flex;
+    font-size: 12px;
+}
+.bottomFooter{
+    background: #17344c;
+    padding: 0px 15px;
+    height: 63px;
+    color: #fff;
+}
+.right {
+    text-align: right;
+}
+.pad15 {
+    padding: 15px;
+    font-size: 12px;
+}
+.footerIcons{
+    display: inline-flex;
+    width: 100%;
+    justify-content: flex-end;
+}
+
+.footerOrgLogo{
+    position: relative;
+    width: 163px;
+    height: 26px;
+    left: 22px;
+    top: 18px;
+}
+
+.footerIconsSize{
+    height: 16px;
+    width:16px;
+}
+
+.footerIcons > a{
+    padding: 0 5px;
+}
+
+.footerCopyText{
+    position: relative;
+    width: 50%;
+    height: 14px;
+    /*left: 878px;*/
+    top: 12px;
+
+    font-family: 'URW DIN';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 14px;
+
+    color: #7AA5BA;
+}

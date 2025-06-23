@@ -1,0 +1,45 @@
+<template>
+    <div class="slds-grid slds-wrap">
+        <div class="slds-col slds-size_7-of-12" >
+            <h1 style="margin-top: 6px;
+                        margin-left: 25px;
+                        font-size: 16px;">ALL PRODUCTS</h1>
+        </div>
+        <div class="slds-col slds-size_4-of-12"  >
+            <input type="text" id="abc" placeholder="Find your products" class="slds-input" onchange={fillSearchValue}></input>
+            <lightning-icon icon-name="utility:search" size="x-small" class="searchicon" alternative-text="Search" title="Search" onclick={applySearch}></lightning-icon>
+        </div>
+        <div class="slds-col slds-size_1-of-12" style="text-align: center;padding: 7px 20px 0 0;">
+            <img src={sorticonurl} style="width: 25px;cursor: pointer;" title="Sort" onclick={showList}>
+            <div if:true={showdropdown} class="slds-dropdown slds-dropdown_actions slds-dropdown_right" style="right: 110px;">
+                <ul class="slds-dropdown__list" role="menu">
+                    <li class="slds-dropdown__item" role="presentation">
+                        <a href="javascript:void(0);" role="menuitem" tabindex="0" data-sort="Name Asc" onclick={applySort}>
+                            <span class="slds-truncate" title="Best Match">Best Match</span>
+                        </a>
+                    </li>
+                    <li class="slds-dropdown__item" role="presentation" data-sort="Name Asc" onclick={applySort}>
+                        <a href="javascript:void(0);" role="menuitem" tabindex="-1">
+                            <span class="slds-truncate" title="Product Name (Ascending)">Product Name (Ascending)</span>
+                        </a>
+                    </li>
+                    <li class="slds-dropdown__item" role="presentation" data-sort="Name desc" onclick={applySort}>
+                        <a href="javascript:void(0);" role="menuitem" tabindex="-1">
+                            <span class="slds-truncate" title="Product Name (Descending)">Product Name (Descending)</span>
+                        </a>
+                    </li>
+                    <li class="slds-dropdown__item" role="presentation" data-sort="Old_Material_Number__c Asc" onclick={applySort}>
+                        <a href="javascript:void(0);" role="menuitem" tabindex="-1">
+                            <span class="slds-truncate" title="Product SKU (Ascending)">Product SKU (Ascending)</span>
+                        </a>
+                    </li>
+                    <li class="slds-dropdown__item" role="presentation" data-sort="Old_Material_Number__c desc" onclick={applySort}>
+                        <a href="javascript:void(0);" role="menuitem" tabindex="-1">
+                            <span class="slds-truncate" title="Product SKU (Descending)">Product SKU (Descending)</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</template>

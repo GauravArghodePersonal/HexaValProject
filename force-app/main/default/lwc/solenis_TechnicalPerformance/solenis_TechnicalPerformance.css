@@ -1,0 +1,312 @@
+.heading {
+	font-style: normal;
+	font-weight: 400;
+	font-size: 22px;
+	line-height: 28px;
+	text-transform: uppercase;
+	color: #17344C;
+}
+
+.caption {
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 24px;
+	color: #687886;
+	padding-bottom: 20px;
+}
+
+.bg-image {
+	z-index: -10;
+	/* Height */
+	height: 100%;
+
+	/* Center and scale the image nicely */
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.paddingRight8px {
+	padding-right: 8px;
+}
+
+.app {
+	display: flex;
+	grid-column-gap: 25px;
+}
+
+.tile {
+	display: inline-block;
+	padding: 15px 18px;
+	height: 190px;
+	max-width: 360px;
+	min-width: 350px;
+	margin-right: 14px;
+	/* Change it as required */
+	margin-bottom: 21px;
+	border: 0.5px solid rgba(0, 0, 0, 0.3);
+	filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.13));
+	box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.3);
+	border-radius: 7px;
+}
+
+.tileHeader {
+	height: 25%;
+	width: 100%;
+	padding: 7px 4px 7px 10px;
+	display: flex;
+}
+
+.tileHeader .img1 {
+	padding-bottom: 4px;
+}
+
+.tileHeaderContent {
+	font-style: normal;
+	font-weight: 400;
+	font-size: 23px;
+	line-height: 20px;
+	display: initial;
+	overflow: hidden;
+	width: 233px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.tileBody {
+	height: 60%;
+	width: 100%;
+}
+
+.tileFooter {
+	height: 15%;
+	width: 100%;
+	padding: 0px 4px 0px 10px;
+}
+
+.tileBodyCol1 {
+	padding-top: 5px;
+	width: 46%;
+	float: left
+}
+
+.tileBodyCol2 {
+	padding-top: 2px;
+	padding-left: 5px;
+	width: 52%;
+	float: right
+}
+
+.tileBody1 {
+	height: 20%;
+	width: 100%;
+	padding: 0px 0px 0px 8px;
+	border-bottom: 1px solid #D9DADB;
+}
+
+.tileBodyCola {
+	width: 50%;
+	float: left
+}
+
+.tileBodyColb {
+	padding-left: 5px;
+	width: 50%;
+	float: right
+}
+
+.tileBody2 {
+	height: 20%;
+	width: 100%;
+	padding: 0px 0px 0px 8px;
+}
+
+.tileBodyContent1 {
+	font-style: normal;
+	font-weight: 400;
+	font-size: 14px;
+	line-height: 14px;
+}
+
+.tileBodyContent2 {
+	font-style: normal;
+	font-weight: 400;
+	font-size: 18px;
+	line-height: 26px;
+}
+
+.colSeparator {
+	background: #D9DADB;
+	transform: rotate(90deg);
+	width: 33%;
+	height: 1px;
+	position: absolute;
+	left: 30%;
+	bottom: 44%;
+}
+
+.width70 {
+	width: 70%;
+}
+
+.width83 {
+	width: 83%;
+}
+
+.visitPortal {
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 28px;
+	color: #5B89B4;
+}
+
+.btn:hover {
+	cursor: pointer;
+}
+
+/* Create two equal columns that floats next to each other */
+.column {
+	float: left;
+	width: 50%;
+}
+
+/* Clear floats after the columns */
+.row:after {
+	content: "";
+	display: table;
+	clear: both;
+	border-bottom: 1px solid gray;
+}
+
+
+.slds-spinner_container {
+	position: relative;
+	height: 25px;
+	margin-top: 30px;
+	z-index: 9051;
+}
+
+.spinner-msg_container {
+	position: absolute;
+	left: 53%;
+}
+
+.spinner-msg {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.notification {
+	padding-right: 2px;
+}
+
+.notification .badge {
+	position: absolute;
+	top: -2px;
+	right: 7px;
+	padding: 0px 5px;
+	border-radius: 50%;
+	font-size: 10px;
+	background: red;
+	color: white;
+}
+
+/* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+	.column {
+		width: 100%;
+	}
+}
+
+@media (max-width:1400px) {
+	.tile {
+		margin-right: 60px;
+		margin-bottom: 60px;
+	}
+}
+
+@media (max-width:1300px) {
+	.app {
+		display: grid;
+		grid-column-gap: 30px;
+		grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+	}
+
+	.tile {
+		margin-right: 50px;
+		margin-bottom: 50px;
+	}
+}
+
+/* Tooltip container */
+.notification {
+	position: relative;
+	display: inline-block;
+}
+
+.notification .tooltiptext {
+	visibility: hidden;
+	width: 113px;
+	height: 113px;
+	background-color: #FFFFFF;
+	color: #3F3B3B;
+	text-align: center;
+	border-radius: 6px;
+	padding: 5px 0;
+	position: absolute;
+	z-index: 1;
+	top: 135%;
+	left: -60%;
+	border: 1px solid #B3B3B3;
+	margin-left: -60px;
+}
+
+.notification .tooltiptext::before,
+.notification .tooltiptext::after {
+	content: "";
+	position: absolute;
+	border-left: 7px solid transparent;
+	border-right: 7px solid transparent;
+	top: 100%;
+	left: 80%;
+	margin-left: -7px;
+}
+
+.notification .tooltiptext::before {
+	border-bottom: 9px solid #B3B3B3;
+	margin-top: -121px;
+}
+
+/* The white fill of the triangle */
+.notification .tooltiptext::after {
+	border-bottom: 10px solid white;
+	margin-top: -120px;
+	z-index: 1;
+}
+
+.slds-text-body_regular,
+.slds-text-body--regular {
+	direction: ltr;
+	float: left;
+	padding-left: 14px;
+}
+
+.notification:hover .tooltiptext {
+	visibility: visible;
+}
+
+.exampleHolder {
+	position: relative;
+	display: inline-block;
+	/* width: 80px; */
+	left: 50%;
+	height: 115px;
+}
+
+.exampleHolderText {
+	position: relative;
+	top: 20%;
+    left: 9%;
+}

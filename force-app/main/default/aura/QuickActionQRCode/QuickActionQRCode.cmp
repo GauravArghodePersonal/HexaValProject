@@ -1,0 +1,9 @@
+<!--
+ - Created by ricardo on 12/3/20.
+ -->
+
+<aura:component description="QuickActionQRCode" implements="force:lightningQuickAction,force:hasRecordId">
+
+    <aura:handler name="init" action="{!c.init}" value="{!this}" />
+
+</aura:component>

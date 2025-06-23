@@ -1,0 +1,132 @@
+<apex:page standardController="Pricing_Condition__c" 
+           extensions="PricingConditionsToExpireController"
+           sidebar="false">
+
+    <apex:includeScript value="{!$Resource.PendingApprovalFunctions}" />
+    <script>
+        function validateForm(f, s) {
+            var msg = '';
+            if (!paf_checkForAtleastOneRowSelection(f, 'rowcb')) {
+                msg += '*** None selected to Expire ***\n\n';
+            }
+            if (msg != '') {
+                alert(msg);
+                return false;
+            }
+            return true;
+        }
+    </script>
+    <apex:messages />
+
+    <apex:form id="theForm">
+        <apex:pageBlock rendered="{!NOT(renderList)}">
+            <apex:pageBlockSection columns="1">
+                <apex:pageBlockSectionItem dataStyle="text-align: center;font-weight: bolder;">
+                    <apex:outputText value="No Pricing Conditions found to be Expired"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        <apex:pageBlock title="Pricing Conditions to be Expired" 
+                        rendered="{!renderList}">
+            <apex:pageBlockButtons location="top">
+                <apex:panelGrid bgcolor="#eeecd1" columns="3" width="100%">
+
+                    <apex:panelGroup styleClass="nowrap">
+                        <apex:commandButton value="Expire Duplicate Pricing Conditions"
+                                            onclick="return validateForm(this.form, 'expire');"
+                                            action="{!gotoExpirePage2}" disabled="{!disableExpireButton}" 
+                                            title="Expire the first condition in each row of the following list"/>
+                                             
+                        <apex:commandButton value="Submit Batch Job"
+                                            action="{!submitExpirationBatchJob}" 
+                                            disabled="{!disableExpireButton}" 
+                                            immediate="true" status="expireStatus" rerender="theForm"/>
+                                            
+                        <apex:actionStatus startText="Submitting Batch Job..." stopText="" id="expireStatus"/>
+                    </apex:panelGroup>
+
+                </apex:panelGrid>
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection columns="1">
+                <apex:pageBlockSectionItem dataStyle="font-weight: bold; text-align: center;">
+                    <apex:outputText value="Selected rows can be reviewed in the next page before submitting to expire."/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection columns="1">
+                <apex:pageBlockSectionItem >
+		            <apex:pageBlockTable id="list" value="{!pricingConditionsToExpire}" var="pc" 
+		                                 rowClasses="rowA,rowB">
+		                <apex:column >
+		                    <apex:facet name="header">
+		                        <apex:inputCheckbox id="allcb" value="{!allSelected}"
+		                            onclick="paf_checkAll(this.form, this, 'rowcb')"/> 
+		                    </apex:facet>
+		                    <apex:inputCheckbox id="rowcb" value="{!pc.selected}"
+		                        onclick="paf_toggleAllCheckbox(this.form, this);"/> 
+		                </apex:column>
+		                <apex:column width="5%">
+		                    <apex:facet name="header">Record<br/>Number</apex:facet>
+		                    <apex:outputText value="{!pc.recordNumber}"/>
+		                </apex:column>
+		                <apex:column width="20%">
+		                    <apex:facet name="header">Account Name, Number<br/>and SalesArea</apex:facet>
+		                    <apex:outputLink value="/{!pc.p1.Account__r.Id}"> 
+		                        <apex:outputText value="{!pc.p1.Account__r.Name} - {!pc.accountNumber}"/>
+		                    </apex:outputLink>
+		                    <br/><apex:outputText value="{!pc.p1.Account__r.sales_area__c}"/>
+		                </apex:column>
+		                <apex:column width="20%">
+		                    <apex:facet name="header">Material Name<br/>and Number</apex:facet>
+		                    <apex:outputLink value="/{!pc.p1.Material2__r.Id}"> 
+		                        <apex:outputText value="{!pc.p1.Material2__r.Material_Desc__c}"/>
+		                    </apex:outputLink>
+		                    <br/><apex:outputText value="{!pc.materialNumber}"/>
+		                </apex:column>
+		                <apex:column width="5%">
+		                    <apex:facet name="header">INCO<br/>Term</apex:facet>
+		                    <apex:outputField value="{!pc.p1.INCO_Term_Code__c}"/>
+		                </apex:column>
+		                <apex:column width="5%">
+		                    <apex:facet name="header">Pricing<br/>Table</apex:facet>
+		                    <apex:outputField value="{!pc.p1.SAP_Pricing_Table__c}"/>
+		                </apex:column>
+		                <apex:column width="5%">
+		                    <apex:facet name="header">To Expire<br/>Active</apex:facet>
+		                    <apex:outputText value="To Expire"/><br/><br/>
+		                    <apex:outputText value="Active"/>
+		                </apex:column>
+		                <apex:column width="10%">
+		                    <apex:facet name="header">PricingCondition<br/>ID</apex:facet>
+		                    <apex:outputLink value="/{!pc.p1.Id}"> 
+		                        <apex:outputField value="{!pc.p1.Name}"/>
+		                    </apex:outputLink><br/><br/>
+		                    <apex:outputLink value="/{!pc.p2.Id}"> 
+		                        <apex:outputField value="{!pc.p2.Name}"/>
+		                    </apex:outputLink>
+		                </apex:column>
+		                <apex:column width="10%">
+		                    <apex:facet name="header">Invoice<br/>Price</apex:facet>
+		                    <apex:outputField value="{!pc.p1.Invoice_Price__c}"/><br/><br/>
+		                    <apex:outputField value="{!pc.p2.Invoice_Price__c}"/>
+		                </apex:column>
+		                <apex:column width="10%">
+		                    <apex:facet name="header">Valid From<br/>Date</apex:facet>
+		                    <apex:outputField value="{!pc.p1.Valid_From_Date__c}"/><br/><br/>
+		                    <apex:outputField value="{!pc.p2.Valid_From_Date__c}"/>
+		                </apex:column>
+		                <apex:column width="10%">
+		                    <apex:facet name="header">Valid To<br/>Date</apex:facet>
+		                    <apex:outputField value="{!pc.p1.Valid_To_Date__c}"/><br/><br/>
+		                    <apex:outputField value="{!pc.p2.Valid_To_Date__c}"/>
+		                </apex:column>
+		            </apex:pageBlockTable>        
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+    <style>
+        .rowA {background-color: #F3F3EC;}
+        .rowB {background-color: #EEECD1;}
+        .nowrap {white-space: nowrap;}
+    </style>
+</apex:page>

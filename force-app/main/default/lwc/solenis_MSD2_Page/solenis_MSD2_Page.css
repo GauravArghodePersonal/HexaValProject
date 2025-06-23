@@ -1,0 +1,37 @@
+*{
+    font-weight: 400;
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+}
+.leftColumn{
+    float: left;
+}
+.rightColumn{
+    float: right;
+}
+.key{
+    font-weight: 700;
+    padding: 5px;
+    width: 190px;
+    margin-top: 10px;
+}
+.value{
+    padding: 5px;
+    width: 190px;
+    margin-top: 10px;
+}
+
+.prod .value{
+    width: 350px;
+}
+.spinnerDiv{
+    position: relative;
+    display: inline-block;
+    margin: 0 auto;
+    width: 80px;
+    height: 80px;
+    left: 50%;
+    position: absolute;
+}
+.slds-grid_align-end {
+    justify-content: start;
+}

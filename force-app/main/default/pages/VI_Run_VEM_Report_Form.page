@@ -1,0 +1,190 @@
+<apex:page standardController="VI_Enrollment_Location__c" extensions="VI_Run_VEM_Report_Form_Extension"  action="{!InitializeForm}">
+
+<style>
+    .activeTab {background-color: #236FBD; color:white; background-image:none}
+    .inactiveTab { background-color: lightgrey; color:black; background-image:none}
+    .inputText_RightAligned {text-align:right;}
+    .outputText_RightAligned {text-align:right;}
+    .outputText_RightAlignedNoWrap {text-align:right;white-space: nowrap;}
+</style>
+
+    <apex:tabPanel switchType="client" value="{!TabInFocus}" id="theTabPanel" tabClass="activeTab" inactiveTabClass="inactiveTab" rendered="{!InsideIntranet}">
+
+        <apex:tab label="Report Parameters" name="reportParameterEntry" id="reportParameterEntry">
+            <apex:form >
+                <apex:pageBlock title="V.E.M. Report Runner" mode="detail">
+                    <apex:pageBlockButtons >
+                        <apex:commandButton action="{!runVIPromotionInstallerDataReport}" value="Run Report"/>
+                    </apex:pageBlockButtons>
+                    
+                    <apex:pageMessage summary="Enter or update the parameters below, then click 'Run Report' to generate the Report." severity="info" strength="2" />
+        
+                    <apex:pageBlockSection title="Key Information" columns="1" collapsible="false">
+
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Run Report Type:"/>
+                            <apex:selectRadio value="{!ReportType}">
+                                <apex:selectOptions value="{!ReportTypes}"/>
+                            </apex:selectRadio>
+                        </apex:pageBlockSectionItem>
+        
+                        <apex:pageBlockSectionItem rendered="{!promotionExists}">
+                            <apex:outputText value="Promotion:"/>
+                            <apex:outputLink value="/{!promotionId}" id="viewRelatedPromotionLink" target="_blank">{!promotionDesc}</apex:outputLink>
+                        </apex:pageBlockSectionItem>
+
+                        <apex:pageBlockSectionItem rendered="{!installerStoreExists}">
+                            <apex:outputText value="Installer Store:"/>
+                            <apex:outputLink value="/{!installerStoreId}" id="viewRelatedInstallerStoreLink" target="_blank">{!installerStoreDesc}</apex:outputLink>
+                        </apex:pageBlockSectionItem>
+
+                        <apex:pageBlockSectionItem rendered="{!SAPAccountExists}">
+                            <apex:outputText value="SAP Account:"/>
+                            <apex:outputLink value="/{!SAPAccountId}" id="viewRelatedSAPAccountLink" target="_blank">{!SAPAccountDesc}</apex:outputLink>
+                        </apex:pageBlockSectionItem>
+
+                        <apex:pageBlockSectionItem rendered="{!parentAccountExists}">
+                            <apex:outputText value="Parent Account:"/>
+                            <apex:outputLink value="/{!parentAccountId}" id="viewRelatedparentAccountLink" target="_blank">{!parentAccountDesc}</apex:outputLink>
+                        </apex:pageBlockSectionItem>
+
+                        <apex:pageBlockSectionItem rendered="{!SAPCustomerGroup5DescExists}">
+                            <apex:outputLabel value="SAP Customer Group 5 Desc:" for="SAPCustomerGroup5Desc"/>
+                            <apex:outputText value="{!CustGrp5}" id="SAPCustomerGroup5Desc"/>
+                        </apex:pageBlockSectionItem>
+
+                    </apex:pageBlockSection>
+             
+                    <apex:panelGrid columns="2" width="100%">
+
+                        <apex:pageBlockSection title="Pricing Information" columns="1" collapsible="false">
+
+                            <apex:pageBlockSectionItem >
+                                <apex:outputText value="Full Synthetic Oil Change Price:" styleClass="outputText_RightAlignedNoWrap"/>
+                                <apex:inputText value="{!FullSynOCPrice}" id="fullSyntheticOilChangePrice" styleClass="inputText_RightAligned"/>
+                            </apex:pageBlockSectionItem>
+
+                            <apex:pageBlockSectionItem >
+                                <apex:outputText value="Semi-Synthetic Oil Change Price:" styleClass="outputText_RightAlignedNoWrap"/>
+                                <apex:inputText value="{!SemiSynOCPrice}" id="semiSyntheticOilChangePrice" styleClass="inputText_RightAligned"/>
+                            </apex:pageBlockSectionItem>
+
+                            <apex:pageBlockSectionItem >
+                                <apex:outputText value="Conventional Oil Change Price:" styleClass="outputText_RightAlignedNoWrap"/>
+                                <apex:inputText value="{!ConvOCPrice}" id="conventionalOilChangePrice" styleClass="inputText_RightAligned"/>
+                            </apex:pageBlockSectionItem>
+
+                            <apex:pageBlockSectionItem rendered="{!serviceProviderProfileId != ''}">
+                                <apex:outputLabel value="" for="viewRelatedInstallerDataLink"/>
+                                <apex:outputLink value="/apex/Service_Provider_Profile_View?id={!serviceProviderProfileId}" id="viewRelatedInstallerDataLink" target="_blank">View Related Installer Data</apex:outputLink>
+                            </apex:pageBlockSectionItem>
+
+                        </apex:pageBlockSection>
+
+                        <apex:pageBlockSection title="Other Information" columns="1" collapsible="false">
+
+<!-- Temporarily commented out until Valvoline wants enabled.
+                            <apex:pageBlockSectionItem >
+                                <apex:outputText value="Issuance Rate Increase %:" styleClass="outputText_RightAlignedNoWrap"/>
+                                <apex:inputText value="{!IssuanceRate}" id="issuanceRateIncreasePct" styleClass="inputText_RightAligned"/>
+                            </apex:pageBlockSectionItem>
+
+                            <apex:pageBlockSectionItem >
+                                <apex:outputText value="Premium Mix Increase %:" styleClass="outputText_RightAlignedNoWrap"/>
+                                <apex:inputText value="{!PremiumMix}" id="premiumMixIncreasePct" styleClass="inputText_RightAligned"/>
+                            </apex:pageBlockSectionItem>
+-->
+                            <apex:pageBlockSectionItem >
+                                <apex:outputText value="Customers who were upsold %:" styleClass="outputText_RightAlignedNoWrap"/>
+                                <apex:inputText value="{!UpsoldPct}" id="customersWhoWereUpsoldPct" styleClass="inputText_RightAligned"/>
+                            </apex:pageBlockSectionItem>
+
+                            <apex:pageBlockSectionItem >
+                                <apex:outputText value="Promotion Loyalty Rate %:" styleClass="outputText_RightAlignedNoWrap"/>
+                                <apex:inputText value="{!LoyaltyRate}" id="promotionLoyaltyRatePct" styleClass="inputText_RightAligned"/>
+                            </apex:pageBlockSectionItem>
+
+                            <apex:pageBlockSectionItem >
+                                <apex:outputText value="Average Customer Pay Ticket:" styleClass="outputText_RightAlignedNoWrap"/>
+                                <apex:inputText value="{!PayTicket}" id="averageCustomerPayTicket" styleClass="inputText_RightAligned"/>
+                            </apex:pageBlockSectionItem>
+
+                            <apex:pageBlockSectionItem >
+                                <apex:outputText value="GP per Customer Ticket %:" styleClass="outputText_RightAlignedNoWrap"/>
+                                <apex:inputText value="{!GPperTicket}" id="grossProfitperCustomerTicketPct" styleClass="inputText_RightAligned"/>
+                            </apex:pageBlockSectionItem>
+    
+                        </apex:pageBlockSection>
+                    </apex:panelGrid>
+
+                    <apex:pageBlockSection title="Additional Information Required for Prospect Accounts" columns="2" rendered="{!showProspectInput}" collapsible="false">
+
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Lubricant Volume:" for="lubricantVolume"/>
+                            <apex:inputText value="{!LubricantVol}" id="lubricantVolume" styleClass="inputText_RightAligned"/>
+                        </apex:pageBlockSectionItem>
+
+                        <apex:pageBlockSectionItem />
+        
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Conventional Mix:" for="conventionalMix"/>
+                            <apex:inputText value="{!ConvMix}" id="conventionalMix" styleClass="inputText_RightAligned"/>
+                        </apex:pageBlockSectionItem>
+
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Conventional Cost:" for="conventionalCost"/>
+                            <apex:inputText value="{!ConvCost}" id="conventionalCost" styleClass="inputText_RightAligned"/>
+                        </apex:pageBlockSectionItem>
+        
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Semi-Synthetic Mix:" for="semiSyntheticMix"/>
+                            <apex:inputText value="{!SemiSynMix}" id="semiSyntheticMix" styleClass="inputText_RightAligned"/>
+                        </apex:pageBlockSectionItem>
+
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Semi-Synthetic Cost:" for="semiSyntheticCost"/>
+                            <apex:inputText value="{!SemiSynCost}" id="semiSyntheticCost" styleClass="inputText_RightAligned"/>
+                        </apex:pageBlockSectionItem>
+        
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Synthetic Mix:" for="syntheticMix"/>
+                            <apex:inputText value="{!SynMix}" id="syntheticMix" styleClass="inputText_RightAligned"/>
+                        </apex:pageBlockSectionItem>
+        
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Synthetic Cost:" for="syntheticCost"/>
+                            <apex:inputText value="{!SynCost}" id="syntheticCost" styleClass="inputText_RightAligned"/>
+                        </apex:pageBlockSectionItem>
+         
+                    </apex:pageBlockSection>
+
+                    &nbsp;
+
+                </apex:pageBlock>
+            </apex:form>
+        </apex:tab>
+        
+        <apex:tab label="Report Viewer" name="reportViewer" id="reportViewer" rendered="{!reportViewerVisible}" disabled="false">
+        
+            <!--
+            <p>reportViewerURL: &lt;{!reportViewerURL}&gt;</p>
+            -->
+             
+            <apex:iframe src="{!reportViewerURL}" scrolling="true" id="reportVieweriFrame" height="600"/>
+        </apex:tab>
+    
+    </apex:tabPanel>
+    
+    <apex:pageBlock title="V.E.M. Report Runner" mode="detail" rendered="{!OutsideIntranet}">
+        <apex:pageMessage escape="false" title="Error: Not connected to the Ashland Network" summary="<BR/>To run the V.E.M Report Runner, you need to be logged into the Ashland Network.<BR/><BR/>Please retry when in the office or connected using VPN to the Ashland Network." severity="error" strength="3" />
+        <apex:pageBlockSection title="Additional Information" columns="1" collapsible="false">
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="User IP Address:" for="userIPAddress"/>
+                <apex:outputText value="{!UserIPAddress}" id="userIPAddress"/>
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+
+    
+    
+</apex:page>

@@ -1,0 +1,16 @@
+<template>
+    <div class="slds-clearfix">
+        <div class="slds-float_right"> 
+                <lightning-button 
+                    icon-name="utility:download" 
+                    variant="brand" 
+                    label="Resend Sample Request to SAP"
+                    onclick={handleClick}>
+                </lightning-button>
+            </div>
+
+                <template if:true={boolShowSpinner}>
+                    <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+                </template>
+  </div>
+</template>

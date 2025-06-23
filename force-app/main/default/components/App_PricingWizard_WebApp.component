@@ -1,0 +1,17 @@
+<apex:component >
+    <apex:attribute name="accountId" description="Account Id" type="String" required="true"/>
+    <apex:attribute name="pricingType" description="Pricing Type" type="String" required="false"/>
+    <apex:attribute name="pricingConditionIds" description="Pricing Condition Ids" type="String" required="false"/>
+    <apex:attribute name="editAll" description="Edit All" type="String" required="false"/>
+    <apex:attribute name="cancelURL" description="cancelURL" type="String" required="false"/>
+    <apex:attribute name="returnURL" description="returnURL" type="String" required="false"/>
+
+    <c:FlexAppContainer id="flexAppContainer"
+                        appTitle="Pricing Wizard"
+                        prodSWF="App_PricingWizard_WebApp_Prod"
+                        debugSWF="App_PricingWizard_WebApp_Debug"
+                        betaSWF="App_PricingWizard_WebApp_Beta"
+                        alphaSWF="App_PricingWizard_WebApp_Alpha"
+                        flashvars="session_id={!$Api.Session_Id}&server_url={!$Api.Partner_Server_URL_250}&accountId={!accountId}&PricingConditionIds={!pricingConditionIds}&EditAll={!editAll}&CSS_SWF_Theme_Path={!URLFOR($Resource.FlexTheme_greenAquaTheme)}&userType={!$Setup.Pricing_Security__c.Add_New_Pricing_User_Type__c}&DebugMode={!$Setup.Pricing_Security__c.Debug_Mode__c}&pricingType={!pricingType}&cancelURL={!cancelURL}&returnURL={!returnURL}"
+                        />
+</apex:component>

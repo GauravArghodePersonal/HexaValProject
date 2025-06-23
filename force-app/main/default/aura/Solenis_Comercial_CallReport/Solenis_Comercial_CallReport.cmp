@@ -1,0 +1,10 @@
+<aura:component implements="force:lightningQuickActionWithoutHeader,force:hasRecordId,lightning:isUrlAddressable" access="global">
+ 	<lightning:navigation aura:id="navigate" />
+        <!--<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>-->
+    
+    <aura:attribute name="recordId" type="String" />  
+    <div class="slds-m-around_xx-large">
+        
+        <c:solenis_Commercial_Send_Call_Report recordId="{!v.recordId}" onclose="{!c.closeQA}" />
+    </div>
+</aura:component>

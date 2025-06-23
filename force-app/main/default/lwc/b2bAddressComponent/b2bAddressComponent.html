@@ -1,0 +1,24 @@
+<template>
+    <lightning-card title="Ship To Address"> 
+        <div class="slds-m-around_medium" style="margin: auto;">
+            <div class="tr_item" style="margin: 20px 20px;">
+                <template if:true={address}>
+                    <div class="td_item item_img" >
+                        <lightning-layout-item>
+                            <lightning-icon icon-name="utility:company" alternative-text="Connected" title="Connected" class="my-icon"></lightning-icon>
+                        </lightning-layout-item>
+                    </div>
+                    <div class="td_item item_name" >
+                        <label class="main"> {accountNumber}</label>
+                    </div>
+                    <div class="td_item item_qty" style="display: flex;" >
+                        <label class="main">{accountName}</label>
+                    </div>
+                    <div class="td_item item_price slds-col slds-size_12-of-12 ">
+                        <label class="main"> {address}</label>
+                    </div>
+                </template>
+            </div> 
+        </div>       
+    </lightning-card> 
+</template>

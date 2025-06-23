@@ -1,0 +1,20 @@
+<template>
+    <lightning-card  title="Service Appointments"  >        
+    <!--<lightning-button label="Approve Selected Rows" slot="actions" onclick={approvesubmit}></lightning-button>
+    <lightning-button label="Reject Selected Rows"  onclick={rejectSubmit} slot="actions"></lightning-button>    -->
+    
+    <div class="center">
+            <!--<lightning-textarea name="Comments" label="Approve / Reject Comments"  data-id="comments" ></lightning-textarea>-->
+        </div>         
+            <!-- Datatable to show the related files of the record -->
+            
+            <lightning-datatable 
+                data-id="relatedFiles"
+                key-field="Id"                
+                data={SADetails}
+                columns={filesListColumns}
+                hide-checkbox-column="true">
+            </lightning-datatable>
+    </lightning-card>    
+    
+</template>

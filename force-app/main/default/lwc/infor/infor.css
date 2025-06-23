@@ -1,0 +1,80 @@
+table{
+    
+  font:bold;
+  text-align: center;
+  padding:8px;
+  
+  border: 1px solid black;
+}
+table tr th{
+  background:rgb(207, 206, 216);
+  border: 1px solid black;
+  text-align: center;
+}
+table tr td {
+   border: 1px solid black;
+   text-align: center;
+  
+   font: bold;
+}
+.forecasted_month{
+background-color: rgb(240, 191, 99);
+}
+.opp{
+  background-color: rgb(49, 112, 230);
+}
+.disclaimer{
+  color: rgb(211, 38, 8);
+}
+.diffcolor{
+  background-color:rgb(132, 236, 172);
+}
+.highlightnew{
+color: rgba(255, 7, 7, 0.986);
+}
+.textbox{
+  width: 50px;
+  height: 34px;
+  text-align: center;
+  background-color: rgb(132, 236, 172);
+  /* background-color:brown; */
+
+  
+}
+.slds-align_absolute-cente{
+  
+  color: rgba(19, 90, 12, 0.849);
+  float:inline-end;
+  font-size: 20px;
+}
+.centercls{
+  text-align: center;
+  font-weight: bold;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+-webkit-appearance: none;
+margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+-moz-appearance: textfield;
+}
+.monthscolor{
+  background-color:rgb(132, 236, 172); 
+}
+.oamonth{
+  background-color:rgb(132, 236, 172); 
+}
+.InforPriceTotal{
+ background-color: rgb(240, 191, 99);
+}
+
+.legend { list-style: none; }
+.legend li { float: left; margin-right: 10px; }
+.legend span { border: 1px solid #ccc; float: left; width: 12px; height: 12px; margin: 2px; }
+/* your colors */
+.legend .considered { background-color: rgb(132, 236, 172); }
+.legend .locked { background-color: rgb(230, 93, 93); }

@@ -1,0 +1,53 @@
+<apex:page standardController="Account" extensions="SAP_Payer_Credit_Controller">
+
+       
+    <apex:pageMessages />
+    
+    <apex:pageBlock >
+        <apex:pageBlockSection >
+            <apex:outputField value="{!creditInfo.SAP_Payer_Balance__c}"/>
+            <apex:outputField value="{!creditInfo.SAP_Payer_Past_Due_1_15_Days__c}"/>
+            <apex:outputField value="{!creditInfo.SAP_Payer_Credit_Limit__c}"/>
+            <apex:outputField value="{!creditInfo.SAP_Payer_Past_Due_16_30_Days__c}"/>
+            <apex:outputField value="{!creditInfo.SAP_Payer_Current__c}"/>
+            <apex:outputField value="{!creditInfo.SAP_Payer_Past_Due_31_60_Days__c}"/>
+
+            <apex:outputField value="{!creditInfo.SAP_Payer_Credit_Control__c}"/>
+            <!--<apex:outputField value="{!creditInfo.SAP_Payer_Credit_Limit__c}"/>-->
+            <apex:outputField value="{!creditInfo.SAP_Payer_Past_Due_61_90_Days__c}"/>
+             <apex:outputField value="{!creditInfo.LastModifiedDate}"/>
+
+            <apex:outputField value="{!creditInfo.SAP_Payer_Past_Due_over_90Days__c}"/>
+            <apex:outputText value="" />
+            <apex:outputField value="{!creditInfo.SAP_Payer_Total_Past_Due__c}"/>
+                        
+             <!--
+             <apex:outputField value="{!creditInfo.SAP_Payer_Balance__c}"/>
+            <apex:outputField value="{!creditInfo.SAP_Payer_Credit_Limit__c}"/>
+            <apex:outputField value="{!creditInfo.SAP_Payer_Credit_Control__c}"/>
+            <!--<apex:outputField value="{!creditInfo.SAP_Payer_Credit_Limit__c}"/>
+            <apex:outputField value="{!creditInfo.SAP_Payer_Current__c}"/>
+            <apex:outputField value="{!creditInfo.SAP_Payer_Past_Due_1_15_Days__c}"/>
+            <apex:outputField value="{!creditInfo.SAP_Payer_Past_Due_16_30_Days__c}"/>
+            <apex:outputField value="{!creditInfo.SAP_Payer_Past_Due_31_60_Days__c}"/>
+            <apex:outputField value="{!creditInfo.SAP_Payer_Past_Due_61_90_Days__c}"/>
+            <apex:outputField value="{!creditInfo.SAP_Payer_Past_Due_over_90Days__c}"/>
+            <apex:outputField value="{!creditInfo.SAP_Payer_Total_Past_Due__c}"/>
+             <apex:outputField value="{!creditInfo.LastModifiedDate}"/>
+
+
+             
+             
+             
+             -->
+
+             <!--<<apex:outputField value="{!creditInfo.SAP_Payer_Sales_Org__c}"/>
+             <apex:outputField value="{!creditInfo.SAP_Payer_Dist_Channel__c}"/>
+            <apex:outputField value="{!creditInfo.SAP_Payer_Division__c}"/>-->
+
+
+
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+    
+</apex:page>

@@ -1,0 +1,113 @@
+<template>
+	<header></header>
+	<div class="container">
+		<div class="top_navbar">
+			<aside class="sidebar ns_left slds-no-print">
+				<div class="sidebar">
+					<ul class="mySidebar">
+						<!-- Back Button -->
+						<template if:true={expandedView}>
+							<li class="nonMobileView" onclick={closeNav} title="Collapse">
+								<img alt="Collapse" src={backIcon} height="20" width="20" onclick={closeNav}/>
+                            </li>
+						</template>
+						<template if:false={expandedView}>
+							<li class="nonMobileView" onclick={openNav} title="Expand">
+								<img alt="Expand" src={forwardIcon} height="20" width="20" onclick={openNav}/>
+                            </li>
+						</template>
+						<template if:true={expandedView}>
+							<li class="mobileView" onclick={handleCrossClick} title="Collapse">
+								<img alt="Collapse" style="z-index: 100" src={crossIcon} height="20" width="20" onclick={handleCrossClick}/>
+                            </li>
+						</template>
+						<template if:false={expandedView}>
+							<li class="mobileView" onclick={handleMenuClick} title="Expand">
+								<img alt="Expand" class="expand" src={menuIcon} height="20" width="20" onclick={handleMenuClick}/>
+                            </li>
+						</template>
+						<!-- Nav Items -->
+						<div class="navItems">
+							<template for:each={sideNavList} for:item="item">
+								<template key={item.id} if:true={expandedView}>
+									<li key={item.id} title={item.label} data-redirect={item.redirectLink}
+										onclick={handleRedirect}>
+										<a href={item.redirectLink} target={item.target}
+											data-redirect={item.redirectLink} onclick={handleRedirect}>
+											<div class="imgContainer">
+												<img alt={item.label} class="image" src={item.iconUrl} height="20" width="20" data-redirect={item.redirectLink} onclick={handleRedirect}/>
+												<div class="overlay">
+													<img alt={item.label} class="image" src={item.iconUrlOnHover} height="20" width="20" data-redirect={item.redirectLink} onclick={handleRedirect}/>
+												</div>
+												<span class="slds-p-top_xxx-small">{item.label}</span>
+											</div>
+										</a>
+										<!-- <a class="active" href="#home">
+                                            <svg class="slds-button__icon slds-button__icon_small" aria-hidden="true">
+                                                <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#home"></use>
+                                            </svg>Home
+                                        </a> -->
+									</li>
+								</template>
+								<template key={item.id} if:false={expandedView}>
+									<li key={item.id} title={item.label} data-redirect={item.redirectLink}
+										onclick={handleRedirect}>
+										<a href={item.redirectLink} target={item.target}
+											data-redirect={item.redirectLink} onclick={handleRedirect}>
+											<div class="imgContainer">
+												<img alt={item.label} class="image" src={item.iconUrl} height="20" width="20" data-redirect={item.redirectLink} onclick={handleRedirect}/>
+												<div class="overlay">
+													<img alt={item.label} class="image" src={item.iconUrlOnHover} height="20" width="20" data-redirect={item.redirectLink} onclick={handleRedirect}/>
+												</div>
+											</div>
+											<!-- <img alt={item.label} src={item.iconUrl} height="20" width="20" data-redirect={item.redirectLink} onclick={handleRedirect}/> -->
+                                        </a>
+										<!-- <a class="active" href="#home">Home</a> -->
+									</li>
+								</template>
+							</template>
+						</div>
+					</ul>
+				</div>
+			</aside>
+		</div>
+		<div class="main_body">
+			<div class="inner_body">
+				<template if:true={isLandingPage}>
+					<c-solenis_-landing-page effective-account-id={effectiveAccountId}></c-solenis_-landing-page>
+				</template>
+				<template if:true={isTechPerforDetailPage}>
+					<c-solenis_technical-performance-detail></c-solenis_technical-performance-detail>
+				</template>
+				<template if:true={isOrderListPage}>
+					<c-solenis_-order-list effective-account-id={effectiveAccountId}></c-solenis_-order-list>
+				</template>
+				<template if:true={isOrderSummaryPage}>
+					<div class="orderSummaryBlock">
+						<lightning-layout class="layout slds-no-print">
+							<lightning-layout-item size="12">
+								<img class="backbtn" alt="Back to Home" title="Back to Home" src={backIcon} height="20" width="20" onclick={backToHome}/>
+								<span class="backText" onclick={backToHome}>Back</span>
+							</lightning-layout-item>
+						</lightning-layout>
+						<c-b2b-order-details-solenis></c-b2b-order-details-solenis>
+					</div>
+				</template>
+				<template if:true={isSupportPage}>
+					<c-solenis_-support></c-solenis_-support>
+				</template>
+				<template if:true={isKnowledgePage}>
+					<c-solenis_-knowledge></c-solenis_-knowledge>
+				</template>
+				<template if:true={isAccountRequestPage}>
+					<c-solenis_-account-request></c-solenis_-account-request>
+				</template>
+			</div>
+		</div>
+	</div>
+	<!-- <footer>THIS IS A FOOTER</footer> -->
+	<div class='bottom' onclick={handleScrollToTop}>
+		<div class="topsvg"><img alt="Scroll to Top" src={topIcon} height="20" width="20"/></div>
+		<div class="topText"><strong>Top</strong></div>		
+	</div>
+</template>

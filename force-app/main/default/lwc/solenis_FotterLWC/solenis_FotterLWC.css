@@ -1,0 +1,266 @@
+:host {
+  --sds-c-card-color-background: #5B89B4;
+}
+
+.slds-card__header {
+  display: none;
+}
+
+.contactStyle {
+  font-size: 22px;
+  font-weight: 400;
+  font-style: normal;
+  padding-left: 25px;
+  direction: rtl;
+  padding-right: 30px;
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  padding-left: 25px;
+  position: relative;
+}
+
+.section {
+  padding: 0 40px 0 0;
+  margin-bottom: auto;
+  margin-top: auto;
+}
+
+.borderRight1px {
+  border-right: 1px solid #FFFFFF;
+}
+
+.borderLeft1px {
+  border-left: 1px solid #FFFFFF;
+}
+
+.paddingLeft30px {
+  padding-left: 30px;
+}
+
+.verticalLine {
+  position: absolute;
+  top: 0px;
+  bottom: 17px;
+  width: 1px;
+  background-color: #ffffff;
+}
+
+.verticalLineContacts {
+  position: absolute;
+  top: 14px;
+  bottom: 17px;
+  width: 1px;
+  background-color: #ffffff;
+}
+
+.column {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 27px;
+  letter-spacing: 0em;
+  text-align: left;
+  color: #FFFFFF;
+}
+
+.marginBottom10px {
+  margin-bottom: 10px
+}
+
+.contactsHeading {
+  white-space: nowrap;
+  display: inline-block;
+}
+
+.paddingLefttoAlign {
+  margin-left: 10px;
+}
+
+.socialFooter {
+  display: flex;
+}
+
+.socialLink {
+  margin-right: 10px;
+}
+
+.cursor:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+
+/* STYLES SPECIFIC TO FOOTER  */
+.footer {
+  width: 100%;
+  position: relative;
+  height: auto;
+  background-color: #5B89B4;
+  padding: 20px 0px;
+}
+
+.footer .firstcol {
+  height: 70px;
+  float: left;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  position: relative;
+  width: 120px;
+}
+
+.centered-element {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.footer .col {
+  height: 70px;
+  float: left;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  padding: 0px 20px 20px 20px;
+}
+
+.footer .col h1 {
+  margin: 0;
+  padding: 0;
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 17px;
+  padding: 20px 0px 5px 0px;
+  color: #FFFFFF;
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.250em;
+}
+
+.footer .col ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.footer .col ul li {
+  color: #FFFFFF;
+  font-size: 14px;
+  font-family: inherit;
+  font-weight: bold;
+  padding: 5px 0px 5px 0px;
+  cursor: pointer;
+  transition: .2s;
+  -webkit-transition: .2s;
+  -moz-transition: .2s;
+}
+
+.social ul li {
+  display: inline-block;
+  padding-right: 5px !important;
+}
+
+.footer .col ul li:hover {
+  color: #ffffff;
+  transition: .1s;
+  -webkit-transition: .1s;
+  -moz-transition: .1s;
+}
+
+.clearfix {
+  clear: both;
+}
+
+@media only screen and (min-width: 1280px) {
+  .contain {
+    width: 1200px;
+    margin: 0 auto;
+  }
+}
+
+/* Below commented code works. Use it when needed */
+/* @media only screen and (max-width: 1139px) {
+  .contain .social {
+    width: 1000px;
+    display: block;
+  }
+
+  .social h1 {
+    margin: 0px;
+  }
+}
+
+@media only screen and (max-width: 950px) {
+  .footer .col {
+    width: 33%;
+  }
+
+  .footer .firstcol {
+    width: 33%;
+  }
+
+  .footer .col h1 {
+    font-size: 14px;
+  }
+
+  .footer .col ul li {
+    font-size: 13px;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .footer .col {
+    width: 50%;
+  }
+
+  .footer .firstcol {
+    width: 50%;
+  }
+
+  .footer .col h1 {
+    font-size: 14px;
+  }
+
+  .footer .col ul li {
+    font-size: 13px;
+  }
+} */
+
+@media only screen and (max-width: 1100px) {
+  .footer .col {
+    width: 50%;
+  }
+
+  .footer .firstcol {
+    width: 50%;
+  }
+
+  .footer .col h1 {
+    font-size: 14px;
+  }
+
+  .footer .col ul li {
+    font-size: 13px;
+  }
+
+  .contactStyle {
+    direction: ltr;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .footer .col {
+    width: 100%;
+  }
+
+  .footer .firstcol {
+    width: 100%;
+  }
+
+  .contactStyle {
+    direction: ltr;
+  }
+}

@@ -1,0 +1,228 @@
+.headingContent {
+	font-style: normal;
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 28px;
+  text-transform: uppercase;
+	color: #17344C;
+}
+.captionContent {
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 24px;
+	color: #687886;
+	padding-bottom: 20px;
+}
+.calender {
+	background-color: #F1F1F1;
+  padding: 7px;
+  border-radius: 7px;
+}
+
+/* Style the header */
+header {
+  padding-bottom: 10px;
+}
+
+/* Create two columns/boxes that floats next to each other */
+/* Column 1 */
+nav {
+  float: left;
+  /* width: 35%; Commenting for now and made Column 1 to 100% width - but reuse it for 2 column layout  */
+  width: 99%;
+  padding: 20px;
+  background: #FFFFFF;
+  border: 1px solid #C9C9C9;
+  border-radius: 7px;
+  margin: 0px 10px 10px 0px;
+  min-height: 155px;
+}
+.navContent {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  margin: 0px 0px 0px 15px;
+}
+
+.paddingRight8px {
+	padding-right: 8px;
+}
+
+/* Column 2 */
+article {
+  float: left;
+  padding: 20px;
+  /* width: 60%;  Commenting for now - but reuse it for 2 column layout */ 
+  background-color: #f1f1f1;
+}
+
+/* Clear floats after the columns */
+section::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Style the footer */
+footer {
+  /* background-color: #777; */
+  /* padding: 10px; */
+  /* text-align: center; */
+  /* color: white; */
+}
+
+/* Grid format - used for mobile view */
+.tiles {
+  padding-top: 15px;
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: grid;
+  grid-column-gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+}
+.tile {
+  padding: 3px;
+  height: 140px;
+  width: 100%;
+  margin-right: 10px;
+}
+
+/* CSS for filpcards */
+.flip-card {
+  background-color: transparent;
+  width: 100%;
+  height: 100%;
+}
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0s;
+  transform-style: preserve-3d;
+  border: 0.5px solid rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.3);
+  border-radius: 7px;
+}
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+.flip-card-front, .flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+}
+.flip-card-front {
+  color: black;
+}
+.flip-card-back {
+  background: rgba(217, 217, 217, 0.37);
+  color: black;
+  transform: rotateY(180deg);
+}
+.flipBackHeaderContent {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 20px;
+  padding-top: 4px;
+}
+.flipBackBodyContent {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 20px;
+  padding-top: 4px;
+}
+
+/* Column - tile header */
+.tileHeader {
+	height: 25%;
+	width: 100%;
+	padding: 7px 4px 7px 15px;
+}
+.tileHeaderContent {
+	font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 20px;
+}
+/* Column - tile body */
+.tileBody {
+	height: 50%;
+	width: 100%;
+  padding: 3px 0px 0px 15px;
+}
+.tileBody .orderNumber {
+	font-style: normal;
+  font-weight: 400;
+  font-size: 21px;
+  line-height: 20px;
+  padding-top: 4px;
+}
+/* Column - tile footer */
+.tileFooter {
+	height: 15%;
+	width: 100%;
+	padding: 0px 4px 0px 15px;
+}
+
+.highlightColor {
+  color: #4F80F8;
+}
+
+.visitPortal {
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 28px;
+	color: #5B89B4;
+}
+
+.btn {
+  cursor: pointer;
+}
+
+.slds-modal__content_footless, .slds-modal__container>.slds-modal__content:last-child, .slds-modal__content_has-hidden-footer {
+  border-radius: 5px;
+}
+
+.combobox {
+  padding: 3px;
+  margin-left: 10px;
+  background-color: #f1f1f1;
+  border-radius: 7px;
+}
+
+.exampleHolder{
+  position: relative;
+  display: inline-block;
+  /* width: 80px; */
+  left: 50%;
+  height: 80px;
+}
+
+.exampleHolderText {
+  position: relative;
+  top: 93%;
+  left: 5%;
+}
+
+lightning-combobox > div.slds-combobox {
+  background-color: blue;
+    position: static;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+}
+
+/* Responsive layout - makes the two columns/boxes stack on top of each other instead of next to each other, on small screens */
+@media (max-width: 600px) {
+  nav, article {
+    width: 100%;
+    height: auto;
+  }
+}

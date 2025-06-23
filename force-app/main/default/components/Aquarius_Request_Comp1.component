@@ -1,0 +1,272 @@
+<apex:component controller="Aquarius_Request_Controller">
+    <apex:attribute name="p_attr1" assignTo="{!attr1}"
+                    type="Sample_Request_Aquarius" description=""/>
+
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-1.6.2.min.js')}" />
+
+    <script type="text/javascript">
+        var $j = jQuery.noConflict();
+        
+        var isReadOnly = {!isReadOnly};
+        
+        // console.log('isReadOnly : ' + isReadOnly);
+        
+        $j(function(){
+            applyStyles();
+        });
+
+        function applyStyles() {
+            $j('.aqrs-multiselect').attr('size','6');
+            if (isReadOnly) {
+                $j('.aqrs-select').attr('disabled','disabled');
+                $j('.aqrs-multiselect').attr('disabled','disabled');
+                $j('img.aqrs-multiselect').hide();
+            }
+        }
+        
+        function uncheckOther(cb) {
+            var cbclass = $j(cb).attr('class');
+            var checkboxes = $j('.'+cbclass);
+            var checked = cb.checked;
+            for (var i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].checked = false;
+            }
+            cb.checked = checked;
+        }
+        
+        function changeStyle(cb, fid) {
+            var f = document.getElementById(fid);
+            if (cb.checked) {$j(f).addClass('aqrs-hilitd');} 
+            else {$j(f).removeClass('aqrs-hilitd');}
+        }
+        
+    </script>
+    
+    <apex:actionStatus id="astat1">
+        <apex:facet name="start">
+            <apex:outputText styleClass="bold" value=" Please wait ...">
+                <apex:image value="{!$Resource.spinner}"/>
+            </apex:outputText>
+        </apex:facet>
+        <apex:facet name="stop">
+    <apex:form id="form1">
+        <apex:pageMessages />
+        <apex:pageBlock id="pblock1" mode="edit" title="Aquarius Request">
+            <table class="aqrs-tbl">
+                <tr><td class="col1">&nbsp;</td>
+                    <td colspan="4" class="center">
+                        <apex:commandButton action="{!validate}" value="OK" immediate="false"
+                                            status="astat1" rerender="form1" rendered="{!!isReadOnly}"
+                                            oncomplete="onAquariusClose(); return false;"/>
+                        <apex:commandButton action="{!cancel}" value="Cancel" immediate="true"
+                                            status="astat1" rerender="form1" 
+                                            oncomplete="onAquariusClose(); return false;"/>
+                    </td></tr>
+                <tr><td colspan="5" class="aqrs-stitle">Desired Coating</td></tr>
+                <tr><td class="col1"><span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Coating_Objective__c.label}</span></td>
+                    <td colspan="4">
+                    <apex:outputPanel styleClass="requiredInput" layout="block">
+	                    <apex:outputPanel styleClass="requiredBlock" layout="block" rendered="{!!isCoatObjReadOnly}"/>
+                        <apex:inputTextArea value="{!aquarius.Coating_Objective__c}" 
+                                            styleClass="aqrs-txta1 aqrs-hilitd"
+                                            disabled="{!isCoatObjReadOnly}"/>
+                    </apex:outputPanel></td></tr>
+                <tr><td class="col1"><span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Coating_Description__c.label}</span></td>
+                    <td colspan="4">
+                    <apex:outputPanel styleClass="requiredInput" layout="block">
+                        <apex:outputPanel styleClass="requiredBlock" layout="block" rendered="{!!isCoatDscReadOnly}"/>
+                        <apex:inputTextArea value="{!aquarius.Coating_Description__c}" 
+                                            styleClass="aqrs-txta1 aqrs-hilitd"
+                                            disabled="{!isCoatDscReadOnly}"/>
+                    </apex:outputPanel></td></tr>
+                <tr><td>&nbsp;</td></tr>
+                <tr><td colspan="5" class="aqrs-stitle">Sample Documentation Required</td></tr>
+                <tr><td class="col1">&nbsp;</td>
+                    <td class="col2">
+                        <apex:inputCheckbox value="{!aquarius.Reconstitution_Instructions__c}" disabled="{!isReadOnly}"/>
+                        <span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Reconstitution_Instructions__c.label}</span></td>
+                    <td class="col3">
+                        <apex:inputCheckbox value="{!aquarius.Certificate_of_Analysis__c}" disabled="{!isReadOnly}"/>
+                        <span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Certificate_of_Analysis__c.label}</span></td>
+                    <td class="col4">
+                        <apex:inputCheckbox value="{!aquarius.Declaration_of_Ingredients__c}" disabled="{!isReadOnly}"/>
+                        <span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Declaration_of_Ingredients__c.label}</span></td>
+                    <td class="col5">
+                        <apex:inputCheckbox value="{!aquarius.Product_Specification__c}" disabled="{!isReadOnly}"/>
+                        <span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Product_Specification__c.label}</span></td>
+                    </tr>
+                <tr><td class="col1">&nbsp;</td>
+                    <td><apex:inputCheckbox value="{!aquarius.Coating_Conditions__c}" disabled="{!isReadOnly}"/>
+                        <span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Coating_Conditions__c.label}</span></td>
+                    <td><apex:inputCheckbox value="{!aquarius.MSDS__c}" disabled="{!isReadOnly}"/>
+                        <span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.MSDS__c.label}</span></td>
+                    <td><apex:inputCheckbox value="{!aquarius.Other_Documentation__c}" disabled="{!isReadOnly}"
+                                         onclick="changeStyle(this, '{!$Component.othDocDtl}');"/>
+                        <span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Other_Documentation__c.label}</span></td>
+                    </tr>
+                <tr><td class="col1"><span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Other_Documentation_Details__c.label}</span></td>
+                    <td colspan="4"><apex:inputTextArea value="{!aquarius.Other_Documentation_Details__c}" disabled="{!isReadOnly}"
+                                                        id="othDocDtl" styleClass="aqrs-txta1 {!styleClass_othDocDtl}"/>
+                    </td></tr>
+                <tr><td>&nbsp;</td></tr>
+                <tr><td colspan="5" class="aqrs-stitle">Project Details</td></tr>
+                <tr><td class="col1"><span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Coating_Substrate__c.label}</span></td>
+                    <td colspan="4"><apex:inputTextArea value="{!aquarius.Coating_Substrate__c}" disabled="{!isReadOnly}"
+                                                        styleClass="aqrs-txta1"/></td></tr>
+                <tr><td class="col1"><span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Required_Functionality__c.label}</span></td>
+                    <td colspan="4"><apex:inputTextArea value="{!aquarius.Required_Functionality__c}" disabled="{!isReadOnly}"
+                                                        styleClass="aqrs-txta1"/></td></tr>
+                <tr><td class="col1"><span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Desired_Weight_Gain__c.label}</span></td>
+                    <td><apex:inputText value="{!aquarius.Desired_Weight_Gain__c}" disabled="{!isReadOnly}" styleClass="aqrs-txt2 {!styleClass_dWeightGn}"/></td>
+                    <td class="col1"><span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Desired_Solids__c.label}</span></td>
+                    <td><apex:inputText value="{!aquarius.Desired_Solids__c}" disabled="{!isReadOnly}" styleClass="aqrs-txt2"/></td></tr>
+                <tr><td class="col1"><span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Desired_Solvent__c.label}</span></td>
+                    <td colspan="4"><apex:inputTextArea value="{!aquarius.Desired_Solvent__c}" disabled="{!isReadOnly}"
+                                                        styleClass="aqrs-txta1"/></td></tr>
+                <tr><td class="col1">&nbsp;</td>
+                    <td><apex:inputCheckbox value="{!aquarius.Customer_Cores_Provided__c}" disabled="{!isReadOnly}"/>
+                        <span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Customer_Cores_Provided__c.label}</span></td>
+                    <td class="col1"><span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Core_Amount__c.label}</span></td>
+                    <td><apex:inputText value="{!aquarius.Core_Amount__c}" disabled="{!isReadOnly}" styleClass="aqrs-txt2"/></td></tr>
+                <tr><td class="col1"><span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Colorants_Preferred__c.label}</span></td>
+                    <td colspan="4"><apex:inputText value="{!aquarius.Colorants_Preferred__c}" disabled="{!isReadOnly}" styleClass="aqrs-txt1"/></td></tr>
+                <tr><td class="col1"><span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Plasticizer_Preference__c.label}</span></td>
+                    <td><apex:inputField value="{!aquarius.Plasticizer_Preference__c}" styleClass="aqrs-select"/></td></tr>
+
+                <tr><td>&nbsp;</td></tr>
+                <tr><td colspan="5" class="aqrs-stitle">Regulatory Requirements</td></tr>
+
+                <tr><td class="col1"><span class="aqrs-lbl">Market</span></td>
+                    <td class="col2"><apex:inputCheckbox value="{!aquarius.Pharma_Market__c}" disabled="{!isReadOnly}"
+                                                      styleClass="marketCbs" onclick="uncheckOther(this);"/>
+                        <span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Pharma_Market__c.label}</span></td>
+                    <td class="col3"><apex:inputCheckbox value="{!aquarius.Nutritional_Market__c}" disabled="{!isReadOnly}"
+                                                      styleClass="marketCbs" onclick="uncheckOther(this);"/>
+                        <span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Nutritional_Market__c.label}</span></td>
+                    <td class="col4"><apex:inputCheckbox value="{!aquarius.Food_Market__c}" disabled="{!isReadOnly}"
+                                                      styleClass="marketCbs" onclick="uncheckOther(this);"/>
+                        <span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Food_Market__c.label}</span></td>
+                    <td class="col5"><apex:inputCheckbox value="{!aquarius.Other_Market__c}" disabled="{!isReadOnly}" styleClass="marketCbs" 
+                                                      onclick="uncheckOther(this); changeStyle(this, '{!$Component.othMktDtl}');"/>
+                        <span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Other_Market__c.label}</span></td>
+                    </tr>
+                <tr><td class="col1"><span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Other_Market_Details__c.label}</span></td>
+                    <td colspan="4"><apex:inputTextArea value="{!aquarius.Other_Market_Details__c}" disabled="{!isReadOnly}"
+                                                        id="othMktDtl" styleClass="aqrs-txta1 {!styleClass_othMktDtl}"/></td></tr>
+                                                        
+                <tr><td class="col1">&nbsp;</td>
+                    <td class="col2"><apex:inputCheckbox value="{!aquarius.Clear_Color__c}" disabled="{!isReadOnly}"
+                                                       styleClass="colorCbs" onclick="uncheckOther(this);"/>
+                        <span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Clear_Color__c.label}</span></td>
+                    <td class="col3"><apex:inputCheckbox value="{!aquarius.White_Color__c}" disabled="{!isReadOnly}"
+                                                       styleClass="colorCbs" onclick="uncheckOther(this);"/>
+                        <span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.White_Color__c.label}</span></td>
+                    <td class="col4"><apex:inputCheckbox value="{!aquarius.Standard_Color__c}" disabled="{!isReadOnly}"
+                                                       styleClass="colorCbs" onclick="uncheckOther(this);"/>
+                        <span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Standard_Color__c.label}</span></td>
+                    <td class="col5"><apex:inputCheckbox value="{!aquarius.Custom_Color__c}" disabled="{!isReadOnly}" styleClass="colorCbs" 
+                                                       onclick="uncheckOther(this); changeStyle(this, '{!$Component.othClrDtl}');"/>
+                        <span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Custom_Color__c.label}</span></td>
+                    </tr>
+                <tr><td class="col1"><span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Color_Details__c.label}</span></td>
+                    <td colspan="4"><apex:inputText value="{!aquarius.Color_Details__c}" disabled="{!isReadOnly}"
+                                                    id="othClrDtl" styleClass="aqrs-txt1 {!styleClass_othClrDtl}"/></td></tr>
+                <tr><td class="col1"><span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Colorants_that_cannot_be_used__c.label}</span></td>
+                    <td colspan="4"><apex:inputText value="{!aquarius.Colorants_that_cannot_be_used__c}" disabled="{!isReadOnly}"
+                                                    styleClass="aqrs-txt1"/></td></tr>
+                <tr><td class="col1"><span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Countries_of_End_Use_Sale__c.label}</span></td>
+                    <td colspan="4"><apex:inputField value="{!aquarius.Countries_of_End_Use_Sale__c}" 
+                                                     styleClass="aqrs-multiselect"/></td></tr>
+                <tr><td>&nbsp;</td></tr>
+                <tr><td colspan="5" class="aqrs-stitle">Target Provided?</td></tr>
+                <tr><td class="col1">&nbsp;</td>
+                    <td class="col2"><apex:inputCheckbox value="{!aquarius.Coated_Tablet__c}" disabled="{!isReadOnly}"
+                                                      styleClass="targetCbs" onclick="uncheckOther(this);"/>
+                        <span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Coated_Tablet__c.label}</span></td>
+                    <td class="col3"><apex:inputCheckbox value="{!aquarius.Other_Target__c}" disabled="{!isReadOnly}" styleClass="targetCbs" 
+                                                      onclick="uncheckOther(this); changeStyle(this, '{!$Component.othTgtDtl}');"/>
+                        <span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Other_Target__c.label}</span></td>
+                    <td colspan="2"><span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Other_Target_Details__c.label}</span>&nbsp;&nbsp;
+                        <apex:inputText value="{!aquarius.Other_Target_Details__c}" disabled="{!isReadOnly}" 
+                                        id="othTgtDtl" styleClass="aqrs-txt2 {!styleClass_othTgtDtl}"/></td></tr>
+                <tr><td class="col1">&nbsp;</td>
+                    <td class="col2"><apex:inputCheckbox value="{!aquarius.Label_Match__c}" disabled="{!isReadOnly}"
+                                                      onclick="changeStyle(this, '{!$Component.prodMatch}');"/>
+                        <span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Label_Match__c.label}</span></td></tr>
+                <tr><td class="col1"><span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Product_to_be_matched__c.label}</span></td>
+                    <td colspan="4"><apex:inputText value="{!aquarius.Product_to_be_matched__c}" disabled="{!isReadOnly}"
+                                                    id="prodMatch" styleClass="aqrs-txt1 {!styleClass_prodMatch}"/></td></tr>
+                <tr><td class="col1"><span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.List_of_Ingredients__c.label}</span></td>
+                    <td colspan="4"><apex:inputTextArea value="{!aquarius.List_of_Ingredients__c}" disabled="{!isReadOnly}"
+                                                        styleClass="aqrs-txta1"/></td></tr>
+                <tr><td class="col1">&nbsp;</td>
+                    <td class="col2"><apex:inputCheckbox value="{!aquarius.Exact_Formulation_Match__c}" disabled="{!isReadOnly}"
+                                                      onclick="changeStyle(this, '{!$Component.qntfMatch}');"/>
+                        <span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Exact_Formulation_Match__c.label}</span></td></tr>
+                <tr><td class="col1"><span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Quantitative_Formula__c.label}</span></td>
+                    <td colspan="4"><apex:inputTextArea value="{!aquarius.Quantitative_Formula__c}" disabled="{!isReadOnly}"
+                                                        id="qntfMatch" styleClass="aqrs-txta1 {!styleClass_qntfMatch}"/></td></tr>
+                <tr><td class="col1"><span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Current_Supplier__c.label}</span></td>
+                    <td colspan="4"><apex:inputTextArea value="{!aquarius.Current_Supplier__c}" disabled="{!isReadOnly}"
+                                                        styleClass="aqrs-txta1"/></td></tr>
+                <tr><td class="col1"><span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Customer_Problems__c.label}</span></td>
+                    <td colspan="4"><apex:inputTextArea value="{!aquarius.Customer_Problems__c}" disabled="{!isReadOnly}"
+                                                        styleClass="aqrs-txta1"/></td></tr>
+                <tr><td class="col1"><span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Customer_Product_Sensitivities__c.label}</span></td>
+                    <td colspan="4"><apex:inputTextArea value="{!aquarius.Customer_Product_Sensitivities__c}" disabled="{!isReadOnly}"
+                                                        styleClass="aqrs-txta1"/></td></tr>
+                <tr><td class="col1"><span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Customer_Core_Description__c.label}</span></td>
+                    <td colspan="4"><apex:inputTextArea value="{!aquarius.Customer_Core_Description__c}" disabled="{!isReadOnly}"
+                                                        styleClass="aqrs-txta1"/></td></tr>
+                <tr><td class="col1"><span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Customer_Core_Issues__c.label}</span></td>
+                    <td colspan="4"><apex:inputTextArea value="{!aquarius.Customer_Core_Issues__c}" disabled="{!isReadOnly}"
+                                                        styleClass="aqrs-txta1"/></td></tr>
+                <tr><td class="col1"><span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Coating_Equipment_Used__c.label}</span></td>
+                    <td colspan="4"><apex:inputTextArea value="{!aquarius.Coating_Equipment_Used__c}" disabled="{!isReadOnly}"
+                                                        styleClass="aqrs-txta1"/></td></tr>
+                <tr><td class="col1"><span class="aqrs-lbl">{!$ObjectType.Sample_Request_Aquarius__c.fields.Additional_Comments__c.label}</span></td>
+                    <td colspan="4"><apex:inputTextArea value="{!aquarius.Additional_Comments__c}" disabled="{!isReadOnly}"
+                                                        styleClass="aqrs-txta1"/></td></tr>
+                <tr><td class="col1">&nbsp;</td>
+                    <td colspan="4" class="center">
+                        <apex:commandButton action="{!validate}" value="OK" immediate="false"
+                                            status="astat1" rerender="form1" rendered="{!!isReadOnly}"
+                                            oncomplete="onAquariusClose(); return false;"/>
+                        <apex:commandButton action="{!cancel}" value="Cancel" immediate="true"
+                                            status="astat1" rerender="form1" 
+                                            oncomplete="onAquariusClose(); return false;"/>
+                    </td></tr>
+            </table>
+        </apex:pageBlock>
+    </apex:form>
+    </apex:facet></apex:actionStatus>
+
+    <style>
+        .bold {font-weight: bold;}
+        .center {text-align: center;}
+        .left {text-align: left;}
+        .right {text-align: right;}
+        .nowrap {white-space: nowrap;}
+        .requiredInput {white-space: nowrap;}
+        input[type="checkbox"] {margin-left: 0;}
+        input[type="text"], select, textarea, checkbox {border: 1px solid #7F9DB9 !important;}
+        input[type="text"]:hover, select:hover, textarea:hover, checkbox:hover,
+        .aqrs-hilitd {background-color: lightyellow; border: 1px solid #7F9DB9 !important;}
+        select.aqrs-multiselect {width: 150px !important; height: 100px !important;}
+        select.aqrs-select {width: 150px !important;}
+        .aqrs-stitle {font-size: 16px;}
+        .aqrs-txta1 {height: 45px; width: 770px !important; resize: none; overflow: auto;}
+        .aqrs-txt1  {height: 15px; width: 770px !important;}
+        .aqrs-txt2  {height: 15px; width: 150px !important;}
+        .aqrs-tbl {width: 950px;}
+        .aqrs-tbl td {padding: 5px;}
+        .aqrs-tbl tr.multiSelectPicklistRow td {padding-left: 0;}
+        .aqrs-tbl .col1 {width: 150px; text-align: right; vertical-align: middle;}
+        .aqrs-tbl .col2 {width: 120px; white-space: nowrap;}
+        .aqrs-tbl .col3 {width: 120px; white-space: nowrap;}
+        .aqrs-tbl .col4 {width: 120px; white-space: nowrap;}
+        .aqrs-tbl .col5 {width: 120px; white-space: nowrap;}
+        .aqrs-lbl {color: #4a4a56; font-weight: bold;}
+    </style>
+    
+</apex:component>

@@ -1,0 +1,431 @@
+<template>    
+    <lightning-record-edit-form object-api-name="Label_Request__c" onsubmit={handleSubmit} onsuccess={handleResponse}>
+        <lightning-messages></lightning-messages>       
+          <div class="slds-m-top_small slds-m-bottom_medium">
+            <div class="alignment">              
+               <lightning-button variant="brand" label="Save and Submit" title="Primary action with lighter look" onclick={handleCreatereqsubmitLWC} class="slds-m-left_x-small"></lightning-button>
+              
+               <lightning-button variant="brand" label="Save Only" title="Primary action with lighter look" onclick={handleCreatereqLWC} class="slds-m-left_x-small"></lightning-button>
+             
+              <lightning-button variant="brand-outline" label="Cancel" title="Primary action with lighter look" onclick={closeQuickAction} class="slds-m-left_x-small"></lightning-button>
+            </div>
+         </div>                         
+        <div class="slds-section slds-is-open">
+            <h3 class="slds-section__title slds-theme_shade">
+              <span class="slds-truncate slds-p-horizontal_small" title="Section Title">Information</span>
+            </h3>            
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col"><br/>
+                  <span>
+                      <lightning-output-field field-name="Name"> </lightning-output-field> 
+                  </span>
+                  <span>
+                    <table>
+                        <tr>
+                            <td style="vertical-align:Top">Delivery Method:</td>
+                            <td>                     
+                                <ul>
+                                    <li><b>Delivery Method: </b>All items are shipped <br/>by UPS Ground</li>
+                                    <li><b>Lead times: </b>1 week for Labels and 2 <br/>weeks for Placard Signs</li>
+                                    <li><b>FOB: </b>Hackettstown, NJ</li>
+                                </ul> 
+                            </td>
+                        </tr>
+                    </table>    
+                  </span>
+                </div>             
+                <div class="slds-col"><br/>
+                  <span><lightning-output-field field-name="Status__c"></lightning-output-field></span>
+                  <span><lightning-input-field data-id="TankRequirement"  field-name="Tank_Requirement__c"></lightning-input-field></span>
+                  <span></span>
+                  <span><lightning-input-field data-id="ShippingInstructionProduct" field-name="Shipping_Instruction_Product__c"></lightning-input-field></span>
+                </div>                
+            </div> 
+        </div>
+        <div class="slds-section slds-is-open">
+            <h3 class="slds-section__title slds-theme_shade">
+                <span class="slds-truncate slds-p-horizontal_small" title="Section Title">Ship-To Information</span>
+              </h3>               
+              <div class="slds-grid slds-gutters">
+                  <div class="slds-col"><br/>
+                        <span> <lightning-input-field field-name="Customer_Prospect__c" value={accrecords.Customer_Prospect__c} disabled="True"> </lightning-input-field>  </span>
+                        <span><lightning-input-field required data-id="FullAddress" field-name="Full_Address__c" value={accrecords.Full_Address__c}></lightning-input-field> </span>
+                  </div>                  
+                  <div class="slds-col"><br/>
+                      <span>
+                        <!--<select >
+                          <template for:each={contactsList} for:item="option" >
+                              <option key={option.key}   value={option.key} >{option.value}</option>
+                          </template> 
+                      </select>-->
+                      <table>
+                        <tr>
+                            <td class="slds-text-body_small"><sub style="color:red;vertical-align: top;font-size: smaller;">*</sub>Contact</td>
+                            <td style="width: 67%;">
+                              <lightning-combobox                                                             
+                                name="progress" 
+                                data-id="Contact"                          
+                                value={value}
+                                placeholder="Select Progress"
+                                options={contactsList}
+                                onchange={createContactHandler}
+                                size=small>
+                                </lightning-combobox>                    
+                              
+                              </td>
+                            </tr>
+                            </table>
+                      </span><br/>
+                      <span><lightning-input-field data-id="ContactPhone" field-name="Contact_Phone__c"></lightning-input-field> </span>
+                  </div>                      
+              </div> 
+        </div>
+        <div class="slds-section slds-is-open">
+            <h3 class="slds-section__title slds-theme_shade">
+                <span class="slds-truncate slds-p-horizontal_small" title="Section Title">Material Details</span>
+              </h3>
+              <div class="slds-grid slds-gutters">
+                <div class="slds-col">
+                  <span><br/>
+                    <lightning-input-field data-id="ProgramType" field-name="Program_Type__c" value={accrecords.Program_Type__c} > </lightning-input-field>  
+                    <lightning-input-field data-id="SAPMaterial" field-name="SAP_Material__c" value={accrecords.SAP_Material__c} required></lightning-input-field>                      
+                    <lightning-input-field data-id="Language" field-name="Language__c" value={accrecords.Language__c} required></lightning-input-field>
+                    <lightning-input-field data-id="Capacity" field-name="Capacity__c" value={accrecords.Capacity__c}></lightning-input-field>
+                    <lightning-input-field data-id="Model" field-name="Model__c" value={accrecords.Model__c}></lightning-input-field>
+                    <lightning-input-field data-id="AssetNumber" field-name="Asset_Number__c" value={accrecords.Asset_Number__c}></lightning-input-field> 
+                  </span>
+                </div>
+                <div class="slds-col">                 
+                </div>
+              </div>
+        </div>           
+        <div class="slds-section slds-is-open">
+            <h3 class="slds-section__title slds-theme_shade">
+                <span class="slds-truncate slds-p-horizontal_small" title="Section Title">Product Information</span>
+              </h3>    </div>          
+                  <table>
+                    <tr>
+                      <td class="table_td_lb_Cls">Solenis Label Cover</td>
+                      <td class="table_td_Cls">
+                        <lightning-input-field variant="label-hidden"  data-id="SolenisLabelCover"  field-name="Solenis_Label_Cover__c"></lightning-input-field>
+                      </td>
+                      <td class="space_Td"></td>
+                      <td class="table_td_lb_Cls" >
+                        Hot Line Sticker
+                      </td>
+                      <td class="table_td_Cls">
+                        <lightning-input-field variant="label-hidden" class="piclistCls" data-id="HotLineSticker"  field-name="Hot_Line_Sticker__c"></lightning-input-field>
+                      </td>
+                    </tr>
+                    <tr>                      
+                      <td class="table_td_lb_Cls">
+                        Solenis Label Cover
+                      </td>
+                      <td class="table_td_Cls">
+                        <img  title="Solenis Label Cover" src={labelImg.pic9small}/>
+                      </td>
+                      <td class="space_Td"></td>
+                      <td class="table_td_lb_Cls"  style="vertical-align: text-top;">
+                        Hot Line Sticker
+                      </td>
+                      <td class="table_td_Cls" >
+                        <img title="Hot Line Sticker" src={labelImg.pic10small}/>
+                      </td>                     
+                    </tr>
+                  </table>
+                  <table>
+                    <tr>
+                      <td class="table_td_lb_Cls"> 
+                        Laminated Label Quantity
+                      </td>
+                      <td class="table_td_Cls" style="width: 40%;">
+                        <lightning-input-field variant="label-hidden" class="piclistCls" data-id="LaminatedLable"  field-name="Laminated_Lable__c"></lightning-input-field>
+                      </td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                  </table>
+                  <table>
+                    <tr>
+                      <td class="table_td_lb_Cls" style="vertical-align: text-top;">
+                        Laminated Label  
+                      </td>
+                      <td  >
+                        <img  title="Laminated Label" src={labelImg.pic18small}/>
+                      </td>    
+                      <td class="table_td_Cls"></td>
+                      <td class="table_td_Cls"></td>   
+                    </tr>
+                  </table>                 
+               
+            <div class="slds-section slds-is-open">
+              <h3 class="slds-section__title slds-theme_shade">
+                  <span class="slds-truncate slds-p-horizontal_small" title="Section Title"></span>
+                </h3>
+              </div>
+                  <table>
+                    <tr>
+                      <td class="table_td_lb_Cls">
+                        Stick On Tank Label Quantity	
+                      </td>
+                      <td>
+                        <lightning-input-field variant="label-hidden" class="piclistCls" data-id="StickOnLabelQuantity"  field-name="Stick_On_Label_Quantity__c"></lightning-input-field>
+                      </td>
+                      <td class="table_td_lb_Cls">
+                        Fill Line Sign
+                      </td>
+                      <td>                                              
+                        <lightning-input-field variant="label-hidden" class="piclistCls" data-id="FillLineSignQuantity"  field-name="Fill_Line_Sign_Quantity__c"></lightning-input-field>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="table_td_lb_Cls" style="vertical-align: text-top;">
+                        Stick On Tank Label
+                      </td>
+                      <td>
+                        <img class="ImgCls" title="Stick On Tank Label" src={labelImg.pic19small}/>
+                      </td>
+                      <td class="table_td_lb_Cls" style="vertical-align: text-top;">
+                        Fill Line Sign
+                      </td>
+                      <td>
+                        <img title="Fill Line Sign" src={labelImg.pic5small}/>
+                      </td>
+                    </tr>
+                  </table>
+                    
+          
+        <div class="slds-section slds-is-open">
+            <h3 class="slds-section__title slds-theme_shade">
+                <span class="slds-truncate slds-p-horizontal_small" title="Section Title"></span>
+              </h3>
+        </div>
+             <table>
+               <tr>
+                 <td class="table_td_lb_Cls" >
+                  Line Tag Quantity
+                 </td>
+                 <td>
+                  <lightning-input-field variant="label-hidden" class="piclistCls" data-id="LineTag" field-name="Line_Tag__c"></lightning-input-field>
+                 </td>
+                 <td class="table_td_lb_Cls" >
+                  Heavy Duty Line Tag Quantity
+                 </td>
+                 <td>
+                  <lightning-input-field variant="label-hidden" class="piclistCls" data-id="GHSCoverlabel" field-name="GHS_Cover_label__c"></lightning-input-field>
+                 </td>
+               </tr>
+               <tr>
+                 <td class="table_td_lb_Cls" style="vertical-align: text-top;">
+                  Line Tag	
+                 </td>
+                 <td>
+                  <img title="Line Tag" src={labelImg.pic16small}/>
+                 </td>
+                 <td class="table_td_lb_Cls" style="vertical-align: text-top;">
+                  Heavy Duty Line Tag
+                 </td>
+                 <td>
+                  <img title="Heavy Duty Line Tag" src={labelImg.pic16small}/>
+                 </td>
+               </tr>
+             </table>        
+            <div class="slds-section slds-is-open">
+        <h3 class="slds-section__title slds-theme_shade">
+            <span class="slds-truncate slds-p-horizontal_small" title="Section Title"></span>
+          </h3>
+        </div>             
+               <table>
+                 <tr>
+                   <td class="table_td_lb_Cls">
+                    Indoor Tank Placard Quantity	
+                   </td>
+                   <td>
+                    <lightning-input-field variant="label-hidden" class="piclistCls" data-id="TankPlacardQuantity" field-name="Tank_Placard_Quantity__c"></lightning-input-field>
+                   </td>
+                   <td class="table_td_lb_Cls">
+                    Outdoor Tank Placard Quantity	
+                   </td>
+                   <td>
+                    <lightning-input-field variant="label-hidden" class="piclistCls" data-id="OutdoorTankPlacard" field-name="Outdoor_Tank_Placard__c"></lightning-input-field>
+                   </td>
+                 </tr>
+                 <tr>
+                   <td class="table_td_lb_Cls" style="vertical-align: text-top;">
+                    Indoor Tank Placard	
+                   </td>
+                   <td>
+                    <img title="Indoor Tank Placard" src={labelImg.pic20small}/>
+                   </td>
+                   <td class="table_td_lb_Cls" style="vertical-align: text-top;">
+                    Outdoor Tank Placard	
+                   </td>
+                   <td>
+                    <img title="Outdoor Tank Placard" src={labelImg.pic20small}/>
+                   </td>
+                 </tr>
+               </table>
+             
+               <div class="slds-section slds-is-open">
+                  <h3 class="slds-section__title slds-theme_shade">
+                      <span class="slds-truncate slds-p-horizontal_small" title="Section Title"></span>
+                  </h3>
+                </div>
+                <table>
+                  <tr>
+                    <td class="table_td_lb_Cls">
+                      Ultra-Serv Inv Mgmt Sign w/Label Qty
+                    </td>
+                    <td style="width:40%">
+                      <lightning-input-field variant="label-hidden" class="piclistCls" data-id="UltraServInvMgmtSignwLabelQty" field-name="Ultra_Serv_Inv_Mgmt_Sign_w_Label_Qty__c"></lightning-input-field>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="table_td_lb_Cls" style="vertical-align: text-top;">
+                      Ultra-Serv Inv Mgmt Sign w/Label	
+                    </td>
+                    <td>
+                      <img title="Ultra-Serv Inv Mgmt Sign w/Label" src={labelImg.pic15small}/>
+                    </td>
+                    <td></td>
+                    
+                  </tr>
+                </table>
+           
+        <div class="slds-section slds-is-open">
+            <h3 class="slds-section__title slds-theme_shade">
+                <span class="slds-truncate slds-p-horizontal_small" title="Section Title">Comments</span>
+              </h3>
+              <div class="slds-grid slds-gutters">
+                <div class="slds-col">
+                  <span><br/>
+                    <lightning-input-field data-id="LabelRequestComments" field-name="Label_Request_Comments__c" value={accrecords.Label_Request_Comments__c} > </lightning-input-field>  
+                        
+                    </span>
+                </div>
+                <div class="slds-col">                                 
+                </div>
+              </div>
+        </div>             
+        <div class="slds-section slds-is-open">
+            <h3 class="slds-section__title slds-theme_shade">
+                <span class="slds-truncate slds-p-horizontal_small" title="Section Title">System Information</span>
+              </h3>
+              <div class="slds-grid slds-gutters">
+                <div class="slds-col">
+                  <span><br/>
+                   
+                        <p>Record Type &nbsp; &nbsp;&nbsp; &nbsp; {recordTypeName}</p>
+                                  
+                    </span>
+                </div>
+                <div class="slds-col">                                 
+                </div>
+              </div>
+        </div>
+        <div class="slds-m-top_small slds-m-bottom_medium">
+          <div class="alignment">              
+             <lightning-button variant="brand" label="Save and Submit" title="Primary action with lighter look" onclick={handleCreatereqsubmitLWC} class="slds-m-left_x-small"></lightning-button>
+            
+             <lightning-button variant="brand" label="Save Only" title="Primary action with lighter look" onclick={handleCreatereqLWC} class="slds-m-left_x-small"></lightning-button>
+           
+            <lightning-button variant="brand-outline" label="Cancel" title="Primary action with lighter look" onclick={closeQuickAction} class="slds-m-left_x-small"></lightning-button>
+          </div>
+       </div>               
+  </lightning-record-edit-form>   
+    
+    <template if:true={openmodel}>
+      <div class="demo-only" style="height: 640px;">
+          <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+              <div class="slds-modal__container">
+                  <header class="slds-modal__header">
+                      <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                          <lightning-icon icon-name="utility:close" size="medium">
+                          </lightning-icon>
+                          <span class="slds-assistive-text">Close</span>
+                      </button>
+                      <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Create New Contact</h2>
+                  </header>                  
+                  <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                     <template if:true={error}>
+                        <div class="m-error">
+                           {error}
+                        </div>
+                        <br/>
+                      </template>
+                      <table>
+                        <tr>
+                           <td style="vertical-align: top;">
+                              Salutation &nbsp;
+                           </td>
+                           <td> 
+                                <select class="slds-input" data-id="salutation">
+                                   <option value="">--None--</option>
+                                   <option value="Mr.">Mr.</option>
+                                   <option value="Ms.">Ms.</option>
+                                   <option value="Mrs.">Mrs.</option>
+                                   <option value="Dr.">Dr.</option>
+                                   <option value="Prof.">Prof.</option>
+                                </select>&nbsp;                                
+                          </td>
+                          <td style="width:10%">
+                              &nbsp;
+                          </td>
+                          <td style="vertical-align: top;">
+                           First Name &nbsp;
+                         </td>
+                         <td> 
+                              <lightning-input type="Text" data-id="firstName" variant="label-hidden" 
+                            value={contactFirstName} ></lightning-input>&nbsp;
+                        </td>
+                        </tr>
+                         <tr>                             
+                           <td style="vertical-align: top;">
+                              Last Name  &nbsp;                           
+                           </td>
+                           <td> 
+                              <lightning-input type="Text" data-id="lastName" variant="label-hidden" 
+                              value={contactLastName} required></lightning-input>&nbsp;
+                           </td>
+                           <td>
+                              &nbsp;
+                           </td>
+                           <td style="vertical-align: top;">
+                              Phone &nbsp;                             
+                           </td>
+                           <td>
+                              <lightning-input type="Phone" data-id="phone" variant="label-hidden" 
+                              value={contactPhone}></lightning-input>&nbsp;
+                          </td>
+                         </tr>
+                         <tr>                           
+                          <td style="vertical-align: top;">
+                           <!--- Account  &nbsp;    -->                   
+                          </td>
+                          <td> 
+                            <!--<lightning-input-field field-name="Customer_Prospect__c" value={accrecords.Customer_Prospect__c} disabled="True"></lightning-input-field>
+                              <c-bw-sales-hyper-link data-id="account" item-link={accrecords.Customer_Prospect__c}  
+                              item-value={accrecords.Customer_Prospect__r.Name}></c-bw-sales-hyper-link>-->                           
+                          </td>
+                          <td>
+                             &nbsp;
+                          </td>
+                          <td>
+                           &nbsp;
+                        </td>
+                        <td>
+                           &nbsp;
+                        </td>
+                        </tr>
+                      </table>
+                  </div>
+                  <footer class="slds-modal__footer">
+                      <lightning-button label="Cancel" variant="neutral" onclick={closeModal}></lightning-button>&nbsp;&nbsp;&nbsp;&nbsp;
+                      <lightning-button label="Ok" variant="brand" onclick={insertContact}></lightning-button>
+                  </footer>
+              </div>
+          </section>
+          <div class="slds-backdrop slds-backdrop_open"></div>         
+      </div>
+      </template>
+</template>

@@ -1,0 +1,125 @@
+<apex:component controller="FlexAppContainerController">
+    <apex:attribute name="appTitle" description="toolbarTitle" type="String" required="true"/>
+    <apex:attribute name="prodSWF" description="prodSWF" type="String" required="true"/>
+    <apex:attribute name="debugSWF" description="debugSWF" type="String" required="true"/>
+    <apex:attribute name="betaSWF" description="betaSWF" type="String" required="true"/>
+    <apex:attribute name="alphaSWF" description="alphaSWF" type="String" required="true"/>
+    <apex:attribute name="overrideVersionToRun" assignTo="{!overrideVersionToRunParam}" default="" description="overrideVersionToRun" type="String" required="false"/>
+    <apex:attribute name="flashvars" description="flashvars" type="String" required="true"/>
+    <apex:attribute name="forceSize" description="flashvars" type="Boolean" default="false" required="false"/>
+    <apex:attribute name="height" description="height" type="String" required="false" default=""/>
+    <apex:attribute name="width" description="width" type="String" required="false" default=""/>
+    <apex:attribute name="wmode" description="wmode" type="String" required="false" default="opaque"/>
+    <apex:attribute name="disableDebugSelector" description="disableDebugSelector" type="Boolean" required="false" default="false"/>
+
+    <apex:includeScript value="{!URLFOR($Resource.jQuery1x,'jQuery/jquery-1.8.0.min.js')}" />
+    <script type="text/javascript">
+        var j$= jQuery.noConflict();
+        
+        //Allow console to work when supported by browser
+        if ( typeof(console) === "undefined" ) {console = {};console.log = function() {};}
+
+        j$(document).ready(function(){
+            resizeHandler(0);
+
+            j$('[id*=swfPanel]').bind('mousewheel DOMMouseScroll onmousewheel', function(e) {
+                //if(e.stopPropagation) e.stopPropagation();
+                //if(e.preventDefault) e.preventDefault();
+                //if(e.stopImmediatePropagation) e.stopImmediatePropagation();
+                //e.bubbles=false;
+                //e.cancelBubble=true;
+                //e.cancel=true;
+                //e.returnValue=false;
+                return false;
+            });
+
+
+            //j$('[id*=swfPanel]').bind('mousewheel DOMMouseScroll onmousewheel', function(e) {
+                //if(e.stopPropagation) e.stopPropagation();
+                //if(e.preventDefault) e.preventDefault();
+                //if(e.stopImmediatePropagation) e.stopImmediatePropagation();
+                //e.bubbles=false;
+                //e.cancelBubble=true;
+                //e.cancel=true;
+                //e.returnValue=false;
+            //    return false;
+            //});
+
+            window.onBeforeUnload = onBeforeUnloadHandler;
+        });
+
+        function onBeforeUnloadHandler() {
+            try {
+                flashObject.browserUnloadEvent();
+            }
+            catch (err) {}
+        }
+
+        function resizeFlexAppDiv(minHeight) {resizeHandler(minHeight);}
+        
+        function resizeHandler(minHeight) {
+        
+            if ({!forceSize}) {
+                j$('[id*=swfPanel]').width({!width});
+                j$('[id*=swfPanel]').height({!height});
+            }
+            else {
+                var salesforceHeaderSize = j$('[id*=swfPanel]').offset().top;
+                var browserWindowHeight = j$(window).height();
+                var windowHeight=(browserWindowHeight - salesforceHeaderSize);
+    
+                if (windowHeight < minHeight) {
+                    windowHeight = minHeight
+                };
+                
+                j$('[id*=swfPanel]').height(windowHeight);
+            } 
+        }
+
+        // a JavaScript function in the container HTML page
+        function redirectToURL(url) {
+            window.location = url;
+        }
+
+        function openURLinNewWindow(url) {
+            window.open(url,url,"width=500,height=400,toolbar=yes,location=yes,directories=yes,status=yes,menubar=yes,scrollbars=yes,copyhistory=yes,resizable=yes");
+        }
+        
+        function openInNewTab(url) {
+            var win=window.open(url, '_blank');
+            win.focus();
+        }
+        
+    </script>
+    
+    
+    <apex:variable var="codebase" value="https://fpdownload.macromedia.com/get/flashplayer/current/swflash.cab"/>
+
+    <style type="text/css">
+        input.buttonNormal {}
+        input.buttonSelected {color:#fff;background:#6CC4E6;}
+    </style>
+
+    <apex:outputPanel id="toolbar" rendered="{!$Setup.FlexAppSettings__c.Allow_Version_Selection__c && NOT(disableDebugSelector)}">
+        <apex:toolbar >
+            <apex:outputLabel value="{!appTitle} Versions:"/>
+            <apex:commandButton action="{!startProdVersion}" value="Prod" reRender="toolbar,swfPanel" styleClass="{!if(RunProd,'buttonSelected','buttonNormal')}"/>
+            <apex:commandButton action="{!startDebugVersion}" value="Debug" reRender="toolbar,swfPanel" styleClass="{!if(RunDebug,'buttonSelected','buttonNormal')}"/>
+            <apex:commandButton action="{!startBetaVersion}" value="Beta" reRender="toolbar,swfPanel" styleClass="{!if(RunBeta,'buttonSelected','buttonNormal')}"/>
+            <apex:commandButton action="{!startAlphaVersion}" value="Alpha" reRender="toolbar,swfPanel" styleClass="{!if(RunAlpha,'buttonSelected','buttonNormal')}"/>
+        </apex:toolbar>
+    </apex:outputPanel>
+
+    <apex:outputPanel layout="block" id="swfPanel" style="overflow:auto">
+<!--         <c:SWFObject id="prod" height="100%" width="100%" src="https://{!$Label.SFDC_URL}/resource/1379433700000/App_PricingWizard_WebApp_Prod" flashvars="{!flashvars}&appName={!prodSWF}&runAs=PROD" codebase="{!codebase}" rendered="{!RunProd}" wmode="{!wmode}"/>  -->
+        <c:SWFObject id="prod" height="100%" width="100%" src="{!$Resource[prodSWF]}" flashvars="{!flashvars}&appName={!prodSWF}&runAs=PROD" codebase="{!codebase}" rendered="{!RunProd}" wmode="{!wmode}"/>
+        <c:SWFObject id="debug" height="100%" width="100%" src="{!$Resource[debugSWF]}" flashvars="{!flashvars}&appName={!debugSWF}&runAs=DEBUG" codebase="{!codebase}" rendered="{!RunDebug}" wmode="{!wmode}"/>
+        <c:SWFObject id="beta" height="100%" width="100%" src="{!$Resource[betaSWF]}" flashvars="{!flashvars}&appName={!betaSWF}&runAs=BETA" codebase="{!codebase}" rendered="{!RunBeta}" wmode="{!wmode}"/>
+        <c:SWFObject id="alpha" height="100%" width="100%" src="{!$Resource[alphaSWF]}" flashvars="{!flashvars}&appName={!alphaSWF}&runAs=ALPHA" codebase="{!codebase}" rendered="{!RunAlpha}" wmode="{!wmode}"/>
+    </apex:outputPanel>
+    <!-- 
+    <apex:outputText value="{!$Api.Session_Id}"/>  
+    <BR/>
+    <apex:outputText value="{!$Api.Partner_Server_URL_250}"/>
+     -->  
+</apex:component>

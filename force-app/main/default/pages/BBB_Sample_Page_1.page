@@ -1,0 +1,52 @@
+<apex:page controller="Sample_Request_Controller" action="{!init}" showHeader="false" standardStylesheets="false" cache="true" title="Salesforce Mobile" >
+<apex:form >
+<apex:include pageName="BBBStyles" />
+<table class="generictable">
+
+<tr><td class="genericcolumn"><apex:outputText value="{!$Label.Account}" styleClass="HeaderLabel" rendered="{!GotAccount}"/></td>
+<td class="genericcolumn"><apex:outputText value="{!account.Name}"></apex:outputtext></td></tr>
+<tr><td class="genericcolumn"><apex:outputText value="{!$Label.Contact}: " styleClass="HeaderLabel" rendered="{!GotContact}"/></td>
+<td class="genericcolumn"><apex:outputText value="{!contact.Name}"></apex:outputText></td></tr>
+<tr><td class="genericcolumn"><apex:outputText value="{!$Label.Contact}: " styleClass="HeaderLabel" rendered="{!CreatingContact}"/></td>
+<td class="genericcolumn"><apex:outputText value="{!$Label.New_Contact}" styleClass="HeaderData" rendered="{!CreatingContact}"/></td></tr>
+<tr><td class="genericcolumn"><apex:outputText value="{!$Label.Opportunity}: " styleClass="HeaderLabel" rendered="{!GotOpportunity}"/></td>
+<td class="genericcolumn"><apex:outputText value="{!opportunity.Name}"></apex:outputText></td></tr>
+
+</table>
+<br/>
+
+ <apex:dataTable value="{!contacts}" var="contactList" cellPadding="4" border="1" styleClass="generictable">
+
+ <apex:column >
+ <apex:facet name="header">
+ <strong>{!$Label.Contact}</strong>
+ </apex:facet>
+ <!--
+ <apex:outputlink value="{!$Page.BBB_Sample_Page_2}">
+
+ <apex:param assignTo="{!contactSelected}" value="{!contactList.id}" name="contactID"/>
+ <apex:param value="{!account.id}" name="accountID"/>
+ <apex:param value="{!opportunity.id}" name="oppID"/>
+ {!contactList.Name}
+ </apex:outputLink>
+ --><br/>
+ <apex:outputText value="{!contactList.mailingStreet}"></apex:outputText><br/>
+ <apex:outputText value="{!contactList.MailingCity} "></apex:outputText>
+ <apex:outputText value="{!contactList.mailingState} "></apex:outputText>
+ <apex:outputText value="{!contactList.MailingPostalCode} "></apex:outputText><br/>
+ <apex:outputText value="{!contactList.MailingCountry}"></apex:outputText><br/>
+ </apex:column>
+ </apex:dataTable>
+
+
+<script language="javascript">
+function selectContact(selectedId)
+{  document.getElementById('{!$Component.SelectedContact}').value=selectedId;  }
+</script>
+&nbsp;&nbsp;
+
+<apex:outputText escape="False" styleClass="Warning" value="{!$Label.Error_Messages}: {!ValidationErrorMessage}" rendered="{!IF(ValidationErrorMessage!='','True','False')}"/>
+<br/>
+                           
+</apex:form>
+</apex:page>

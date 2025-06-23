@@ -1,0 +1,28 @@
+<apex:page controller="CISRelationships_Controller">
+    <script type="text/javascript">
+        var previousOnload = window.onload;        
+        window.onload = function() { 
+            if (previousOnload) {previousOnload();}
+            gotoAccount();
+        }
+    </script>
+        
+    <apex:form id="theForm">
+        <apex:pageBlock id="pb1"> 
+                <apex:actionStatus id="pb1status">
+                    <apex:facet name="start">
+                        <apex:outputText escape="false" style="font-weight: bold;" 
+                                         value=" Please wait ... ">
+                            <apex:image value="{!$Resource.spinner}"/>
+                        </apex:outputText>
+                    </apex:facet>
+                    <apex:facet name="stop">
+                        <apex:outputPanel >
+                        </apex:outputPanel>
+                    </apex:facet>
+                </apex:actionStatus>
+                <apex:actionFunction name="gotoAccount" action="{!gotoAccount}"
+                                     status="pb1status"/>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

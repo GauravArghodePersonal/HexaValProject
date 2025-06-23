@@ -1,0 +1,15 @@
+.scrollable-table {
+    max-height: 300px; /* Set maximum height for vertical scrollbar */
+    overflow-y: auto; /* Add vertical scrollbar when content overflows */
+    overflow-x: auto; /* Add horizontal scrollbar when content overflows */
+}
+
+/* Add styles for the table to fit its content */
+.slds-table {
+    width: 100%; /* Set table width to 100% */
+    table-layout: auto; /* Let the table adjust its layout based on content */
+}
+
+th[scope="col"] {
+    width: 60px; /* Set your desired initial width */
+}

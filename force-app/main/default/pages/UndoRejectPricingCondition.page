@@ -1,0 +1,27 @@
+<apex:page standardcontroller="Pricing_Condition__c" extensions="rejectpricingconditionextension" >
+<apex:form >
+<apex:sectionheader title="{!PCN.name}" subtitle="OTC Reject"/>
+<apex:pageblock rendered="{!allowaction}">
+<apex:pageblockbuttons >
+<apex:commandbutton value="Save" action="{!otcrejectpcnundo}"/>
+<apex:commandbutton value="Cancel" action="{!cancel}"/>
+</apex:pageblockbuttons>
+<apex:pageblocksection >
+<apex:pageblocksectionitem >
+<apex:outputlabel value="Rejection Comments"/>
+<apex:inputfield value="{!PCN.Rejection_Comments__c}"/>
+</apex:pageblocksectionitem>
+</apex:pageblocksection>
+</apex:pageblock>
+
+<apex:pageblock rendered="{!NOT(allowaction)}">
+<apex:pageBlockButtons >
+<apex:commandbutton value="Go Back" action="{!cancel}"/>
+</apex:pageBlockButtons>
+<center>
+<apex:outputtext value="OTC can not undo OTC Reject when Pricing Condition has a status of {!pcn.Record_Status__c}"/>
+</center>
+</apex:pageblock>
+
+</apex:form>
+</apex:page>

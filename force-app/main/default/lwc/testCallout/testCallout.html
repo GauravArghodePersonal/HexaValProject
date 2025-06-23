@@ -1,0 +1,31 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 06-26-2023
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+    <div class="slds-clearfix">
+        <div class="slds-float_right"> 
+                <lightning-button 
+                    variant="brand" 
+                    label="SAP Customer Update"
+                    onclick={handleClick}>
+                </lightning-button>
+            </div>
+           <!--   &nbsp;&nbsp;&nbsp;
+            <div class="slds-float_right"> 
+                <lightning-button 
+                    icon-name="utility:download" 
+                    variant="brand" 
+                    label="All Changes to SAP"
+                    onclick={AllUpdateHandleClick}>
+                </lightning-button>
+            </div> -->  
+
+                <template if:true={boolShowSpinner}>
+                    <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+                </template>
+  </div>
+</template>

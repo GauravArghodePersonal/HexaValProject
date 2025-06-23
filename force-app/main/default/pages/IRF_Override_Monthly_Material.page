@@ -1,0 +1,4 @@
+<apex:page id="thePage" standardController="IRF_Monthly_Material__c" 
+           title="IRF Monthly Material" extensions="IRF_Controller" 
+           sidebar="false" action="{!initActionImm}">
+</apex:page>

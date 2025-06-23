@@ -1,0 +1,15 @@
+<template>
+	<lightning-card class="slds-no-print">
+		<div >
+			<img class="logo" src={solenisLogo}/>
+			<div class="rightFloatClass">
+				<!-- <div class="verticalLine"></div> -->
+				<!-- <img class="img1" src={searchLogo}/> -->
+				<!-- <div class="verticalLine"></div> -->
+				<!-- <img class="img2" src={notificationLogo}/> -->
+				<!-- <div class="verticalLine"></div> -->
+				<img if:true={profilePhotoUrl} class="profilePic" src={profilePhotoUrl} alt="User Profile Photo"/><span class="profileName">{profileUserName}</span>
+			</div>
+		</div>
+	</lightning-card>
+</template>

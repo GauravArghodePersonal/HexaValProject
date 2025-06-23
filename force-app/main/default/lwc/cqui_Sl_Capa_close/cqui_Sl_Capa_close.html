@@ -1,0 +1,69 @@
+<template>
+    
+    <c-cq-record-form-container has-loaded={allDone} hide-save="true" title={pageTitle} onsave={saveRecord} oncancel={cancelForm} is-saving={isSaving}
+    main-obj={objInfo} form-errors={formErrors}  save-label={labels.save} cancel-label={labels.cancel} lightning-icon="">
+        <div slot="sections" class="slds-col slds-size_1-of-1">
+                    
+                
+                   
+        <template if:true={sectionHider.expando_unique_id_1}>
+            <c-cq-record-form-section section-title={CQSL_INFORMATION} expando-unique-id="expando-unique-id-1" edit-heading="false" detail-heading="true">
+                <div slot="sectionsItem">
+                    <div class="slds-grid slds-gutters slds-wrap">
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_COMPLIANCEQUEST__RESOLUTION__C} value={v_COMPLIANCEQUEST__RESOLUTION__C}
+                                            display-value={d_COMPLIANCEQUEST__RESOLUTION__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Required">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_COMPLIANCEQUEST__CREATE_NEW_REVISION__C} value={v_COMPLIANCEQUEST__CREATE_NEW_REVISION__C}
+                                            display-value={d_COMPLIANCEQUEST__CREATE_NEW_REVISION__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_COMPLIANCEQUEST__RATING__C} value={v_COMPLIANCEQUEST__RATING__C}
+                                            display-value={d_COMPLIANCEQUEST__RATING__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                         
+                    </div>
+                </div>
+            </c-cq-record-form-section>
+        </template>
+                 
+            
+                
+                   
+        <template if:true={sectionHider.expando_unique_id_2}>
+            <c-cq-record-form-section section-title={CQSL_CUSTOM_LINKS} expando-unique-id="expando-unique-id-2" edit-heading="true" detail-heading="false">
+                <div slot="sectionsItem">
+                    <div class="slds-grid slds-gutters slds-wrap">
+                         
+                    </div>
+                </div>
+            </c-cq-record-form-section>
+        </template>
+                 
+            
+
+        </div>
+    </c-cq-record-form-container>
+</template>

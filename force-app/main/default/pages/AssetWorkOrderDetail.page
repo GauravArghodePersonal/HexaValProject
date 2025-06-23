@@ -1,0 +1,4 @@
+<apex:page id="thePage" standardController="Asset_Work_Order_Detail__c" 
+           title="Asset Work Order Detail" extensions="AssetWorkOrderController" 
+           action="{!gotoAssetWorkOrderPage}">
+</apex:page>

@@ -1,0 +1,5 @@
+<apex:page title="testPreloader2">
+    <apex:flash src="{!$Resource.testPreloader2}"   
+            flashvars=""
+            height="100%" width="100%" />
+</apex:page>

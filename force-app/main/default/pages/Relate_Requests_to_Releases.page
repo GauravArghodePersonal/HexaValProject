@@ -1,0 +1,45 @@
+<apex:page controller="Relate_Requests_to_Releases_Controller">
+	<apex:form >
+
+		<apex:pageMessages id="pageMessages" />
+
+		<apex:pageBlock >
+			<apex:pageBlockSection columns="2">
+				<apex:pageBlockSectionItem >
+					<apex:outputPanel id="requestSection" layout="block">
+						<apex:outputText value="Requests" />
+						<p /><apex:selectList id="requestList"
+							value="{!selectedRequestIds}" multiselect="true" size="20">
+							<apex:selectOptions value="{!requestList}" />
+						</apex:selectList>
+						<p /><apex:commandButton value="Relate"
+							action="{!relateRequeststoRelease}"
+							rerender="pageMessages,requestSection,requestsRelatedtoSelectedReleaseList" />
+					</apex:outputPanel>
+				</apex:pageBlockSectionItem>
+
+				<apex:pageBlockSectionItem >
+					<apex:outputPanel layout="block">
+						<apex:outputText value="Releases" />
+						<p /><apex:selectList id="releaseList"
+							value="{!selectedReleaseId}" multiselect="false" size="1">
+							<apex:selectOptions value="{!releaseList}" />
+							<apex:actionSupport event="onchange"
+								action="{!handleNewReleaseSelected}"
+								rerender="requestsRelatedtoSelectedReleaseList" />
+						</apex:selectList>
+						<p /><apex:outputText value="Related Requests" />
+						<p /><apex:selectList id="requestsRelatedtoSelectedReleaseList"
+							value="{!selectedRequestsRelatedtoSelectedReleaseId}"
+							multiselect="true" size="20">
+							<apex:selectOptions value="{!requestsRelatedtoSelectedReleaseList}" />
+						</apex:selectList>
+						<p /><apex:commandButton value="Remove From Release"
+							action="{!removeRelatedRequestsfromRelease}"
+							rerender="pageMessages,requestSection,requestsRelatedtoSelectedReleaseList" />
+					</apex:outputPanel>
+				</apex:pageBlockSectionItem>
+			</apex:pageBlockSection>
+		</apex:pageBlock>
+	</apex:form>
+</apex:page>

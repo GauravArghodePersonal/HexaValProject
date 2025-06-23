@@ -1,0 +1,306 @@
+<apex:page standardController="Market_Price_Book__c" 
+                           id="Market_Price_Book_Page" 
+                      sidebar="false"
+                     tabStyle="Market_Price_Book__c" 
+                        title="Market Price Book Expiration"
+                   extensions="MarketPriceBookExpiration_Ext,App_MarketPriceBookViewer_WebApp_View_Ex"
+                        >
+    <apex:includeScript value="{!URLFOR($Resource.jQuery1x,'jQuery/jquery-1.8.0.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery1x,'jQuery/jquery-ui-1.8.20.custom.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery1x,'jQueryPlugins/blockUI/jquery.blockUI.js')}" />
+              
+    <style type="text/css">body{background:#F8F8F8;}</style>
+                        
+<!--  https://{!$Label.SFDC_URL}/apex/MarketPriceBookExpiration?id=a5qP0000000CabF&sfdc.override=1 -->                        
+  
+    <script>
+        if (!window.console) window.console = {};   
+        if (!window.console.log) window.console.log = function () { };
+    </script>
+
+    <script language="javascript">
+        var j$= jQuery.noConflict();
+        j$.fn.exists = function(){return this.length>0;}
+        
+        j$(document).ready(function(){
+            applyJQueryStyling();
+        });
+
+        function applyJQueryStyling() {
+            var sectionsToStartCollapsed = j$('div[startcollapsed="true"]');
+
+            for (var i=0;i<sectionsToStartCollapsed.length;i++) {
+                togglePageSectionCollapsed(sectionsToStartCollapsed[i]);
+            }
+        }
+
+        function togglePageSectionCollapsed(item) {
+            twistSection(item.getElementsByTagName('img')[0]);
+        }
+
+
+        function confirmExpire() {
+            var isConfirmed = confirm("Are you sure you wish to Expire this Market Price Book?");
+            if (isConfirmed) {
+                actionFunction_expireMPB();
+                return false;
+            }
+      
+            return false;
+        }  
+    </script>   
+         
+    <style>
+        .bold {
+            font-weight:bold;
+        }
+        
+        .header {
+            font-size: 110%;
+            font-weight:bold;       
+        }
+
+        /* This changes all of the Page Block Section Colors */
+        .pbSubheader {
+            background-color: #3D8D8D !important;
+            /* border-color: none !important; */
+        }
+
+        .detailPanelLevel1 {
+            padding-left:25px;
+            padding-right:25px;
+            padding-top:20px;
+            padding-bottom:10px;
+        }
+        
+        .detailPanel {
+            padding-left:10px;
+            padding-right:10px;
+            padding-top:20px;
+            padding-bottom:10px;
+        }
+}
+        
+    
+    </style>
+                         
+    <apex:form >
+      <apex:actionFunction action="{!expireMPB}" name="actionFunction_expireMPB" rerender="buttons,messages,webApp" status="status"/>
+
+      <apex:outputPanel id="messages">
+          <apex:pageMessages />
+      </apex:outputPanel>
+  
+      <apex:pageBlock title="{!$Label.Market_Price_Book_Expiration_Page_Title}" mode="maindetail">
+          <apex:pageBlockButtons >
+              <apex:commandButton value="Expire" onclick="return confirmExpire()" immediate="true" rerender=""/>
+              <apex:commandButton value="Cancel" action="{!redirectToMarketPriceBookViewerPage}" immediate="true"  rerender=""/>
+          </apex:pageBlockButtons>
+
+          <apex:pageBlockSection showHeader="false" columns="1">
+            <apex:pageBlockSection columns="1">
+                  <apex:outputField value="{!mpb.Name}"/>
+                  <apex:outputField value="{!mpb.Description__c}"/>
+              </apex:pageBlockSection>
+          </apex:pageBlockSection>
+
+        <BR/>
+
+          <apex:outputPanel rendered="{!warningNeeded}">
+            <apex:pageMessage summary="{!$Label.Market_Price_Book_Expiration_General_Warning}" severity="warning" strength="3" />
+         </apex:outputPanel>
+
+         <apex:outputPanel rendered="{!NOT(warningNeeded)}">
+              <apex:pageMessage summary="{!$Label.Market_Price_Book_Expiration_No_Items_To_Review}" severity="confirm" strength="3" />
+         </apex:outputPanel>
+
+        <BR/>
+        
+        <apex:outputPanel layout="block" styleClass="detailPanelLevel1">
+            <apex:pageBlock title="{!$Label.Market_Price_Book_Expiration_Related_Entries_Title}" rendered="{!showMarketPriceBookEntriesBlock}" tabStyle="Account" mode="detail">
+                <apex:outputPanel >
+                    <apex:pageBlockSection columns="1">
+                        <apex:outputPanel >
+                            <apex:outputText value="{!$Label.Market_Price_Book_Expiration_Ramifications_Label} : " styleClass="bold header"/>
+                            <apex:outputText value="{!$Label.Market_Price_Book_Expiration_Entry_Ramifications}"/>
+                        </apex:outputPanel>
+                    </apex:pageBlockSection>
+                </apex:outputPanel>
+    
+                <apex:outputPanel layout="block" styleClass="detailPanel">
+                    <apex:outputText value="{!marketPriceBookEntriesMessage}"/>
+                    <apex:pageBlockSection title="View Details" columns="1" collapsible="true" html-startcollapsed="true">
+                        <apex:pageBlockTable value="{!marketPriceBookEntries}" var="item">
+                            <apex:column headerValue="Entry">
+                                <apex:outputLink value="/{!item.Id}" target="_blank">{!item.Name}</apex:outputLink>
+                            </apex:column> 
+                            <apex:column headerValue="Material Number" value="{!item.Material_Sales_Data2__r.Material_Number_Trimmed__c}"/> 
+                            <apex:column value="{!item.Material_Sales_Data2__r.Material_Desc__c}"/> 
+                        </apex:pageBlockTable> 
+                    </apex:pageBlockSection>
+                </apex:outputPanel>
+            </apex:pageBlock>
+    
+            <BR/>
+    
+            <apex:pageBlock title="{!$Label.Market_Price_Book_Expiration_Related_Accounts_Title}" rendered="{!showAccountToMarketPriceBookEntriesBlock}">
+                <apex:outputPanel >
+                    <apex:pageBlockSection columns="1">
+                        <apex:outputPanel >
+                            <apex:outputText value="{!$Label.Market_Price_Book_Expiration_Ramifications_Label} : " styleClass="bold header"/>
+                            <apex:outputText value="{!$Label.Market_Price_Book_Expiration_Account_Ramifications}"/>
+                        </apex:outputPanel>
+                    </apex:pageBlockSection>
+                </apex:outputPanel>
+                
+                <apex:outputPanel layout="block" styleClass="detailPanel">
+                    <apex:outputText value="{!accountToMarketPriceBookEntriesMessage}"/>
+                    <apex:pageBlockSection title="View Details" columns="1" collapsible="true" html-startcollapsed="true">
+                        <apex:pageBlockTable value="{!accountToMarketPriceBookEntries}" var="item">
+                            <apex:column headerValue="Account">
+                                <apex:outputLink value="/{!item.Account__r.Id}" target="_blank">{!item.Account__r.Name}</apex:outputLink>
+                            </apex:column> 
+                            <apex:column headerValue="Entry">
+                                <apex:outputLink value="/{!item.Market_Price_Book_Entry__r.Id}" target="_blank">{!item.Market_Price_Book_Entry__r.Name}</apex:outputLink>
+                            </apex:column> 
+                            <apex:column headerValue="Account Owner">
+                                <apex:outputLink value="/{!item.Account__r.OwnerId}" target="_blank">{!item.Account__r.Owner.Name}</apex:outputLink>
+                            </apex:column> 
+                            <apex:column headerValue="Material Number" value="{!item.Market_Price_Book_Entry__r.Material_Sales_Data2__r.Material_Number_Trimmed__c}"/> 
+                            <apex:column value="{!item.Market_Price_Book_Entry__r.Material_Sales_Data2__r.Material_Desc__c}"/> 
+                        </apex:pageBlockTable> 
+                    </apex:pageBlockSection>
+                   </apex:outputPanel>
+            </apex:pageBlock>
+    
+            <BR/>
+    
+            <apex:pageBlock title="{!$Label.Market_Price_Book_Expiration_Related_Active_PCNs_Title}" rendered="{!showActivePricingConditionsBlock}">
+                <apex:outputPanel >
+                    <apex:pageBlockSection columns="1">
+                        <apex:outputPanel >
+                            <apex:outputText value="{!$Label.Market_Price_Book_Expiration_Ramifications_Label} : " styleClass="bold header"/>
+                            <apex:outputText value="{!$Label.Market_Price_Book_Expiration_Active_PCNs_Ramifications}"/>
+                        </apex:outputPanel>
+                    </apex:pageBlockSection>
+                </apex:outputPanel>
+                
+                <apex:outputPanel layout="block" styleClass="detailPanel">
+                    <apex:outputText value="{!activePricingConditionsMessage}"/>
+                    <apex:pageBlockSection title="View Details" columns="1" collapsible="true" html-startcollapsed="true">
+                        <apex:pageBlockTable value="{!activePricingConditions}" var="item">
+                            <apex:column headerValue="Pricing Condition">
+                                <apex:outputLink value="/{!item.Id}" target="_blank">{!item.Name}</apex:outputLink>
+                            </apex:column> 
+                            <apex:column headerValue="Account">
+                                <apex:outputLink value="/{!item.Account__r.Id}" target="_blank">{!item.Account__r.Name}</apex:outputLink>
+                            </apex:column> 
+                            <apex:column headerValue="Account Owner">
+                                <apex:outputLink value="/{!item.Account__r.OwnerId}" target="_blank">{!item.Account__r.Owner.Name}</apex:outputLink>
+                            </apex:column> 
+                            <apex:column headerValue="Material Number" value="{!item.Material2__r.Material_Number_Trimmed__c}"/> 
+                            <apex:column value="{!item.Material2__r.Material_Desc__c}"/>
+                        </apex:pageBlockTable> 
+                    </apex:pageBlockSection>
+                </apex:outputPanel>
+            </apex:pageBlock>
+    
+            <BR/>
+    
+            <apex:pageBlock title="{!$Label.Market_Price_Book_Expiration_Related_Draft_PCNs_Title}" rendered="{!showDraftPricingConditionsBlock}">
+                <apex:outputPanel >
+                    <apex:pageBlockSection columns="1">
+                        <apex:outputPanel >
+                            <apex:outputText value="{!$Label.Market_Price_Book_Expiration_Ramifications_Label} : " styleClass="bold header"/>
+                            <apex:outputText value="{!$Label.Market_Price_Book_Expiration_Draft_PCNs_Ramifications}"/>
+                        </apex:outputPanel>
+                    </apex:pageBlockSection>
+                </apex:outputPanel>
+                
+                <apex:outputPanel layout="block" styleClass="detailPanel">
+                    <apex:outputText value="{!draftPricingConditionsMessage}"/>
+                    <apex:pageBlockSection title="View Details" columns="1" collapsible="true" html-startcollapsed="true">
+                        <apex:pageBlockTable value="{!draftPricingConditions}" var="item">
+                            <apex:column headerValue="Pricing Condition">
+                                <apex:outputLink value="/{!item.Id}" target="_blank">{!item.Name}</apex:outputLink>
+                            </apex:column> 
+                            <apex:column headerValue="Account">
+                                <apex:outputLink value="/{!item.Account__r.Id}" target="_blank">{!item.Account__r.Name}</apex:outputLink>
+                            </apex:column> 
+                            <apex:column headerValue="Account Owner">
+                                <apex:outputLink value="/{!item.Account__r.OwnerId}" target="_blank">{!item.Account__r.Owner.Name}</apex:outputLink>
+                            </apex:column> 
+                            <apex:column headerValue="Material Number" value="{!item.Material2__r.Material_Number_Trimmed__c}"/> 
+                            <apex:column value="{!item.Material2__r.Material_Desc__c}"/>
+                        </apex:pageBlockTable> 
+                    </apex:pageBlockSection>
+                </apex:outputPanel>
+            </apex:pageBlock>
+    
+            <BR/>
+    
+            <apex:pageBlock title="{!$Label.Market_Price_Book_Expiration_Related_Approved_Not_Yet_Active_PCNs_Title}" rendered="{!showApprovedNotYetActivePricingConditionsBlock}">
+                <apex:outputPanel >
+                    <apex:pageBlockSection columns="1">
+                        <apex:outputPanel >
+                            <apex:outputText value="{!$Label.Market_Price_Book_Expiration_Ramifications_Label} : " styleClass="bold header"/>
+                            <apex:outputText value="{!$Label.Market_Price_Book_Expiration_Approved_Not_Active_Ramifications}"/>
+                        </apex:outputPanel>
+                    </apex:pageBlockSection>
+                </apex:outputPanel>
+                
+                <apex:outputPanel layout="block" styleClass="detailPanel">
+                    <apex:outputText value="{!approvedNotYetActivePricingConditionsMessage}"/> 
+                    <apex:pageBlockSection title="View Details" columns="1" collapsible="true" html-startcollapsed="true">
+                        <apex:pageBlockTable value="{!approvedNotYetActivePricingConditions}" var="item">
+                            <apex:column headerValue="Pricing Condition">
+                                <apex:outputLink value="/{!item.Id}" target="_blank">{!item.Name}</apex:outputLink>
+                            </apex:column> 
+                            <apex:column headerValue="Account">
+                                <apex:outputLink value="/{!item.Account__r.Id}" target="_blank">{!item.Account__r.Name}</apex:outputLink>
+                            </apex:column> 
+                            <apex:column headerValue="Account Owner">
+                                <apex:outputLink value="/{!item.Account__r.OwnerId}" target="_blank">{!item.Account__r.Owner.Name}</apex:outputLink>
+                            </apex:column> 
+                            <apex:column headerValue="Material Number" value="{!item.Material2__r.Material_Number_Trimmed__c}"/> 
+                            <apex:column value="{!item.Material2__r.Material_Desc__c}"/>
+                        </apex:pageBlockTable> 
+                    </apex:pageBlockSection>
+                </apex:outputPanel>
+            </apex:pageBlock>
+    
+            <BR/>
+    
+            <apex:pageBlock title="{!$Label.Market_Price_Book_Expiration_Related_In_Approval_Process_PCNs_Title}" rendered="{!showInApprovalProcessPricingConditionsBlock}">
+                <apex:outputPanel >
+                    <apex:pageBlockSection columns="1">
+                        <apex:outputPanel >
+                            <apex:outputText value="{!$Label.Market_Price_Book_Expiration_Ramifications_Label} : " styleClass="bold header"/>
+                            <apex:outputText value="{!$Label.Market_Price_Book_Expiration_In_Approval_Process_Ramifications}"/>
+                        </apex:outputPanel>
+                    </apex:pageBlockSection>
+                </apex:outputPanel>
+                
+                <apex:outputPanel layout="block" styleClass="detailPanel">
+                    <apex:outputText value="{!inApprovalProcessPricingConditionsMessage}"/> 
+                    <apex:pageBlockSection title="View Details" columns="1" collapsible="true" html-startcollapsed="true">
+                        <apex:pageBlockTable value="{!inApprovalProcessPricingConditions}" var="item">
+                            <apex:column headerValue="Pricing Condition">
+                                <apex:outputLink value="/{!item.Id}" target="_blank">{!item.Name}</apex:outputLink>
+                            </apex:column> 
+                            <apex:column headerValue="Account">
+                                <apex:outputLink value="/{!item.Account__r.Id}" target="_blank">{!item.Account__r.Name}</apex:outputLink>
+                            </apex:column> 
+                            <apex:column headerValue="Account Owner">
+                                <apex:outputLink value="/{!item.Account__r.OwnerId}" target="_blank">{!item.Account__r.Owner.Name}</apex:outputLink>
+                            </apex:column> 
+                            <apex:column headerValue="Material Number" value="{!item.Material2__r.Material_Number_Trimmed__c}"/> 
+                            <apex:column value="{!item.Material2__r.Material_Desc__c}"/>
+                        </apex:pageBlockTable> 
+                    </apex:pageBlockSection>
+                </apex:outputPanel>
+            </apex:pageBlock>
+       </apex:outputPanel> 
+      </apex:pageBlock>
+  </apex:form>
+</apex:page>

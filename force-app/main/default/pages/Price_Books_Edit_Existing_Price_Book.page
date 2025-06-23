@@ -1,0 +1,12 @@
+<apex:page standardController="Price_Book__c" 
+                           id="thePage" 
+                   extensions="PriceBookViewController"
+                      sidebar="false"
+                     tabStyle="Price_Book__c" 
+                        title="Price Book: {!Price_Book__c.Description__c}">
+
+  <apex:form >
+   	<c:App_PriceBookWizard_WebApp cancelURL="{!priceBookTabUrl}" PriceBookId="{!Price_Book__c.Id}"/>
+  </apex:form>
+
+</apex:page>

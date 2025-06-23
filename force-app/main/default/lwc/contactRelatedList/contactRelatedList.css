@@ -1,0 +1,14 @@
+.tableContainer {
+    width: 100%;
+}
+
+.tableContainer td, .tableContainer th {
+    padding: 8px;
+}
+
+.tableContainer th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    color: black;
+}

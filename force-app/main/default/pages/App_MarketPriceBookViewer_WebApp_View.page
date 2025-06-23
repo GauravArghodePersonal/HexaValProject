@@ -1,0 +1,72 @@
+<apex:page standardController="Market_Price_Book__c" 
+                           id="Market_Price_Book_Page" 
+                      sidebar="false"
+                     tabStyle="Market_Price_Book__c" 
+                        title="Market Price Book Wizard"
+                   extensions="App_MarketPriceBookViewer_WebApp_View_Ex"
+                        >
+
+  <script> 
+  function confirmDelete() {
+      var isConfirmed = confirm("Are you sure you wish to Delete this Market Price Book?");
+      if (isConfirmed) return true;
+  
+     return false; 
+  }  
+
+  function confirmExpire() {
+      var isConfirmed = confirm("Are you sure you wish to Expire this Market Price Book?");
+      if (isConfirmed) {
+        actionFunction_expireMPB();
+        return false;
+      }
+  
+     return false;
+  }  
+
+  function redirectToMarketPriceBookExpirationPage() {
+  }
+
+  function confirmUnexpire() {
+      var isConfirmed = confirm("Are you sure you wish to Unexpire this Market Price Book?");
+      if (isConfirmed) {
+        actionFunction_unexpireMPBandMakeDraft();
+        return false;
+      }
+  
+     return false;
+  }  
+  </script>
+
+  <apex:form >
+      <apex:actionFunction action="{!expireMPB}" name="actionFunction_expireMPB" rerender="buttons,messages,webApp" status="status"/>
+      <apex:actionFunction action="{!unexpireMPBandMakeDraft}" name="actionFunction_unexpireMPBandMakeDraft" rerender="buttons,messages,webApp" status="status"/>
+      
+      <apex:outputPanel id="buttons">
+          <apex:pageBlock mode="view">
+              <center>
+                      <apex:commandButton value="Edit" action="{!edit}"/>
+                      <apex:commandButton value="Delete" action="{!delete}" onclick="return confirmDelete()" immediate="true"/>
+<!--                      <apex:commandButton value="Old Expire" onclick="return confirmExpire()" immediate="true" rendered="{!showExpireButton}"  rerender=""/>  -->
+                      <apex:commandButton value="Expire" action="{!redirectToMarketPriceBookExpirationPage}" immediate="true" rendered="{!showExpireButton}" rerender=""/>
+                      <apex:commandButton value="Unexpire" onclick="return confirmUnexpire()" immediate="true" rendered="{!showUnexpireButton}" rerender=""/>
+                      <apex:actionStatus startText="Processing..." id="status">
+                          <apex:facet name="stop"></apex:facet>
+                      </apex:actionStatus>
+              </center>
+          </apex:pageBlock>
+      </apex:outputPanel>
+
+      <apex:outputPanel id="messages">
+          <apex:pageMessages />
+      </apex:outputPanel>
+
+      <apex:outputPanel id="webApp">
+          <c:App_MarketPriceBookViewer_WebApp MarketPriceBookId="{!Market_Price_Book__c.Id}"/>
+      </apex:outputPanel>
+          
+  </apex:form>
+
+  <apex:detail title="false" rendered="{!showStdPageLayout}"/>
+  
+</apex:page>

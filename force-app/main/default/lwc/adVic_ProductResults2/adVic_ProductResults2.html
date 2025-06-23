@@ -1,0 +1,86 @@
+<template>
+    <template if:true={isLoading}>
+        <lightning-spinner alternative-text="Loading" size="medium" style="margin-top:65px;"></lightning-spinner>
+    </template>
+
+    <template if:false={isLoading}>
+        <div class="product-list-container">
+            <template for:each={allProducts} for:item="product">
+                <div key={product.id} class="product-card slds-border_bottom">
+                    <!-- Product Image -->
+                    <div class="product-image-section" onclick={navigateToProduct} data-id={product.id}>
+                        <img src={product.image.url} alt={product.image.alternateText} class="product-image"/>
+                    </div>
+                    <!-- Product Details -->
+                    <div class="product-details-section">
+                        <a data-id={product.id} onclick={navigateToProduct}><h2 class="product-title" title={product.name}>{product.name}</h2></a>
+                        <div class="important-product-data">
+                            <span>Item No. {product.ProductCode}</span>
+                            <span class="data-separator">|</span>
+                            <span class="in-stock">In Stock</span>
+                        </div>
+                        <div class="product-text">
+                            <ul>
+                                <template for:each={product.customFields} for:item="field">
+                                    <li key={field.apiName}>
+                                        {field.label}: {field.value}
+                                    </li>
+                                </template>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <template if:false={isguest}>
+                        <!-- Price and Add to Cart Section -->
+                        <div class="product-right-section">
+                            <!-- Price Section -->
+                            <div class="product-price">
+                                <p class="sale-price">CHF 77.70</p>
+                                <!-- <p class="list-price">{List_Price_Label}: $1999</p> -->
+                            </div>       
+                            <!-- Quantity Selector -->
+                            <div class="quantity-and-atc-buttons">
+                                <div class="quantity-selector">
+                                    <p>QTY</p>
+                                    <button data-id={product.id} onclick={decreaseQuantity} class="quantity-button" style={getQuantityButtonColor}>-</button>
+                                    <input data-id={product.id} value={product.quantity} oninput={handleQuantityChange} class="quantity-input"/>
+                                    <button data-id={product.id} onclick={increaseQuantity} class="quantity-button" style={getQuantityButtonColor}>+</button>
+                                </div>
+        
+                                <!-- Add to Cart Button -->
+                                <button data-id={product.id} class="add-to-cart-button" onclick={handleAddToCart} style={getCartButtonColor}>
+                                    {Add_To_Cart_Label}
+                                    <svg class="button_icon">
+                                        <use xlink:href={cartButton}></use>
+                                    </svg>
+                                </button>
+
+                                <!-- Add to List Button -->
+                                <button data-id={product.id} class="add-to-cart-button" onclick={handleAddToList} style={getCartButtonColor}>
+                                    Add to List
+                                    <svg class="button_icon">
+                                        <use xlink:href={listButton}></use>
+                                    </svg>
+                                </button>
+                                <div if:true={showAddToList}>
+                                    <c-ad-vic_-wishlist-pop-up onmodalmessage={onCloseListPopUp} product-id={wishlistProductId} quantity={product.quantity}></c-ad-vic_-wishlist-pop-up>
+                                </div>
+
+                            </div>
+                        </div>
+                    </template>
+                </div>                
+            </template>
+        </div>
+
+        <template if:true={isMoreThanOnePage}>
+            <div class="nav-buttons slds-m-top_medium">
+                <button onclick={handlePrevPage} class="slds-button slds-button_neutral" disabled={isFirstPage}>Previous</button>
+                <div class="pagination-text slds-m-horizontal_medium">
+                    {currentPageText}
+                </div>
+                <button onclick={handleNextPage} class="slds-button slds-button_neutral slds-m-left_small" disabled={isLastPage}>Next</button>
+            </div>
+        </template>
+    </template>
+</template>

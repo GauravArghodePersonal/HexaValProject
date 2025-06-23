@@ -1,0 +1,453 @@
+<apex:component controller="AdvancedDataTableController" allowDML="true">
+	<apex:attribute name="dataTableDefinitionName" assignTo="{!dataTableDefinitionName}" description="Definition of Data Table" type="String" required="true" />
+	<apex:attribute name="startingId" assignTo="{!startingId}" description="Starting Id" type="String" required="true" />
+	<apex:attribute name="tableHeading" assignTo="{!tableHeading}" description="Optional Heading for Table" type="String" required="false"/>
+	<apex:attribute name="dynamicFilter1" assignTo="{!dynamicFilter1}" description="Dynamic Filter 1" type="String" required="false"/>
+	<apex:attribute name="dynamicFilter2" assignTo="{!dynamicFilter2}" description="Dynamic Filter 2" type="String" required="false"/>
+	<apex:attribute name="dynamicFilter3" assignTo="{!dynamicFilter3}" description="Dynamic Filter 3" type="String" required="false"/>
+
+	<head>
+	<apex:includeScript value="{!URLFOR($Resource.jQuery1x,'jQuery/jquery-1.8.0.min.js')}" />
+	<apex:includeScript value="{!URLFOR($Resource.jQuery1x,'jQueryPlugins/blockUI/jquery.blockUI.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.AdvancedDataTableResources,'js/general.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.AdvancedDataTableResources,'css/style.css')}"/>
+	<apex:includeScript value="{!URLFOR($Resource.jQuery1x,'jQueryPlugins/jqueryExpander/jquery.expander.min.js')}" />
+
+	<script>
+		if (!window.console) window.console = {};	
+		if (!window.console.log) window.console.log = function () { };
+	</script>
+	
+	<style type="text/css">body{background:#F8F8F8;}</style>
+	
+	<script type="text/javascript">
+	        var j$= jQuery.noConflict();
+
+	        j$(document).ready(function(){
+		       	AdvancedDataTable_FireChangeEvent();
+	        });
+
+	        function AdvancedDataTable_FireChangeEvent() {
+	        	AdvancedDataTable_ApplyJQueryStyling();
+				AdvancedDataTable_FireRefreshEvent();
+	        }
+	        
+	        function AdvancedDataTable_ApplyJQueryStyling() {
+	            unblockUIMessageOnDataTable();
+	        
+	        	// http://plugins.learningjquery.com/expander/
+		        j$.expander.defaults = {
+					// the number of characters at which the contents will be sliced into two parts.
+					slicePoint: 100,
+					
+					// whether to keep the last word of the summary whole (true) or let it slice in the middle of a word (false)
+					preserveWords: true,
+					
+					// widow: a threshold of sorts for whether to initially hide/collapse part of the element's contents.
+					// If after slicing the contents in two there are fewer words in the second part than
+					// the value set by widow, we won't bother hiding/collapsing anything.
+					widow: 4,
+					
+					// text displayed in a link instead of the hidden part of the element.
+					// clicking this will expand/show the hidden/collapsed text
+					expandText: 'read more',
+					expandPrefix: '… ',
+					
+					// class names for summary element and detail element
+					summaryClass: 'summary',
+					detailClass: 'details',
+					
+					// class names for span around "read-more" link and "read-less" link
+					moreClass: 'read-more',
+					lessClass: 'read-less',
+					
+					// number of milliseconds after text has been expanded at which to collapse the text again.
+					// when 0, no auto-collapsing
+					collapseTimer: 0,
+					
+					// effects for expanding and collapsing
+					expandEffect: 'fadeIn',
+					expandSpeed: 250,
+					collapseEffect: 'fadeOut',
+					collapseSpeed: 200,
+					
+					// allow the user to re-collapse the expanded text.
+					userCollapse: true,
+					
+					// text to use for the link to re-collapse the text
+					userCollapseText: 'collapse',
+					userCollapsePrefix: '<BR><BR>',
+					
+					
+					// all callback functions have the this keyword mapped to the element in the jQuery set when .expander() is called
+					
+					onSlice: null, // function() {}
+					beforeExpand: null, // function() {},
+					afterExpand: null, // function() {},
+					onCollapse: null // function(byUser) {}
+				};
+	        
+				j$('div.expandable').expander();
+				
+				j$('a.ExpandAll').click(function(event){
+    				event.preventDefault();
+    				j$('span.read-more a').each(function(){
+        				j$(this).click();
+        			});
+    			});
+    			
+				j$('a.CollapseAll').click(function(event){
+    				event.preventDefault();
+    				j$('span.read-less a').each(function(){
+        				j$(this).click();
+        			});
+    			});
+	        }
+	        
+	        function AdvancedDataTable_HandleTableColumnHeaderClick(columnName,sortable) {
+	        	if (sortable) {
+	            	sortTableButtonHandler(columnName,"","");
+	            }
+	        }
+	        
+		    function AdvancedDataTable_FireRefreshEvent() {
+	            j$('#AdvancedDataTableEvents').trigger('refresh');
+		    }
+		    
+		    function AdvancedDataTable_ProcessNewSelection(selectedId,dynamicFilter1,dynamicFilter2,dynamicFilter3) {
+		    	applyAdditionalIdFilter(selectedId,dynamicFilter1,dynamicFilter2,dynamicFilter3);
+		    }
+		    
+		    function AdvancedDataTable_ApplyNewStartingId(newSelectedId) {
+		    	applyNewStartingId(newSelectedId);
+		    }
+		    
+		    function AdvancedDataTable_ApplyNewStartingIdAndDynamicFilters(newSelectedId,newDynamicFilter1,newDynamicFilter2,newDynamicFilter3) {
+		    	//alert('Hey!' + newSelectedId);
+		    	//console.log('AdvancedDataTable_ApplyNewStartingIdAndDynamicFilters - ' + newSelectedId + ' - ' + newDynamicFilter1 + ' - ' + newDynamicFilter2 + ' - ' + newDynamicFilter3);
+		    	applyNewStartingIdAndDynamicFilters(newSelectedId,newDynamicFilter1,newDynamicFilter2,newDynamicFilter3);
+		    }
+		    
+		    function AdvancedDataTable_ApplyNewDynamicFilter1(newDynamicFilter1) {
+		    	applyNewDynamicFilter1(newDynamicFilter1);
+		    }
+		    
+		    function AdvancedDataTable_ApplyNewDynamicFilter2(newDynamicFilter2) {
+		    	applyNewDynamicFilter2(newDynamicFilter2);
+		    }
+		    
+		    function AdvancedDataTable_ApplyNewDynamicFilter3(newDynamicFilter3) {
+		    	applyNewDynamicFilter1(newDynamicFilter3);
+		    }
+
+			function showBlockUIMessageOnDataTable(message) {
+				showBlockUIMessageonItem(j$('#adt_Table'),message);
+			}
+
+			function unblockUIMessageOnDataTable() {
+				unblockUIMessageonItem(j$('#adt_Table'));
+			}
+
+			function showBlockUIMessageonItem(item,message) {
+				j$(item).block({message: '<BR/><h1><img src="{!URLFOR($Resource.AccountRollupResources, 'images/busy.gif')}" /> ' + message + '...</h1><BR/><BR/>'});
+			}
+			
+			function unblockUIMessageonItem(item) {
+				j$(item).unblock(); 
+			}
+		    
+	        function DeleteItem(id) {
+	            var isConfirmed = confirm("Are you sure you wish to Delete this?");
+	      		if (isConfirmed) {
+		            showBlockUIMessageOnDataTable('Deleting Record');
+		            deleteId(id);
+	    	    }
+	        }
+	        
+	        function handleEnterOld(ev)  {
+	        if (window.event && window.event.keyCode == 13 || ev.which == 13) {
+	            return false;
+	         } else {
+	              return true;
+	         }
+	     }
+	     
+	    function handleEnter(e)  {
+			code = e.keyCode ? e.keyCode : e.which;
+                if (code.toString() == 13){
+                    e.preventDefault();
+                    j$('[id*=adt_filter_SearchText]').click();              
+                }
+        }
+	    </script>
+	    
+<style>
+.hideIt {
+	visibility: hidden;
+}
+
+.hideMe {
+	display: none;
+}
+
+</style>	    
+	    
+	</head>
+
+	<div id="AdvancedDataTableEvents"/>
+
+	<apex:actionFunction action="{!sortTableButtonHandler}" name="sortTableButtonHandler" rerender="adt_detailArea,adt_footerToolbar,adt_adminPanel">
+		<apex:param name="sortField1Selection" assignTo="{!sortField1Selection}" value="" />
+		<apex:param name="sortField2Selection" assignTo="{!sortField2Selection}" value="" />
+		<apex:param name="sortField3Selection" assignTo="{!sortField3Selection}" value="" />
+	</apex:actionFunction>
+
+	<apex:actionFunction action="{!applyNewStartingId}" name="applyNewStartingIdAndDynamicFilters" rerender="adt_detailArea,adt_footerToolbar,adt_adminPanel">
+		<apex:param name="startingId" assignTo="{!startingIdOverride}" value="" />
+		<apex:param name="dynamicFilter1" assignTo="{!dynamicFilter1}" value="" />
+		<apex:param name="dynamicFilter2" assignTo="{!dynamicFilter2}" value="" />
+		<apex:param name="dynamicFilter3" assignTo="{!dynamicFilter3}" value="" />
+	</apex:actionFunction>
+
+	<apex:actionFunction action="{!applyNewStartingId}" name="applyNewStartingId" rerender="adt_detailArea,adt_footerToolbar,adt_adminPanel">
+		<apex:param name="startingId" assignTo="{!startingId}" value="" />
+	</apex:actionFunction>
+
+	<apex:actionFunction action="{!applyNewDynamicFilter1}" name="applyNewDynamicFilter1" rerender="adt_detailArea,adt_footerToolbar,adt_adminPanel">
+		<apex:param name="dynamicFilter1" assignTo="{!dynamicFilter1}" value="" />
+	</apex:actionFunction>
+
+	<apex:actionFunction action="{!applyNewDynamicFilter2}" name="applyNewDynamicFilter2" rerender="adt_detailArea,adt_footerToolbar,adt_adminPanel">
+		<apex:param name="dynamicFilter2" assignTo="{!dynamicFilter2}" value="" />
+	</apex:actionFunction>
+
+	<apex:actionFunction action="{!applyNewDynamicFilter3}" name="applyNewDynamicFilter3" rerender="adt_detailArea,adt_footerToolbar,adt_adminPanel">
+		<apex:param name="dynamicFilter3" assignTo="{!dynamicFilter3}" value="" />
+	</apex:actionFunction>
+ 
+	<apex:actionFunction action="{!deleteId}" name="deleteId" rerender="adt_detailArea,adt_footerToolbar,adt_adminPanel" oncomplete="AdvancedDataTable_ApplyJQueryStyling();">
+		<apex:param name="idToDelete" assignTo="{!idToDelete}" value="" />
+	</apex:actionFunction>
+
+	<div id="adt_Table">
+	<apex:pageBlock id="adt_mainPageBlock" >
+		<apex:pageBlockSection id="adt_headerToolbar" showHeader="{!if(tableHeading!='',true,false)}" title="{!tableHeading}" columns="4" collapsible="false">
+		
+			<!-- HEADER TOOLBAR -->
+			
+			<apex:outputPanel layout="block" id="adt_toolbarGroupHeaderCustomFilterList">
+				<apex:outputPanel id="adt_customFilterListPanel" rendered="{!showCustomFilterList}" styleClass="toolbarGroup toolbarGroup-left-side filterToolbar-left-side filterToolbarButtons">
+					<apex:outputText value="View(s): " />
+					<apex:selectList id="adt_customFilterList" value="{!customFilterSelection}" size="1" title="custom filters" styleClass="toolbarItem">
+						<apex:actionSupport event="onchange" action="{!handleNewCustomFilterSelected}" onsubmit="showBlockUIMessageOnDataTable('Changing View');" oncomplete="unblockUIMessageOnDataTable();AdvancedDataTable_FireChangeEvent();" rerender="adt_mainPageBlock,adt_detailArea,adt_headerToolbar,adt_footerToolbar,adt_adminPanel"/>
+						<apex:selectOptions value="{!customFilterItems}" />
+					</apex:selectList>
+				</apex:outputPanel>
+			</apex:outputPanel>
+
+			<apex:outputPanel id="adt_toolbarGroupHeaderStartsWithFilter" styleClass="toolbarGroup toolbarGroup-center-column filterToolbar-center filterToolbarButtons" rendered="{!ShowStartsWithFilter}">
+				<apex:outputPanel rendered="{!not(editingStartsWithFilterField)}">
+					<apex:repeat value="{!StartsWithFilterLetters}" var="letter">
+						<apex:commandButton action="{!startsWithFilterButtonHandler}" value="{!letter.filterLabel}" rerender="adt_mainPageBlock,adt_detailArea,adt_headerToolbar,adt_footerToolbar,adt_adminPanel" styleClass="filterToolbarButton {!if(startsWithFilter==letter.filterValue,'filterToolbarButton-selected','filterToolbarButton-unselected')}"
+							onclick="showBlockUIMessageOnDataTable('Filtering');" oncomplete="unblockUIMessageOnDataTable();AdvancedDataTable_FireChangeEvent();" title="Filter {!startsWithFilterFieldSelectionLabel} Field with '{!letter.filterLabel}'">
+							<apex:param name="filterValue" value="{!letter.filterValue}" assignTo="{!startsWithFilter}" />
+						</apex:commandButton>
+					</apex:repeat>
+					<apex:commandButton action="{!editStartsWithFilterField}" immediate="true" rerender="adt_mainPageBlock,adt_detailArea,adt_headerToolbar,adt_footerToolbar,adt_adminPanel" oncomplete="AdvancedDataTable_FireChangeEvent();" image="{!URLFOR($Resource.AccountRollupsStyling,'images/dvGear16x16.gif')}"
+						styleClass="filterToolbarButton filterToolbarButton-unselected" title="Change Filter Field (Currently {!startsWithFilterFieldSelection})" />
+				</apex:outputPanel>
+
+				<apex:outputPanel rendered="{!editingStartsWithFilterField}">
+					<apex:outputText value="Choose a new Filter: " />
+					<apex:selectList id="adt_startsWithFilterField" value="{!startsWithFilterFieldSelection}" size="1" title="Starts with Filter Field Selection" styleClass="toolbarItem">
+						<apex:selectOptions value="{!currentFields_SelectOptions}" />
+					</apex:selectList>
+					<p /><apex:outputPanel style="text-align: center;">
+						<apex:commandButton action="{!processNewStartsWithFilterField}" value="OK" rerender="adt_mainPageBlock,adt_detailArea,adt_headerToolbar,adt_footerToolbar,adt_adminPanel" onclick="showBlockUIMessageOnDataTable('Filtering');" oncomplete="unblockUIMessageOnDataTable();AdvancedDataTable_FireChangeEvent();" />
+						<apex:commandButton action="{!cancelNewStartsWithFilterField}" value="Cancel" rerender="mainPageBlock,detailArea,headerToolbar,footerToolbar,adt_adminPanel" oncomplete="AdvancedDataTable_FireChangeEvent();" />
+					</apex:outputPanel>
+				</apex:outputPanel>
+			</apex:outputPanel>
+
+			<apex:outputPanel layout="block" id="adt_toolbarGroupHeaderFilterByFilter" styleClass="toolbarGroup toolbarGroup-right-column filterToolbarButtons">
+				<apex:outputPanel layout="block" rendered="{!ShowEntryFilter}">
+					<apex:outputPanel layout="block" rendered="{!not(editingFilterByField)}">
+						<apex:outputText value="Filter by {!filterByFieldSelectionLabel}:" />
+						<apex:inputText id="adt_searchText" value="{!filterText}" onkeypress="return handleEnter(event);"/>
+						<apex:commandButton action="{!searchByNameFilterButtonHandler}" onclick="showBlockUIMessageOnDataTable('Filtering');" oncomplete="unblockUIMessageOnDataTable();AdvancedDataTable_FireChangeEvent();" value="search" id="adt_filter_SearchText" rerender="adt_detailArea,adt_headerToolbar,adt_footerToolbar,adt_adminPanel" />
+	
+						<apex:commandButton action="{!editFilterByField}" immediate="true" rerender="adt_mainPageBlock,adt_detailArea,adt_headerToolbar,adt_footerToolbar,adt_adminPanel" oncomplete="AdvancedDataTable_FireChangeEvent();" image="{!URLFOR($Resource.AccountRollupsStyling,'images/dvGear16x16.gif')}"
+							styleClass="filterToolbarButton filterToolbarButton-unselected" title="Change Filter Field (Currently {!filterByFieldSelection})" />
+					</apex:outputPanel>
+	
+					<apex:outputPanel layout="block" rendered="{!editingFilterByField}">
+						<apex:outputText value="Choose a new Filter: " />
+						<apex:selectList id="adt_filterByField" value="{!filterByFieldSelection}" size="1" title="Filter By Fields Selection" styleClass="toolbarItem">
+							<apex:selectOptions value="{!currentFields_SelectOptions}" />
+						</apex:selectList>
+						<p /><apex:outputPanel layout="block" style="text-align: center;">
+							<apex:commandButton action="{!processNewFilterByField}" value="OK" rerender="adt_mainPageBlock,adt_detailArea,adt_headerToolbar,adt_footerToolbar,adt_adminPanel" onclick="showBlockUIMessageOnDataTable('Changing View');" oncomplete="unblockUIMessageOnDataTable();AdvancedDataTable_FireChangeEvent();" />
+							<apex:commandButton action="{!cancelNewFilterByField}" value="Cancel" rerender="adt_mainPageBlock,adt_detailArea,adt_headerToolbar,adt_footerToolbar,adt_adminPanel" oncomplete="AdvancedDataTable_FireChangeEvent();" />
+						</apex:outputPanel>
+					</apex:outputPanel>
+				</apex:outputPanel>
+			</apex:outputPanel> 
+
+			<apex:outputPanel layout="block" id="adt_saveButton" styleClass="toolbarGroup toolbarGroup-right-column filterToolbarButtons" rendered="{!visibleColumns.editable}">
+				<apex:commandButton action="{!saveChanges}" value="Save Changes" rerender="adt_mainPageBlock,adt_detailArea,adt_headerToolbar,adt_footerToolbar,adt_adminPanel" 
+							        immediate="true"
+							        title="Save Changes" 
+							        styleClass="filterToolbarButton filterToolbarButton-unselected"
+									onclick="showBlockUIMessageOnDataTable('Refreshing View');" 
+									oncomplete="unblockUIMessageOnDataTable();AdvancedDataTable_FireChangeEvent();"/>
+			</apex:outputPanel>
+
+			<apex:outputPanel layout="block" id="adt_refreshButton" styleClass="toolbarGroup toolbarGroup-right-column filterToolbarButtons">
+				<apex:commandButton action="{!refresh}" value="Refresh" rerender="adt_mainPageBlock,adt_detailArea,adt_headerToolbar,adt_footerToolbar,adt_adminPanel" 
+							        immediate="true"
+							        title="Refresh Grid" 
+							        styleClass="filterToolbarButton filterToolbarButton-unselected"
+								    image="{!URLFOR($Resource.AdvancedDataTableResources,'images/refresh.png')}"
+									onclick="showBlockUIMessageOnDataTable('Refreshing View');" 
+									oncomplete="unblockUIMessageOnDataTable();AdvancedDataTable_FireChangeEvent();"/>
+			</apex:outputPanel>
+			
+		</apex:pageBlockSection>
+
+		<!-- DETAIL AREA -->
+		
+		<style>
+			.jqueryDataTable {
+				
+			}
+		</style>
+
+		<apex:pageBlockSection id="adt_detailArea" showHeader="false" columns="1">
+			<apex:outputPanel id="adt_panelSection">
+				<apex:pageBlock >
+					<apex:pageBlockTable id="adt_relatedRecordsTable" styleClass="jqueryDataTable" value="{!RelatedRecords}" var="item">
+						<apex:column headerValue="Action"
+							headerClass="actionColumnHeader hideWhenEditing"
+							styleClass="actionColumn hideWhenEditing"
+							style="width: 1%;white-space: nowrap;"
+							rendered="{!ShowActionColumn}"
+							>
+							<apex:outputPanel layout="block"
+								styleClass="actionLinks TextCenterAlign hideWhenEditing">
+								<table>
+									<tr>
+										<td>
+											<apex:outputPanel rendered="{!ShowEditLink}">
+												<apex:outputLink target="_blank" value="/{!item.rec.Id}/e">Edit</apex:outputLink>
+											</apex:outputPanel>
+										</td>
+										<td>
+											<apex:outputText value=" | " rendered="{!AND(ShowEditLink,ShowDelLink)}"/>
+										</td>
+										<td>
+											<apex:outputPanel rendered="{!ShowDelLink}">
+												<apex:outputLink value="#" onclick="DeleteItem('{!item.rec.Id}');">Delete</apex:outputLink>
+											</apex:outputPanel>
+										</td>
+										<td>
+											<apex:image id="loadingImage" styleClass="hideMe"
+												value="{!URLFOR($Resource.AccountRollupResources, 'images/spin_24x24_loading.gif')}"
+												width="24" height="24" />
+										</td>
+									</tr>
+								</table>									
+							</apex:outputPanel>
+						</apex:column>
+				
+						<apex:repeat value="{!visibleColumns.columns}" var="col">
+							<apex:column headerClass="{!if(col.rec.Sortable__c,'sortable','')} {!if(col.SortedAscending,'sorted asc','')} {!if(col.SortedDescending,'sorted desc','')}">
+								<apex:facet name="header">
+									<apex:outputPanel layout="block" styleClass="tableColumnHeader {!if(col.rec.Sortable__c,'sortable','')} {!if(col.SortedAscending,'sorted asc','')} {!if(col.SortedDescending,'sorted desc','')}" 
+										onclick="AdvancedDataTable_HandleTableColumnHeaderClick('{!col.rec.Full_Field_Name__c}',{!col.rec.Sortable__c})">
+										<apex:outputText value="{!col.rec.Field_Label__c}"/>
+										<apex:outputText rendered="{!col.DisplayAsResizableTextArea}" value=" - ("/>
+										<apex:outputLink rendered="{!col.DisplayAsResizableTextArea}" value="#" styleClass="ExpandAll" style="text-decoration:underline">Expand All</apex:outputLink>
+										<apex:outputText rendered="{!col.DisplayAsResizableTextArea}" value=" / "/>
+										<apex:outputLink rendered="{!col.DisplayAsResizableTextArea}" value="#" styleClass="CollapseAll" style="text-decoration:underline">Collapse All</apex:outputLink>
+										<apex:outputText rendered="{!col.DisplayAsResizableTextArea}" value=")"/>
+										<apex:outputText value="" style="padding-right:20px"/>
+									</apex:outputPanel>
+								</apex:facet> 
+								
+								<apex:outputText rendered="{!col.DisplayAsNonEditableText}" value="{!item.rec[col.rec.Full_Field_Name__c]}"/>
+								<apex:inputText rendered="{!col.DisplayAsEditableText}" value="{!item.rec[col.rec.Full_Field_Name__c]}"/>
+								
+								<apex:outputField rendered="{!col.DisplayAsNonEditableField}" value="{!item.rec[col.rec.Full_Field_Name__c]}"/>
+								<apex:inputField rendered="{!col.DisplayAsEditableField}" value="{!item.rec[col.rec.Full_Field_Name__c]}"/>
+								
+								<apex:outputPanel rendered="{!col.DisplayAsResizableTextArea}" styleClass="expandable" layout="block">
+									<apex:outputField value="{!item.rec[col.rec.Full_Field_Name__c]}"/>
+								</apex:outputPanel>
+								
+ 								<apex:outputLink rendered="{!col.DisplayAsLink}" value="/{!col.rec.Link_URL_Prefix__c + item.rec[col.rec.Link_Id_Field__r.Full_Field_Name__c]}" target="{!col.rec.Link_Target__c}">{!item.rec[col.rec.Full_Field_Name__c]}</apex:outputLink>
+							</apex:column>
+						</apex:repeat>
+					</apex:pageBlockTable>
+				</apex:pageBlock>
+			</apex:outputPanel>
+		</apex:pageBlockSection>
+
+		<!-- PAGING FOOTER -->
+		<apex:pageBlockSection showHeader="false" columns="1">
+			<apex:outputPanel id="adt_footerToolbar" layout="block">
+				<apex:outputPanel layout="block">
+					<apex:outputPanel id="adt_footerToolbar1" layout="block">
+						<apex:outputPanel styleClass="toolbarGroup fullWidthToolbar-centered pageStatusToolbarText">
+							<apex:outputText styleClass="toolbarItem" value="{!PagingNavMessage}" />
+						</apex:outputPanel>
+					</apex:outputPanel>
+
+					<apex:outputPanel id="adt_footerToolbar2" layout="block" styleClass="toolbar pageNavigationToolbar">
+						<apex:outputPanel layout="block" styleClass="toolbarGroup toolbarGroup-left-side">
+							<p />
+						</apex:outputPanel>
+
+						<apex:outputPanel layout="block" id="adt_toolbarGroupFooterNavigation" styleClass="toolbarGroup toolbarGroup-center-column">
+							<apex:commandButton styleClass="toolbarItem" action="{!gotoFirstPage}" value="First Page" id="adt_nav_FirstPage" disabled="{!firstPageNavButtonDisabled}" rerender="adt_detailArea,adt_footerToolbar,adt_adminPanel" onclick="showBlockUIMessageOnDataTable('Retrieving');" oncomplete="unblockUIMessageOnDataTable();AdvancedDataTable_FireChangeEvent();"/>
+							<apex:commandButton styleClass="toolbarItem" action="{!gotoPrevPage}" value="Prev Page" id="adt_nav_PrevPage" disabled="{!prevPageNavButtonDisabled}" rerender="adt_detailArea,adt_footerToolbar,adt_adminPanel" onclick="showBlockUIMessageOnDataTable('Retrieving');" oncomplete="unblockUIMessageOnDataTable();AdvancedDataTable_FireChangeEvent();"/>
+							<apex:commandButton styleClass="toolbarItem" action="{!gotoNextPage}" value="Next Page" id="adt_nav_NextPage" disabled="{!nextPageNavButtonDisabled}" rerender="adt_detailArea,adt_footerToolbar,adt_adminPanel" onclick="showBlockUIMessageOnDataTable('Retrieving');" oncomplete="unblockUIMessageOnDataTable();AdvancedDataTable_FireChangeEvent();"/>
+							<apex:commandButton styleClass="toolbarItem" action="{!gotoLastPage}" value="Last Page" id="adt_nav_LastPage" disabled="{!lastPageNavButtonDisabled}" rerender="adt_detailArea,adt_footerToolbar,adt_adminPanel" onclick="showBlockUIMessageOnDataTable('Retrieving');" oncomplete="unblockUIMessageOnDataTable();AdvancedDataTable_FireChangeEvent();"/>
+						</apex:outputPanel>
+
+						<apex:outputPanel layout="block" styleClass="toolbarGroup toolbarGroup-right-side" rendered="{!ShowPageRecordCountOptions}">
+							<apex:outputText value="{!$Label.Records_Per_Page}: " styleClass="toolbarItem" />
+							<apex:selectList id="adt_pageSize" value="{!pageSize}" size="1" title="{!$Label.Records_Per_Page}" styleClass="toolbarItem">
+								<apex:actionSupport event="onchange" action="{!pageSizeChangeHandler}" rerender="adt_detailArea,adt_footerToolbar,adt_adminPanel" onsubmit="showBlockUIMessageOnDataTable('Retrieving');" oncomplete="unblockUIMessageOnDataTable();AdvancedDataTable_FireChangeEvent();" />
+								<apex:selectOption itemLabel="10" itemValue="10"/>
+								<apex:selectOption itemLabel="25" itemValue="25"/>
+								<apex:selectOption itemLabel="50" itemValue="50"/>
+							</apex:selectList>
+						</apex:outputPanel>
+					</apex:outputPanel>
+				</apex:outputPanel>
+			</apex:outputPanel>
+		</apex:pageBlockSection>
+		
+	</apex:pageBlock>
+	</div>
+	<apex:pageBlock >
+		<apex:commandButton id="adt_ToggleAdminPanelButton"
+		                    action="{!toggleAdminPanel}" 
+		                    rendered="{!AdminUser}"
+		                    rerender="adt_AdminPanelText,adt_ToggleAdminPanelButton,adt_AdminPanel" 
+		                    immediate="true"
+		                    image="{!URLFOR($Resource.AccountRollupsStyling,'images/dvGear16x16.gif')}"
+							title="{!if(ShowAdminPanel,'Hide Admin Panel','Show Admin Panel')}"
+							oncomplete="AdvancedDataTable_FireChangeEvent();" 
+							/>
+		<apex:outputPanel id="adt_AdminPanel">
+			<apex:pageBlockSection rendered="{!ShowAdminPanel}" title="Admin Panel" columns="2" collapsible="false">
+				<apex:outputText value="LastRetrieveCountSOQL = "/>
+				<apex:outputText value="{!LastRetrieveCountSOQL}"/>
+				<apex:outputText value="LastRetrieveRelatedRecordsSOQL = "/>
+				<apex:outputText value="{!LastRetrieveRelatedRecordsSOQL}"/>
+			</apex:pageBlockSection>
+		</apex:outputPanel>
+	</apex:pageBlock>
+				
+</apex:component>

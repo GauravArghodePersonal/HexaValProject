@@ -1,0 +1,11 @@
+<apex:page standardController="Market_Price_Book__c" 
+                           id="Market_Price_Book_Page" 
+                      sidebar="false"
+                     tabStyle="Market_Price_Book__c" 
+                        title="Market Price Book Wizard">
+
+  <apex:form >
+      <c:App_MarketPriceBookWizard_WebApp />
+  </apex:form>
+
+</apex:page>

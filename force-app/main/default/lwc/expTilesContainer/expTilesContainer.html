@@ -1,0 +1,20 @@
+<template>
+	<div class="my_margin">
+	<div class="slds-grid slds-wrap slds-gutters">
+		<template lwc:if={isSuccess}>
+			<template for:each={tiles} for:item="tile">
+				<div key={tile.tileName}
+					class="slds-col slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_3-of-12 slds-large-size_3-of-12">
+					<!--<c-exp-tile key={tile.tileName} tile={tile}></c-exp-tile>-->
+					<c-exp_tile key={tile.tileName} tile={tile}></c-exp_tile>
+				</div>
+			</template>
+		</template>
+		<template lwc:else>
+			{error}
+		</template>
+		<br/>
+		<br/>
+	</div>
+	</div>
+</template>

@@ -1,0 +1,126 @@
+<apex:page controller="SOQLOffsetIssue">
+
+<apex:form >
+        <apex:pageBlock title="SOQL OffSet Issue" mode="edit">
+            <apex:pageBlockSection title="Base Query Info" columns="2">
+                <apex:outputText value="SOQL Query:"/>
+                <apex:outputText value="SELECT COUNT() 
+                  FROM Account 
+                 WHERE (ParentId = '0015000000F8rCcAAJ' 
+                    OR Parent.ParentId = '0015000000F8rCcAAJ' 
+                    OR Parent.Parent.ParentId = '0015000000F8rCcAAJ' 
+                    OR Parent.Parent.Parent.ParentId = '0015000000F8rCcAAJ')"/>
+            </apex:pageBlockSection>
+
+           <apex:pageBlockSection title="Row Counts" columns="2">
+                <apex:outputText value="Row Count for query (no limits or offsets):"/>
+                <apex:outputText value="{!SOQLRowCount}"/>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection title="LIMIT 100 Added" columns="1">
+                <apex:outputText value="SELECT Id, Name, Type, AccountNumber  
+                  FROM Account 
+                 WHERE (ParentId = '0015000000F8rCcAAJ' 
+                    OR Parent.ParentId = '0015000000F8rCcAAJ' 
+                    OR Parent.Parent.ParentId = '0015000000F8rCcAAJ' 
+                    OR Parent.Parent.Parent.ParentId = '0015000000F8rCcAAJ') LIMIT 100"/>
+
+               <apex:pageBlockTable value="{!SOQLDataLimit100}" var="rec">
+                    <apex:column headerValue="Id" value="{!rec.Id}" />
+                    <apex:column headerValue="Name" value="{!rec.Name}" />
+                    <apex:column headerValue="Account Number" value="{!rec.AccountNumber}" />
+                    <apex:column headerValue="Type" value="{!rec.Type}" />
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection title="LIMIT 10 OFFSET 0 Added" columns="1">
+                <apex:outputText value="SELECT Id, Name, Type, AccountNumber  
+                  FROM Account 
+                 WHERE (ParentId = '0015000000F8rCcAAJ' 
+                    OR Parent.ParentId = '0015000000F8rCcAAJ' 
+                    OR Parent.Parent.ParentId = '0015000000F8rCcAAJ' 
+                    OR Parent.Parent.Parent.ParentId = '0015000000F8rCcAAJ') LIMIT 10 OFFSET 0"/>
+
+
+                <apex:pageBlockTable value="{!SOQLDataOffset0}" var="rec">
+                    <apex:column headerValue="Id" value="{!rec.Id}" />
+                    <apex:column headerValue="Name" value="{!rec.Name}" />
+                    <apex:column headerValue="Account Number" value="{!rec.AccountNumber}" />
+                    <apex:column headerValue="Type" value="{!rec.Type}" />
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection title="LIMIT 10 OFFSET 10 Added" columns="1">
+
+                <apex:outputText value="SELECT Id, Name, Type, AccountNumber  
+                  FROM Account 
+                 WHERE (ParentId = '0015000000F8rCcAAJ' 
+                    OR Parent.ParentId = '0015000000F8rCcAAJ' 
+                    OR Parent.Parent.ParentId = '0015000000F8rCcAAJ' 
+                    OR Parent.Parent.Parent.ParentId = '0015000000F8rCcAAJ') LIMIT 10 OFFSET 10"/>
+
+                <apex:pageBlockTable value="{!SOQLDataOffset10}" var="rec">
+                    <apex:column headerValue="Id" value="{!rec.Id}" />
+                    <apex:column headerValue="Name" value="{!rec.Name}" />
+                    <apex:column headerValue="Account Number" value="{!rec.AccountNumber}" />
+                    <apex:column headerValue="Type" value="{!rec.Type}" />
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection title="LIMIT 10 OFFSET 20 Added" columns="1">
+                <apex:outputText value="SELECT Id, Name, Type, AccountNumber  
+                  FROM Account 
+                 WHERE (ParentId = '0015000000F8rCcAAJ' 
+                    OR Parent.ParentId = '0015000000F8rCcAAJ' 
+                    OR Parent.Parent.ParentId = '0015000000F8rCcAAJ' 
+                    OR Parent.Parent.Parent.ParentId = '0015000000F8rCcAAJ') LIMIT 10 OFFSET 20"/>
+
+
+                <apex:pageBlockTable value="{!SOQLDataOffset20}" var="rec">
+                    <apex:column headerValue="Id" value="{!rec.Id}" />
+                    <apex:column headerValue="Name" value="{!rec.Name}" />
+                    <apex:column headerValue="Account Number" value="{!rec.AccountNumber}" />
+                    <apex:column headerValue="Type" value="{!rec.Type}" />
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection title="LIMIT 10 OFFSET 25 Added" columns="1">
+
+                <apex:outputText value="SELECT Id, Name, Type, AccountNumber  
+                  FROM Account 
+                 WHERE (ParentId = '0015000000F8rCcAAJ' 
+                    OR Parent.ParentId = '0015000000F8rCcAAJ' 
+                    OR Parent.Parent.ParentId = '0015000000F8rCcAAJ' 
+                    OR Parent.Parent.Parent.ParentId = '0015000000F8rCcAAJ') LIMIT 10 OFFSET 25"/>
+
+                <apex:pageBlockTable value="{!SOQLDataOffset25}" var="rec">
+                    <apex:column headerValue="Id" value="{!rec.Id}" />
+                    <apex:column headerValue="Name" value="{!rec.Name}" />
+                    <apex:column headerValue="Account Number" value="{!rec.AccountNumber}" />
+                    <apex:column headerValue="Type" value="{!rec.Type}" />
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection title="LIMIT 10 OFFSET 30 Added" columns="1">
+
+                <apex:outputText value="SELECT Id, Name, Type, AccountNumber  
+                  FROM Account 
+                 WHERE (ParentId = '0015000000F8rCcAAJ' 
+                    OR Parent.ParentId = '0015000000F8rCcAAJ' 
+                    OR Parent.Parent.ParentId = '0015000000F8rCcAAJ' 
+                    OR Parent.Parent.Parent.ParentId = '0015000000F8rCcAAJ') LIMIT 10 OFFSET 30"/>
+
+                <apex:pageBlockTable value="{!SOQLDataOffset30}" var="rec">
+                    <apex:column headerValue="Id" value="{!rec.Id}" />
+                    <apex:column headerValue="Name" value="{!rec.Name}" />
+                    <apex:column headerValue="Account Number" value="{!rec.AccountNumber}" />
+                    <apex:column headerValue="Type" value="{!rec.Type}" />
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+            
+            
+        </apex:pageBlock>
+    </apex:form>
+
+
+</apex:page>

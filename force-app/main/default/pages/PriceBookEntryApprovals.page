@@ -1,0 +1,47 @@
+<apex:page controller="PriceBookEntryApprovalController" tabStyle="Price_Book_Entry__c">
+    <apex:includeScript value="{!$Resource.PendingApprovalFunctions}" />
+    <apex:messages />
+    <apex:form id="actionForm">
+        <apex:pageBlock Title="PriceBook Entries pending Approval">
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Approve Selected Rows"
+                    onclick="return paf_validateForm1(this.form);"
+                    action="{!approveSelectedList}" />
+                <apex:commandButton value="Reject Selected Rows"
+                    onclick="return paf_validateForm2(this.form);"
+                    action="{!rejectSelectedList}" />
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection columns="1">
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Approve / Reject Comments"/>
+                    <apex:inputTextArea title="Approve / Reject Comments" 
+                                        id="userComments" value="{!userComments}" 
+                                        rows="1" cols="100"/>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:pageBlockTable value="{!priceBookEntries}" var="p">
+                        <apex:column >
+                            <apex:facet name="header">
+                                <apex:inputCheckbox id="allcb" value="{!allSelected}"
+                                    onclick="paf_checkAll(this.form, this, 'rowcb')" />
+                            </apex:facet>
+                            <apex:inputCheckbox id="rowcb" value="{!p.selected}"
+                                onclick="paf_toggleAllCheckbox(this.form, this);" />
+                        </apex:column>
+                        <apex:column headervalue="PriceBook Entry"
+                            value="{!p.priceBookEntry.Name}" />
+                        <apex:column headervalue="Material"
+                            value="{!p.priceBookEntry.Material_Sales_Data2__r.Material_Desc__c} ({!p.materialNumber})" />
+                        <apex:column headervalue="Market Price"
+                            value="{!p.priceBookEntry.Market_Price__c}" />
+                        <apex:column headervalue="Floor Price"
+                            value="{!p.priceBookEntry.Floor_Price__c}" />
+                    </apex:pageBlockTable>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

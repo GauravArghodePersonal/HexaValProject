@@ -1,0 +1,121 @@
+<apex:page controller="SampleRequestApprovalController" sidebar="false" tabStyle="Sample_Request__c" lightningStylesheets="True">
+    <apex:includeScript value="{!$Resource.PendingApprovalFunctions}" />
+    <apex:messages />
+
+    <apex:form id="actionForm">
+        <apex:pageBlock Title="Sample Requests pending Approval">
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Approve Selected Rows"
+                    onclick="return paf_validateForm1(this.form);"
+                    action="{!approveSelectedList}" />
+                <apex:commandButton value="Reject Selected Rows"
+                    onclick="return paf_validateForm2(this.form);"
+                    action="{!rejectSelectedList}" />
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection columns="1">
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Approve / Reject Comments"/>
+                    <apex:inputTextArea title="Approve / Reject Comments" 
+                                        id="userComments" value="{!userComments}" 
+                                        rows="3" cols="100"/>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:pageBlockTable value="{!sampleReqsPendingApproval}" var="p">
+
+                        <apex:column width="10px">
+                            <apex:facet name="header">
+                                <apex:inputCheckbox id="allcb" value="{!allSelected}"
+                                    onclick="paf_checkAll(this.form, this, 'rowcb')" />
+                            </apex:facet>
+                            <apex:inputCheckbox id="rowcb" value="{!p.selected}"
+                                onclick="paf_toggleAllCheckbox(this.form, this);" />
+                        </apex:column>
+                        <apex:column width="60px">
+                            <apex:facet name="header">Sample<br/>Request #</apex:facet>
+                            <apex:outputLink value="/{!p.sr.Id}"> 
+                                <apex:outputField value="{!p.sr.Name}"/>
+                            </apex:outputLink>
+                        </apex:column>
+                        <apex:column width="120px">
+                            <apex:facet name="header">Account Name<br/>and Number</apex:facet>
+                            <apex:outputField value="{!p.sr.Account__r.Name}"/><br/>
+                            <apex:outputText value="{!p.accountNumber}"/>
+                        </apex:column>
+                        <apex:column width="120px">
+                            <apex:facet name="header">Created By<br/>and Date</apex:facet>
+                            <apex:outputField value="{!p.sr.CreatedBy.Name}"/><br/>
+                            <apex:outputField value="{!p.sr.CreatedDate}"/>
+                        </apex:column>
+                        <apex:column width="120px">
+                            <apex:facet name="header">Reason for <br/>Sample</apex:facet>
+                            <apex:outputField value="{!p.sr.Reason_for_Sample__c}"/>
+                        </apex:column>
+                        <apex:column width="30px">
+                            <apex:facet name="header">
+                                <apex:outputText escape="false" value="{!reqhdr01}"/>
+                            </apex:facet>
+                            <apex:outputText escape="false" value="{!p['reqfld01']}"/>
+                        </apex:column>
+                        <apex:column headerClass="textAlignCenter">
+                            <apex:facet name="header">
+                                <apex:outputText escape="false" 
+                                      value="S a m p l e &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; M a t e r i a l s"/>
+                            </apex:facet>
+                            <apex:pageBlockTable value="{!p.sms}" var="m">
+                                <!-- Plant --> 
+                                <apex:column width="{!mathdr02cw}">
+                                    <apex:facet name="header">
+                                        <apex:outputText escape="false" value="{!mathdr02}"
+                                                         styleClass="bold" />
+                                    </apex:facet>
+                                    <apex:outputText escape="false" value="{!m['matfld02']}"/>
+                                </apex:column>
+                                <!-- Material Name --> 
+                                <apex:column width="240px">
+                                    <apex:facet name="header">
+                                        <apex:outputText escape="false" value="{!mathdr03}"
+                                                         styleClass="bold" />
+                                    </apex:facet>
+                                    <apex:outputText escape="false" value="{!m['matfld03']}"/>
+                                </apex:column>
+                                <!-- PAC Segment / Product Line --> 
+                                <apex:column width="60px">
+                                    <apex:facet name="header">
+                                        <apex:outputText escape="false" value="{!mathdr01}"
+                                                         styleClass="bold" />
+                                    </apex:facet>
+                                    <apex:outputText escape="false" value="{!m['matfld01']}"/>
+                                </apex:column>
+                                <apex:column width="240px">
+                                    <apex:facet name="header">
+                                        <apex:outputText styleClass="bold" value="Quantity"/>
+                                    </apex:facet>
+                                    <apex:outputText escape="false" 
+                                          value="{!m.sm.Sample_Quantity__c} {!m.sm.Sample_UOM__c}"/>
+                                </apex:column>
+                                <apex:column width="60px">
+                                    <apex:facet name="header">
+                                        <apex:outputText styleClass="bold" value="Required By"/>
+                                    </apex:facet>
+                                    <apex:outputField value="{!m.sm.Date_Required_By__c}"/>
+                                </apex:column>
+                            </apex:pageBlockTable>
+                        </apex:column>
+
+                    </apex:pageBlockTable>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+
+        </apex:pageBlock>
+    </apex:form>
+    <style>
+        .textAlignCenter {text-align: center;}
+        .textAlignRight {text-align: right;}
+        .nowrap {white-space: nowrap;}
+        .bold {font-weight: bold;}
+        .row1 {background-color: #f3f3ec;}
+        .row2 {background-color: #eeecd1;}
+    </style>
+</apex:page>

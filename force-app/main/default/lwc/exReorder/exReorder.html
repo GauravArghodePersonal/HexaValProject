@@ -1,0 +1,561 @@
+<template>
+    <template if:true={isModalOpen}>
+        <!-- Modal/Popup Box LWC starts here -->
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-02" aria-modal="true"
+        aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open center centerModal">
+            <div class="modal-container">
+                <template if:false={cancelflag}>                    
+                    <lightning-button-icon class="slds-modal__close" title="Close" icon-name="utility:close"
+                        icon-class="slds-button_icon-inverse" onclick={closeQuickAction}>
+                    </lightning-button-icon>
+                </template>
+                <template if:true={isLoading}>
+                    <div>
+                        <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+                    </div>
+                </template>
+                <template if:true={flag_Pilotuser}>
+                    <div class="alignment">
+                        <template if:true={reorderRedirectflag}>
+                            <button onclick={Next} title="Next" class="exorder-modal-button">
+                                Next
+                            </button>
+                        </template>
+                        <!-- <template if:true={flg_Next}>
+                            <button onclick={orderselect} class="exorder-modal-button">
+                                Next
+                            </button>
+                        </template> -->
+                        <template if:true={reorderflag}>
+                            <button onclick={openModal} class="exorder-modal-button">
+                                Previous
+                            </button>
+                        </template>
+                        <!-- <template if:true={previousflag}>
+                            <button onclick={Previous_OrderType} class="exorder-modal-button">
+                                Previous
+                            </button>
+                        </template> -->
+                        <template if:true={cancelflag}>
+                            <button onclick={closeQuickAction} class="exorder-modal-button">
+                                Cancel
+                            </button>
+                        </template>
+                        <template if:false={cancelflag}>
+                            <button onclick={closeQuickAction} class="exorder-modal-button exorder-modal-button-bg-color">
+                                Submit
+                            </button>
+                        </template>
+
+                    </div>
+
+                    <template if:true={reorderRedirectflag}>
+
+                            <!-- <div style="width:1022px;margin:auto">
+                                <lightning-datatable data-id="relatedFiles" 
+                                                    key-field="Id" 
+                                                    class="myCss"
+                                                    sorted-by={sortBy} 
+                                                    sorted-direction={sortDirection} 
+                                                    onsort={handleSortdata}
+                                                    data={openOrderList} 
+                                                    columns={filesListColumnss}     onrowselection={getSelectedRows}>
+                                </lightning-datatable>
+                            </div> -->
+                          
+                            <div class="table-container">
+                            
+                                <table >
+                                    <tr class="table-heading-container">
+
+                                        <th class="table-heading-checkbox" scope="col">
+                                            <p class="slds-truncate">
+                                                <lightning-input onchange={allSelected} type="checkbox"></lightning-input>
+                                            </p>
+                                        </th>
+                                        <th>
+                                         <p class="table-heading">
+                                            OpenOrderID
+                                         </p>
+                                        </th>
+                                        <th>
+                                         <p class="table-heading">
+                                            Sales Order Number
+                                         </p>
+                                        </th>
+                                        <th>
+                                          <p class="table-heading">
+                                            Line Item Number
+                                          </p>
+                                        </th>
+                                        <th>
+                                          <p class="table-heading">
+                                            Material Desc
+                                          </p>
+                                        </th>
+                                        <th>
+                                        <p class="table-heading">
+                                          OrderedQty
+                                        </p>
+                                        </th>
+                                        <th>
+                                            <p class="table-heading">
+                                            Ordered Qty UOM
+                                            </p>
+                                        </th>
+                                        <th>
+                                            <p class="table-heading">
+                                             PlantDesc
+                                            </p>
+                                        </th>
+                                        <th>
+                                            <p class="table-heading">
+                                               Agreed Ship Date
+                                            </p>
+                                        </th>
+                                    </tr>
+                                  <template for:each={openOrderList} for:item="order">
+                                    <tr key={order.Id}>
+                                    <td class="table-data-check">
+                                    <lightning-input data-id={order.Id} id={order.Id} type="checkbox" ></lightning-input>
+                                    </td>
+                                      <td class="table-data">{order.OpenOrderID}</td>
+                                      <td class="table-data">{order.SalesOrderNumber}</td>
+                                      <td class="table-data">{order.LineItemNumber}</td>
+                                      <td class="table-data">{order.MaterialDesc}</td>
+                                      <td class="table-data">{order.OrderedQty}</td>
+                                      <td class="table-data">{order.OrderedQtyUOM}</td>
+                                      <td class="table-data">{order.PlantDesc}</td>
+                                      <td class="table-data">{order.AgreedShipDate}</td>
+                                    </tr>
+                                  </template>
+                                </table>
+                                
+                            </div>
+                            
+                            <div if:true={openOrder_flag} style="color:red" class="centerModal">
+                               <div> No Records Found</div>  
+                            </div>
+                       
+                    </template>
+
+
+                    <template if:true={reorderMainflag}>
+                        <template if:true={reorderflag}>
+                            <div class="record-container">
+                                <lightning-record-edit-form object-api-name="Open_Orders__c" onsuccess={handleResponse}>
+                                    <lightning-messages></lightning-messages>
+                                    <lightning-card class="record-heading slds-text-title_bold" title="Order Details">
+                                        <template if:true={errormsg}>
+                                            <p class="error">{errormsg}</p>
+                                        </template>
+                                        <table class="Table">
+                                            <tr>
+                                                <td>
+                                                    Sold To
+                                                </td>
+                                                <td>
+                                                    <lightning-input-field data-id="SoldTo" class="ship-to"
+                                                        variant="label-hidden" value={SoldToName} field-name="SoldTo__c"
+                                                        disabled="True"></lightning-input-field>
+                                                </td>
+                                                <td>
+                                                    Ship To
+                                                </td>
+                                                <td>
+                                                    <lightning-input-field data-id="ShipTo" variant="label-hidden"
+                                                        value={Shipto} field-name="ShipTo__c"
+                                                        disabled="True"></lightning-input-field>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                </td>
+                                                <td>
+
+                                                </td>
+                                                <td>
+                                                    Street
+                                                </td>
+                                                <td>
+                                                    {Street}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td>
+                                                    City
+                                                </td>
+                                                <td>
+                                                    {City}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td>
+                                                    Postal / Zip Code
+                                                </td>
+                                                <td>
+                                                    {PostalCode}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td>Country</td>
+                                                <td>
+                                                    {Country}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </lightning-card>
+                                    <div class="slds-section slds-is-open">
+                                        <h3 class="slds-section__title slds-theme_shade">
+                                            <span
+                                                class="slds-truncate slds-p-horizontal_small slds-text-title_bold order-header"
+                                                title="Section Title">Order Header</span>
+                                        </h3>
+
+                                        <table>
+                                            <tr>
+                                                <td style="width: 25%;">Order Type</td>
+                                                <td style="width: 25%;">
+                                                    <div style="color: red;" if:true={ordertypereq}>Complete this field.
+                                                    </div>
+                                                    <lightning-combobox variant="label-hidden"  
+                                                    
+                                                                data-id="OrderType"
+                                                                onchange={OnchangeReordertype} options={genericNumberPicklist}
+                                                                value={roderypSelecte} disabled>
+                                                    </lightning-combobox>
+                                                </td>
+                                                <template if:true={ordertypeflag}>
+                                                    <td>Contract Number (Must be Numeric)</td>
+                                                    <td><lightning-input data-id="ContractNumber" type="number"
+                                                            name="input1" value={Ins_ContractNumberSelect}
+                                                            disabled></lightning-input></td>
+                                                </template>
+                                                <template if:false={ordertypeflag}>
+                                                    <td></td>
+                                                    <td></td>
+                                                </template>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="slds-section slds-is-open">
+                                        <h3 class="slds-section__title slds-theme_shade">
+                                            <span
+                                                class="slds-truncate slds-p-horizontal_small slds-text-title_bold order-header"
+                                                title="Section Title">Requested Delivery Dates</span>
+                                        </h3> <br />
+                                        <template if:true={errormsg}>
+                                            <p class="error">{errormsg}</p>
+                                        </template>
+                                        <table>
+                                            <tr>
+                                                <th class="datestd"></th>
+                                                
+                                                <th class="slds-text-title_bold">
+                                                    PO NUMBER
+                                                    <div style="color:red">*</div> 
+                                                    <div style="color: red;" 
+                                                    if:true={Ponumberreq}>Complete this field.
+                                                    </div>
+                                                </th>
+                                                <th class="slds-text-title_bold">
+                                                    REQUESTED DELIVERY DATE
+                                                    <div style="color:red">*</div> 
+                                                    </th>
+                                                <th class="slds-text-title_bold">ESTIMATED SHIP DATE</th>
+                                                <th class="">SPECIAL INSTRUCTIONS</th>
+
+                                            </tr>
+
+                                            <template for:each={orderdeliverydateList} for:item="orList"
+                                                for:index="index">
+                                                <tr key={orList.Id}>
+                                                    <td class="datestd1"><lightning-input class="request-delivery-inputs"
+                                                            data-id="flag" type="checkbox"
+                                                            value={orList.flag}></lightning-input></td>
+                                                    <td class="slds-m-right_x-small">
+                                                        <lightning-input class="slds-p-around_x-small"
+                                                            onfocus={runOnceLeadtime} data-id="ponumber" type="text"
+                                                            value={orList.PONUMBER}></lightning-input>
+                                                    </td>
+                                                    <td class="slds-m-right_x-small">
+
+                                                        <lightning-input class="slds-p-around_x-small" type="date"
+                                                            data-id='requestDeliveryDate'
+                                                            value={orList.REQUESTEDDELIVERYDATE}></lightning-input>
+                                                    </td>
+                                                    <td class="slds-m-right_x-small">
+
+                                                        <lightning-input class="slds-p-around_x-small" type="date"
+                                                            data-id='estimateShipDate' value={orList.ESTIMATEDSHIPDATE}
+                                                            disabled></lightning-input>
+                                                    </td>
+
+                                                    <td class="slds-m-right_x-small text-area">
+                                                        <lightning-textarea data-id='specificIns'
+                                                            class="slds-p-around_x-small"
+                                                            value={orList.SPECIALINSTRUCTIONS}></lightning-textarea>
+                                                    </td>
+                                                </tr>
+                                            </template>
+
+                                        </table>
+
+
+                                        <!--<lightning-button variant="brand" label="Request Additional Dates" onclick={addOrderDeliveryDate} title="Successful action" class="slds-m-left_x-small"></lightning-button>-->
+                                        <!--<lightning-button variant="destructive" label="Remove Selected Dates" onclick={removeOrderdeliveryDate} title="Destructive action" class="slds-m-left_x-small"></lightning-button>-->
+                                    </div>
+
+                                    <div class="slds-section slds-is-open">
+                                        <h3 class="slds-section__title slds-theme_shade order-header">
+                                            <span
+                                                class="slds-truncate slds-p-horizontal_small slds-p-top_small slds-text-title_bold"
+                                                title="Section Title">Line Items</span>
+                                        </h3>
+                                        <!--<h1 class="blink"><span class="spanblink"> QTY is amount to ship in Bulk or Package size. For example: Material selected is a Drum, then Qty should be amount of drums and UOM should be Drums. Please enter QTY/UOM carefully.</span></h1>-->
+                                        <div class="isa_warning slds-p-around_medium">
+                                            <i class="fa fa-warning"></i>
+                                            QTY is amount to ship in Bulk or Package size. For example: Material
+                                            selected is a Drum, then Qty should be amount of drums and UOM should be
+                                            Drums. Please enter QTY/UOM carefully.
+                                        </div>
+                                        <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                                            <tr class="slds-line-height_reset">
+                                                <th class="" style="width: 2%;">
+                                                    <div class="slds-truncate slds-trunc"></div>
+                                                </th>
+                                                <th class="" >
+                                                    <div class="slds-truncate slds-trunc">Quantity</div>
+                                                    <div style="color: red;" if:true={Quantityreq}>Complete this field.
+                                                    </div>
+                                                </th>
+                                                <th class="" >
+                                                    <div class="slds-truncate slds-trunc">UOM</div>
+                                                    <div style="color: red;" if:true={uomreq}>Complete this field.
+                                                    </div>
+                                                </th>
+                                                <th class="" >
+                                                    <div class="slds-truncate slds-trunc">Material Number</div>
+                                                </th>
+                                                <th class="" >
+                                                    <div class="slds-truncate slds-trunc">Plant</div>
+                                                </th>
+                                                <th class="" style="width: 3%;">
+                                                    <div class="slds-truncate slds-trunc">Required <br />Lead Time <br />in Days
+                                                    </div>
+                                                </th>
+                                                <th class="" style="width: 15%;">
+                                                    <div class="slds-truncate slds-trunc"></div>Tank <br />Number
+                                    </th>
+                                    </tr>
+                                    <template for:each={SelectedMatList} for:item="matlist" for:index="index">
+                                        <tr key={matlist.Id}>
+                                            <td class="datestd"><lightning-input data-id="Selectedflag"
+                                                    type="checkbox"></lightning-input></td>
+                                            <td>
+                                                <div style="color:red">*</div><lightning-input style="width: 80%;"
+                                                    data-id="Quantity" type="text" value={matlist.qty}
+                                                    onfocus={Leadtime}></lightning-input>
+                                            </td>
+                                            <td> <!--<div style="color:red">*</div> --> <br /> <br />
+                                                {matlist.umo}
+                                                <input data-id="selectedPlant" value={matlist.umo}
+                                                    type="hidden"></input>
+                                            </td>
+                                            <td><br />
+                                                <input data-id="SelectedMaterialNumber" type="hidden"
+                                                    value={matlist.matname} disabled></input>
+                                                <div class="slds-cell-wrap slds-text-body_small" style="width: 100px">
+                                                    <lightning-formatted-url target="_blank" value={matlist.matnameLink}
+                                                        label={matlist.matDesc}></lightning-formatted-url><br />
+                                                </div>
+                                            </td>
+                                            <td class="slds-form-element__control slds-grow"><br />
+                                                <input type="hidden" data-id='msId' value={matlist.msId}
+                                                    disabled></input>
+
+                                                {matlist.plant}
+                                                <input data-id="Plant" value={matlist.plant}
+                                                    type="hidden"></input>
+
+
+                                                <!--<c-solenis-plant-list mat-id={matlist.Id}></c-solenis-plant-list>-->
+                                            </td>
+                                            <td><br />
+                                                <input data-id="leadtime" value={matlist.leadTime}
+                                                    type="hidden"></input>
+                                                <div align='Center'>{matlist.leadTime}</div>
+                                            </td>
+                                            <td><br /><lightning-input data-id="TankNumber" value={matlist.TankNumber}
+                                                    type="text"></lightning-input></td>
+                                        </tr>
+
+                                    </template>
+
+                                    </table><br />
+                                    <table>
+                                        <tr>
+                                            <td class="slds-p-top_xx-large">
+                                                <!-- <lightning-input 
+                                                data-id="SearchMaterial"
+                                                placeholder="Search Material Number" type="Text" 
+                                                variant="label-hidden" value={SerachMaterial}
+                                                class="slds-p-around_x-small">
+                                                </lightning-input> -->
+                                                <input data-id="SearchMaterial"
+                                                placeholder="Search Material Number" type="text" value={SerachMaterial} class="modal-input" />
+                                            </td>
+                                            <td>
+                                                <button onclick={openAddMaterial} class="exorder-modal-submit-button">
+                                                    Add New Material
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <button onclick={removeMaterial} class="exorder-modal-submit-button-grey">
+                                                    Remove Selected Materials
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <button onclick={insertorder} class="exorder-modal-button">
+                                                    Submit
+                                                </button>
+                                                        <div if:true={isLoadingOrderAttachment}>
+                                                            <lightning-spinner id="1" alternative-text="Loading" size="large"></lightning-spinner>
+                                                        </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <!-- <lightning-button variant="brand" label="Next" onclick={insertorder}
+                                        title="Successful action" class="slds-m-left_x-small"></lightning-button> -->
+                            </div>
+
+                            </lightning-record-edit-form>
+            </div>
+    </template>
+    <template if:true={openmodel}>
+        <div class="demo-only">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open centerModal">
+                <div class="exorder-addmaterial-container">
+                <div class="exorder-add-material-table-container">
+                        <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse closeButton"
+                            title="Close" onclick={closeModal}>
+                            <lightning-icon icon-name="utility:close" size="medium">
+                            </lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <br />
+                        <div class="isa_warning">
+                        </div>
+                        <h2 id="modal-heading-05" class="slds-text-heading_medium slds-hyphenate">Search Material</h2>
+                        <br />
+                        <lightning-input data-id='SearchMatValue' placeholder="Search Material Number" type="Text"
+                            class="lastName" variant="label-hidden" value={SerachMaterial}></lightning-input><br />
+                        <!-- <lightning-button variant="brand" label="Search" class="slds-m-left_x-small"
+                            onclick={searchMat}></lightning-button> -->
+                            <button class="exorder-modal-submit-button-searchMaterial" onclick={searchMat}>Search</button>
+
+
+                    </header>
+                    <div class={exampleHolder} if:true={isLoading}> spinner
+                        <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+                    </div>
+                    <div class="modal-body" style="height:500px">
+                        <template if:true={isLoading}>
+                            <div>
+                                <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+                             </div>
+                         </template>
+                        <div class=".slds-scrollable_none">
+                        <lightning-datatable 
+                            data-id="relatedFiles" 
+                            key-field="Id" 
+                            data={MatrialList}
+                            columns={filesListColumns} 
+                            onrowselection={getSelectedRows} 
+                            enable-infinite-loading
+                            onmousewheel={loadMoreData} 
+                            onclick={loadMoreData} 
+                            onmouseleave={loadMoreData}
+                            show-row-number-column="true"
+                        >
+                        </lightning-datatable>
+                        </div>
+                     </div>
+                </div>
+                <footer class="slds-modal__footer exorder-addmaterial-footer">
+                        <!-- <lightning-button variant="brand" label="Add Material" title="Add Material"
+                            class="slds-m-left_x-small" onclick={addMatrial}></lightning-button>
+                        <lightning-button variant="destructive" label="Cancel" onclick={closeModal} title="Cancel"
+                            class="slds-m-left_x-small"></lightning-button> -->
+                            <button onclick={addMatrial} class="exorder-modal-submit-button-addMaterial">
+                                Add Material
+                            </button>
+                            <button onclick={closeModal} class="exorder-modal-submit-button-cancelMaterial">
+                                Cancel
+                            </button>
+                </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+    </template>
+</template>
+<template if:true={attachflag}>
+    <c-ex-order-attachment reorder-ids={atachReorderIds}></c-ex-order-attachment> 
+</template>
+</template>
+
+<template if:false={isLoading}>
+    <template if:false={flag_Pilotuser}>
+        <div>You do not have access. Please Contact System Administrator</div>
+    </template>
+</template>
+</div>
+</section>
+<div class="slds-backdrop slds-backdrop_open"></div>
+
+<template if:true={isWarning}>
+        <!-- Modal/Popup Box LWC starts here -->
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-02" aria-hidden="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open warning-modal-container centerModal">
+            <div class="slds-modal__container">
+                <!-- Modal/Popup Box LWC header here -->
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                        <lightning-icon icon-name="utility:close"
+                            alternative-text="close"
+                            variant="inverse"
+                            size="small" onclick={closeModal1}></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 id="modal-heading-03" class="slds-text-heading_medium slds-hyphenate">Warning</h2>
+                </header>
+                <!-- Modal/Popup Box LWC body starts here -->
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <template if:true={isLoading}>
+                    <div>
+                        <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+                    </div>
+                </template>
+                    <p><b>If you proceed to previous tab selected material and details will not be saved</b></p>
+                 
+                </div>
+                <!-- Modal/Popup Box LWC footer starts here -->
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_brand" onclick={closeModal1} title="Cancel">Cancel</button>
+                    <button class="slds-button slds-button_brand" onclick={warningOkay} title="OK">OK</button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+</template>
+</template>

@@ -1,0 +1,27 @@
+<template>
+    <lightning-card>
+        <lightning-layout>
+            <lightning-layout-item size="10" class="slds-p-left_small">
+                <lightning-progress-indicator current-step={currentStep} type="path" variant="base">
+                    <template for:each={steps} for:item="step">
+                        <lightning-progress-step label={step.label} value={step.value} key={step.label} onclick={handleStepClick}></lightning-progress-step>
+                    </template>
+                </lightning-progress-indicator>
+            </lightning-layout-item>
+            <lightning-layout-item size="2">
+                <template if:false={loaded}>
+                    <lightning-spinner alternative-text="Loading"></lightning-spinner>
+                </template>
+                <template if:false={isSAPStatusBtnDisabled}>
+                    <lightning-button variant="brand" label="Mark SAP Status as Complete" title="Mark SAP Status as Complete" 
+                                  onclick={handleClick} class="slds-p-horizontal_small" icon-name="utility:check" 
+                                  icon-position="left"></lightning-button>
+                </template>
+                <template if:true={isSAPStatusBtnDisabled}>
+                    <lightning-button variant="brand" label="Mark SAP Status as Complete" title="Mark SAP Status as Complete" 
+                                  class="slds-p-horizontal_small" icon-name="utility:check" icon-position="left" disabled></lightning-button>
+                </template>                                 
+            </lightning-layout-item>          
+        </lightning-layout>       
+    </lightning-card>
+</template>

@@ -1,0 +1,174 @@
+.product-container {
+    width: 100%;
+    margin: auto;
+    display: flex;
+    overflow: hidden;
+    position: relative;
+    height: 475px;
+    padding-left: 20px;
+    padding-right: 20px;
+    /* padding-bottom: 20px; */
+}
+
+.product-card {
+    flex: 0 0 20%;
+    display: flex;
+    flex-direction: column;
+    border: .5px grey solid;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); /* Subtle drop shadow */
+    padding: 10px;
+}
+
+.product-image {
+    height: 225px;
+    overflow: hidden;
+    cursor: pointer; /* Indicates clickable area */
+}
+
+.product-image:hover img {
+    opacity: 0.8; /* Slightly fade image on hover */
+}
+
+.product-image img {
+    max-height: 100%;
+    display: block;
+    object-fit: contain;
+    margin: 0 auto;
+}
+
+.product-details {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.product-details p {
+    margin-left: 20px;
+}
+
+.product-title {
+    font-size: 1em;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+    overflow: hidden; /* Ensures that the overflow text is hidden */
+    text-overflow: ellipsis; /* Replaces overflow text with an ellipsis */
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Number of lines allowed */
+    -webkit-box-orient: vertical;
+    line-height: 1.2em; /* Adjust as needed */
+    max-height: 2.4em; /* Based on line height, 2 lines here */
+    cursor: pointer; /* Indicates clickable area */
+    color: rgb(16, 6, 159);
+}
+
+.product-title:hover {
+    text-decoration: underline; /* Underline text on hover */
+}
+
+.add-to-cart-button {
+    border: none;
+    background-color: rgb(16, 6, 159);
+    color: white;
+    align-self: center;
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+    padding: 5px 10px;
+    width: 150px;
+    justify-content: space-between;
+    margin-top: auto;
+}
+
+.button_icon {
+    fill: white;
+    height: 20px;
+    width: 20px;
+    margin-left: 5px;
+}
+
+/* Add styles for navigation buttons */
+.nav-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.left-nav {
+    left: 10px;
+}
+
+.right-nav {
+    right: 10px;
+}
+
+.nav-icon {
+    width: 30px;
+    height: 30px;
+    fill: #333; /* Change color as needed */
+}
+
+.product-carousel {
+    display: flex;
+    overflow: hidden;
+    justify-content: space-evenly;
+    width: 100%;
+    transition: transform 0.5s ease;
+    padding: 10px;
+}
+
+@media (max-width: 1275px) {
+    .product-card {
+        flex: 0 0 30%; /* Adjust to show 3 cards */
+    }
+
+    .product-details p {
+        margin-left: 5px;
+        font-size: .8em;
+    }
+
+    .product-title {
+        font-size: .9em;
+        margin-bottom: 8px;
+    }
+
+    .product-container {
+        height: 425px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}
+
+@media (max-width: 750px) {
+    .product-card {
+        flex: 0 0 42%; /* Adjust to show 2 cards */
+    }
+    .product-container {
+        height: 425px;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    /* Any other necessary style adjustments for this viewport size */
+}
+
+/* Media query for max-width: 600px */
+@media (max-width: 600px) {
+    .product-card {
+        flex: 0 0 95%; /* Adjust to show 1 card */
+    }
+
+    .product-container {
+        height: 425px;
+        padding-left: 2px;
+        padding-right: 2px;
+    }
+
+    /* Any other necessary style adjustments for this viewport size */
+}

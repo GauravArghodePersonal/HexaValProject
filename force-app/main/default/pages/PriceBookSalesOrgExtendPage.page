@@ -1,0 +1,94 @@
+<apex:page controller="PriceBookSalesOrgExtendController" 
+           action="{!init}" sidebar="false">
+
+    <apex:form id="theForm">
+	    <apex:pageBlock rendered="{!pageBlockNum = 1}"
+	                    title="Extend PriceBook {!priceBookName} to other Sales Orgs">
+
+            <apex:pageMessages />
+        
+	        <apex:panelGrid columns="4">
+	            <apex:commandButton action="/{!priceBookId}"
+	                                value="View PriceBook"/>
+                <apex:outputText value=""/>
+                <apex:outputText value="Select Sales Org to extend from =======> "
+                                 style="font-weight: bold;"/>
+                <apex:selectList value="{!fromSalesOrg}" 
+                                 size="1" style="width: 250px;">
+                    <apex:selectOptions value="{!sorgOpts0}"/>
+                </apex:selectList>
+
+	            <apex:selectList value="{!salesOrgs1}" multiSelect="true" 
+	                             size="{!listSize}" style="width: 250px;">
+	                <apex:selectOptions value="{!sorgOpts1}"/>
+	            </apex:selectList>
+	            <apex:panelGroup >
+	                <apex:actionStatus id="stat1">
+	                    <apex:facet name="start">
+	                        <apex:outputText escape="false" styleClass="centerBtns" 
+	                                         value=" Please wait ... ">
+	                            <apex:image value="{!$Resource.spinner}"/>
+	                        </apex:outputText>
+	                    </apex:facet>
+	                    <apex:facet name="stop">
+	                        <apex:outputPanel >
+	                        <apex:commandButton action="{!addSalesOrgs2}" 
+	                                            value=" Add » " 
+	                                            rerender="theForm" status="stat1"
+	                                            styleClass="centerBtns"/>
+	                        <br/><br/>
+                            <apex:commandButton action="{!addAllSalesOrgs2}" 
+                                                value=" Add All » " 
+                                                rerender="theForm" status="stat1"
+                                                styleClass="centerBtns"/>
+                            <br/><br/>
+	                        <apex:commandButton action="{!removeSalesOrgs2}" 
+	                                            value=" « Remove "
+	                                            rerender="theForm" status="stat1"
+	                                            styleClass="centerBtns"/>
+                            <br/><br/>
+                            <apex:commandButton action="{!removeAllSalesOrgs2}" 
+                                                value=" « Remove All "
+                                                rerender="theForm" status="stat1"
+                                                styleClass="centerBtns"/>
+                            </apex:outputPanel>
+	                    </apex:facet>
+	                </apex:actionStatus>
+	            </apex:panelGroup>
+	            <apex:selectList value="{!salesOrgs2}" multiSelect="true" 
+	                             size="{!listSize}" style="width: 250px;">
+	                <apex:selectOptions value="{!sorgOpts2}"/>
+	            </apex:selectList>
+	            <apex:panelGroup >
+	                <apex:actionStatus id="stat2">
+	                    <apex:facet name="start">
+	                        <apex:outputText escape="false" styleClass="centerBtns" 
+	                                         value=" Please wait ... ">
+	                            <apex:image value="{!$Resource.spinner}"/>
+	                        </apex:outputText>
+	                    </apex:facet>
+	                    <apex:facet name="stop">
+			                <apex:commandButton action="{!extendPriceBookToSalesOrgs}"
+			                                    value=" Extend PriceBook to the selected Sales Orgs "
+			                                    rerender="theForm" status="stat2"/>
+	                    </apex:facet>
+	                </apex:actionStatus>
+	            </apex:panelGroup>
+            </apex:panelGrid>
+	    </apex:pageBlock>
+        <apex:pageBlock rendered="{!pageBlockNum = 2}">
+            <apex:pageMessages />
+            <apex:commandButton action="{!backToPage1}"
+                                value="Select another Sales Org"/>
+            <apex:commandButton action="/{!priceBookId}"
+                                value="View PriceBook"/>
+        </apex:pageBlock>
+    </apex:form>
+    <style>
+        .centerBtns {font-weight: bold; 
+                     text-align: center; 
+                     width: 94px; 
+                     white-space: nowrap;}
+    </style>
+
+</apex:page>

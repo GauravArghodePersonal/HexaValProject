@@ -1,0 +1,85 @@
+<apex:page controller="PriceBookApprovalController" tabStyle="Price_Book__c">
+    <apex:includeScript value="{!$Resource.PendingApprovalFunctions}" />
+    <apex:messages />
+    <apex:form id="actionForm">
+        <apex:pageBlock Title="Price Books pending Approval">
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Approve Selected Rows"
+                    onclick="return paf_validateForm1(this.form);"
+                    action="{!approveSelectedList}" />
+                <apex:commandButton value="Reject Selected Rows"
+                    onclick="return paf_validateForm2(this.form);"
+                    action="{!rejectSelectedList}" />
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection columns="1">
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Approve / Reject Comments"/>
+                    <apex:inputTextArea title="Approve / Reject Comments" 
+                                        id="userComments" value="{!userComments}" 
+                                        rows="1" cols="100"/>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:pageBlockTable value="{!priceBooks}" var="p">
+                        <apex:column >
+                            <apex:facet name="header">
+                                <apex:inputCheckbox id="allcb" value="{!allSelected}"
+                                    onclick="paf_checkAll(this.form, this, 'rowcb')" />
+                            </apex:facet>
+                            <apex:inputCheckbox id="rowcb" value="{!p.selected}"
+                                onclick="paf_toggleAllCheckbox(this.form, this);" />
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">PriceBook<br/>Number</apex:facet>
+                            <apex:outputLink value="/apex/PriceBookApprovalsPage2?id={!p.priceBook.Id}&vt=2"> 
+                                <apex:outputText value="{!p.priceBook.Name}"/>
+                            </apex:outputLink>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">PriceBook<br/>Owner</apex:facet>
+                            <apex:outputField value="{!p.priceBook.Owner.Name}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Description</apex:facet>
+                            <apex:outputField value="{!p.priceBook.Description__c}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Effective<br/>Date</apex:facet>
+                            <apex:outputField value="{!p.priceBook.Effective_Date__c}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Regions</apex:facet>
+                            <apex:outputText escape="false" value="{!p.regions}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Sales Orgs</apex:facet>
+                            <apex:outputText escape="false" value="{!p.salesOrgs}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Distribution<br/>Channel</apex:facet>
+                            <apex:outputText value="{!p.priceBook.Dist_Channel_Description__c} - {!p.priceBook.Dist_Channel_Code__c}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Division</apex:facet>
+                            <apex:outputText value="{!p.priceBook.Division_Description__c} - {!p.priceBook.Division_Code__c}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Product Lines</apex:facet>
+                            <apex:outputText escape="false" value="{!p.productLines}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Product Families</apex:facet>
+                            <apex:outputText escape="false" value="{!p.families}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Customer<br/>Groups</apex:facet>
+                            <apex:outputText escape="false" value="{!p.customerGroups}"/>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

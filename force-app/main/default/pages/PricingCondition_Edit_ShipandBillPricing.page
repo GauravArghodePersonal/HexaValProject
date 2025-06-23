@@ -1,0 +1,7 @@
+<apex:page standardController="Pricing_Condition__c" tabStyle="Pricing_Condition__c" sidebar="false" title="Edit Ship and Bill Pricing">
+
+  <apex:form >
+  	<c:App_PricingWizard_WebApp id="Pricing_Wizard" accountId="{!Pricing_Condition__c.Account__c}" pricingConditionIds="{!Pricing_Condition__c.Id}" cancelURL="/{!Pricing_Condition__c.Account__c}" returnURL="/{!Pricing_Condition__c.Account__c}"/>
+  </apex:form>
+
+</apex:page>

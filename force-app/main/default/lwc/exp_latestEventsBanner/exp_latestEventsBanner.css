@@ -1,0 +1,28 @@
+.exp_border{
+    width: 65px;
+    border: 2px solid #4F80F8;
+}
+.exp_banner_heading{
+	font-family: URWDIN-Medium !important;
+	font-style: normal;
+	font-weight: 500;
+	font-size: 29px;
+	line-height: 36px;
+	color: #3F3B3B;
+}
+.exp_banner_subheading{
+	font-family: URWDIN-Regular !important;
+	font-style: normal;
+	font-weight: 500;
+	font-size: 20px;
+	line-height: 36px;
+	color: #3F3B3B;
+}
+.exp_banner_content{
+	font-family: URWDIN-Regular !important;
+	font-style: normal;
+	font-weight: 500;
+	font-size: 15px;
+	line-height: 36px;
+	color: #4F80F8;
+}

@@ -1,0 +1,331 @@
+<apex:page standardController="Consumption__c" extensions="ConsumptionExtension" sidebar="true" showHeader="true" >
+
+    <apex:sectionHeader title="Consumptions" subtitle="{!Consumption__c.Name}"  />
+
+    <apex:form id="frmConsumption" >
+    
+    <!-- 
+    <apex:outputPanel id="RerenderThis" >
+        <apex:outputText >Testing: </apex:outputText>
+             {!ISNULL(Industry)} 
+        
+                  <apex:selectList size="1" value="{!ProductFunction}" >
+                    <apex:selectOptions value="{!ProductFunctions}"/> 
+                  </apex:selectList>        
+    </apex:outputPanel>
+    -->
+    
+        <apex:pageBlock >
+
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Save" action="{!save}"/>
+                <apex:commandButton value="Cancel" action="{!cancel}"/>                    
+            </apex:pageBlockButtons>    
+
+            <apex:pageBlockSection title="Information" columns="2" collapsible="false" rendered="{!PMChinaInfoSectionRendered}">
+                <apex:inputField value="{!Consumption__c.Account_Name__c}" required="true" />    
+                <apex:inputField value="{!Consumption__c.Status__c}"/> 
+                <apex:inputField value="{!Consumption__c.Price__c}"/> 
+                <apex:pageBlockSectionItem />   
+                <apex:inputField value="{!Consumption__c.Type__c}"/> 
+                <apex:pageBlockSectionItem /> 
+                <apex:inputField value="{!Consumption__c.Competitor_Volume__c}"/>                                              
+            </apex:pageBlockSection>
+
+
+            <apex:pageBlockSection title="Information" columns="2" collapsible="false" rendered="{!DRTKCnsmptnInfoSectionRendered}">
+                <apex:inputField value="{!Consumption__c.Status__c}"/> 
+                <apex:inputField value="{!Consumption__c.Page_Number__c}"/>                 
+                <apex:inputField value="{!Consumption__c.Account_Name__c}" required="true"/>  
+                <apex:inputField value="{!Consumption__c.Reporting_Year__c}"/>              
+                <apex:inputField value="{!Consumption__c.EPA_ID__c}"/>
+                <apex:inputField value="{!Consumption__c.Offsite_Waste_Management__c}"/>  
+                <apex:pageBlockSectionItem />                         
+                <apex:inputField value="{!Consumption__c.Onsite_Waste_Management__c}"/>                                                  
+            </apex:pageBlockSection>
+                
+            <apex:pageBlockSection title="Information" columns="2" collapsible="false" rendered="{!DstrbtnPlstcsCnsmptnInfoSectionRendered}">
+                <apex:inputField value="{!Consumption__c.Account_Name__c}" required="true"/>    
+                <apex:inputField value="{!Consumption__c.Status__c}"/> 
+                <apex:inputField value="{!Consumption__c.Annual_Usage_T_Y__c}" required="true"/>               
+            </apex:pageBlockSection>
+                
+            <apex:pageBlockSection title="Information" columns="2" collapsible="false" rendered="{!AWTConsumptionInformationSectionRendered}">
+                <apex:inputField value="{!Consumption__c.Account_Name__c}" required="true" />    
+                <apex:inputField value="{!Consumption__c.Status__c}"/> 
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection title="Information" columns="2" collapsible="false" rendered="{!DistribChemicalsInfoSectionRendered}">
+                <apex:inputField value="{!Consumption__c.Account_Name__c}" required="true" />    
+                <apex:inputField value="{!Consumption__c.Status__c}"/> 
+                <apex:inputField value="{!Consumption__c.Channel_to_Market__c}"/>
+                <apex:inputField value="{!Consumption__c.Converted_to_Opportunity__c}"/>
+                <apex:inputField value="{!Consumption__c.Marketing_Code__c}"/>                                              
+            </apex:pageBlockSection>            
+                  
+            <apex:pageBlockSection title="Information" columns="2" collapsible="false" rendered="{!DistribCompositesInfoSectionRendered}">
+                <apex:inputField value="{!Consumption__c.Account_Name__c}" required="true" />    
+                <apex:inputField value="{!Consumption__c.Status__c}"/> 
+                <apex:inputField value="{!Consumption__c.Channel_to_Market__c}"/>                                             
+            </apex:pageBlockSection>                   
+                            
+            <apex:pageBlockSection title="Information" columns="2" collapsible="false" rendered="{!AqualonConsumptionInformationSectionRendered}">
+                <apex:inputField value="{!Consumption__c.Account_Name__c}" required="true" />
+                <apex:inputField value="{!Consumption__c.Status__c}"/> 
+                <apex:inputField value="{!Consumption__c.End_User_City__c}"/>
+                <apex:inputField value="{!Consumption__c.Competitor_Delivery_Terms__c}" />  
+                <apex:inputField value="{!Consumption__c.End_User_Country__c}"/>
+                <apex:inputField value="{!Consumption__c.ASI_Approved__c}" />                             
+                <apex:inputField value="{!Consumption__c.Sales_Region_Channel__c}" required="true"/>
+                <apex:inputField value="{!Consumption__c.Competitor_Approved__c}" />
+                <apex:inputField value="{!Consumption__c.AQ_Distributor__c}" />
+                <apex:inputField value="{!Consumption__c.Pricing_is_Firm__c}" />
+                <apex:pageBlockSectionItem />
+                <apex:inputField value="{!Consumption__c.Contract_Pricing__c}" />                                
+                <apex:pageBlockSectionItem />
+                <apex:inputField value="{!Consumption__c.Asian_Source__c}" />                                    
+            </apex:pageBlockSection>
+
+
+            <apex:pageBlockSection title="Market Knowledge" columns="2" collapsible="false" rendered="{!PMChinaMrktKnwldgRendered}" >
+                <apex:inputField value="{!Consumption__c.Current_Supplier_Producer__c}"/>
+                <!-- apex:inputField value="{!Consumption__c.Ashland_Material_in_Use__c}" / -->                
+                <apex:inputField value="{!Consumption__c.Current_Supplier_Producer_Other__c}"/>
+                <apex:inputField value="{!Consumption__c.Other_Material_in_Use__c}"/>
+                <apex:inputField value="{!Consumption__c.Distribution__c}"/>
+                <apex:pageBlockSectionItem />
+                <apex:inputField value="{!Consumption__c.Product_Description__c}"/>
+
+            </apex:pageBlockSection>
+            
+
+            <apex:pageBlockSection title="Market Knowledge" columns="2" collapsible="false" rendered="{!DRTKMrktKnwldgRendered}" >
+                <apex:inputField value="{!Consumption__c.Source_Code__c}"/>
+                <apex:inputField value="{!Consumption__c.Waste_Form_Code__c}"/>
+                <apex:inputTextArea value="{!Consumption__c.Waste_Description__c}" rows="3" cols="50"/>                                                                                                                                                               
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection title="Market Knowledge" columns="2" collapsible="false" rendered="{!DstrbPlstcsMrktKnwldgRendered}" >
+                <apex:inputField value="{!Consumption__c.Product_Group__c}" required="true"/>
+                <apex:inputField value="{!Consumption__c.Nexeo_Competitor__c}"/>
+                <apex:inputField value="{!Consumption__c.MFI__c}"/>
+                <apex:inputField value="{!Consumption__c.SAP_Material__c}"/>
+                <apex:inputField value="{!Consumption__c.Current_Supplier_Producer__c}"/>
+                <apex:inputField value="{!Consumption__c.Other_Material_in_Use__c}"/>
+                <apex:inputField value="{!Consumption__c.Current_Supplier_Producer_Other__c}"/>                                                                                                               
+                <apex:inputField value="{!Consumption__c.Flexural_Modulus__c}"/>
+                <apex:inputField value="{!Consumption__c.Distribution__c}"/>
+                <apex:inputField value="{!Consumption__c.of_Filler_Content_or_Comonomer__c}"/>
+                <apex:inputField value="{!Consumption__c.Market__c}" required="true"/>
+                <apex:inputField value="{!Consumption__c.Slip_Antiblocking__c}"/>
+                <apex:inputField value="{!Consumption__c.Technology_Activity__c}" required="true"/>
+                <apex:inputField value="{!Consumption__c.Density__c}"/>
+                <apex:inputField value="{!Consumption__c.Product_Description__c}"/>                                                                                                                                
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection title="Market Knowledge" columns="1" collapsible="false" rendered="{!DstrbCmpstsMrktKnwldgRendered}" >
+                <apex:inputField value="{!Consumption__c.SAP_Material__c}"/>                                                                                                                                   
+                <apex:inputField value="{!Consumption__c.Base_Code_Other__c}"/>
+                <apex:inputField value="{!Consumption__c.Annual_Volume__c}"/>
+                <apex:inputField value="{!Consumption__c.Unit_of_Measure__c}"/>
+                <apex:inputField value="{!Consumption__c.Nexeo_Competitor__c}" required="true" />
+                <apex:inputField value="{!Consumption__c.Current_Supplier_Producer__c}"/>                                                                                                
+            </apex:pageBlockSection> 
+
+            <apex:pageBlockSection title="Market Knowledge" columns="1" collapsible="false" rendered="{!DistribChemMrktKnwldgRendered}" >
+                <apex:inputField value="{!Consumption__c.SAP_Material__c}"/>                                                                                                                                   
+                <apex:inputField value="{!Consumption__c.Base_Code_Other__c}"/>
+                <apex:inputField value="{!Consumption__c.Distribution_Volume__c}"/>
+                <apex:inputField value="{!Consumption__c.Direct_Volume__c}"/>
+                <apex:inputField value="{!Consumption__c.Unit_of_Measure__c}"/>
+                <apex:inputField value="{!Consumption__c.Nexeo_Competitor__c}"/>
+                <apex:inputField value="{!Consumption__c.Current_Supplier_Producer__c}"/>                                                                                                
+            </apex:pageBlockSection> 
+            
+            <apex:pageBlockSection title="Market Knowledge" columns="1" collapsible="false" rendered="{!AWTMarketKnowledgeRendered}" >
+                <apex:outputField value="{!Consumption__c.Annual_Sales_Revenue__c}"/>
+                <apex:inputField value="{!Consumption__c.Annualized_Gross_Profit__c}"/>
+                <apex:inputField value="{!Consumption__c.Annual_Usage_Volume__c}"/>
+                <apex:inputField value="{!Consumption__c.Unit_of_Measure__c}"/>
+                <apex:inputField value="{!Consumption__c.Competitive_Product_Name__c}"/>
+                <apex:inputField value="{!Consumption__c.Product_Family__c}"/>
+                <apex:inputField value="{!Consumption__c.Product_Segment__c}"/>
+                <apex:inputField value="{!Consumption__c.Product_Sub_Segment__c}"/>
+                <apex:inputField value="{!Consumption__c.Current_Competitor__c}"/>
+                <apex:inputField value="{!Consumption__c.Comments__c}"/>                                                                                                                                
+            </apex:pageBlockSection>  
+             
+            <apex:pageBlockSection title="Quantity Generated / Managed" columns="1" collapsible="false" rendered="{!DRTKQualityMngdRendered}" >
+                <apex:inputField value="{!Consumption__c.Tons_Generated__c}"/>
+                <apex:inputField value="{!Consumption__c.Tons_Managed__c}"/>
+                <apex:inputField value="{!Consumption__c.Tons_Managed_Onsite__c}"/>
+                <apex:inputField value="{!Consumption__c.Tons_Managed_Offsite__c}"/>                                
+            </apex:pageBlockSection>                        
+            
+
+<apex:actionRegion immediate="true">            
+            <apex:pageBlockSection id="CompetitiveDataSectionId" title="Competitive Data" columns="2" collapsible="false" rendered="{!CompetitiveDataSectionRendered}" >
+               <apex:pageBlockSectionItem >
+                  <apex:outputLabel value="Industry" for="IndustrySelectList" />
+                  <apex:selectList value="{!Industry}" size="1" id="IndustrySelectList" >
+                    <apex:actionSupport event="onchange" rerender="CompetitiveDataSectionId"/>
+                    <apex:selectOptions value="{!Industries}" /> 
+                  </apex:selectList>
+                </apex:pageBlockSectionItem>  
+              
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="ASI Functional Equivalent"/> 
+                    <apex:outputText id="ASIFunctionalEqTextId" value=""/>               
+                 </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                  <apex:outputLabel value="Product Function" for="ProductFunctionSelectList"/>
+                  <apex:selectList value="{!ProductFunction}" size="1"  disabled="{!ISNULL(Industry)}" id="ProductFunctionSelectList" >
+                    <apex:actionSupport event="onchange" rerender="CompetitiveDataSectionId"/>
+                    <apex:selectOptions value="{!ProductFunctions}"/>  
+                  </apex:selectList>
+                </apex:pageBlockSectionItem>
+                 
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Price Information"/>        
+                    <apex:inputField value="{!Consumption__c.Price_Information__c}" required="true" > 
+                        <apex:actionSupport event="onchange" rerender="CompetitiveDataSectionId"/>
+                    </apex:inputField>                                     
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem > 
+                  <apex:outputLabel value="Brand Name" for="BrandNameSelectList"/>
+                  <apex:selectList id="BrandNameSelectList" value="{!BrandName}" size="1" disabled="{!BrandNameFieldDisabled}"  >
+                    <apex:actionSupport event="onchange" rerender="CompetitiveDataSectionId"/>
+                    <apex:selectOptions value="{!BrandNames}"/>       
+                  </apex:selectList>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Price"/>                
+                    <apex:inputField value="{!Consumption__c.Price__c}" required="{!PriceRequired}"  /> 
+                </apex:pageBlockSectionItem>                 
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Other Brand Name"/>                
+                    <apex:inputText value="{!OtherBrandName}" disabled="{!OtherBrandNameFieldDisabled}"/> 
+                 </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Pricing UoM"/>        
+                    <apex:inputField value="{!Consumption__c.Pricing_UoM__c}" required="true" > 
+                        <apex:actionSupport event="onchange" rerender="CompetitiveDataSectionId"/>
+                    </apex:inputField>                                     
+                </apex:pageBlockSectionItem>
+                                                 
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Chem Class"/> 
+                    <apex:outputText id="ChemClassOutPutTextId" value="{!ChemClass}"/>               
+                 </apex:pageBlockSectionItem> 
+                                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Currency"/>                
+                    <apex:inputField value="{!Consumption__c.CurrencyIsoCode}" />
+                 </apex:pageBlockSectionItem>                                                                                       
+                                                                   
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Chem SubClass1"/> 
+                    <apex:outputText id="ChemSubClass1OutPutTextId" value="{!ChemSubClass1}"/>               
+                 </apex:pageBlockSectionItem> 
+            
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Price Per KG"/> 
+                    <apex:outputText id="PricePerKGTextId" value="{!Consumption__c.Price_Per_KG__c}"/>               
+                 </apex:pageBlockSectionItem>
+                                                                 
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Chem SubClass2"/> 
+                    <apex:outputText id="ChemSubClass2OutPutTextId" value="{!ChemSubClass1}"/>               
+                 </apex:pageBlockSectionItem>  
+
+                <apex:pageBlockSectionItem />
+                  
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Grade"/>                
+                    <apex:outputText id="GradeOutPutTextId" value="{!Grade}"/>
+                 </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem />
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Supplier"/>                
+                    <apex:outputText id="SupplierOutPutTextId" value="{!Supplier}"/>
+                 </apex:pageBlockSectionItem>                
+
+                <apex:pageBlockSectionItem />
+             
+                <apex:pageBlockSectionItem >                
+                    <apex:outputLabel value="Other Supplier"/>                
+                    <apex:outputField value="{!Consumption__c.Other_Supplier__c}"/>
+                </apex:pageBlockSectionItem>                
+
+                <apex:pageBlockSectionItem />
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="SBU-Product"/> 
+                    <apex:outputText id="SBUProductOutPutTextId" value="{!SBUProduct}"/>               
+                 </apex:pageBlockSectionItem>
+                    
+       
+
+            </apex:pageBlockSection>    
+</apex:actionRegion>
+    
+            <apex:pageBlockSection title="Volume - MT as Sold or Wet" columns="2" collapsible="false" rendered="{!VolumeMTasSoldorWetSectionRendered}" >
+                <apex:inputField value="{!Consumption__c.Annual_Volume__c}" required="true" />    
+                <apex:inputField value="{!Consumption__c.Percent_Share_of_Total__c}" required="false" />    
+
+                <!--
+                <apex:outputField value="{!Consumption__c.Value_in_Millions__c}"/>   
+                -->                                            
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection title="Description Information" columns="1" collapsible="false" rendered="{!DescInfoCommentsSectionRendered}">  
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Comments"/>
+                    <apex:outputPanel > 
+                        <apex:inputTextArea value="{!Consumption__c.Comments__c}" rows="5" cols="75"  />
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>  
+            
+            <apex:pageBlockSection title="Description Information" columns="1" collapsible="false" rendered="{!DescInfoSectionRendered}">  
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Description"/>
+                    <apex:outputPanel > 
+                        <apex:inputTextArea value="{!Consumption__c.Description__c}" rows="5" cols="75"  />
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>             
+            
+            <apex:pageBlockSection title="System Information" columns="2" collapsible="false" rendered="{!SystemInformationSectionRendered}" >  
+                <apex:outputField value="{!Consumption__c.RecordTypeId}" /> 
+            </apex:pageBlockSection>     
+            
+            <apex:pageBlockSection title="System Information" columns="2" collapsible="false" rendered="{!SysInfoWithRecordSourceSectionRendered}" >  
+                <apex:outputField value="{!Consumption__c.RecordTypeId}" /> 
+                <apex:outputField value="{!Consumption__c.Record_Source__c}" />                
+            </apex:pageBlockSection>              
+                  
+      </apex:pageBlock>
+      
+            <!-- Following fields are used to save the value back to consumption from custom dropdown fields -->
+            <apex:outputField value="{!Consumption__c.Industry__c}" rendered="false"/>                
+            <apex:outputField value="{!Consumption__c.Product_Function__c}" rendered="false"/>
+            <apex:outputField value="{!Consumption__c.Brand_Name__c}" rendered="false"/>                    
+            <apex:outputField value="{!Consumption__c.Grade__c}" rendered="false"/>  
+            <apex:outputField value="{!Consumption__c.AQ_Supplier__c}" rendered="false"/> 
+            <apex:outputField value="{!Consumption__c.Chem_Class__c}" rendered="false"/>   
+            <apex:outputField value="{!Consumption__c.Chem_SubClass1__c}" rendered="false"/>
+            <apex:outputField value="{!Consumption__c.Chem_SubClass2__c}" rendered="false"/>
+            <apex:outputField value="{!Consumption__c.SBU_Product__c}" rendered="false"/>                                                                                  
+            <apex:outputField value="{!Consumption__c.Other_Brand_Name__c}" rendered="false"/> 
+                             
+    </apex:form>
+
+</apex:page>

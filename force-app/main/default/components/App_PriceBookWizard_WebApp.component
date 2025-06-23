@@ -1,0 +1,14 @@
+<apex:component >
+    <apex:attribute name="PriceBookId" description="PriceBookId" type="String" required="false"/>
+    <apex:attribute name="cancelURL" description="cancelURL" type="String" required="true"/>
+    <apex:attribute name="returnURL" description="returnURL" type="String" required="false"/>
+    
+    <c:FlexAppContainer id="flexAppContainer"
+                        appTitle="Price Book Wizard"
+                        prodSWF="App_PriceBookWizard_WebApp_Prod"
+                        debugSWF="App_PriceBookWizard_WebApp_Debug"
+                        betaSWF="App_PriceBookWizard_WebApp_Beta"
+                        alphaSWF="App_PriceBookWizard_WebApp_Alpha"
+                        flashvars="PriceBookId={!PriceBookId}&userId={!$User.Id}&session_id={!$Api.Session_Id}&server_url={!$Api.Partner_Server_URL_250}}&DebugMode={$Setup.Pricing_Security__c.Debug_Mode__c}&userType={!$Setup.Pricing_Security__c.Add_New_Pricing_User_Type__c}&cancelURL={!cancelURL}&returnURL={!returnURL}"
+                        />
+</apex:component>

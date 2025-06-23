@@ -1,0 +1,74 @@
+<apex:page StandardController="Opportunity">
+
+    <style>
+        .ul1 li {padding-bottom: 6px;}
+        .msg1   {color: red; font-weight: bold;}
+        .str1   {font-weight: bold; text-decoration: underline;}
+    </style>
+
+<apex:pageMessage escape="false" severity="Info">
+    <span class="str1">New Business</span>: “Above”, “In”, “Best Few”, “Trial Start” or “Commitment”
+        <ul class="ul1">
+            <li>If Won : "Closed"</li>
+            <li>If lost or cancelled by customer : “Lost opportunity” </li>
+        </ul>
+   
+
+        <span class="str1">Existing Business</span>: 
+
+        <ul class="ul1">
+            <li>“Defense – Routine” (application support request)</li>
+                <ul class="ul2">
+                    <li>When support is given : “Support received”</li>
+                </ul>
+            <li>“Defense - at risk” or “Competitive trial” (business at risk)</li>
+                <ul class="ul2">
+                    <li>If business kept : “Defended”</li>
+                    <li>If not kept : “Lost business”</li>
+                </ul>
+        </ul>
+
+        <span class="str1">Loss Recording</span>: If no opportunity was created in Defense, create an opportunity in “Lost business”
+        <br></br><br></br>
+
+        <span class="str1">Consumption changes</span>: “Permanent Increase/Decrease”, “Temporary Increase/Decrease”  and “Substitution” (use negative values for decrease or replaced products) are used to record consumption changes (facts, not assumptions).
+<br></br><br></br><!--For more details about stage definitions, see <a target="new" href="https://{!$Label.SFDC_URL}/50150000000c0Id"> AWT Sales Portal </a>-->
+
+
+    
+    </apex:pageMessage>
+
+<!-- Old Page Message replaced with above one on 10/27/2014
+    <apex:pageMessage escape="false" severity="Info">
+        <span class="msg1">Only the following stages should be used:</span>
+        <br/><br/>
+
+        <span class="str1">New Business</span>: Above, In, Best Few or Trial Start
+
+        <ul class="ul1">
+            <li>If Won : Closed</li>
+            <li>If Lost : Lost Opportunity</li>
+            <li>If the project is cancelled by the customer : Lost Opportunity</li>
+        </ul>
+
+        <span class="str1">Existing Business in Renewal</span>: Defense at risk
+
+        <ul class="ul1">
+            <li>If Renewed : Defended</li>
+            <li>If Not Renewed : Lost Business</li>
+        </ul>
+
+        <span class="str1">Application support request</span>: Defense routine
+
+        <ul class="ul1">
+            <li>If Received : Support Received</li>
+        </ul>
+
+        <span class="msg1">
+            The other stages (Shutdown, Increase, Decrease, and Substitution) were implemented for test.
+            Please do not use them for the time being.
+        </span>
+    </apex:pageMessage>
+    
+    -->
+</apex:page>

@@ -1,0 +1,2 @@
+<apex:page controller="Sample_Request_Controller2" tabStyle="Sample_Request__c">
+</apex:page>

@@ -1,0 +1,11 @@
+.orderPage{
+	width: 1062px;
+    height: 397px;
+    border-radius: 19px;
+    border: 1px solid black;
+    background: #fff;
+    margin: 17px 34px 117px 34px;
+    padding-right: 47px;
+    padding-top: 38px;
+    padding-left: 40px;
+}

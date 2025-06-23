@@ -1,0 +1,275 @@
+<apex:page controller="FlintSiteHomeController" >
+<!--
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <title>Available Promotions</title>
+    <apex:stylesheet value="{!URLFOR($Resource.VIResources2, 'css/VIStyles.css')}" />
+    <apex:includeScript value="{!URLFOR($Resource.VIResources, 'js/jquery-1.4.2.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.VIResources, 'js/utils.js')}" />
+    <script type="text/javascript">
+
+    jQuery.noConflict();
+
+    jQuery(function() {
+        disableButtonsOnSubmit("{!$Component.theForm}");
+    });
+
+    function checkAll(elements, checked) {
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].checked = checked;
+        }
+    }
+
+    function isAllChecked(elements) {
+        var checked = elements.length > 0;
+        for (var i = 0; i < elements.length; i++) {
+            if (!elements[i].checked) {
+                checked = false;
+                break;
+            }
+        }
+        return checked;
+    }
+
+    </script>
+
+</head>
+
+<body >
+
+<div id="{!IF(portalUser, 'VI-Body', 'body')}">
+
+    <c:VI_Portal_Page_Header p_accountId="{!accountId}" rendered="{!portalUser}"/>
+
+    <div style="position: relative; height: 100%;">
+
+    <apex:outputPanel layout="none" rendered="{!ISBLANK(accountId)}">
+        <apex:pageMessage severity="Error" strength="2" summary="Account not found." />
+    </apex:outputPanel>
+
+    <apex:form id="theForm" rendered="{!NOT(ISBLANK(accountId))}">
+        <apex:sectionHeader title="{!facilityName}" subtitle="Available Promotions" />
+
+        <apex:pageBlock title="Available Promotions" mode="edit">
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Cancel" action="{!cancel}"
+                                    immediate="true" rendered="{!NOT(ISBLANK(returnURL))}"/>
+                <apex:commandButton value="Enroll Selected Promotions" rendered="{!canEnterEnrollment}"
+                                    action="{!enrollSelectedPromotions}"/>
+            </apex:pageBlockButtons>
+
+            <apex:pageMessages />
+
+            <apex:pageBlockSection title="{!thisYear} Promotions" showHeader="true" collapsible="false" rendered="{!thisYearPromotions.size > 0}">
+                <apex:facet name="body">
+                    <apex:outputPanel layout="none">
+                        <table class="list" border="0" cellspacing="0" cellpadding="0">
+                            <thead class="dr-table-head">
+                                <tr class="headerRow">
+                                    <th scope="col">&nbsp;</th>
+                                    <apex:outputPanel layout="none" rendered="{!canEnterEnrollment}"> <!-- rendered="{!internalUser}" 
+                                        <th scope="col" class="actionColumn">
+                                            <apex:inputCheckbox id="tySelAll" styleClass="tyAllItems" onclick="checkAll(jQuery('.tyItem'), this.checked);" />
+                                            <apex:outputLabel for="tySelAll"/>
+                                        </th>
+                                    </apex:outputPanel>
+                                    <apex:outputPanel layout="none" rendered="{!canEnterEnrollment}">
+                                        <th scope="col" class="actionColumn">Action</th>
+                                    </apex:outputPanel>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Program Code</th>
+                                    <th scope="col">Description</th>
+                                    <th scope="col">Start Date</th>
+                                    <th scope="col">End Date</th>
+                                    <apex:outputPanel layout="none" rendered="{!NOT(isCustomerPortalUser)}">
+                                        <th scope="col" class="booleanColumn">Enrolled?</th>
+                                    </apex:outputPanel>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <apex:repeat value="{!thisYearPromotions}" var="item">
+                                    <apex:outputPanel layout="none" rendered="{!item.beginGroup}">
+                                        <tr class="dataRow{!IF(item.isFirst, ' first', '')}{!IF(item.isEven, ' odd', ' even')}">
+                                            <td class="dataCell" colspan="99">
+                                                <strong>
+                                                    <apex:outputText value="Promotion Group {0}">
+                                                        <apex:param value="{!item.promo.Promotional_Group__c}" />
+                                                    </apex:outputText>
+                                                </strong>
+                                            </td>
+                                        </tr>
+                                    </apex:outputPanel>
+                                    <tr class="dataRow{!IF(item.isLast, ' last', '')}{!IF(item.isEven, ' even', ' odd')}" onmouseover="if (window.hiOn){hiOn(this);}" onmouseout="if (window.hiOff){hiOff(this);}">
+                                        <td class="dataCell">
+                                            <img src="/s.gif" alt="" border="0" width="24" height="1" />
+                                        </td>
+                                        <apex:outputPanel layout="none" rendered="{!canEnterEnrollment}"> <!-- rendered="{!internalUser}" 
+                                            <td class="dataCell actionColumn">
+                                                <apex:inputCheckbox id="tySel" value="{!item.selected}" styleClass="tyItem" onclick="jQuery('.tyAllItems').attr('checked', isAllChecked(jQuery('.tyItem')));" />
+                                            </td>
+                                        </apex:outputPanel>
+                                        <apex:outputPanel layout="none" rendered="{!canEnterEnrollment}">
+                                            <td class="dataCell actionColumn">
+                                                <apex:commandLink action="{!enrollSelectedPromotion}" styleClass="actionLink">
+                                                    <apex:param name="promotion" value="{!item.promo.Id}" />
+                                                    <apex:outputText value="Enroll" rendered="{!!item.reorder}"/>
+                                                    <apex:outputText value="Re-order" rendered="{!item.reorder}"/>
+                                                </apex:commandLink>
+                                                <apex:outputPanel rendered="{!AND(canDeleteEnrollment, item.reorder)}"><br/><br/>
+                                                <apex:outputLink value="{!$Page.VIDeleteEnrollment2}" styleClass="actionLink">
+                                                    <apex:param name="promotion" value="{!item.promo.Id}" />
+                                                    <apex:param name="location" value="{!accountId}" />
+                                                    <apex:param name="retURL" value="{!URLENCODE(thisURL)}" />
+                                                    <apex:outputText value="Un-enroll" />
+                                                </apex:outputLink></apex:outputPanel>
+                                            </td>
+                                        </apex:outputPanel>
+                                        <td class="dataCell" width="25%">
+                                            <apex:outputField value="{!item.promo.AVI_Name__c}" rendered="{!AND(OR(item.promo.AVI__c = 'Yes', item.promo.AVI__c = 'Yes - AVI Only'), aviCertified)}" />
+                                            <apex:outputField value="{!item.promo.Program_Name__c}" rendered="{!OR(item.promo.AVI__c = 'No', NOT(aviCertified))}" />
+                                        </td>
+                                        <td class="dataCell">
+                                            <apex:outputField value="{!item.promo.Program_Code__c}" />
+                                        </td>
+                                        <td class="dataCell" width="30%">
+                                            <apex:outputField value="{!item.promo.AVI_Description__c}" rendered="{!AND(OR(item.promo.AVI__c = 'Yes', item.promo.AVI__c = 'Yes - AVI Only'), aviCertified)}" />
+                                            <apex:outputField value="{!item.promo.Program_Description__c}" rendered="{!OR(item.promo.AVI__c = 'No', NOT(aviCertified))}" />
+                                        </td>
+                                        <td class="dataCell">
+                                            <apex:outputField value="{!item.promo.Start_Date__c}" />
+                                        </td>
+                                        <td class="dataCell">
+                                            <apex:outputField value="{!item.promo.End_Date__c}" />
+                                        </td>
+                                        <apex:outputPanel layout="none" rendered="{!NOT(isCustomerPortalUser)}">
+                                            <td class="dataCell booleanColumn">
+                                                <apex:image value="/img/checkbox_checked.gif" width="21" height="16" alt="Yes" title="Yes" rendered="{!item.reorder}" />
+                                                <apex:image value="/img/checkbox_unchecked.gif" width="21" height="16" alt="No" title="No" rendered="{!NOT(item.reorder)}" />
+                                            </td>
+                                        </apex:outputPanel>
+                                    </tr>
+                                </apex:repeat>
+                            </tbody>
+                        </table>
+                    </apex:outputPanel>
+                </apex:facet>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection title="{!nextYear} Promotions" showHeader="true" collapsible="false" rendered="{!nextYearPromotions.size > 0}">
+                <apex:facet name="body">
+                    <apex:outputPanel layout="none">
+                        <table class="list" border="0" cellspacing="0" cellpadding="0">
+                            <thead class="dr-table-head">
+                                <tr class="headerRow">
+                                    <th scope="col">&nbsp;</th>
+                                    <apex:outputPanel layout="none" rendered="{!canEnterEnrollment}"> <!-- rendered="{!internalUser}" 
+                                    <th scope="col" class="actionColumn">
+                                        <apex:inputCheckbox id="nySelAll" styleClass="nyAllItems" onclick="checkAll(jQuery('.nyItem'), this.checked);" />
+                                        <apex:outputLabel for="nySelAll"/>
+                                    </th>
+                                    </apex:outputPanel>
+                                    <apex:outputPanel layout="none" rendered="{!canEnterEnrollment}">
+                                        <th scope="col" class="actionColumn">Action</th>
+                                    </apex:outputPanel>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Program Code</th>
+                                    <th scope="col">Description</th>
+                                    <th scope="col">Start Date</th>
+                                    <th scope="col">End Date</th>
+                                    <apex:outputPanel layout="none" rendered="{!NOT(isCustomerPortalUser)}">
+                                        <th scope="col" class="booleanColumn">Enrolled?</th>
+                                    </apex:outputPanel>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <apex:repeat value="{!nextYearPromotions}" var="item">
+                                    <apex:outputPanel layout="none" rendered="{!item.beginGroup}">
+                                        <tr class="dataRow{!IF(item.isFirst, ' first', '')}{!IF(item.isEven, ' odd', ' even')}">
+                                            <td class="dataCell" colspan="99">
+                                                <strong>
+                                                    <apex:outputText value="Promotion Group {0}">
+                                                        <apex:param value="{!item.promo.Promotional_Group__c}" />
+                                                    </apex:outputText>
+                                                </strong>
+                                            </td>
+                                        </tr>
+                                    </apex:outputPanel>
+                                    <tr class="dataRow{!IF(item.isLast, ' last', '')}{!IF(item.isEven, ' even', ' odd')}" onmouseover="if (window.hiOn){hiOn(this);}" onmouseout="if (window.hiOff){hiOff(this);}">
+                                        <td class="dataCell">
+                                            <img src="/s.gif" alt="" border="0" width="24" height="1" />
+                                        </td>
+                                        <apex:outputPanel layout="none" rendered="{!canEnterEnrollment}"> 
+                                            <td class="dataCell actionColumn">
+                                                <apex:inputCheckbox id="nySel" value="{!item.selected}" styleClass="nyItem" onclick="jQuery('.nyAllItems').attr('checked', isAllChecked(jQuery('.nyItem')));" />
+                                            </td>
+                                        </apex:outputPanel>
+                                        <apex:outputPanel layout="none" rendered="{!canEnterEnrollment}">
+                                            <td class="dataCell actionColumn">
+                                                <apex:commandLink action="{!enrollSelectedPromotion}" styleClass="actionLink">
+                                                    <apex:param name="promotion" value="{!item.promo.Id}" />
+                                                    <apex:outputText value="Enroll" rendered="{!!item.reorder}"/>
+                                                    <apex:outputText value="Re-order" rendered="{!item.reorder}"/>
+                                                </apex:commandLink>
+                                                <apex:outputPanel rendered="{!AND(canDeleteEnrollment, item.reorder)}"><br/><br/>
+                                                <apex:outputLink value="{!$Page.VIDeleteEnrollment2}" styleClass="actionLink">
+                                                    <apex:param name="promotion" value="{!item.promo.Id}" />
+                                                    <apex:param name="location" value="{!accountId}" />
+                                                    <apex:param name="retURL" value="{!URLENCODE(thisURL)}" />
+                                                    <apex:outputText value="Un-enroll" />
+                                                </apex:outputLink></apex:outputPanel>
+                                            </td>
+                                        </apex:outputPanel>
+                                        <td class="dataCell" width="25%">
+                                            <apex:outputField value="{!item.promo.AVI_Name__c}" rendered="{!AND(OR(item.promo.AVI__c = 'Yes', item.promo.AVI__c = 'Yes - AVI Only'), aviCertified)}" />
+                                            <apex:outputField value="{!item.promo.Program_Name__c}" rendered="{!OR(item.promo.AVI__c = 'No', NOT(aviCertified))}" />
+                                        </td>
+                                        <td class="dataCell">
+                                            <apex:outputField value="{!item.promo.Program_Code__c}" />
+                                        </td>
+                                        <td class="dataCell" width="30%">
+                                            <apex:outputField value="{!item.promo.AVI_Description__c}" rendered="{!AND(OR(item.promo.AVI__c = 'Yes', item.promo.AVI__c = 'Yes - AVI Only'), aviCertified)}" />
+                                            <apex:outputField value="{!item.promo.Program_Description__c}" rendered="{!OR(item.promo.AVI__c = 'No', NOT(aviCertified))}" />
+                                        </td>
+                                        <td class="dataCell">
+                                            <apex:outputField value="{!item.promo.Start_Date__c}" />
+                                        </td>
+                                        <td class="dataCell">
+                                            <apex:outputField value="{!item.promo.End_Date__c}" />
+                                        </td>
+                                        <apex:outputPanel layout="none" rendered="{!NOT(isCustomerPortalUser)}">
+                                            <td class="dataCell booleanColumn">
+                                                <apex:image value="/img/checkbox_checked.gif" width="21" height="16" alt="Yes" title="Yes" rendered="{!item.reorder}" />
+                                                <apex:image value="/img/checkbox_unchecked.gif" width="21" height="16" alt="No" title="No" rendered="{!NOT(item.reorder)}" />
+                                            </td>
+                                        </apex:outputPanel>
+                                    </tr>
+                                </apex:repeat>
+                            </tbody>
+                        </table>
+                    </apex:outputPanel>
+                </apex:facet>
+            </apex:pageBlockSection>
+
+            <apex:outputPanel layout="none" rendered="{!(thisYearPromotions.size + nextYearPromotions.size) = 0}">
+                <p>There are no promotions to display.</p>
+            </apex:outputPanel>
+        </apex:pageBlock>
+
+        <apex:outputPanel layout="none" rendered="{!AND(NOT(isCustomerPortalUser), (thisYearPromotions.size + nextYearPromotions.size) > 0)}">
+        </apex:outputPanel>
+
+    </apex:form>
+
+    </div>
+
+    <apex:include pageName="VIPortalPageFooter" rendered="{!portalUser}"/>
+
+</div>
+
+</body>
+
+</html>
+-->
+</apex:page>

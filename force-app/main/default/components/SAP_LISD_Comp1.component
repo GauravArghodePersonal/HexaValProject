@@ -1,0 +1,360 @@
+<apex:component controller="SAP_LISD_Controller">
+    <apex:attribute name="p_enableAcc" assignTo="{!enableAcc}"
+                    type="Boolean" description=""/>
+    <apex:attribute name="p_showLisds" assignTo="{!showLisds}"
+                    type="Boolean" description=""/>
+    <apex:attribute name="p_sapLisd" assignTo="{!sapLisd}"
+                    type="SAP_LISD" description=""/>
+
+    <apex:form id="form1">
+        <apex:actionFunction action="{!setIndustries}"  name="setIndustries"  
+                             status="accstat" rerender="form1"
+                             oncomplete="onLisdComplete(); return false;"/>
+    <apex:pageBlock id="pblock1" mode="edit">
+                <apex:actionStatus id="accstat">
+                    <apex:facet name="start">
+                        <apex:outputPanel layout="block"><br/>&nbsp;&nbsp;&nbsp;
+                        <apex:outputText styleClass="bold" value=" Please wait ...">
+                            <apex:image value="{!$Resource.spinner}"/>
+                        </apex:outputText></apex:outputPanel>
+                    </apex:facet>
+                    <apex:facet name="stop">
+        <apex:pageBlockSection collapsible="false">
+<!-- ----------------------------------------------------------------------------------------------- -->            
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel for="accFld" value="Account"/>
+                        <apex:outputPanel styleClass="requiredInput" layout="block">
+                        <apex:outputPanel rendered="{!!readOnlyAC}">
+                        <apex:outputPanel styleClass="requiredBlock" layout="block"/>
+                        <apex:inputField id="accFld" styleClass="fld1"
+                                         value="{!con.AccountId}"/>&nbsp;&nbsp;
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!readOnlyAC}">
+                        <apex:inputText disabled="true" styleClass="fld3"
+                                        value="{!acc.Name}"/>
+                        </apex:outputPanel>
+                        <apex:commandButton action="{!setIndustries}" value="Go"
+                                            rerender="form1" status="accstat"
+                                            disabled="{!readOnlyAC}" 
+                                            oncomplete="onLisdComplete(); return false;"/>
+                        </apex:outputPanel>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Account Owner"/>
+                <apex:outputField value="{!acc.Owner.Name}"/>
+            </apex:pageBlockSectionItem>
+<!-- ----------------------------------------------------------------------------------------------- -->            
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel for="indfld" value="Industry"/>
+                <apex:outputPanel styleClass="nowrap">
+                    <apex:actionStatus id="indstat">
+                        <apex:facet name="start">
+                            <apex:outputText styleClass="bold" value=" Please wait ...">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop">
+                            <apex:outputPanel styleClass="nowrap">
+                                <apex:selectList id="indfld" size="1" styleClass="fld2" 
+                                                 disabled="{!readOnlyL1}" value="{!industry}">
+                                    <apex:actionSupport event="onchange" action="{!setEndUseCusts}"
+                                                        oncomplete="onLisdComplete(); return false;" 
+                                                        rerender="form1" status="indstat"/>
+                                    <apex:selectOptions value="{!industries}"/>
+                                </apex:selectList>
+                                <apex:commandButton action="{!setEndUseCusts}" value="Go"
+                                                    rerender="form1" status="indstat"
+                                                    disabled="{!readOnlyL1}" 
+                                                    oncomplete="onLisdComplete(); return false;"/>
+                            </apex:outputPanel>
+                        </apex:facet>
+                    </apex:actionStatus>
+                </apex:outputPanel>
+            </apex:pageBlockSectionItem>    
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Account Number"/>
+                <apex:outputLink value="/{!acc.Id}"> 
+                    <apex:outputField value="{!acc.AccountNumber}"/>
+                </apex:outputLink>
+            </apex:pageBlockSectionItem>
+<!-- ----------------------------------------------------------------------------------------------- -->            
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel for="eucfld" value="EndUse Customer"/>
+                <apex:outputPanel styleClass="nowrap">
+                    <apex:actionStatus id="eucstat">
+                        <apex:facet name="start">
+                            <apex:outputText styleClass="bold" value=" Please wait ...">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop">
+                            <apex:outputPanel styleClass="nowrap">
+                                <apex:selectList id="eucfld" size="1" styleClass="fld2" 
+                                                 disabled="{!readOnlyEC}" value="{!endUseCust}">
+                                    <apex:actionSupport event="onchange" action="{!setSalesDsts}" 
+                                                        oncomplete="onLisdComplete(); return false;" 
+                                                        rerender="form1" status="eucstat"/>
+                                    <apex:selectOptions value="{!endUseCusts}"/>
+                                </apex:selectList>
+                                <apex:commandButton action="{!setSalesDsts}" value="Go"
+                                                    rerender="form1" status="eucstat"
+                                                    disabled="{!readOnlyEC}" 
+                                                    oncomplete="onLisdComplete(); return false;"/>
+                            </apex:outputPanel>
+                        </apex:facet>
+                    </apex:actionStatus>
+                </apex:outputPanel>
+            </apex:pageBlockSectionItem>    
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Sales Area"/>
+                <apex:outputText value="{!accsarea}"/>
+            </apex:pageBlockSectionItem>
+<!-- ----------------------------------------------------------------------------------------------- -->            
+            <apex:pageBlockSectionItem helpText="{!sdhelp}">
+                <apex:outputLabel for="sdstfld" value="Sales District"/>
+                <apex:outputPanel styleClass="nowrap">
+                    <apex:actionStatus id="sdststat">
+                        <apex:facet name="start">
+                            <apex:outputText styleClass="bold" value=" Please wait ...">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop">
+                            <apex:outputPanel styleClass="nowrap">
+                                <apex:selectList id="sdstfld" size="1" styleClass="fld2" 
+                                                 disabled="{!readOnlySD}" value="{!salesDst}">
+                                    <apex:actionSupport event="onchange" action="{!setSalesOfcs}" 
+                                                        oncomplete="onLisdComplete(); return false;" 
+                                                        rerender="form1" status="sdststat"/>
+                                    <apex:selectOptions value="{!salesDsts}"/>
+                                </apex:selectList>
+                                <apex:commandButton action="{!setSalesOfcs}" value="Go"
+                                                    rerender="form1" status="sdststat"
+                                                    disabled="{!readOnlySD}"
+                                                    oncomplete="onLisdComplete(); return false;"/>
+                            </apex:outputPanel>
+                        </apex:facet>
+                    </apex:actionStatus>
+                </apex:outputPanel>
+            </apex:pageBlockSectionItem>    
+            <apex:pageBlockSectionItem helpText="{!sdhelp}">
+                <apex:outputLabel value="Sales District"/>
+                <apex:outputText value="{!acc.SAP_Sales_District_Desc__c} - {!acc.SAP_SalesDistrict__c}"/>
+            </apex:pageBlockSectionItem>
+<!-- ----------------------------------------------------------------------------------------------- -->            
+            <apex:pageBlockSectionItem helpText="{!sohelp}">
+                <apex:outputLabel for="sofcfld" value="Sales Office"/>
+                <apex:outputPanel styleClass="nowrap">
+                    <apex:actionStatus id="sofcstat">
+                        <apex:facet name="start">
+                            <apex:outputText styleClass="bold" value=" Please wait ...">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop">
+                            <apex:outputPanel styleClass="nowrap">
+                                <apex:selectList id="sofcfld" size="1" styleClass="fld2" 
+                                                 disabled="{!readOnlySO}" value="{!salesOfc}">
+                                    <apex:actionSupport event="onchange" action="{!setSalesGrps}" 
+                                                        oncomplete="onLisdComplete(); return false;" 
+                                                        rerender="form1" status="sofcstat"/>
+                                    <apex:selectOptions value="{!salesOfcs}"/>
+                                </apex:selectList>
+                                <apex:commandButton action="{!setSalesGrps}" value="Go"
+                                                    rerender="form1" status="sofcstat"
+                                                    disabled="{!readOnlySO}"
+                                                    oncomplete="onLisdComplete(); return false;"/>
+                            </apex:outputPanel>
+                        </apex:facet>
+                    </apex:actionStatus>
+                </apex:outputPanel>
+            </apex:pageBlockSectionItem>    
+            <apex:pageBlockSectionItem helpText="{!sohelp}">
+                <apex:outputLabel value="Sales Office"/>
+                <apex:outputText value="{!acc.SAP_Sales_Office_Desc__c} - {!acc.SAP_Sales_Office__c}"/>
+            </apex:pageBlockSectionItem>
+<!-- ----------------------------------------------------------------------------------------------- -->            
+            <apex:pageBlockSectionItem helpText="{!sghelp}">
+                <apex:outputLabel for="sgrpfld" value="Sales Group"/>
+                <apex:outputPanel styleClass="nowrap">
+                    <apex:actionStatus id="sgrpstat">
+                        <apex:facet name="start">
+                            <apex:outputText styleClass="bold" value=" Please wait ...">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop">
+                            <apex:outputPanel styleClass="nowrap">
+                                <apex:selectList id="sgrpfld" size="1" styleClass="fld2" 
+                                                 disabled="{!readOnlySG}" value="{!salesGrp}">
+                                    <apex:actionSupport event="onchange" action="{!setCustGroups}" 
+                                                        oncomplete="onLisdComplete(); return false;" 
+                                                        rerender="form1" status="sgrpstat"/>
+                                    <apex:selectOptions value="{!salesGrps}"/>
+                                </apex:selectList>
+                                <apex:commandButton action="{!setCustGroups}" value="Go"
+                                                    rerender="form1" status="sgrpstat"
+                                                    disabled="{!readOnlySG}"
+                                                    oncomplete="onLisdComplete(); return false;"/>
+                            </apex:outputPanel>
+                        </apex:facet>
+                    </apex:actionStatus>
+                </apex:outputPanel>
+            </apex:pageBlockSectionItem>    
+            <apex:pageBlockSectionItem helpText="{!sghelp}">
+                <apex:outputLabel value="Sales Group"/>
+                <apex:outputText value="{!acc.SAP_Sales_Group_Desc__c} - {!acc.SAP_SalesGroup__c}"/>
+            </apex:pageBlockSectionItem>
+<!-- ----------------------------------------------------------------------------------------------- -->            
+            <apex:pageBlockSectionItem helpText="{!cghelp}">
+                <apex:outputLabel for="cgrpfld" value="Customer Group"/>
+                <apex:outputPanel styleClass="left">
+                    <apex:actionStatus id="cgrpstat">
+                        <apex:facet name="start">
+                            <apex:outputText styleClass="bold" value=" Please wait ...">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop">
+                            <apex:outputPanel styleClass="nowrap">
+                                <apex:selectList id="cgrpfld" size="1" styleClass="fld2" 
+                                                 disabled="{!readOnlyCG}" value="{!custGroup}">
+                                    <apex:actionSupport event="onchange" action="{!setSellerOpts}" 
+                                                        oncomplete="onLisdComplete(); return false;" 
+                                                        rerender="form1" status="cgrpstat"/>
+                                    <apex:selectOptions value="{!custGroups}"/>
+                                </apex:selectList>
+                                <apex:commandButton action="{!setSellerOpts}" value="Go"
+                                                    rerender="form1" status="cgrpstat"
+                                                    disabled="{!readOnlyCG}"
+                                                    oncomplete="onLisdComplete(); return false;"/>
+                            </apex:outputPanel>
+                        </apex:facet>
+                    </apex:actionStatus>
+                </apex:outputPanel>
+            </apex:pageBlockSectionItem>    
+            <apex:pageBlockSectionItem helpText="{!cghelp}">
+                <apex:outputLabel value="Customer Group"/>
+                <apex:outputText value="{!acc.SAP_Customer_Group_Desc__c} - {!acc.SAP_Customer_Group__c}"/>
+            </apex:pageBlockSectionItem>
+<!-- ----------------------------------------------------------------------------------------------- -->            
+            <apex:pageBlockSectionItem >
+<!--
+                <apex:outputLabel value="Seller"/>
+                <apex:outputField value="{!seller.Name}"/>
+-->
+                <apex:outputLabel for="selrfld" value="Seller"/>
+                <apex:outputPanel styleClass="left">
+                    <apex:actionStatus id="selrstat">
+                        <apex:facet name="start">
+                            <apex:outputText styleClass="bold" value=" Please wait ...">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop">
+                            <apex:outputPanel styleClass="nowrap">
+                                <apex:selectList id="selrfld" size="1" styleClass="fld2" 
+                                                 disabled="{!readOnlySL}" value="{!sellerNum}">
+                                    <apex:actionSupport event="onchange" action="{!setSapLisds}" 
+                                                        oncomplete="onLisdComplete(); return false;" 
+                                                        rerender="form1" status="selrstat"/>
+                                    <apex:selectOptions value="{!sellerOpts}"/>
+                                </apex:selectList>
+                                <apex:commandButton action="{!setSapLisds}" value="Go"
+                                                    rerender="form1" status="selrstat"
+                                                    disabled="{!readOnlySL}"
+                                                    oncomplete="onLisdComplete(); return false;"/>
+                            </apex:outputPanel>
+                        </apex:facet>
+                    </apex:actionStatus>
+                </apex:outputPanel>
+
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+                    </apex:facet>
+                </apex:actionStatus>
+        <br/>
+<!-- ----------------------------------------------------------------------------------------------- -->            
+        <apex:pageBlockTable value="{!sapLisds}" var="s" rendered="{!renderLisds}">
+            <apex:column width="70px">
+                <apex:facet name="header">LISD #</apex:facet>
+                <apex:outputLink value="/{!s.lisd.Id}" target="_blank"> 
+                    <apex:outputField value="{!s.lisd.Name}"/>
+                </apex:outputLink>
+            </apex:column>
+            <apex:column width="30px">
+                <apex:facet name="header">Sales<br/>Org</apex:facet>
+                <apex:outputField value="{!s.lisd.Sales_Org__c}"/>
+            </apex:column>
+            <apex:column width="30px">
+                <apex:facet name="header">Dist<br/>Chan</apex:facet>
+                <apex:outputField value="{!s.lisd.Dist_Channel__c}"/>
+            </apex:column>
+            <apex:column width="30px">
+                <apex:facet name="header">Divsn</apex:facet>
+                <apex:outputField value="{!s.lisd.Division__c}"/>
+            </apex:column>
+            <apex:column width="70px">
+                <apex:facet name="header">L1 Segment</apex:facet>
+                <apex:outputField value="{!s.lisd.L1_Segment__c}"/>
+            </apex:column>
+            <apex:column width="70px">
+                <apex:facet name="header">EndUse<br/>Cust #</apex:facet>
+                <apex:outputField value="{!s.lisd.EndUseCust_Number__c}"/>
+            </apex:column>
+            <apex:column width="30px">
+                <apex:facet name="header">Sales<br/>Dist</apex:facet>
+                <apex:outputField value="{!s.lisd.Sales_District__c}"/>
+            </apex:column>
+            <apex:column width="30px">
+                <apex:facet name="header">Sales<br/>Office</apex:facet>
+                <apex:outputField value="{!s.lisd.Sales_Office__c}"/>
+            </apex:column>
+            <apex:column width="30px">
+                <apex:facet name="header">Sales<br/>Group</apex:facet>
+                <apex:outputField value="{!s.lisd.Sales_Group__c}"/>
+            </apex:column>
+            <apex:column width="30px">
+                <apex:facet name="header">Cust<br/>Group</apex:facet>
+                <apex:outputField value="{!s.lisd.Customer_Group__c}"/>
+            </apex:column>
+            <apex:column width="70px">
+                <apex:facet name="header">ShipTo #</apex:facet>
+                <apex:outputField value="{!s.lisd.ShipTo_Number__c}"/>
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">ShipTo</apex:facet>
+                <apex:outputField value="{!s.lisd.ShipTo_Account__c}"/>
+            </apex:column>
+            <apex:column width="70px">
+                <apex:facet name="header">Seller #</apex:facet>
+                <apex:outputField value="{!s.lisd.Seller_Number__c}"/>
+            </apex:column>
+            <apex:column width="150px">
+                <apex:facet name="header">Seller</apex:facet>
+                <apex:outputField value="{!s.seller.Name}"/>
+            </apex:column>
+        </apex:pageBlockTable>
+<!-- ----------------------------------------------------------------------------------------------- -->            
+        <apex:pageBlockSection columns="1" rendered="{!renderMsg1}">
+            <apex:outputPanel layout="block" styleClass="center">
+                <apex:outputText value="{!message1}" styleClass="bold"/>
+            </apex:outputPanel>
+        </apex:pageBlockSection>
+<!-- ----------------------------------------------------------------------------------------------- -->            
+    </apex:pageBlock>
+    </apex:form>
+
+    <style>
+        .bold {font-weight: bold;}
+        .center {text-align: center;}
+        .left {text-align: left;}
+        .right {text-align: right;}
+        .nowrap {white-space: nowrap;}
+        .requiredInput {white-space: nowrap;}
+        .fld1 {height: 17px; width: 200px;}
+        .fld2 {height: 21px; width: 233px;}
+        .fld3 {height: 17px; width: 230px;}
+    </style>
+    
+</apex:component>

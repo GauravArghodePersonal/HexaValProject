@@ -1,0 +1,76 @@
+.Table {
+    
+    width: 80%;  
+    padding: 1px;
+    margin: auto;   
+    align-content: center;
+    float: center;
+    text-align: center;
+  }
+  td{
+    padding: 1px;
+  }
+  .datestd{
+    padding: 1px;
+  }
+  
+  .error {
+    padding: 10px;
+    color: red;
+  }
+  .info{
+    color: rgb(105, 15, 15);
+  }
+
+  .blink{		
+	  color: red;
+			
+	}
+	.spanblink{		
+		color: red;
+		animation: blink 10s linear infinite;
+	}
+@keyframes blink{
+    0%{opacity: 0;}
+    50%{opacity: .5;}
+    100%{opacity: 1;}
+}
+.modal{
+  display: block !important; /* I added this to see the modal, you don't need this */
+}
+
+/* Important part */
+.modal-dialog{
+  overflow-y: initial !important
+}
+.modal-body{
+  height: 250px;
+  overflow-y: auto;
+}
+.vl {
+  border-left: 3px solid red;
+  height: 20px;
+}
+.exampleHolder{
+  position: relative;
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+}
+.isa_warning {
+  color: #9F6000;
+  background-color: #FEEFB3;
+
+  margin:10px 22px;
+  font-size:1em;
+  vertical-align:middle;
+}
+.alignment{
+  align-content: center;
+  float: center;
+  text-align: center;
+  padding: 10px;
+}
+.hide{
+  display: none;
+}

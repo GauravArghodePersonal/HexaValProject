@@ -1,0 +1,225 @@
+.confirmation-section {
+    width: 600px;
+    margin: 0 auto;
+    padding: 25px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    margin-bottom: 5px;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.15); /* Even lighter shadow */
+}
+
+.address-comparison {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    padding: 5px
+}
+
+.address-block {
+    width: 50%; /* Adjust as per your design needs */
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.submit-section {
+    display: flex;
+    justify-content: center; /* Center the buttons horizontally */
+    gap: 10px; /* Add space between buttons */
+    margin-top: 20px;
+}
+
+.address-block {
+    cursor: pointer; /* Indicates interactivity */
+    padding: 10px;
+}
+
+.address-block.selected {
+    border-radius: 15px;
+    background-color: #e6effc;
+    border: 1.5px solid #597dcb;
+}
+
+/* Media query for tablet devices */
+@media (max-width: 768px) {
+    .confirmation-section {
+        width: 70%; /* Adjusting the width for tablet devices */
+        padding: 15px;
+    }
+}
+
+/* Media query for small devices */
+@media (max-width: 480px) {
+    .confirmation-section {
+        width: 98%; /* Adjusting the width for mobile devices */
+        padding: 10px;
+    }
+
+    .address-comparison {
+        flex-direction: column; /* Stack the addresses vertically on mobile */
+        align-items: stretch;
+    }
+    
+    /* Make sure blocks within the address comparison section are full width and not too close */
+    .address-comparison > div {
+        width: 95%;
+        margin-bottom: 5px;
+    }
+    
+    .submit-section {
+        margin-top: 8px;
+    }
+
+    .slds-text-heading_medium {
+        font-size: 16px!important;
+        font-weight: 700;
+        color: black!important;
+    }
+
+    .slds-m-bottom_small {
+        margin-bottom: 5px!important;
+    }
+
+    .slds-text-heading_small {
+        font-size: 15px!important;
+    }
+
+    .address-block {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .address-comparison{
+        margin-bottom: 5px;
+    }
+
+    p{
+        font-size: 14px!important;
+    }
+}
+
+.form-container {
+    width: 450px;
+    margin: 0 auto;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.15); /* Even lighter shadow */
+    padding: 20px 25px; /* Reduced top and bottom padding */
+    background-color: #ffffff;
+    border-radius: 15px;
+    margin-bottom: 20px;
+}
+
+.center-text {
+    text-align: center;
+    color: #777;
+    font-size: 12px;
+    margin-bottom: 10px; /* Reduced space below the note about required fields */
+}
+
+/* Button styling to match input width */
+.slds-button {
+    width: 100%; 
+    margin: 20px auto; 
+    display: block;
+}
+
+.highlight {
+    border: 2px solid rgb(183, 0, 0);
+}
+
+/* Input width adjustment */
+.slds-input {
+    width: 100%;
+    margin-bottom: 7px;
+}
+
+/* Form elements */
+.slds-form-element {
+    text-align: left; 
+    width: 80%;
+    margin: 0 auto; 
+}
+
+/* Form control alignment */
+.slds-form-element__control {
+    text-align: center;  /* Center the child inputs */
+}
+
+/* Red asterisk for required fields */
+.required {
+    color: rgb(170, 0, 0);
+    padding-right: 2px;
+}
+
+.form-section {
+    background-color: #f9f9f9;
+    padding: 15px; /* Reduced padding for a more compact look */
+    border-radius: 5px;
+    margin-bottom: 20px; /* Reduced gap between sections */
+}
+
+.slds-text-heading_medium {
+    font-size: 26px; /* Slightly increased size */
+    margin-bottom: 10px; /* Reduced space below the main title */
+}
+
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    z-index: 1000;
+}
+
+.success-message {
+    text-align: center;
+    color: green;
+}
+
+.duplicate-messge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: rgb(170, 0, 0);
+}
+
+.area-code-dropdown {
+    padding: 0.5rem; /* Adjust as needed */
+    border-radius: 0.25rem; /* Adjust as needed */
+    background-color: #fff; /* Adjust as needed */
+}
+
+.area-code-dropdown, .slds-input {
+    height: 36px;  /* You can adjust this value based on your design needs */
+}
+
+/* Media query for small devices */
+@media (max-width: 500px) {
+    .form-container {
+        width: 100%;
+        padding: 5px;
+        box-shadow: none; /* Remove drop shadow for mobile */
+    }
+    
+    .slds-button {
+        margin-top: 20px;
+        width: 100%; /* Increased width for mobile */
+    }
+
+    .slds-input {
+        margin-bottom: 8px;
+        width: 100%; /* Increased width for mobile */
+    }
+
+    .slds-form-element {
+        margin-bottom: 8px;
+        width: 100%; /* Increased width for mobile */
+    }
+}

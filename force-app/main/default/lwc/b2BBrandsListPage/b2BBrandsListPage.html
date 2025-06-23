@@ -1,0 +1,28 @@
+<template>
+        <!--<lightning-card >--> <!--style="border: slategrey; padding-left: 100px; padding-right: 100px;"-->
+            <div class="slds-m-around_medium" style="padding-left: 30px; padding-right: 30px; text-align: center;">
+                <div class="slds-grid slds-no-flex">
+                    <div class="slds-col slds-size_2-of-12" style="text-align: end; padding-top: 15px;">
+                        <template if:false={disablePrev}>
+                            <lightning-button-icon icon-name="utility:chevronleft"  size="large"  onclick={handlePrev}   variant="container" alternative-text="Prev" title="Prev"></lightning-button-icon>
+                            <!--<lightning-button variant="base" label="Prev" disabled={disablePrev} onclick={handlePrev} class="slds-m-left_x-small"></lightning-button>-->
+                        </template>
+                    </div>
+                    <div class="slds-col slds-size_8-of-12" >
+                        <template for:each={showBrandList} for:item="brandItem">
+                                    <!--<div class="slds-col slds-size_4-of-12 imgdiv" key={brandItem.Id}>-->
+                                        <c-b2b-brands-logo-card key={brandItem.Id} category-id={brandItem.Id} category-item={brandItem}
+                                        effective-account={effectiveAccountId} style="text-align: center; padding-left: 10px;padding-right: 10px;"></c-b2b-brands-logo-card>
+                                    <!--</div>-->
+                        </template>
+                    </div>
+                    <div class="slds-col slds-size_2-of-12" style="text-align: start;padding-top: 15px;">
+                        <template if:false={disableNext}>
+                            <lightning-button-icon icon-name="utility:chevronright"  size="large"  onclick={handleNext}   variant="container" alternative-text="Next" title="Next"></lightning-button-icon>
+                            <!--<lightning-button variant="base" label="Next" disabled={disableNext} onclick={handleNext} class="slds-m-left_x-small"></lightning-button>   --> 
+                        </template>
+                    </div>
+                </div>
+            </div>
+        <!--</lightning-card>-->
+</template>

@@ -1,0 +1,10 @@
+<apex:page action="{!showIDoc}" contentType="text/xml"
+           standardController="Pricing_Condition__c"
+           extensions="PricingConditionIDocController">
+    <apex:outputText escape="false">
+        <?xml version="1.0" encoding="UTF-8"?>
+        <ZCOND_A>
+            {!idoc}
+        </ZCOND_A>
+    </apex:outputText>
+</apex:page>

@@ -1,0 +1,210 @@
+<apex:page controller="MergeboardController" id="mergeboardPage">
+
+	<apex:includeScript value="{!URLFOR($Resource.jQuery1x,'jQuery/jquery-1.8.0.min.js')}" />
+	<apex:includeScript value="{!URLFOR($Resource.jQuery1x,'jQueryPlugins/blockUI/jquery.blockUI.js')}" />
+	<apex:includeScript value="{!URLFOR($Resource.jQuery1x,'jQueryPlugins/jqEasySlidePanel/js/jquery.slidePanel.js')}" />
+
+	<style type="text/css">
+		body {
+			background: #F8F8F8;
+		}
+	</style>
+
+	<script>
+		if (!window.console) window.console = {};	
+		if (!window.console.log) window.console.log = function () { };
+	</script>
+
+	<script language="javascript">
+	    var j$= jQuery.noConflict();
+	    j$.fn.exists = function(){return this.length>0;}
+	    
+        j$(document).ready(function(){
+        });
+        
+        function RemoveMergeboardAccountItem(id) {
+        	var isConfirmed = confirm("Are you sure you wish to Remove this from the mergeboard?");
+            if (isConfirmed) {
+            	showBlockUIMessageOnDataTable('Removing Item');
+                controller_RemoveMergeboardAccountItem(id);
+            }
+        }
+        
+        function clearMergeboard() {
+        	var isConfirmed = confirm("Are you sure you wish to remove all items from the mergeboard?");
+            if (isConfirmed) {
+            	showBlockUIMessageOnDataTable('Removing All Items');
+                controller_clearMergeboard();
+            }
+        }
+        
+        function refreshMergeboard() {
+           	showBlockUIMessageOnDataTable('Refreshing');
+            controller_refresh();
+        }
+        
+        function addTestData() {
+           	showBlockUIMessageOnDataTable('Adding Test Data');
+            controller_addTestData();
+        }
+        
+        function showBlockUIMessageOnDataTable(message) {
+        	showBlockUIMessageonItem(j$('[id*=mainPanel]'),message);
+		}
+   
+        function showBlockUIMessageonItem(item,message) {
+        	j$(item).block({message: '<BR/><h1><img src="{!URLFOR($Resource.AccountRollupResources, 'images/busy.gif')}" /> ' + message + '...</h1><BR/><BR/>'});
+		}
+  
+	    function unblockUIMessageonItem(item) {
+           j$(item).unblock(); 
+        }
+        
+        function unblockUIMessageOnDataTable() {
+        	unblockUIMessageonItem(j$('[id*=mainPanel]'));
+        }
+        
+        function selectItem(mergeboardAccountItemId,selected) {
+            //showBlockUIMessageOnDataTable('Selecting Item');
+        	console.log('Selecting Item: ' + mergeboardAccountItemId + ' - ' + selected);
+        	controller_selectItem(mergeboardAccountItemId,selected);
+        }
+        
+        function gotoMergeStep2(url,valid,errorMessage) {
+        	if (valid) {
+        		parent.location=url;
+        	}
+        	else {
+        		alert(errorMessage);
+        	}
+        }
+        
+    </script>
+
+	<apex:form rendered="{!NOT(mergeboardEnabled)}">
+        <apex:pageBlock title="Mergeboard Not Enabled" mode="edit">
+        	<apex:outputText value="The Mergeboard is not enabled.  Please contact support if you need access to this."/>
+        </apex:pageBlock>
+    </apex:form>
+
+	<apex:form rendered="{!mergeboardEnabled}">
+
+		<apex:actionFunction name="controller_RemoveMergeboardAccountItem"
+			action="{!removeMergeboardAccountItem}" rerender="mainPanel,mergeboardAccountItemsTable,adminInfoPanel,myMergeboardPageBlock"
+			oncomplete="unblockUIMessageOnDataTable();">
+			<apex:param name="mergeboardAccountItemId"
+				assignTo="{!mergeboardAccountItemId}" value="" />
+		</apex:actionFunction>
+
+		<apex:actionFunction name="controller_clearMergeboard"
+			action="{!clearMergeboard}" rerender="mainPanel,mergeboardAccountItemsTable,adminInfoPanel,myMergeboardPageBlock"
+			oncomplete="unblockUIMessageOnDataTable();">
+		</apex:actionFunction>
+
+		<apex:actionFunction name="controller_refresh" action="{!refresh}"
+			rerender="mainPanel,mergeboardAccountItemsTable,adminInfoPanel,myMergeboardPageBlock" oncomplete="unblockUIMessageOnDataTable();">
+		</apex:actionFunction>
+
+		<apex:actionFunction name="controller_addTestData"
+			action="{!addTestData}" rerender="mainPanel,mergeboardAccountItemsTable,adminInfoPanel,myMergeboardPageBlock"
+			oncomplete="unblockUIMessageOnDataTable();">
+		</apex:actionFunction>
+
+		<apex:actionFunction name="controller_selectItem" action="{!selectItem}" immediate="false" rerender="adminInfoPanel,myMergeboardPageBlock" oncomplete="unblockUIMessageOnDataTable();">
+			<apex:param name="mergeboardAccountItemId" assignTo="{!mergeboardAccountItemId}" value="" />
+			<apex:param name="selected" assignTo="{!selected}" value="" />
+		</apex:actionFunction>
+
+		<apex:actionFunction name="controller_selectAll" action="{!selectAll}" immediate="false" rerender="validationMessages,adminInfoPanel,mergeboardAccountItemsTable,myMergeboardPageBlock" oncomplete="unblockUIMessageOnDataTable();">
+		</apex:actionFunction>
+
+
+		<apex:outputPanel id="mainPanel" layout="block"> 
+			<apex:outputPanel id="mainPanel_NoData" layout="block" rendered="{!NOT(itemsExist)}"> 
+	 			<apex:pageBlock id="myMergeboardPageBlockNoData" title="My Mergeboard">
+					<apex:pageBlockButtons >
+						<input value=" Refresh " type="button" class="btn" onclick="refreshMergeboard();" />
+						<apex:outputPanel id="addTestDataButtonNoData" rendered="{!isAdmin}">
+							<input value=" DEBUG - Add Test Data - DEBUG " class="btn" type="button" onclick="addTestData();" />
+						</apex:outputPanel>
+					</apex:pageBlockButtons> 
+					
+					<apex:outputPanel layout="block">
+						<apex:outputText value="Your Account Mergeboard is empty.  To add Accounts to your Mergeboard, go to an account, click on the 'Mergeboard' button and click 'Add to Mergeboard'."/>
+					</apex:outputPanel>
+				</apex:pageBlock>
+			</apex:outputPanel>
+
+			<apex:outputPanel id="mainPanel_HasData" layout="block" rendered="{!itemsExist}"> 
+			
+	 			<apex:pageBlock id="myMergeboardPageBlock" title="My Mergeboard">
+					<apex:pageBlockButtons >
+						<input value=" Merge Selected Accounts " type="button" class="btn" onclick="gotoMergeStep2('{!mergeStep2URL}',{!selectionValid},'{!validationSummary}');" />
+						<input value=" Clear Mergeboard " type="button" class="btn" onclick="clearMergeboard();" />
+						<input value=" Refresh " type="button" class="btn" onclick="refreshMergeboard();" />
+						<apex:outputPanel id="addTestDataButton" rendered="{!isAdmin}">
+							<input value=" DEBUG - Add Test Data - DEBUG " class="btn" type="button" onclick="addTestData();" />
+						</apex:outputPanel>
+					</apex:pageBlockButtons> 
+	
+					
+					<apex:pageBlockTable id="mergeboardAccountItemsTable" value="{!mergeboardAccountItems}" var="item">
+	             
+						<apex:column >
+	                    	<apex:facet name="header">
+		                    	<apex:inputCheckbox value="{!selectAllCheckboxValue}" onclick="controller_selectAll()"/>
+	                        </apex:facet> 
+	                              
+							<apex:inputCheckbox value="{!item.selected}" onclick="controller_selectItem('{!item.mergeboardAccountItemId}',{!NOT(item.selected)})"/>
+	                    </apex:column>
+	                         
+						<apex:column headerValue="Account Name">
+							<apex:outputLink value="/{!item.accountId}" target="_blank">{!item.name}</apex:outputLink>
+						</apex:column>
+						
+						<apex:column headerValue="Account Number">
+							<apex:outputLink value="/{!item.accountId}" target="_blank">{!item.accountNumber}</apex:outputLink>
+	                    </apex:column>
+	                    
+						<apex:column headerValue="Owner Name">
+							<apex:outputLink value="/{!item.ownerId}" target="_blank">{!item.ownerName}</apex:outputLink>
+						</apex:column>
+						
+						<apex:column value="{!item.accountType}" headerValue="Account Type"/>
+						<apex:column value="{!item.recordTypeName}" headerValue="RecordType Name"/>
+						<apex:column value="{!item.salesArea}" headerValue="Sales Area"/>
+						<apex:column value="{!item.stateCityCountry}" headerValue="State, City, Country"/>
+						<apex:column headerValue="Action">
+					    	<input value=" Remove " type="button" class="btn" onclick="RemoveMergeboardAccountItem('{!item.mergeboardAccountItemId}');" />
+						</apex:column>								
+	                 
+					</apex:pageBlockTable>
+	
+		  			<apex:outputPanel id="adminInfoPanel" rendered="{!isAdmin}">
+		  				<BR/>
+		                <apex:outputText value="MERGE URL: "/>
+		                <apex:outputText value="{!mergeStep2URL}"/>
+		                <BR/>
+		                <apex:outputText value="showValidationMessage: "/>
+		                <apex:outputText value="{!showValidationMessage}"/>
+		                <BR/>
+		                <apex:outputText value="selectionValid: "/>
+		                <apex:outputText value="{!selectionValid}"/>
+		                <BR/>
+		                <apex:outputText value="validationSummary: "/>
+		                <apex:outputText value="{!validationSummary}"/>
+		                <BR/>
+		                <apex:outputText value="validationSeverity: "/>
+		                <apex:outputText value="{!validationSeverity}"/>
+		                <BR/>
+		                <apex:outputText value="validationStrength: "/>
+		                <apex:outputText value="{!validationStrength}"/>
+		                <BR/>
+		                <apex:outputText value="idSelectionCount: "/>
+		                <apex:outputText value="{!idSelectionCount}"/>
+		            </apex:outputPanel>
+				</apex:pageBlock>
+			</apex:outputPanel>
+		</apex:outputPanel>
+	</apex:form>
+</apex:page>

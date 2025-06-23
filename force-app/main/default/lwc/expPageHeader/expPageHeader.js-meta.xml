@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+	<apiVersion>57.0</apiVersion>
+	<isExposed>true</isExposed>
+	<masterLabel>EXPPageHeader</masterLabel>
+	<targets>
+		<target>lightningCommunity__Page</target>
+		        <target>lightningCommunity__Default</target>
+
+	</targets>
+	 <targetConfigs>   
+        <targetConfig targets="lightningCommunity__Default">
+            <property name="title" type="String" default="" label="title"/>
+            <property name="label" type="String" default="" label="label"/>
+			 <property name="url" type="String" default="" label="URL"/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

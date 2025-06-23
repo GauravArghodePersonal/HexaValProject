@@ -1,0 +1,979 @@
+<apex:page id="thePage" standardController="Risk__c" 
+           title="Risk" extensions="Risk_Controller" 
+           sidebar="false">
+
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-1.6.2.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-ui-1.8.16.custom.min.js')}" />
+    <style type="text/css">
+        @import "{!URLFOR($Resource.jQuery, 'css/redmond/jquery-ui-1.8.16.custom.css')}";
+    </style>
+
+    <apex:form id="theForm">
+
+        <script type="text/javascript">
+            var $j = jQuery.noConflict();
+            
+            var isEditable = {!isEditable};
+            
+            $j(function(){init1();});
+            
+            function init1() {
+                var fld = $j('[id$=tnamefld]'); fld.focus();
+                $j('table.multiSelectPicklistTable tr:nth-child(1)').hide();
+                $j('.sbufld').attr('size','6');
+                if (!isEditable) {
+                    $j('.sbufld').attr('disabled','disabled');
+                    $j('img.sbufld').hide();
+                }
+            }
+        </script>
+                
+        <apex:pageMessages />
+
+        <apex:variable var="decimals" value="2"/>
+        <apex:variable var="locale" value="{!userLocale}"/>
+        <apex:pageBlock id="riskHdr" rendered="{!renderRiskHdr}">
+            <apex:facet name="header"><apex:outputPanel layout="block"><table class="bold">
+                <tr class="pbtr1">
+                    <td class="pbtd11">Risk Details</td>
+                    <td class="left">
+                    <apex:actionStatus id="pb1Btns">
+                        <apex:facet name="start">
+                            <apex:outputText styleClass="bold" value=" Please wait ...">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop">
+                            <apex:outputPanel styleClass="nowrap">
+                            <apex:commandButton action="{!gotoPage1}" rendered="{!renderGoto1}"
+                                                immediate="true" value="Previous"/>&nbsp;&nbsp;
+                            <apex:commandButton action="{!editRisk}" rendered="{!renderEditBtn}"
+                                                rerender="theForm" status="pb1Btns" 
+                                                value="Edit"/>&nbsp;&nbsp;
+                            <apex:commandButton action="{!saveRisk}" rendered="{!isEditable}"
+                                                rerender="theForm" status="pb1Btns" 
+                                                value="Save"/>&nbsp;&nbsp;
+                            <apex:commandButton action="{!cancel}" rendered="{!isEditable}"
+                                                rerender="theForm" status="pb1Btns" 
+                                                value="Cancel"/>&nbsp;&nbsp;
+                           <!-- <apex:commandButton id="cmdCreateTask" value="Create Task" action="{!saveTask}"/>-->                    
+                            </apex:outputPanel>
+                        </apex:facet>
+                    </apex:actionStatus>    
+                    </td>
+                </tr>
+            </table></apex:outputPanel></apex:facet>
+
+            <apex:outputPanel layout="block"><table class="tbl"><tr>
+<!-- 1 - 1 --------------------------------------------------------------------------------------- -->                                        
+                    <td class="lbl1">Risk Name</td>
+                    <td class="fld1"><apex:outputPanel layout="block" styleClass="requiredInput" rendered="{!isEditable}">
+                            <div class="requiredBlock"></div>
+                            <apex:inputField id="tnamefld" styleClass="fld1 {!styleClass_tname}"
+                                        onfocus="addStyleOnFocus(this)" onblur="addStyleOnBlur(this)"
+                                        onkeydown="setfocus2(event, '{!$Component.cmplfld}');"
+                                        value="{!rh.Name}" required="false"/>
+                        </apex:outputPanel>
+                        <apex:outputField rendered="{!!isEditable}"
+                                        value="{!rh.Name}"/></td>
+<!-- 1 - 2 --------------------------------------------------------------------------------------- -->                                        
+                    <td class="lbl1">
+                        <c:Label labelValue="Account" helpText="Account"/></td>
+                    <td class="fld2"><apex:outputField value="{!rh.Account__c}"/></td>
+<!-- 1 - 3 --------------------------------------------------------------------------------------- -->                                        
+                    <td class="lbl1">Competitor</td>
+                    <td class="fld3"><apex:outputPanel layout="block" styleClass="requiredInput" rendered="{!isEditable}">
+                            <div class="requiredBlock"></div>
+                            <apex:inputField id="compfld" styleClass="fld3 {!styleClass_comp}"
+                                                onfocus="addStyleOnFocus(this)" onblur="addStyleOnBlur(this)"
+                                                onkeydown="setfocus2(event, '{!$Component.casefld}');"
+                                                value="{!rh.Competitor__c}" required="false"/>
+                        </apex:outputPanel>
+                        <apex:outputField rendered="{!!isEditable}"
+                                        value="{!rh.Competitor__c}"/></td>
+<!-- --------------------------------------------------------------------------------------------- -->                                        
+                </tr><tr>
+<!-- 2 - 1 --------------------------------------------------------------------------------------- -->                                        
+                    <td class="lbl1">Complaint #</td>
+                    <td class="fld1"><apex:inputField id="cmplfld" styleClass="fld1" rendered="{!isEditable}"
+                                        onfocus="addStyleOnFocus(this)" onblur="addStyleOnBlur(this)"
+                                        onkeydown="setfocus2(event, '{!$Component.crncyfld}');"
+                                        value="{!rh.Complaint_Number__c}"/>
+                        <apex:outputField rendered="{!!isEditable}"
+                                        value="{!rh.Complaint_Number__c}"/></td>
+<!-- 2 - 2 --------------------------------------------------------------------------------------- -->                                        
+                    <td class="lbl1">
+                        <c:Label labelValue="EndUse Customer" helpText="EndUse Customer"/></td>
+                    <td class="fld2"><apex:inputField styleClass="fld2" rendered="{!isEditable}"
+                                                     value="{!rh.EndUse_Customer__c}"/>
+                        <apex:outputField rendered="{!!isEditable}"
+                                        value="{!rh.EndUse_Customer_Desc__c}"/></td>
+<!-- 2 - 3 --------------------------------------------------------------------------------------- -->                                        
+                    <td class="lbl1">Related Case</td>
+                    <td class="fld3"><apex:inputField id="casefld" styleClass="fld3" rendered="{!isEditable}"
+                                        onfocus="addStyleOnFocus(this)" onblur="addStyleOnBlur(this)"
+                                        onkeydown="setfocus2(event, '{!$Component.cntctfld}');"
+                                        value="{!rh.Case__c}" required="false"/>
+                        <apex:outputField rendered="{!!isEditable}"
+                                        value="{!rh.Case__c}"/></td>
+<!-- --------------------------------------------------------------------------------------------- -->                                        
+                </tr><tr>
+<!-- 3 - 1 --------------------------------------------------------------------------------------- -->                                        
+                    <td class="lbl1">Currency</td>
+                    <td class="fld1"><apex:outputPanel >
+                            <apex:actionStatus id="crncyStatus">
+                                <apex:facet name="start">
+                                    <apex:outputText styleClass="bold" value=" {!$Label.Please_Wait} ...">
+                                        <apex:image value="{!$Resource.spinner}"/>
+                                    </apex:outputText>
+                                </apex:facet>
+                                <apex:facet name="stop">
+                                    <apex:outputPanel >
+                                    <apex:inputField id="crncyfld" styleClass="fld1" rendered="{!isEditable}"
+                                        onfocus="addStyleOnFocus(this)" onblur="addStyleOnBlur(this)"
+                                        onkeydown="setfocus2(event, '{!$Component.stagefld}');"
+                                        value="{!rh.CurrencyIsoCode}" required="false">
+                                        <apex:actionSupport event="onchange" action="{!calculate}" 
+                                                            status="crncyStatus" rerender="theForm"/>
+                                    </apex:inputField>
+                                    </apex:outputPanel>
+                                </apex:facet>
+                            </apex:actionStatus>
+                        </apex:outputPanel>
+                        <apex:outputField rendered="{!!isEditable}"
+                                        value="{!rh.CurrencyIsoCode}"/></td>
+<!-- 3 - 2 --------------------------------------------------------------------------------------- -->                                        
+                    <td class="lbl1">
+                        <c:Label labelValue="Sales District" helpText="{!lisd.helpText_sd}"/></td>
+                    <td class="fld2"><apex:outputField value="{!rh.Sales_District_Desc__c}"/></td>
+<!-- 3 - 3 --------------------------------------------------------------------------------------- -->                                        
+                    <td class="lbl1">Related Contact</td>
+                    <td class="fld3"><apex:inputField id="cntctfld" styleClass="fld3" rendered="{!isEditable}"
+                                        onfocus="addStyleOnFocus(this)" onblur="addStyleOnBlur(this)"
+                                        onkeydown="setfocus2(event, '{!$Component.opptyfld}');"
+                                        value="{!rh.Contact__c}" required="false"/>
+                        <apex:outputField rendered="{!!isEditable}"
+                                        value="{!rh.Contact__c}"/></td>
+<!-- --------------------------------------------------------------------------------------------- -->                                        
+                </tr><tr>
+<!-- 4 - 1 --------------------------------------------------------------------------------------- -->                                        
+                    <td class="lbl1">Stage</td>
+                    <td class="fld1"><apex:outputPanel layout="block" styleClass="requiredInput" rendered="{!isEditable}">
+                            <div class="requiredBlock"></div>
+                            <apex:actionStatus id="stageStatus">
+                                <apex:facet name="start">
+                                    <apex:outputText styleClass="bold" value=" {!$Label.Please_Wait} ...">
+                                        <apex:image value="{!$Resource.spinner}"/>
+                                    </apex:outputText>
+                                </apex:facet>
+                                <apex:facet name="stop">
+                                    <apex:outputPanel >
+                                    <apex:inputField id="stagefld" styleClass="fld1 {!styleClass_stage}"
+                                                        onfocus="addStyleOnFocus(this)" onblur="addStyleOnBlur(this)"
+                                                        onkeydown="setfocus2(event, '{!$Component.reasnfld}');"
+                                                        value="{!rh.Stage__c}" required="false">
+                                        <apex:actionSupport event="onchange" action="{!onStageChange}" 
+                                                            status="stageStatus" rerender="budgetRisk" />
+                                    </apex:inputField>
+                                    </apex:outputPanel>
+                                </apex:facet>
+                            </apex:actionStatus>
+                        </apex:outputPanel>
+                        <apex:outputField rendered="{!!isEditable}"
+                                        value="{!rh.Stage__c}"/></td>
+<!-- 4 - 2 --------------------------------------------------------------------------------------- -->                                        
+                    <td class="lbl1">
+                        <c:Label labelValue="Sales Office" helpText="{!lisd.helpText_so}"/></td>
+                    <td class="fld2"><apex:outputField value="{!rh.Sales_Office_Desc__c}"/></td>
+<!-- 4 - 3 --------------------------------------------------------------------------------------- -->                                        
+                    <td class="lbl1">Related Opportunity</td>
+                    <td class="fld3"><apex:inputField id="opptyfld" styleClass="fld3" rendered="{!isEditable}"
+                                        onfocus="addStyleOnFocus(this)" onblur="addStyleOnBlur(this)"
+                                        onkeydown="setfocus2(event, '{!$Component.regnfld}');"
+                                        value="{!rh.Opportunity__c}" required="false"/>
+                        <apex:outputField rendered="{!!isEditable}"
+                                        value="{!rh.Opportunity__c}"/></td>
+<!-- --------------------------------------------------------------------------------------------- -->                                        
+                </tr><tr>
+<!-- 5 - 1 --------------------------------------------------------------------------------------- -->                                        
+                    <td class="lbl1">Reason</td>
+                    <td class="fld1"><apex:outputPanel layout="block" styleClass="requiredInput" rendered="{!isEditable}">
+                            <div class="requiredBlock"></div>
+                            <apex:inputField id="reasnfld" styleClass="fld1 {!styleClass_reasn}"
+                                                onfocus="addStyleOnFocus(this)" onblur="addStyleOnBlur(this)"
+                                                onkeydown="setfocus2(event, '{!$Component.statusfld}');"
+                                                value="{!rh.Reason__c}" required="false"/>
+                        </apex:outputPanel>
+                        <apex:outputField rendered="{!!isEditable}"
+                                        value="{!rh.Reason__c}"/></td>
+<!-- 5 - 2 --------------------------------------------------------------------------------------- -->                                        
+                    <td class="lbl1">
+                        <c:Label labelValue="Sales Group" helpText="{!lisd.helpText_sg}"/></td>
+                    <td class="fld2"><apex:outputField value="{!rh.Sales_Group_Desc__c}"/></td>
+<!-- 5 - 3 --------------------------------------------------------------------------------------- -->                                        
+                    <td class="lbl1">PAC Description</td>
+                    <td class="fld3"><apex:outputPanel layout="block" rendered="{!isEditable}">
+                        <apex:actionStatus id="pacdStatus">
+                        <apex:facet name="start">
+                            <apex:outputText styleClass="bold" value=" Please wait ...">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop"><apex:outputPanel >
+                            <apex:selectList id="pacdfld" styleClass="fld3" size="1" 
+                                             onfocus="addStyleOnFocus(this)" onblur="addStyleOnBlur(this)"
+                                             onkeydown="setfocus2(event, '{!$Component.krtpfld}');"
+                                             disabled="{!lisd.readOnlyL2}" title="{!rh.PAC_Description__c}"
+                                             value="{!rh.PAC_Industry_Code__c}" required="false">
+                                <apex:actionSupport event="onchange" action="{!setPacIndustry}" 
+                                             rerender="pacdfld, pacifld" status="pacdStatus"/>
+                                <apex:selectOptions value="{!lisd.pacIndustries}"/>
+                            </apex:selectList></apex:outputPanel>
+                        </apex:facet></apex:actionStatus></apex:outputPanel>
+                        <apex:outputField rendered="{!!isEditable}"
+                                        value="{!rh.PAC_Description__c}"/></td>
+<!-- --------------------------------------------------------------------------------------------- -->                                        
+                </tr><tr>
+<!-- 6 - 1 --------------------------------------------------------------------------------------- -->                                        
+                    <td class="lbl1">Status</td>
+                    <td class="fld1"><apex:outputPanel layout="block" styleClass="requiredInput" rendered="{!isEditable}">
+                            <div class="requiredBlock"></div>
+                            <apex:selectList id="statusfld" styleClass="fld1 {!styleClass_status}" size="1" 
+                                             onfocus="addStyleOnFocus(this)" onblur="addStyleOnBlur(this)"
+                                             onkeydown="setfocus2(event, '{!$Component.krtpfld}');"
+                                             value="{!rh.Record_Status__c}" required="false">
+                                <apex:selectOptions value="{!statusOpts}"/>
+                            </apex:selectList>
+                        </apex:outputPanel>
+                        <apex:outputField rendered="{!!isEditable}"
+                                        value="{!rh.Record_Status__c}"/></td>
+<!-- 6 - 2 --------------------------------------------------------------------------------------- -->                                        
+                    <td class="lbl1">
+                        <c:Label labelValue="Customer Group" helpText="{!lisd.helpText_cg}"/></td>
+                    <td class="fld2"><apex:outputField value="{!rh.Customer_Group_Desc__c}"/></td>
+<!-- 6 - 3 --------------------------------------------------------------------------------------- -->                                        
+                    <td class="lbl1">PAC Industry</td>
+                    <td class="fld3"><apex:outputField id="pacifld" value="{!rh.PAC_Industry_Code__c}"/></td>
+<!-- --------------------------------------------------------------------------------------------- -->                                        
+                </tr><tr>
+<!-- 7 - 1 --------------------------------------------------------------------------------------- -->                                        
+                    <td class="lbl1">Key Risk to Plan</td>
+                    <td class="fld1"><apex:inputField id="krtpfld" styleClass="chkbx" rendered="{!isEditable}"
+                                        onfocus="addStyleOnFocus(this)" onblur="addStyleOnBlur(this)"
+                                        onkeydown="setfocus2(event, '{!$Component.enducfld}');"
+                                        value="{!rh.Key_Risk_To_Plan__c}" required="false"/>
+                        <apex:outputField rendered="{!!isEditable}"
+                                        value="{!rh.Key_Risk_To_Plan__c}"/></td>
+<!-- 7 - 2 --------------------------------------------------------------------------------------- -->
+                    <td class="lbl1">
+                        <c:Label labelValue="Seller Name" helpText="Seller"/></td>
+                    <td class="fld2"><apex:outputField value="{!rh.Seller__c}"/></td>
+<!-- 7 - 3 --------------------------------------------------------------------------------------- -->
+                    <td rowspan="2" colspan="2">
+                        <div class="lbl2">&nbsp;SBU</div>
+                        <apex:outputPanel layout="block" styleClass="requiredInput">
+                            <apex:outputPanel layout="block" styleClass="requiredBlock"
+                                              rendered="{!isEditable}"></apex:outputPanel>
+                            <apex:inputField styleClass="sbufld" id="sbufld" 
+                                             value="{!rh.SBU__c}" required="false"/>
+                        </apex:outputPanel></td>
+<!-- --------------------------------------------------------------------------------------------- -->                                        
+                </tr><tr>
+<!-- 8 - 1 --------------------------------------------------------------------------------------- -->                                        
+                    <td class="lbl1">Description</td>
+                    <td colspan="3">
+                        <apex:inputTextarea id="descfld" styleClass="txta" 
+                            disabled="{!!isEditable}" value="{!rh.Description__c}"
+                            onfocus="addStyleOnFocus(this)" onblur="addStyleOnBlur(this)"
+                            onkeydown="setfocus2(event, '{!$Component.tnamefld}');"/></td>
+<!-- --------------------------------------------------------------------------------------------- -->
+<!-- 
+                 <td class="lbl1"> <c:Label labelValue="Created Date" helpText="Created Date"/></td>
+            <td class="fld2"><apex:outputField value="{!rh.CreatedDate}"/></td>
+            
+             <td class="lbl1"> <c:Label labelValue="Created by" helpText="Created by"/></td>
+            <td class="fld2"><apex:outputField value="{!rh.CreatedBy.name}"/></td>
+
+          <td class="lbl1"> <c:Label labelValue="Modified Date" helpText="Modified Date"/></td>
+            <td class="fld2"><apex:outputField value="{!rh.LastModifiedDate}"/></td>
+            
+            <td class="lbl1"><c:Label labelValue="Modified by" helpText="Modified by"/></td>
+            <td class="fld2"><apex:outputField value="{!rh.LastModifiedBy.name}"/></td>
+            -->
+
+                                       
+                </tr></table></apex:outputPanel>
+            
+        </apex:pageBlock>
+
+        <apex:pageBlock id="riskDtl" rendered="{!renderRiskHdr}">
+        
+            <apex:facet name="header">
+                <apex:outputPanel layout="block">
+                <table class="bold">
+                
+                    <tr class="pbtr1">
+                        <td class="pbtd11">Risk Materials</td>
+                        <td class="left">
+                        <apex:actionStatus id="riskDtlBtns" rendered="{!isEditable}">
+                            <apex:facet name="start">
+                                <apex:outputText styleClass="bold" value=" Please wait ...">
+                                    <apex:image value="{!$Resource.spinner}"/>
+                                </apex:outputText>
+                            </apex:facet>
+                            <apex:facet name="stop">
+                                <apex:outputPanel styleClass="nowrap">
+                                <apex:commandButton action="{!showPlanMtrls}"
+                                                    rendered="{!isEditable}" 
+                                                    rerender="theForm" status="riskDtlBtns" 
+                                                    value="Add Materials"/>&nbsp;&nbsp;
+                                <apex:commandButton action="{!deleteMaterials}"
+                                                    rendered="{!isEditable}" 
+                                                    rerender="theForm" status="riskDtlBtns" 
+                                                    value="Delete Materials"/>
+                                </apex:outputPanel>
+                            </apex:facet>
+                        </apex:actionStatus>    
+                        </td>
+                    </tr>
+                    
+                </table>
+                </apex:outputPanel>
+            </apex:facet>
+            
+            <apex:pageBlockTable value="{!riskDetails}" var="d" styleClass="font1" 
+                                 rendered="{!renderThrtMtrlsTbl}">
+                <apex:column headerClass="right" styleClass="right" width="20px">
+                    <apex:facet name="header">#</apex:facet>
+                    <apex:outputText value="{!d.recNum}"/>
+                </apex:column>
+                <apex:column rendered="{!isEditable}" headerClass="chkbx" 
+                             styleClass="chkbx" width="20px">
+                    <apex:facet name="header">
+                        <apex:inputCheckbox styleClass="allcb1" value="{!allDetlMtrls}"
+                            onclick="onClick_AllChkbox('rowcb1', this);"/>
+                    </apex:facet>
+                    <apex:inputCheckbox styleClass="rowcb1" value="{!d.selected}"
+                        onclick="onClick_RowChkbox('rowcb1', 'allcb1');"/>
+                </apex:column>
+
+                <apex:column >
+                    <apex:facet name="header">Material Name</apex:facet>
+                    <apex:outputText value="{!d.rd.Material__r.Name}"/>
+                </apex:column>
+                <apex:column styleClass="nowrap">
+                    <apex:facet name="header">Planned<br/>Volume<br/>This Year</apex:facet>
+                    <apex:outputPanel >
+                    <apex:outputField value="{!d.rd.Product_Sales_Plan__r.Sales_Volume__c}"/>&nbsp;
+                    <apex:outputField value="{!d.rd.Product_Sales_Plan__r.Sales_Volume_UOM__c}"/>
+                    </apex:outputPanel>
+                </apex:column>
+                <apex:column styleClass="font1">
+                    <apex:facet name="header">Volume<br/>at Risk<br/>UOM</apex:facet>
+                    <apex:inputField value="{!d.rd.Volume_UOM_at_Risk__c}" required="false"
+                                     rendered="{!isEditable}" styleClass="font1"
+                                     onfocus="addStyleOnFocus(this)" onblur="addStyleOnBlur(this)"/>
+                    <apex:outputField value="{!d.rd.Volume_UOM_at_Risk__c}" rendered="{!!isEditable}"/>
+                </apex:column>
+                
+                <apex:column >
+                    <apex:facet name="header">Volume<br/>at Risk<br/>This Year</apex:facet>
+                    <apex:outputPanel layout="block" styleClass="requiredInput" rendered="{!isEditable}">
+                        <div class="requiredBlock"></div>
+                        <apex:inputField value="{!d.rd.Volume_at_Risk_CY__c}" id="varcyfld" required="false" 
+                                         onfocus="addStyleOnFocus(this)" onblur="addStyleOnBlur(this)"
+                                         styleClass="{!d.styleClass_vcy} font1" style="width: 5em;">
+                                <apex:actionSupport event="onchange" 
+                                    action="{!calculate}" status="riskDtlBtns" 
+                                    oncomplete="setfocus3('{!$Component.pricecyfld}');" 
+                                    rerender="theForm"/>
+                        </apex:inputField>
+                    </apex:outputPanel>
+                    <apex:outputField value="{!d.rd.Volume_at_Risk_CY__c}" rendered="{!!isEditable}"/>
+                </apex:column>
+
+                <apex:column >
+                    <apex:facet name="header">Price<br/>This Year<br/>
+                        <span id="pricecy-_help" class="helpButton">
+                            <img class="helpOrb" title="" alt="" src="/s.gif"/>
+                            <script type="text/javascript">
+                                sfdcPage.setHelp('pricecy', 'Prices are in Volume at Risk UOM');
+                            </script>
+                        </span>
+                    </apex:facet>
+                    <apex:outputPanel layout="block" styleClass="requiredInput" rendered="{!isEditable}">
+                        <div class="requiredBlock"></div>
+                        <apex:inputField value="{!d.rd.Price_CY__c}" id="pricecyfld" required="false"
+                                         onfocus="addStyleOnFocus(this)" onblur="addStyleOnBlur(this)"
+                                         styleClass="{!d.styleClass_pcy} font1" style="width: 5em;">
+                                <apex:actionSupport event="onchange" 
+                                    action="{!calculate}" status="riskDtlBtns" 
+                                    oncomplete="setfocus3('{!$Component.varnyfld}');" 
+                                    rerender="theForm"/>
+                        </apex:inputField>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!!isEditable}">
+                        <c:Currency value="{!d.rd.Price_CY__c}"
+                                    code="{!d.rd.CurrencyIsoCode}"
+                                    decimals="{!decimals}" locale="{!locale}"/>
+                    </apex:outputPanel>
+                </apex:column>
+                
+                <apex:column rendered="{!isEditable}">
+                    <apex:facet name="header">Price<br/>Currency</apex:facet>
+                    <apex:outputPanel layout="block" styleClass="requiredInput">
+                        <div class="requiredBlock"></div>
+                        <apex:inputField value="{!d.rd.CurrencyIsoCode}"
+                                         style="width: 100px; font-size: 95%;" 
+                                         id="crncyfld2" required="false">
+                                <apex:actionSupport event="onchange" 
+                                    action="{!calculate}" status="riskDtlBtns" 
+                                    oncomplete="setfocus3('{!$Component.varnyfld}');" 
+                                    rerender="theForm"/>
+                        </apex:inputField>
+                    </apex:outputPanel><!--
+                    <apex:outputField value="{!d.rd.CurrencyIsoCode}" rendered="{!!isEditable}"/>-->
+                </apex:column>
+
+                <apex:column styleClass="nowrap" >
+                    <apex:facet name="header">Amount<br/>at Risk<br/>This Year</apex:facet>
+                    <apex:outputPanel >
+                        <c:Currency value="{!d.rd.Amount_at_Risk_CY__c}"
+                                    code="{!rh.CurrencyIsoCode}"
+                                    decimals="{!decimals}" locale="{!locale}"/>
+                    </apex:outputPanel>
+                </apex:column>
+
+                <apex:column >
+                    <apex:facet name="header">Volume<br/>at Risk<br/>Next Year</apex:facet>
+                    <apex:inputField value="{!d.rd.Volume_at_Risk_NY__c}" id="varnyfld" required="false" 
+                                     onfocus="addStyleOnFocus(this)" onblur="addStyleOnBlur(this)"
+                                     rendered="{!isEditable}"
+                                     styleClass="{!d.styleClass_vny} font1" style="width: 5em;">
+                            <apex:actionSupport event="onchange" 
+                                action="{!calculate}" status="riskDtlBtns" 
+                                oncomplete="setfocus3('{!$Component.pricenyfld}');" 
+                                rerender="theForm"/>
+                    </apex:inputField>
+                    <apex:outputField value="{!d.rd.Volume_at_Risk_NY__c}" rendered="{!!isEditable}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Price<br/>Next Year<br/>
+                        <span id="priceny-_help" class="helpButton">
+                            <img class="helpOrb" title="" alt="" src="/s.gif"/>
+                            <script type="text/javascript">
+                                sfdcPage.setHelp('priceny', 'Prices are in Volume at Risk UOM');
+                            </script>
+                        </span>
+                    </apex:facet>
+                    <apex:inputField value="{!d.rd.Price_NY__c}" id="pricenyfld" required="false"
+                                     onfocus="addStyleOnFocus(this)" onblur="addStyleOnBlur(this)"
+                                     rendered="{!isEditable}"
+                                     styleClass="{!d.styleClass_pny} font1" style="width: 5em;">
+                            <apex:actionSupport event="onchange" 
+                                action="{!calculate}" status="riskDtlBtns" 
+                                oncomplete="setfocus3('{!$Component.comprodfld}');" 
+                                rerender="theForm"/>
+                    </apex:inputField>
+                    <apex:outputPanel rendered="{!!isEditable}">
+                        <c:Currency value="{!d.rd.Price_NY__c}"
+                                    code="{!d.rd.CurrencyIsoCode}"
+                                    decimals="{!decimals}" locale="{!locale}"/>
+                    </apex:outputPanel>
+                </apex:column>
+                <apex:column styleClass="nowrap" >
+                    <apex:facet name="header">Amount<br/>at Risk<br/>Next Year</apex:facet>
+                    <apex:outputPanel >
+                        <c:Currency value="{!d.rd.Amount_at_Risk_NY__c}"
+                                    code="{!rh.CurrencyIsoCode}"
+                                    decimals="{!decimals}" locale="{!locale}"/>
+                    </apex:outputPanel>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Competitor<br/>Product<br/>Name</apex:facet>
+                    <apex:inputField value="{!d.rd.Competitor_Product_Name__c}" required="false" 
+                                     rendered="{!isEditable}" id="comprodfld"
+                                     onfocus="addStyleOnFocus(this)" onblur="addStyleOnBlur(this)"
+                                     style="width: 5em; font-size: 95%;"/>
+                    <apex:outputField value="{!d.rd.Competitor_Product_Name__c}" rendered="{!!isEditable}"/>
+                </apex:column>
+            </apex:pageBlockTable>
+
+        </apex:pageBlock>
+
+        <apex:pageBlock id="budgetRisk" rendered="{!renderRiskHdr}">
+            <apex:facet name="header"><apex:outputPanel layout="block"><table class="bold">
+                <tr class="pbtr1"><td class="pbtd11">Plan at Risk</td></tr>
+            </table></apex:outputPanel></apex:facet>
+
+            <table class="tbl">
+                <tr>
+<!-- 1 - 1 --------------------------------------------------------------------------------------- -->                                        
+                    <td class="lbl1">Current Year Plan at Risk</td>
+                    <td class="fld1"><apex:outputPanel rendered="{!isEditable}">
+                            <c:Currency value="{!totBudgetCY}"
+                                        code="{!rh.CurrencyIsoCode}"
+                                        decimals="{!decimals}" locale="{!locale}"/>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!!isEditable}">
+                            <c:Currency value="{!rh.Amount_at_Risk_CY__c}"
+                                        code="{!rh.CurrencyIsoCode}"
+                                        decimals="{!decimals}" locale="{!locale}"/>
+                        </apex:outputPanel></td>
+<!-- 1 - 2 --------------------------------------------------------------------------------------- -->                                        
+                    <td class="lbl1">% Probability of Risk this Year</td>
+                    <td class="fld1" nowrap="nowrap"><apex:actionStatus id="probcystat">
+                        <apex:facet name="start">
+                            <apex:outputText styleClass="bold" value=" Please wait ...">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop"><apex:outputPanel >
+                            <apex:outputPanel layout="block" styleClass="requiredInput" rendered="{!isEditable}">
+                            <div class="requiredBlock"></div>
+                            <apex:inputField id="probcyfld" styleClass="fld4 {!styleClass_probcy}"
+                                    onfocus="addStyleOnFocus(this)" onblur="addStyleOnBlur(this)"
+                                    onkeydown="setfocus2(event, '{!$Component.probnyfld}');" 
+                                    value="{!rh.Probability_of_Risk_CY__c}">
+                                <apex:actionSupport event="onchange" 
+                                    action="{!calculate}" status="probcystat" 
+                                    oncomplete="setfocus3('{!$Component.probnyfld}');" 
+                                    rerender="theForm"/>
+                            </apex:inputField>
+                            </apex:outputPanel>
+                            <apex:outputField rendered="{!!isEditable}"
+                                    value="{!rh.Probability_of_Risk_CY__c}"/>
+                        </apex:outputPanel></apex:facet>
+                    </apex:actionStatus></td>
+<!-- 1 - 3 --------------------------------------------------------------------------------------- -->                                        
+                    <td class="lbl1">Weighted Plan at Risk this year</td>
+                    <td class="fld1"><apex:outputPanel rendered="{!isEditable}">
+                            <c:Currency value="{!wtdBudgetCY}"
+                                        code="{!rh.CurrencyIsoCode}"
+                                        decimals="{!decimals}" locale="{!locale}"/>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!!isEditable}">
+                            <c:Currency value="{!rh.Weighted_Amount_at_Risk_CY__c}"
+                                        code="{!rh.CurrencyIsoCode}"
+                                        decimals="{!decimals}" locale="{!locale}"/>
+                        </apex:outputPanel></td>
+<!-- --------------------------------------------------------------------------------------------- -->                                        
+                </tr><tr>
+<!-- 2 - 1 --------------------------------------------------------------------------------------- -->                                        
+                    <td class="lbl1">Next Year Plan at Risk</td>
+                    <td class="fld1"><apex:outputPanel rendered="{!isEditable}">
+                            <c:Currency value="{!totBudgetNY}"
+                                        code="{!rh.CurrencyIsoCode}"
+                                        decimals="{!decimals}" locale="{!locale}"/>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!!isEditable}">
+                            <c:Currency value="{!rh.Amount_at_Risk_NY__c}"
+                                        code="{!rh.CurrencyIsoCode}"
+                                        decimals="{!decimals}" locale="{!locale}"/>
+                        </apex:outputPanel></td>
+<!-- 2 - 2 --------------------------------------------------------------------------------------- -->                                        
+                    <td class="lbl1">% Probability of Risk next Year</td>
+                    <td class="fld1" nowrap="nowrap"><apex:actionStatus id="probnystat">
+                        <apex:facet name="start">
+                            <apex:outputText styleClass="bold" value=" Please wait ...">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop"><apex:outputPanel >
+                            <apex:inputField id="probnyfld" styleClass="fld4 {!styleClass_probny}" rendered="{!isEditable}"
+                                    onfocus="addStyleOnFocus(this)" onblur="addStyleOnBlur(this)"
+                                    onkeydown="setfocus2(event, '{!$Component.probcyfld}');" 
+                                    value="{!rh.Probability_of_Risk_NY__c}">
+                                <apex:actionSupport event="onchange" 
+                                    action="{!calculate}" status="probnystat" 
+                                    oncomplete="setfocus3('{!$Component.probcyfld}');" 
+                                    rerender="theForm"/>
+                            </apex:inputField>
+                            <apex:outputField rendered="{!!isEditable}"
+                                    value="{!rh.Probability_of_Risk_NY__c}"/>
+                        </apex:outputPanel></apex:facet>
+                    </apex:actionStatus></td>
+<!-- 2 - 3 --------------------------------------------------------------------------------------- -->                                        
+                    <td class="lbl1">Weighted Plan at Risk next year</td>
+                    <td class="fld1"><apex:outputPanel rendered="{!isEditable}">
+                            <c:Currency value="{!wtdBudgetNY}"
+                                        code="{!rh.CurrencyIsoCode}"
+                                        decimals="{!decimals}" locale="{!locale}"/>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!!isEditable}">
+                            <c:Currency value="{!rh.Weighted_Amount_at_Risk_NY__c}"
+                                        code="{!rh.CurrencyIsoCode}"
+                                        decimals="{!decimals}" locale="{!locale}"/>
+                        </apex:outputPanel></td>
+<!-- --------------------------------------------------------------------------------------------- -->                                        
+                </tr>
+            </table>
+            
+            <apex:facet name="footer"><apex:outputPanel layout="block"><table class="bold">
+                <tr class="pbtr1">
+                    <td class="pbtd11">&nbsp;</td>
+                    <td class="left">
+                    <apex:actionStatus id="pb1Btns2">
+                        <apex:facet name="start">
+                            <apex:outputText styleClass="bold" value=" Please wait ...">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop">
+                            <apex:outputPanel styleClass="nowrap">
+                            <apex:commandButton action="{!gotoPage1}" rendered="{!renderGoto1}"
+                                                immediate="true" value="Previous"/>&nbsp;&nbsp;
+                            <apex:commandButton action="{!editRisk}" rendered="{!renderEditBtn}"
+                                                rerender="theForm" status="pb1Btns2" 
+                                                value="Edit"/>&nbsp;&nbsp;
+                            <apex:commandButton action="{!saveRisk}" rendered="{!isEditable}"
+                                                rerender="theForm" status="pb1Btns2" 
+                                                value="Save"/>&nbsp;&nbsp;
+                            <apex:commandButton action="{!cancel}" rendered="{!isEditable}"
+                                                rerender="theForm" status="pb1Btns2" 
+                                                value="Cancel"/>&nbsp;&nbsp;
+                            </apex:outputPanel>
+                        </apex:facet>
+                    </apex:actionStatus>    
+                    </td>
+                </tr>
+            </table></apex:outputPanel></apex:facet>
+
+        </apex:pageBlock>
+
+        <apex:pageBlock id="planMtrls" rendered="{!renderPlanMtrls}">
+
+            <apex:facet name="header">
+                <apex:outputPanel layout="block"><br/>
+                <table class="bold">
+                
+                    <tr>
+                        <td class="pbtd11">Sales Plan Materials</td>
+                        <td class="left" colspan="2">
+                        <apex:actionStatus id="planMtrlsBtns">
+                            <apex:facet name="start">
+                                <apex:outputText styleClass="bold" value=" Please wait ...">
+                                    <apex:image value="{!$Resource.spinner}"/>
+                                </apex:outputText>
+                            </apex:facet>
+                            <apex:facet name="stop">
+                                <apex:outputPanel styleClass="nowrap">
+                                <apex:inputText id="matSrchString" value="{!matSrchString}" 
+                                                styleClass="txt1"/>&nbsp;
+                                <apex:commandButton action="{!setPlanMaterials}" 
+                                                    value="Search for Materials" 
+                                                    rerender="theForm" status="planMtrlsBtns"/>
+                                &nbsp;&nbsp;
+                                <apex:commandButton action="{!addAndReturn}" 
+                                                    rerender="theForm" status="planMtrlsBtns" 
+                                                    value="Select and Return"/>
+                                &nbsp;&nbsp;
+                                <apex:commandButton action="{!addMaterials}" 
+                                                    rerender="theForm" status="planMtrlsBtns" 
+                                                    value="Select"/>
+                                &nbsp;&nbsp;
+                                <apex:commandButton action="{!gotoRiskPage}" 
+                                                    rerender="theForm" status="planMtrlsBtns" 
+                                                    value="Return"/>
+                                </apex:outputPanel>
+                            </apex:facet>
+                        </apex:actionStatus>    
+                        </td>
+                    </tr>
+                    
+                    <tr><td colspan="3">&nbsp;</td></tr>
+                    
+                    <tr><td class="center" width="15%">
+                        <apex:outputText value="Records: {!pc1.recordFrom} - {!pc1.recordTo} of {!pc1.resultSize}" 
+                                         styleClass="nowrap"/>
+                    </td>
+
+                    <td class="center" width="70%">
+                            <apex:actionStatus id="pageControls">
+                                <apex:facet name="start">
+                                    <apex:outputText styleClass="bold" value=" Please wait ...">
+                                        <apex:image value="{!$Resource.spinner}"/>
+                                    </apex:outputText>
+                                </apex:facet>
+                                <apex:facet name="stop">
+                                <apex:outputPanel >
+                                <apex:outputText value="Rows Per Page:"/>&nbsp;
+                                <apex:selectList id="pageSize" value="{!pc1.pageSize}" size="1" title="Rows Per Page:">
+                                    <apex:actionSupport event="onchange" action="{!pc1Size}" 
+                                                    rerender="planMtrls" status="pageControls"/>
+                                    <apex:selectOption itemLabel="20" itemValue="20"/>
+                                    <apex:selectOption itemLabel="50" itemValue="50"/>
+                                    <apex:selectOption itemLabel="100" itemValue="100"/>
+                                    <apex:selectOption itemLabel="200" itemValue="200"/>
+                                </apex:selectList>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <apex:commandButton action="{!pc1Frst}" disabled="{!NOT(pc1.hasPrevious)}" 
+                                                    rerender="planMtrls" status="pageControls"
+                                                    title="First Page" value="<<"/>&nbsp;&nbsp;
+                                <apex:commandButton action="{!pc1Prev}" disabled="{!NOT(pc1.hasPrevious)}" 
+                                                    rerender="planMtrls" status="pageControls"
+                                                    title="Prev Page" value="<"/>
+                                                    
+                                Previous&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Next&nbsp;
+                                
+                                <apex:commandButton action="{!pc1Next}" disabled="{!NOT(pc1.hasNext)}" 
+                                                    rerender="planMtrls" status="pageControls"
+                                                    title="Next Page" value=">"/>&nbsp;&nbsp;
+                                <apex:commandButton action="{!pc1Last}" disabled="{!NOT(pc1.hasNext)}" 
+                                                    rerender="planMtrls" status="pageControls"
+                                                    title="Last Page" value=">>"/>
+                                </apex:outputPanel>
+                            </apex:facet>
+                        </apex:actionStatus>
+                    </td>
+
+                    <td class="center" width="15%">
+                        <apex:outputText value="Page: {!pc1.pageNumber} of {!pc1.lastPageNumber}"/>
+                    </td>
+                    </tr>
+                    </table>
+                </apex:outputPanel>
+            </apex:facet>
+            
+            <apex:pageBlockTable value="{!planMaterials}" var="m" rendered="{!renderPlanMtrlsTbl}">
+                <apex:column headerClass="right" styleClass="right" width="20px">
+                    <apex:facet name="header">#</apex:facet>
+                    <apex:outputText value="{!m.recNum}"/>
+                </apex:column>
+                <apex:column headerClass="chkbx" styleClass="chkbx" width="20px">
+                    <apex:facet name="header">
+                        <apex:inputCheckbox styleClass="allcb2" value="{!allPlanMtrls}"
+                            onclick="onClick_AllChkbox('rowcb2', this);"/>
+                    </apex:facet>
+                    <apex:inputCheckbox styleClass="rowcb2" 
+                        disabled="{!m.selected}" value="{!m.selected}"
+                        onclick="onClick_RowChkbox('rowcb2', 'allcb2');"/>
+                </apex:column>
+
+                <apex:column width="400px">
+                    <apex:facet name="header">Material Name</apex:facet>
+                    <apex:outputText value="{!m.psp.Material__r.Name}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Planned Volume<br/>This Year</apex:facet>
+                    <apex:outputPanel >
+                    <apex:outputField value="{!m.psp.Sales_Volume__c}"/>&nbsp;
+                    <apex:outputField value="{!m.psp.Sales_Volume_UOM__c}"/>
+                    </apex:outputPanel>
+                </apex:column>
+<!--                
+                <apex:column >
+                    <apex:facet name="header">Planned Volume<br/>Next Year</apex:facet>
+                    <apex:outputPanel >
+                    <apex:outputField value="{!m.psp.Sales_Volume_NY__c}"/>&nbsp;
+                    <apex:outputField value="{!m.psp.Sales_Volume_UOM_NY__c}"/>
+                    </apex:outputPanel>
+                </apex:column>
+-->                
+            </apex:pageBlockTable>
+
+            <apex:outputPanel rendered="{!!renderPlanMtrlsTbl}" layout="block" styleClass="center">
+                <span class="msg">Account does not have any Sales Plan Materials</span>
+            </apex:outputPanel>
+
+        </apex:pageBlock>
+        
+        <apex:pageBlock rendered="{!renderRiskHdr}">
+            <apex:facet name="header"><apex:outputPanel layout="block"><table class="bold">
+                <tr class="pbtr1"><td class="pbtd11">System Information</td></tr>
+            </table></apex:outputPanel></apex:facet>
+
+            <table class="tbl">
+                <tr>
+<!-- 1 - 1 --------------------------------------------------------------------------------------- -->                                        
+             <td class="lbl1"> <c:Label labelValue="Created Date" helpText="Created Date"/></td>
+            <td class="fld2"><apex:outputField value="{!rh.CreatedDate}"/></td>
+            
+             <td class="lbl1"> <c:Label labelValue="Created by" helpText="Created by"/></td>
+            <td class="fld2"><apex:outputField value="{!rh.CreatedBy.name}"/></td>
+
+          <td class="lbl1"> <c:Label labelValue="Modified Date" helpText="Modified Date"/></td>
+            <td class="fld2"><apex:outputField value="{!rh.LastModifiedDate}"/></td>
+            
+            <td class="lbl1"><c:Label labelValue="Modified by" helpText="Modified by"/></td>
+            <td class="fld2"><apex:outputField value="{!rh.LastModifiedBy.name}"/></td>
+
+
+                </tr>
+               </table>
+         </apex:pageBlock> 
+         
+     <!---------------------------------------------------------------------->
+    <!-- <apex:pageBlock rendered="{!renderRiskHdr}">
+            <apex:facet name="header"><apex:outputPanel layout="block"><table class="bold">
+                <tr class="pbtr1"><td class="pbtd11">Activities</td></tr>
+            </table></apex:outputPanel></apex:facet>
+
+            <table class="tbl">
+                <tr><apex:commandButton id="cmdCreateTask" value="Create Task" action="{!saveTask}"/>  -->                 
+
+<!-- 1 - 1 ---------------------------------------------------------------------------------------                                         
+             <td class="lbl1"> <c:Label labelValue="Created Date" helpText="Created Date"/></td>
+            <td class="fld2"><apex:outputField value="{!tskNew.OwnerId}"/></td>
+            
+             <td class="lbl1"> <c:Label labelValue="Created by" helpText="Created by"/></td>
+            <td class="fld2"><apex:outputField value="{!tskNew.Subject}"/></td>
+
+          <td class="lbl1"> <c:Label labelValue="Modified Date" helpText="Modified Date"/></td>
+            <td class="fld2"><apex:outputField value="{!tskNew.Status}"/></td>
+            
+            <td class="lbl1"><c:Label labelValue="Modified by" helpText="Modified by"/></td>
+            <td class="fld2"><apex:outputField value="{!tskNew.WhatId}"/></td>-->
+
+
+            <!--    </tr>
+               </table>
+         </apex:pageBlock>
+         <apex:pageblock >  -->       
+        <!--<apex:pageBlockTable value="{!AllTaskRecord()}" var="tsknew">
+         <apex:column value="{!tskNew.OwnerId}"/>
+         <apex:column value="{!tskNew.Subject}"/>
+         <apex:column value="{!tskNew.Subject}"/>
+      </apex:pageBlockTable>        
+      </apex:pageblock>-->
+
+
+
+     
+     <!------------------------------------------------------------------------->    
+         
+    </apex:form>
+    <apex:relatedList list="OpenActivities"/>
+     <apex:relatedList list="ActivityHistories"/>
+      <!--<c:Related_List_History_Component EnterRecordLimit="{!50}" EnterObjectName="{!Risk__c}"/>-->
+<!--
+    <apex:outputPanel style="display: none;">
+        <div id="dialog1" title="Confirm"><apex:form >
+            <apex:outputPanel layout="block" styleClass="center">
+            <table class="tbl">
+                <tr class="center">
+                    <td class="center">
+                    <apex:actionStatus id="dialog1Btns">
+                        <apex:facet name="start">
+                            <apex:outputText styleClass="bold" value=" Please wait ...">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop">
+                            <apex:outputPanel styleClass="nowrap">
+                            <br/><span class="bold">Cancel the WorkOrder?</span><br/><br/>
+                            <apex:commandButton action="{!cancelWorkOrder}"
+                                                oncomplete="closeDialog1(); return false;"
+                                                rerender="theForm" status="dialog1Btns" 
+                                                value="Yes"/>&nbsp;&nbsp;
+                            <apex:commandButton value="No" onclick="closeDialog1(); return false;"/>
+                            </apex:outputPanel>
+                        </apex:facet>
+                    </apex:actionStatus>    
+                    </td>
+                </tr>
+            </table></apex:outputPanel>
+        </apex:form></div>
+    </apex:outputPanel>
+-->    
+    <script type="text/javascript">
+        var $j = jQuery.noConflict();
+        
+        $j(function() {
+            var fld = $j('[id$=tnamefld]'); fld.focus();
+        });
+        
+        function addStyleOnFocus(f) {
+            //$j(f).removeClass('onblur').addClass('onfocus');
+        }
+                            
+        function addStyleOnBlur(f) {
+            //$j(f).removeClass('onfocus').addClass('onblur');
+        }
+        
+        function setfocus2(event, fid) {
+            var kc = event.keyCode;
+            if (kc == 9) {
+                event.preventDefault ? event.preventDefault() : event.returnValue = false; 
+                setfocus3(fid);
+            }
+        }
+
+        function setfocus3(fid) {
+            var fld = document.getElementById(fid);
+            if (fld != null) {fld.focus();}
+        }
+
+        function onClick_AllChkbox(rowCbClass, allChkbox) {
+            $j("."+rowCbClass).each(function() {
+                if (this.disabled == false) {
+                    this.checked = allChkbox.checked;
+                }
+            });
+        }
+
+        function onClick_RowChkbox(rowCbClass, allCbClass) {
+            var allChkbox = $j("."+allCbClass).get(0);
+            allChkbox.checked = true;
+            $j("."+rowCbClass).each(function() {
+                if (!this.checked) {
+                    allChkbox.checked = false;
+                    return false;
+                }
+            });
+        }
+
+        $j("#dialog1").dialog({
+            autoOpen: false, height: 150, width: 300, modal: true, resizable: false
+        });
+        
+        function openDialog1() {$j("#dialog1").dialog("open");}
+
+        function closeDialog1() {$j("#dialog1").dialog("close");}
+
+        $j("#dialog2").dialog({
+            autoOpen: false, height: 150, width: 300, modal: true, resizable: false
+        });
+        
+        function openDialog2() {$j("#dialog2").dialog("open");}
+
+        function closeDialog2() {$j("#dialog2").dialog("close");}
+
+    </script>
+    
+    <style>
+        .tbl {border-spacing: 0; border-collapse: collapse; width: 100%;}
+        .tbl td {font-size: 95%; padding: 4px; vertical-align: top; white-space: nowrap;}
+        .tbl td select {font-size: 95%;}
+        .tbl td.lbl1, .lbl1 {color: #4a4a56; font-weight: bold; 
+                             text-align: right; width: 80px;}
+        .lbl2 {color: #4a4a56; font-weight: bold;}
+        .tbl td a.error {border: 0px !important;}
+        .tbl td a.fld1 {border: 0px;}
+        .tbl td.msg, .msg {background-color: #ffc; color: blue; font-weight: bold; text-align: center;}
+        .tbl td .chkbx {margin-left: 0px; padding-left: 0px; width: 10px;}
+        .tbl td.fld1, .fld1 {width: 160px; font-size: 95%;}
+        .tbl td.fld2, .fld2 {width: 180px; font-size: 95%;}
+        .tbl td.fld3, .fld3 {width: 200px; font-size: 95%;}
+        .tbl td.fld4, .fld4 {width: 50px; font-size: 95%;}
+        /*
+        .tbl td select.fld3 {width: 160px !important;}
+        .tbl td select.fld3 {width: 160px;}
+        */
+        select.sbufld {width: 160px !important; height: 100px !important;}
+        .txt1 {width: 160px;}
+        .txta {height: 85px; width: 500px; resize: none; overflow: auto;}
+        .w100 {width: 100%;}
+        .font1 {font-size: 95%;}
+        .chkbx {text-align: center; width: 20px;}
+        .bold {font-weight: bold;}
+        .center {text-align: center;}
+        .left {text-align: left;}
+        .right {text-align: right;}
+        .nowrap {white-space: nowrap;}
+        .error {background-color: #ffc; border: 1px solid !important;}
+        .onfocus {border: 2px solid #7f9db9;}
+        .onblur {border: 1px solid #7f9db9;}
+        .pbtr1 {background-color: aqua; text-align: center;}
+        .pbtd11 {font-size: 1.1em; padding-left: 12px; text-align: left; width: 20%;}
+    </style>
+</apex:page>

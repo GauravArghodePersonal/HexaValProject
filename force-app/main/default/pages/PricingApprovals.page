@@ -1,0 +1,98 @@
+<apex:page controller="PricingController" sidebar="false" tabStyle="Pricing__c" lightningStylesheets="true">
+    <apex:includeScript value="{!$Resource.PendingApprovalFunctions}" />
+    <apex:messages />
+    <apex:form id="actionForm">
+        <apex:pageBlock Title="Pricing pending Approval" id="contacts_list">
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Approve Selected Rows"
+                    onclick="return paf_validateForm1(this.form);"
+                    action="{!approveSelectedList}" />
+                <apex:commandButton value="Reject Selected Rows"
+                    onclick="return paf_validateForm2(this.form);"
+                    action="{!rejectSelectedList}" />
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection columns="1">
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Approve / Reject Comments"/>
+                    <apex:inputTextArea title="Approve / Reject Comments" 
+                                        id="userComments" value="{!userComments}" 
+                                        rows="3" cols="100"/>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:pageBlockTable value="{!pricingsPendingApproval}" var="p"
+                                         rowClasses="row1,row2">
+                        <apex:column width="10px">
+                            <apex:facet name="header">
+                                <apex:inputCheckbox id="allcb" value="{!allSelected}"
+                                    onclick="paf_checkAll(this.form, this, 'rowcb')" />
+                            </apex:facet>
+                            <apex:inputCheckbox id="rowcb" value="{!p.selected}"
+                                onclick="paf_toggleAllCheckbox(this.form, this);" />
+                        </apex:column>
+                        <apex:column width="30px">
+                            <apex:facet name="header">Pricing<br/>Number </apex:facet>
+                            <apex:outputLink value="/{!p.pc.Id}"> 
+                                <apex:outputText value="{!p.pc.Name}"/>
+                            </apex:outputLink>
+                        </apex:column>
+                        
+                       <!-- <apex:column width="30px">
+                            <apex:facet name="header">CreatedBy<br/>Date Submitted</apex:facet>
+                            <apex:outputLink value="/{!p.pc.Id}"> 
+                                <apex:outputText value="{!p.pc.CreatedBy}"/>
+                            </apex:outputLink>
+                        </apex:column> -->
+                        
+                        <apex:column width="120px">
+                            <apex:facet name="header">Sales District<br/>Sales Office</apex:facet>
+                            <apex:outputField value="{!p.pc.Account_SAP_Sales_District_Desc__c}"/><br/>
+                            <apex:outputField value="{!p.pc.Account_SAP_Sales_Office_Desc__c}"/>
+                        </apex:column>
+                        <apex:column width="120px">
+                            <apex:facet name="header">Sales Group<br/>Customer Group</apex:facet>
+                            <apex:outputField value="{!p.pc.Account_SAP_Sales_Group_Desc__c}"/><br/>
+                            <apex:outputField value="{!p.pc.SAP_Customer_Group_Desc__c}"/>
+                        </apex:column>
+                        <apex:column width="120px">
+                            <apex:facet name="header">Account Name<br/>Number and Owner</apex:facet>
+                            <apex:outputText value="{!p.pc.Account__r.Name}"/><br/>
+                            <apex:outputText value="{!p.accountNumber} - {!p.pc.Account__r.Owner.Name}"/>
+                        </apex:column>
+                        <apex:column width="120px">
+                            <apex:facet name="header">Rush /<br/>Emergency
+                                <!--Command link added by Donald for sort -->
+                             <apex:commandLink action="{! sortByEmerName }"
+            reRender="contacts_list">Rush /<br/>Emergency 
+        </apex:commandLink>
+                            </apex:facet>
+                            <apex:outputField value="{!p.pc.Rush_Emergency__c}"/>
+                        </apex:column> 
+                        <apex:column width="30px" headerClass="textAlignCenter" styleClass="textAlignCenter">
+                            <apex:facet name="header">Number of<br/>Attachments</apex:facet>
+                            <apex:outputText value="{!p.notesCount}"/>
+                        </apex:column>
+                        <apex:column width="120px">
+                            <apex:facet name="header">Submitted<br/>Date and Time</apex:facet>
+                            <apex:outputText value="{!p.submittedDateTime}"/>
+                        </apex:column>
+                        <apex:column width="120px">
+                            <apex:facet name="header">Comments</apex:facet>
+                            <apex:outputField value="{!p.pc.Comments__c}"/>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+
+        </apex:pageBlock>
+    </apex:form>
+    <style>
+        .textAlignCenter {text-align: center;}
+        .textAlignRight {text-align: right;}
+        .nowrap {white-space: nowrap;}
+        .bold {font-weight: bold;}
+        .row1 {background-color: #f3f3ec;}
+        .row2 {background-color: #eeecd1;}
+    </style>
+</apex:page>

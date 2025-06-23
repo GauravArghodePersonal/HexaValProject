@@ -1,0 +1,75 @@
+<apex:component controller="IdeaSummaryEmailCompController" access="global"  >
+    <apex:attribute name="uId" assignTo="{!userId}" type="String" description="userId"/>
+    <apex:attribute name="uName" assignTo="{!userName}" type="String" description="userName"/>
+    
+    <style type="text/css">
+    
+        body {font-family: Arial; size: 9pt;}
+
+        table {
+            border-width: 1px;
+            border-spacing: 0px;
+            border-style: solid;
+            border-color: gray; 
+        }
+        
+        td {
+            text-align: left;
+            border-width: 1px;
+            padding: 4px;
+            border-style: solid;
+            border-color:gray; 
+        }
+ 
+        th { 
+            text-align: left;
+            color: #000000;
+            border-width: 1px ;
+            padding: 4px ;
+            border-style: solid ;
+            border-color: gray; 
+            background-color: #DCDCDC; 
+        }
+    </style>
+    
+    <body>
+      
+        <p>Dear {!userName},</p>
+          
+        <p>Please find below summary of recent activities on your following ideas:
+       
+        </p>
+            <table border="0" >
+                <tr>
+                    <th>Title: Subject of the Idea</th>
+                    <th>Category</th> 
+                    <th>What problem does your idea address?</th>
+                    <th>What is your Idea / Solution?</th>
+                    <th>Status</th>
+                    <th>Total Vote Points</th>
+                    <th>Recent Comments</th>
+                </tr>
+                <apex:repeat var="i" value="{!listIdea}">
+                <tr> 
+                    <td><a href="{!$Label.Solenis_Ideation_URL}/lightning/r/Idea__c/{!i.Id}/view">{!i.Name}</a></td>
+                    <td>{!i.Category__c}</td> 
+                    <td>{!i.What_problem_does_your_idea_address__c}</td>
+                    <td>{!i.What_is_your_Idea_Solution__c}</td>
+                    <td>{!i.Status__c}</td>
+                    <td>{!i.Total_Vote_Points__c}</td> 
+                    <td>
+                        <apex:repeat var="ic" value="{!i.Idea_Comments__r}">
+                       <b>{!ic.CreatedBy.Name}</b>- {!ic.Comments__c}<br/> 
+                        </apex:repeat> 
+                    </td>
+                </tr>
+                </apex:repeat> 
+            </table>
+              
+             <p>
+             Sincerely,<br/>
+             Team Solenis Ideation
+             </p>
+    </body>
+    
+</apex:component>

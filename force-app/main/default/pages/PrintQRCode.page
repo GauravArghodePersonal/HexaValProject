@@ -1,0 +1,82 @@
+<!--
+ - Created by ricardo on 11/25/20.
+ -->
+
+<apex:page id="PrintQRCode" standardController="Chemical_Container__c" showHeader="false" sidebar="false">
+
+    <head>
+        <title>QR Code</title>
+        <style>
+            td {
+            	font-family: Calibri;
+            	font-size: 14px;
+            	padding: 3px;
+            	width:200px;
+            }
+
+            th {
+                text-align: center;
+            }
+        </style>
+    </head>
+
+
+    <body>
+
+        <div class="qrcodecontainer">
+            <table style="width:400px">
+                <tr>
+                    <th colspan="2" style="padding: 30px">
+                        <image src="https://quickchart.io/qr?text={!URLENCODE(Chemical_Container__c.QR_Code__c)}&size=120" width="120" height="120" style="vertical-align:middle">
+                        </image>
+                    </th>
+                </tr>
+                <tr>
+                    <td><b>ACCOUNT: {! Chemical_Container__c.Account__r.Name }</b></td>
+                    <td><b>CITY: {! Chemical_Container__c.City__c }</b></td>
+                </tr>
+                <tr>
+                    <td><b>TANK S/N: {! Chemical_Container__c.Name }</b></td>
+                    <td><b>CONTAINER: {! Chemical_Container__c.Container_Type__c }</b></td>
+                </tr>
+                <tr>
+                    <td><b>TANK CAPACITY: {! Chemical_Container__c.Tank_Capacity__c }</b></td>
+                    <td><b>PRODUCT: {! Chemical_Container__c.Product_Name_wo_Package__c }</b></td>
+                </tr>
+                <tr>
+                    <td><b>UNIT: {! Chemical_Container__c.Unit__c }</b></td>
+                    <td><b>APPLICATION: {! Chemical_Container__c.Application__c }</b></td>
+                </tr>
+            </table>
+        </div>
+
+        <br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br>
+		<br></br><br></br><br></br><br></br><br></br><br></br><br></br>
+
+        <table style="width:400px">
+            <tr>
+                <th colspan="2" style="padding: 30px">
+                    <image src="https://quickchart.io/qr?text={!URLENCODE(Chemical_Container__c.QR_Code__c)}&size=120" width="120" height="120" style="vertical-align:middle">
+                    </image>
+                </th>
+            </tr>
+            <tr>
+                <td><b>ACCOUNT: {! Chemical_Container__c.Account__r.Name }</b></td>
+                    <td><b>CITY: {! Chemical_Container__c.City__c }</b></td>
+                </tr>
+                <tr>
+                    <td><b>TANK S/N: {! Chemical_Container__c.Name }</b></td>
+                    <td><b>CONTAINER: {! Chemical_Container__c.Container_Type__c }</b></td>
+                </tr>
+                <tr>
+                    <td><b>TANK CAPACITY: {! Chemical_Container__c.Tank_Capacity__c }</b></td>
+                    <td><b>PRODUCT: {! Chemical_Container__c.Product_Name_wo_Package__c }</b></td>
+                </tr>
+                <tr>
+                    <td><b>UNIT: {! Chemical_Container__c.Unit__c }</b></td>
+                    <td><b>APPLICATION: {! Chemical_Container__c.Application__c }</b></td>
+            </tr>
+        </table>
+    </body>
+
+</apex:page>

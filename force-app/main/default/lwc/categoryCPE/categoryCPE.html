@@ -1,0 +1,29 @@
+<template>
+
+    <template if:true={isLoading}>
+        <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+    </template>
+
+    <template if:false={isLoading}>
+        <lightning-combobox name="categories" 
+                            label="Select a Category" 
+                            options={categories} 
+                            value={value}
+                            onchange={handleCategoryChange}></lightning-combobox>
+        <div>
+            <template for:each={processedBreadcrumbs} for:item="breadcrumb">
+                <span key={breadcrumb.value} class={breadcrumb.cssClass}
+                    onclick={breadcrumb.onClick}>
+                    {breadcrumb.label}
+                </span>
+                <template if:true={breadcrumb.showSeparator}>
+                    <span key={breadcrumb.value} class="separator"> > </span>
+                </template>
+            </template>
+        </div>
+        <!-- Display the ID of the current selected category -->
+        <div class="current-category-id">
+            <p>Current Selected Category ID: {value}</p>
+        </div>
+    </template>
+</template>

@@ -1,0 +1,38 @@
+<apex:page standardController="Price_Book__c"
+           extensions="PriceBookListController"
+           recordSetVar="priceBooks" sidebar="false">
+
+    <script>           
+        if(!{!renderChangeOwnerBlock}) {               
+            alert('Select at least one Price Book');
+            window.top.document.location = "{!retURL}";
+        }        
+     </script>
+
+    <apex:form >
+
+        <apex:pageMessages />
+    
+        <apex:pageBlock rendered="{!renderChangeOwnerBlock}"
+                        title="Change Owner of selected Price Books">
+            <apex:pageBlockSection columns="1">
+                <apex:pageBlockSectionItem helpText="PriceBook Owner">
+                    <apex:outputLabel value="Price Book Owner : "/>
+                    <apex:inputField value="{!tempObject.OwnerId}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="Send Notification Email">
+                    <apex:outputLabel value="Send Notification Email"/>
+                    <apex:inputCheckbox value="{!sendOwnerChangeEmail}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value=""/>
+                    <apex:outputPanel >
+                        <apex:commandButton action="{!changeOwner}" value="Change Owner"/>
+                        <apex:commandButton action="{!gotoPriceBookTabPage}" value="Cancel"/>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+    
+</apex:page>

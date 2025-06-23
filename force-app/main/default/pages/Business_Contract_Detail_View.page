@@ -1,0 +1,6 @@
+<apex:page StandardController="Business_Contract__c">
+    <apex:pageMessage id="pageMessageId" summary="Please remember to attach any file whenever necessary by clicking the button Attach File" severity="info" strength="3"/>
+    <!--
+    <apex:detail subject="{!Business_Contract__c.Id}"/>
+    -->
+</apex:page>

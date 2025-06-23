@@ -1,0 +1,38 @@
+<template>
+	<iframe width=0 height=0 marginwidth=0 marginheight=0 frameborder=0 name="theframe" src={iframelocation}></iframe>
+	<!--Error Code: {parameters.ErrorCode}
+    Error Description: {parameters.ErrorDescription}
+    startURL: {parameters.startURL}-->
+    <!--Below block will display success messages that we have through as custom exception from registration handler-->
+	<template if:true={resultLoaded}>
+		<template if:true={showSuccess}>
+			<div class="slds-notify_container slds-is-relative">
+				<div class="slds-notify slds-notify_toast slds-theme_success" role="status">
+					<span class="slds-assistive-text">success</span>
+					<span class="slds-icon_container slds-icon-utility-success slds-m-right_small slds-no-flex slds-align-top" title="Description of icon when needed">
+						<lightning-icon icon-name="action:approval" alternative-text="Approved" title="Approved"></lightning-icon>
+					</span>
+					<div class="slds-notify__content">
+						<h2 class="slds-text-heading_small ">
+							<a>{parameters.ErrorDescription}</a></h2>
+					</div>
+				</div>
+			</div>
+		</template>
+		<!--Below with display errors-->
+		<template if:false={showSuccess}>
+			<div class="slds-notify_container slds-is-relative">
+				<div class="slds-notify slds-notify_toast slds-theme_error" role="status">
+					<span class="slds-assistive-text">error</span>
+					<span class="slds-icon_container slds-icon-utility-error slds-m-right_small slds-no-flex slds-align-top" title="Description of icon when needed">
+						<lightning-icon icon-name="utility:error" alternative-text="Error" title="Error"></lightning-icon>
+					</span>
+					<div class="slds-notify__content">
+						<h2 class="slds-text-heading_small ">
+							<a>{parameters.ErrorDescription}</a></h2>
+					</div>
+				</div>
+			</div>
+		</template>
+	</template>
+</template>

@@ -1,0 +1,132 @@
+<apex:component controller="AdvancedTabbarController">
+	<apex:attribute name="rollupDefinitionName" assignTo="{!rollupDefinitionName}" description="Definition of Rollup" type="String" required="true" />
+	<apex:attribute name="startingId" assignTo="{!startingId}" description="Starting Id" type="String" required="true" />
+	<apex:attribute name="recordTypeName" assignTo="{!recordTypeName}" description="Record Type Name" type="String" required="true" />
+	<apex:attribute name="startingSection" assignTo="{!startingSection}" description="Starting Section" type="String" required="true" />
+	<apex:attribute name="focusId" assignTo="{!focusId}" description="Focus id" type="String" required="true" />
+
+	<script>
+		if (!window.console) window.console = {};	
+		if (!window.console.log) window.console.log = function () { };
+	</script>
+
+	<head>
+    	<apex:includeScript value="{!URLFOR($Resource.jQuery1x,'jQuery/jquery-1.8.0.min.js')}"/>
+		<apex:includeScript value="{!URLFOR($Resource.jQuery1x,'jQueryPlugins/blockUI/jquery.blockUI.js')}" />
+    	<apex:includeScript value="{!URLFOR($Resource.AdvancedTabbarResources,'js/general.js')}"/>
+    	<apex:stylesheet value="{!URLFOR($Resource.AdvancedTabbarResources,'css/style.css')}"/>
+  
+  	<apex:includeScript value="{!URLFOR($Resource.jQuery1x,'jQueryPlugins/log4javascript/log4javascript.js')}" />  
+	<script type="text/javascript">
+		var log = log4javascript.getDefaultLogger();
+		log4javascript.setEnabled(false);
+	</script>
+  
+    	
+		<style type="text/css">body{background:#F8F8F8;}</style>
+    	
+		<script type="text/javascript">
+			var j$= jQuery.noConflict();
+	
+			var currentSectionName = '';
+	
+		    j$(document).ready(function(){
+	        	AdvancedTabbar_ApplyJQueryStyling();
+		        currentSectionName = '{!currentSection.Name}';
+				AdvancedTabbar_SetSectionSelection(currentSectionName);
+				AdvancedTabbar_ActivateEventListeners();
+		    });
+		      
+		    function AdvancedTabbar_ApplyJQueryStyling() {
+		    	AdvancedTabbar_ApplyToolbarStyling();
+		        AdvancedTabbar_FireRefreshEvent();
+		    	AdvancedTabbar_ActivateEventListeners();
+		    	unblockUIMessageonItem(j$('[id*=AdvancedTabbar_detailAreaPanel]'));
+		    	j$.unblockUI();
+		    }
+		        
+		    function AdvancedTabbar_ApplyToolbarStyling() {
+		        j$('input.toolbarTabButton').mouseover(function() {j$(this).addClass('toolbarTabButton-mouseover');});
+		        j$('input.toolbarTabButton').mouseout(function() {j$(this).removeClass('toolbarTabButton-mouseover');});
+		    }
+		
+		    function AdvancedTabbar_SetSectionSelection(sectionName) {
+		        currentSectionName = sectionName;
+		        j$('.toolbarTabButton').not('.' + sectionName).removeClass('toolbarTabButton-selected').addClass('toolbarTabButton-unselected');
+		        j$('.toolbarTabButton').filter('.' + sectionName).addClass('toolbarTabButton-selected').removeClass('toolbarTabButton-unselected');
+		        AdvancedTabbar_ActivateEventListeners();
+		    }
+		        
+		    function AdvancedTabbar_FireRefreshEvent() {
+			    j$.unblockUI();
+		    	unblockUIMessageonItem(j$('[id*=AdvancedTabbar_detailAreaPanel]'));
+		    
+		    	var sectionDataMinWidth = j$('#SectionData').attr('minWidth');
+		    	console.log('sectionDataMinWidth = ' + sectionDataMinWidth);
+		    
+	            j$('#AdvancedTabbarEvents').trigger({type:'refresh',minWidth:sectionDataMinWidth});
+		    }
+		    
+		    function AdvancedTabbar_ActivateEventListeners() {
+		    	var advancedDataTableDetailCount = j$('[id*=advancedDataTableDetail]').size();
+		    
+		    	if (advancedDataTableDetailCount > 0) {
+					j$('#AdvancedDataTableEvents').on('refresh', 
+						function(e) {
+	            			AdvancedTabbar_ApplyJQueryStyling();
+	    				}
+	    			);
+	    		}
+			}
+		    
+		    function AdvancedTabbar_IframeResizeRequest() {
+         		AdvancedTabbar_ApplyJQueryStyling();
+         		//Set the width using jquery based on the content of the iframe...
+         		//j$('#IframeDetail').
+         		//resizeIframe_windowName('IframeDetail');
+		    }
+
+			function showBlockUIMessage(message) {
+	        	j$.blockUI({ message: '<BR/><h1><img src="{!URLFOR($Resource.AccountRollupResources, 'images/busy.gif')}" /> ' + message + '...</h1><BR/><BR/>'});
+			}
+			
+			function showBlockUIMessageonItem(item,message) {
+				j$(item).block({message: '<BR/><h1><img src="{!URLFOR($Resource.AccountRollupResources, 'images/busy.gif')}" /> ' + message + '...</h1><BR/><BR/>'});
+			}
+			
+			function unblockUIMessageonItem(item) {
+				j$(item).unblock(); 
+			}
+		</script>
+	</head>
+
+	<div id="AdvancedTabbarEvents"/>
+
+	<apex:pageBlock id="sectionTabs" title="{!rollupTitle} - {!currentSection.Section_Label__c}">
+
+		<apex:pageBlockSection showHeader="false" columns="1">
+			<apex:outputPanel >
+				<div id="rollupTabBar"><apex:repeat value="{!availableSections}" var="section">
+					<apex:commandButton action="{!processNewSectionSelected}" value="{!section.Tab_Label__c}"
+					                    onclick="showBlockUIMessageonItem(j$('[id*=AdvancedTabbar_detailAreaPanel]'),'Loading');" 
+					                    oncomplete="AdvancedTabbar_FireRefreshEvent();AdvancedTabbar_SetSectionSelection('{!currentSection.Name}');unblockUIMessageonItem(j$('[id*=AdvancedTabbar_detailAreaPanel]'));" status="toolbarStatus" rerender="detailArea" styleClass="toolbarTabButton {!section.Name}">
+						<apex:param name="sectionName" value="{!section.Name}" assignTo="{!newSectionSelected}" />
+					</apex:commandButton>
+				</apex:repeat></div>
+			</apex:outputPanel>
+		</apex:pageBlockSection>
+
+		<apex:outputPanel id="AdvancedTabbar_detailAreaPanel" layout="block">
+			<apex:pageBlockSection id="detailArea" showHeader="false" columns="1">
+				<div id="SectionData" minWidth="{!currentSection.Min_Width__c}"/>
+				<apex:outputPanel id="iframeType" rendered="{!showIFrameType}">
+					<apex:iframe id="IframeDetail" src="{!$Page[iframePageName]}?id={!startingId}" scrolling="{!iframeScrollingEnabled}" height="{!iframeHeightPercent}"/>
+				</apex:outputPanel>
+				
+				<apex:outputPanel id="dataTableType" rendered="{!showDataTableType}">
+	            	<c:AdvancedDataTable id="advancedDataTableDetail" dataTableDefinitionName="{!currentSection.Advanced_Data_Table_Definition__r.Name}" startingId="{!startingId}"/>
+				</apex:outputPanel>
+			</apex:pageBlockSection>
+		</apex:outputPanel>
+	</apex:pageBlock>
+</apex:component>

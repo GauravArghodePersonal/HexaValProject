@@ -1,0 +1,63 @@
+<template>
+    <div class="slds-card slds-var-p-around_x-small box">
+        <template if:true={recordId}>
+            <div class="slds-grid slds-wrap">
+                <div class="slds-col slds-size_2-of-12">
+                        <div class="imgdiv">
+                        <!--<a href={producturl}>-->
+                            <img if:true={imageUrl} src={imageUrl}
+                                class="product"
+                                alt="Product picture"/>
+                        <!--</a>-->
+                    </div>
+                </div>
+                
+                <div class="slds-col slds-size_3-of-12">
+                    <br/>
+                    <span slot="title" class="title">{orderItem.Product2.Name}</span>
+                    <br/><br/>
+                    <span style="color: #17b;">Sku#: {orderItem.Product2.Old_Material_Number__c}</span>
+                    <br/><br/>
+                </div>
+                <div class="slds-col slds-size_1-of-12">
+                    <br/><br/><br/>
+                    <h1 class="field-title" >QTY-{orderItem.Quantity}</h1> <!--style="font-size: 20px; color:rgb(32, 104, 32);"-->
+                </div>
+                <div class="slds-col slds-size_2-of-12">
+                    <br/><br/><br/>
+                    <h1 class="smalltext">UOM: {orderItem.Product2.Sales_Unit_Of_Mesure__c}</h1>
+                </div>
+                <div class="slds-col slds-size_2-of-12">
+                    <br/><br/><br/>
+                    <h1 class="smalltext">{unitPrice} USD</h1>
+                </div>
+                <div class="slds-col slds-size_2-of-12">
+                    <br/><br/><br/>
+                    <div class="verysmalltext" style="text-align: right;">Total Price</div>
+                    <div class="field-title header-column "  style="text-align: right;">{totalPrice} USD</div>
+                </div>
+
+
+                <!--<div class="slds-col slds-size_4-of-12">
+                    <br/><br/><br/>
+                    <h1 style="font-size: 20px; color:rgb(32, 104, 32);">{orderItem.CurrencyIsoCode} {orderItem.TotalPrice}</h1>
+                </div>
+                <div class="slds-col slds-size_2-of-12">
+                    <br/><br/><br/>
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-col slds-size_5-of-12">
+                            <div class="field-title" key={order.Id}>QTY-{order.Quantity}</div>
+                            <input type="number" class="slds-input" disabled value={orderItem.Quantity}/>
+                        </div>
+                        <div class="slds-col slds-size_2-of-12">
+                            <br/>
+                        </div>
+                        <div class="slds-col slds-size_5-of-12">
+                            
+                        </div>
+                    </div>
+                </div>-->
+            </div>
+        </template>
+    </div>
+</template>

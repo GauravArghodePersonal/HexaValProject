@@ -1,0 +1,62 @@
+<apex:page standardController="Pricing_Condition__c" 
+           extensions="PricingConditionListController"
+           recordSetVar="pricingConditions"
+           sidebar="false">
+    <apex:messages />
+    <apex:form id="actionForm">
+        <apex:pageBlock Title="Pricing Conditions to Expire" mode="detail">
+            <apex:pageBlockButtons location="top">
+                <apex:commandButton value="Submit"
+                    disabled="{!disableSubmit}"
+                    action="{!expirePricingConditions}" />
+                <apex:commandButton value="Cancel"
+                    action="{!gotoListPage1}" />
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection columns="1">
+                <apex:pageBlockSectionItem dataStyle="text-align: center;">
+                    <apex:outputText value="Review the following Prices before submitting to expire."/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Reasons to Expire Prices"/>
+                    <apex:outputText value="{!userComments}"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection columns="1">
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value=""/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:pageBlockTable value="{!selectedPricingConditions}" var="p">
+                        <apex:column >
+                            <apex:facet name="header">Account Name<br/>and Number<br/>Customer Group</apex:facet>
+                            <apex:outputLink value="/{!p.pricingCondition.Account__r.Id}"> 
+                                <apex:outputText value="{!p.pricingCondition.Account__r.Name}"/>
+                            </apex:outputLink>
+                            <br/><apex:outputText value="{!p.accountNumber}"/>
+                            <br/><apex:outputText value="{!p.pricingCondition.Account__r.SAP_Customer_Group_1_Desc__c}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Material Name<br/>and Number</apex:facet>
+                            <apex:outputLink value="/{!p.pricingCondition.Material2__r.Id}"> 
+                                <apex:outputText value="{!p.pricingCondition.Material2__r.Material_Desc__c}"/>
+                            </apex:outputLink>
+                            <br/><apex:outputText value="{!p.materialNumber}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Invoice<br/>Price</apex:facet>
+                            <apex:outputLink value="/{!p.pricingCondition.Id}">
+                                <apex:outputField value="{!p.pricingCondition.Invoice_Price__c}"/>
+                            </apex:outputLink>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Valid From<br/>and To</apex:facet>
+                            <apex:outputField value="{!p.pricingCondition.Valid_From_Date__c}"/><br/>
+                            <apex:outputField value="{!p.pricingCondition.Valid_To_Date__c}"/>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

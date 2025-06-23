@@ -1,0 +1,140 @@
+<apex:page id="thePage" standardController="Risk__c" 
+           title="Risk" extensions="Risk_Controller" 
+           sidebar="false" action="{!initAction1}">
+
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-1.6.2.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-ui-1.8.16.custom.min.js')}" />
+    <style type="text/css">
+        @import "{!URLFOR($Resource.jQuery, 'css/redmond/jquery-ui-1.8.16.custom.css')}";
+    </style>
+
+    <apex:outputPanel id="op">
+    <apex:pageMessages escape="false" rendered="{!!renderPage2}"/>
+
+    <apex:outputPanel layout="block" styleClass="center">
+        <apex:form >
+            <apex:actionFunction action="{!onLisdComplete}" name="onLisdComplete"
+                                 immediate="true" rerender="op" status="astat1"/>
+            <apex:actionStatus id="astat1">
+                <apex:facet name="start">
+                    <apex:outputText styleClass="bold" value=" Please wait ...">
+                        <apex:image value="{!$Resource.spinner}"/>
+                    </apex:outputText>
+                </apex:facet>
+                <apex:facet name="stop"><apex:outputPanel >
+                <apex:commandButton action="{!gotoPage2}" value="Next"
+                                    rendered="{!renderGoto2}" 
+                                    rerender="op" status="astat1"/>
+                <apex:commandButton action="{!cancel}" value="Cancel"
+                                    rendered="{!renderLisd}" 
+                                    rerender="op" status="astat1" immediate="true"/>
+                </apex:outputPanel></apex:facet>
+            </apex:actionStatus>
+        </apex:form>
+    </apex:outputPanel>
+    
+    <apex:outputPanel ><br/>
+        <apex:include pageName="Risk_Page2" rendered="{!renderPage2}"/>
+        <c:SAP_LISD_Comp1 p_sapLisd="{!lisd}" rendered="{!renderLisd}"/>
+    </apex:outputPanel>
+    
+    <apex:outputPanel layout="block" styleClass="center">
+        <apex:form >
+            <apex:actionStatus id="astat2">
+                <apex:facet name="start">
+                    <apex:outputText styleClass="bold" value=" Please wait ...">
+                        <apex:image value="{!$Resource.spinner}"/>
+                    </apex:outputText>
+                </apex:facet>
+                <apex:facet name="stop"><apex:outputPanel >
+                <apex:commandButton action="{!gotoPage2}" value="Next"
+                                    rendered="{!renderGoto2}" 
+                                    rerender="op" status="astat2"/>
+                <apex:commandButton action="{!cancel}" value="Cancel"
+                                    rendered="{!renderLisd}" 
+                                    rerender="op" status="astat2" immediate="true"/>
+                </apex:outputPanel></apex:facet>
+            </apex:actionStatus>
+        </apex:form>
+    </apex:outputPanel>
+    
+    <apex:outputPanel >
+        <apex:outputLabel value="1" rendered="{!!renderPage2}" styleClass="pageid"/>
+    </apex:outputPanel>
+    
+    </apex:outputPanel>
+
+    <script type="text/javascript">
+        var $j = jQuery.noConflict();
+        
+        $j(function setfocus() {
+            var fld = $j('[id$=tnamefld]'); fld.focus();
+        });
+        
+        function addStyleOnFocus(f) {
+            //$j(f).removeClass('onblur').addClass('onfocus');
+        }
+                            
+        function addStyleOnBlur(f) {
+            //$j(f).removeClass('onfocus').addClass('onblur');
+        }
+        
+        function setfocus2(event, fid) {
+            var kc = event.keyCode;
+            if (kc == 9) {
+                event.preventDefault ? event.preventDefault() : event.returnValue = false; 
+                setfocus3(fid);
+            }
+        }
+
+        function setfocus3(fid) {
+            var fld = document.getElementById(fid);
+            if (fld != null) {fld.focus();}
+        }
+
+        function onClick_AllChkbox(rowCbClass, allChkbox) {
+            $j("."+rowCbClass).each(function() {
+                if (this.disabled == false) {
+                    this.checked = allChkbox.checked;
+                }
+            });
+        }
+
+        function onClick_RowChkbox(rowCbClass, allCbClass) {
+            var allChkbox = $j("."+allCbClass).get(0);
+            allChkbox.checked = true;
+            $j("."+rowCbClass).each(function() {
+                if (!this.checked) {
+                    allChkbox.checked = false;
+                    return false;
+                }
+            });
+        }
+
+        $j("#dialog1").dialog({
+            autoOpen: false, height: 150, width: 300, modal: true, resizable: false
+        });
+        
+        function openDialog1() {$j("#dialog1").dialog("open");}
+
+        function closeDialog1() {$j("#dialog1").dialog("close");}
+
+        $j("#dialog2").dialog({
+            autoOpen: false, height: 150, width: 300, modal: true, resizable: false
+        });
+        
+        function openDialog2() {$j("#dialog2").dialog("open");}
+
+        function closeDialog2() {$j("#dialog2").dialog("close");}
+
+    </script>
+    
+    <style>
+        .bold {font-weight: bold;}
+        .center {text-align: center;}
+        .left {text-align: left;}
+        .right {text-align: right;}
+        .nowrap {white-space: nowrap;}
+        .pageid {font-size: 70%; float: right;}
+    </style>
+</apex:page>

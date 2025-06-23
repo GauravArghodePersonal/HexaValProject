@@ -1,0 +1,216 @@
+<apex:page standardController="Material_Sales_Data2__c"
+                   extensions="Material_Sales_Data2_Controller"
+                        title="Material: {!msd.Material_Desc__c} - {!materialNumber}">
+
+    <apex:form id="theForm">
+
+        <apex:pageBlock >
+
+            <apex:pageBlockSection title="{!$Label.SAP_Material_Details}" id="block1">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Material_Number}"/>
+                    <apex:outputText value="{!materialNumber}"/>
+                </apex:pageBlockSectionItem>
+                <apex:outputField value="{!msd.Material_Desc__c}"/>
+                <apex:pageBlockSectionItem helpText="{!$Label.Sales_Org_Name_and_Code}">
+                    <apex:outputLabel value="{!$Label.Sales_Org_and_Code}"/>
+                    <apex:outputText value="{!msd.SalesOrg_Desc__c} - {!msd.Sales_Org_Code__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="{!$Label.Dist_Channel_Name_and_Code}">
+                    <apex:outputLabel value="{!$Label.Distribution_Channel}"/>
+                    <apex:outputText value="{!msd.DistChannel_Desc__c} - {!msd.Dist_Channel_Code__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:outputField value="{!msd.Sales_UOM_Desc__c}"/>
+                <apex:outputField value="{!msd.Gross_Weight__c}"/>
+                <apex:outputField value="{!msd.Minimum_Order_Qty__c}"/>
+                <apex:outputField value="{!msd.Net_Weight__c}"/>
+                <apex:outputField value="{!msd.Material_General_Data__r.Base_UOM_Desc__c}"/>
+                <apex:outputField value="{!msd.Material_General_Data__r.Weight_UOM_Desc__c}"/>
+               <!-- <apex:outputField rendered="{!showBaseCode}"
+                                  value="{!msd.Material_General_Data__r.Material_Base_Code_Desc__c}"/>-->
+                <apex:outputField value="{!msd.Gross_Weight_in_LBs__c}"/>
+                <apex:outputField value="{!msd.Material_General_Data__r.Material_Container_Desc__c}"/>
+                <apex:outputField value="{!msd.Net_Weight_in_LBs__c}"/>
+                <apex:outputField value="{!msd.Material_General_Data__r.Material_Group_Desc__c}"/>
+                <apex:outputField value="{!msd.Material_General_Data__r.Material_Type_Desc__c}"/>
+                <apex:outputField value="{!msd.Material_Group1_Desc__c}"/>
+                <apex:pageblocksectionitem helptext="{!$Label.Material_Marked_for_Deletion}">
+                <apex:outputlabel value="{!$Label.Material_Deleted}?"/>
+                 <apex:outputtext value="{!msd.Material_General_Data__r.Marked_for_deletion__c}"/>
+                </apex:pageblocksectionitem>
+                <apex:outputField value="{!msd.Material_Group2_Desc__c}"/>
+                <apex:pageblocksectionitem helptext="{!$Label.Marked_for_Deletion_at_Sales_Area}">
+                 <apex:outputlabel value="{!$Label.SalesArea_Deleted}"/>
+                 <apex:outputtext value="{!msd.Deletion_Flag__c}"/>
+                </apex:pageblocksectionitem>
+                <apex:pageBlockSectionItem helpText="{!$Label.Division_Name_and_Code}">
+                    <apex:outputLabel value="{!$Label.Material_Owning_Division}"/>
+                    <apex:outputText value="{!msd.Material_General_Data__r.Division_Desc__c} - {!msd.Division_Code__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:outputField value="{!msd.Material_General_Data__r.Cross_Dist_Material_Status__c}"
+                                  label="Cross-Plant Material Status"/>
+                <apex:pageblocksectionitem >
+                    <apex:outputLabel value="Sample Material?"/>
+                    <apex:outputPanel >
+                        <apex:image value="/img/checkbox_checked.gif" rendered="{!sampleMaterial}"/>
+                        <apex:image value="/img/checkbox_unchecked.gif" rendered="{!!sampleMaterial}"/>
+                    </apex:outputPanel>
+                </apex:pageblocksectionitem>
+                <apex:outputField value="{!msd.Dist_Channel_Material_Status__c}"
+                                  label="Dist-Chan Material Status"/>     
+                
+                <apex:outputField value="{!msd.NP_Effective_Date__c}"
+                                  label="NP-Effective Date"/>
+                <apex:outputField value="{!msd.NP_Global_Region__c}"
+                                  label="NP Global Region"/>
+                <apex:outputField value="{!msd.NPI_Product__c}"
+                                  label="NPI Product?"/>
+                <apex:outputField value="{!msd.LastModifiedDate}"
+                                  label="Last Modified Date"/>   
+                 <apex:outputField value="{!msd.LastModifiedById}"
+                                  label="Last Modified By"/>                
+                
+                 
+                                  
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection title="{!$Label.Product_Hierarchy}" id="block2" columns="1">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Business}"/>
+                    <apex:outputText value="{!msd.Product_Hierarchy__r.PH1_Division__c} - {!msd.Product_Hierarchy__r.PH1__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.SBU}"/>
+                    <apex:outputText value="{!msd.Product_Hierarchy__r.PH2_Line__c} - {!msd.Product_Hierarchy__r.PH2__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Product_Group}"/>
+                    <apex:outputText value="{!msd.Product_Hierarchy__r.PH3_Group__c} - {!msd.Product_Hierarchy__r.PH3__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Product_Supplier}"/>
+                    <apex:outputText value="{!msd.Product_Hierarchy__r.PH4_Supplier__c} - {!msd.Product_Hierarchy__r.PH4__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Product_Family}"/>
+                    <apex:outputText value="{!msd.Product_Hierarchy__r.PH5_Family__c} - {!msd.Product_Hierarchy__r.PH5__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Product_Segment}"/>
+                    <apex:outputText value="{!msd.Product_Hierarchy__r.PH6_Segment__c} - {!msd.Product_Hierarchy__r.PH6__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Product_SubSegment}"/>
+                    <apex:outputText value="{!msd.Product_Hierarchy__r.PH7_SubSegment__c} - {!msd.Product_Hierarchy__r.PH7__c}"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection title="{!$Label.Plants}" id="block4" columns="1">
+            
+                <apex:facet name="header">
+                    <apex:outputPanel >
+                    <h3><apex:outputText value="{!$Label.Plants}"/>  </h3>
+                    <apex:actionStatus id="plantLinkStat">
+                        <apex:facet name="start">
+                            <apex:outputText escape="false" style="font-weight: bold;" 
+                                             value="&nbsp;{!$Label.Please_Wait}...">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop" >
+                        <apex:actionRegion immediate="true">
+                            <apex:outputPanel id="plantShowHidePanelId" rendered="{!renderPlantShowHidePanel}">
+                            <apex:commandLink value="Show Deleted Plants" action="{!ToggleDeletedPlants}" 
+                                rerender="plantsTable, plantShowHidePanelId" status="plantLinkStat"
+                                rendered="{!!showDeletedPlants}">
+                            </apex:commandLink>
+                            <apex:outputText value="&nbsp;&nbsp;" escape="false" />
+                            <apex:commandLink value="Hide Deleted Plants" action="{!ToggleDeletedPlants}" 
+                                rerender="plantsTable, plantShowHidePanelId" status="plantLinkStat"
+                                rendered="{!showDeletedPlants}"/>
+                            <apex:outputText value="&nbsp;&nbsp;" escape="false" />
+                            </apex:outputPanel>
+                        </apex:actionRegion>
+                        </apex:facet>       
+                   </apex:actionStatus>
+                </apex:outputPanel>
+               </apex:facet> 
+               <apex:actionRegion immediate="true">           
+               <apex:pageBlockTable value="{!plants}" var="plant" id="plantsTable">
+                   <apex:column value="{!plant.Plant_Name__c} - {!plant.Plant_Code__c}"
+                                headerValue="{!$Label.Plant_Name_and_Code}"/>
+                   <apex:column value="{!plant.Plant_Address__c}"
+                                headerValue="{!$Label.City_State_Zip}"/>
+                   <apex:column value="{!plant.Third_Party_Plant__c}"
+                                styleClass="textAlignCenter"
+                                headerClass="textAlignCenter">
+                       <apex:facet name="header">3rd Party<br/>Plant?</apex:facet>
+                   </apex:column>
+                   <!-- Required_Lead_Time__c / Lead_Time_in_Days__c -->
+                   <apex:column value="{!plant.Required_Lead_Time__c}"
+                                styleClass="textAlignCenter"
+                                headerClass="textAlignCenter">
+                       <apex:facet name="header">
+                           Required<br/>Lead Time<br/>
+                           <span id="reqLeadTime-_help" class="helpButton">
+                               <img class="helpOrb" title="" alt="" src="/s.gif"/>
+                               <script type="text/javascript">
+                                   sfdcPage.setHelp('reqLeadTime', '{!reqLeadTimeHelp}');
+                               </script>
+                           </span><br/>                                
+                       </apex:facet>
+                   </apex:column>
+                   <!--<apex:column value="{!plant.COGS_String__c}"
+                                styleClass="textAlignRight"
+                                headerClass="textAlignRight"
+                                headerValue="{!$Label.COGS}"/>-->
+                    <!--<apex:column value="{!plant.LastModifiedDate}"
+                                styleClass="textAlignRight"
+                                headerClass="textAlignRight">
+                              <apex:facet name="header">
+                               Last Modified Date<br/><br/>
+                        </apex:facet>  </apex:column>-->
+                    
+                   <apex:column value="{!plant.Deletion_Flag__c}"
+                                styleClass="textAlignCenter"
+                                headerClass="textAlignCenter">
+                       <apex:facet name="header">
+                           Deleted<br/><br/>
+                           <span id="deleted-_help" class="helpButton">
+                               <img class="helpOrb" title="" alt="" src="/s.gif"/>
+                               <script type="text/javascript">
+                                   sfdcPage.setHelp('deleted', '{!deletedHelp}');
+                               </script>
+                           </span><br/>                                
+                       </apex:facet>      
+                </apex:column>
+               </apex:pageBlockTable>
+                </apex:actionRegion> 
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection title="{!$Label.Alternative_UOMs}" id="block3" columns="1">
+                <apex:pageBlockTable value="{!altUOMs}" var="uom">
+                    <apex:column value="{!uom.Alternative_UOM_Desc__c}" headerValue="{!$Label.Alt_UoM}"/>
+                    <apex:column value="{!uom.Gross_Weight_in_LBs__c}" headerValue="{!$Label.Gross_Weight_in_LBs}"/>
+                    <apex:column value="{!uom.Net_Weight_in_LBs__c}" headerValue="{!$Label.Net_Weight_in_LBs}"/>
+                    <apex:column value="{!uom.Alt_Gross_Weight__c}" headerValue="{!$Label.Gross_Weight}"/>
+                    <apex:column value="{!uom.Alt_Net_Weight__c}" headerValue="{!$Label.Net_Weight}"/>
+                    <apex:column value="{!uom.Base_UOM_Desc__c}" headerValue="{!$Label.Base_UoM}"/>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+
+            <apex:includescript value="{!$Resource.PageBlockSupplementScript}" />
+            <script>
+                addLoadEvent(collapsePageBlockSection('{!$Component.block3}'));
+            </script>
+
+        </apex:pageBlock>
+    </apex:form>
+
+    <style>
+        table {border-collapse: collapse;}
+        .textAlignCenter {text-align: center;}
+        .textAlignRight {text-align: right;}
+    </style>    
+
+</apex:page>

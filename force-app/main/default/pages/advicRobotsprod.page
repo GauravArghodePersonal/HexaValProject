@@ -1,0 +1,28 @@
+<!--
+ - Created by dillon.loubser on 10/31/23.
+ -->
+
+<apex:page id="advicRobotsprod" contentType="text/plain">
+    User-agent: *
+    Disallow: /
+    Sitemap: https://solenis.my.site.com/diverseyswedisheshop/sitemap.xml
+    Sitemap: https://solenis.my.site.com/diverseyportugaleshop/sitemap.xml
+    Sitemap: https://solenis.my.site.com/france/sitemap.xml
+    Sitemap: https://solenis.my.site.com/poland/sitemap.xml
+    Sitemap: https://solenis.my.site.com/diverseybelgiumeshop/sitemap.xml
+    Sitemap: https://solenis.my.site.com/spain/sitemap.xml
+    Sitemap: https://solenis.my.site.com/romania/sitemap.xml
+    Sitemap: https://solenis.my.site.com/unitedkingdom/sitemap.xml
+    Sitemap: https://solenis.my.site.com/diverseynetherlandseshop/sitemap.xml
+    Sitemap: https://solenis.my.site.com/diverseygermaneshop/sitemap.xml
+    Sitemap: https://solenis.my.site.com/swiss/sitemap.xml
+    Sitemap: https://solenis.my.site.com/italy/sitemap.xml
+    Sitemap: https://solenis.my.site.com/czechrepublic/sitemap.xml
+    Sitemap: https://solenis.my.site.com/diverseyaustriaeshop/sitemap.xml
+    Sitemap: https://solenis.my.site.com/finland/sitemap.xml
+    Sitemap: https://solenis.my.site.com/NSS/sitemap.xml
+    Sitemap: https://solenis.my.site.com/slovakia/sitemap.xml
+    Sitemap: https://solenis.my.site.com/denmark/sitemap.xml
+    Sitemap: https://solenis.my.site.com/diverseyhungaryeshop/sitemap.xml
+    Sitemap: https://solenis.my.site.com/diverseygreeceeshop/sitemap.xml
+</apex:page>

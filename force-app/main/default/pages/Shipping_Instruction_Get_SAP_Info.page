@@ -1,0 +1,265 @@
+<apex:page showHeader="false" standardController="Shipping_Instruction__c" extensions="UpdateShipInstrn">
+  
+  <html>
+  <body>
+  
+   <FORM NAME="PrintInformationTop" ID="PrintInformationTop">
+    <INPUT TYPE="button" NAME="PrintInformationTop" VALUE=" Print Screen" ONCLICK="window.print()"/>
+   </FORM>
+   
+   <table border="1" cellspacing="0" cellpadding="5" width="750">
+   <tr><td width="200" valign="top">Date:</td>
+       <td width="550" valign="top">{!FormattedDate}</td> 
+   </tr> 
+   <tr><td width="200" valign="top">&nbsp;</td>
+       <td width="550" valign="top">&nbsp;</td> 
+   </tr>
+   <tr><td width="200" valign="top">Ship to Number:</td>
+       <td width="550" valign="top">{!Shipping_Instruction__c.Customer_Prospect_Number__c}</td>
+   </tr>
+   <tr><td width="200" valign="top">&nbsp;</td>
+       <td width="550" valign="top">&nbsp;</td> 
+   </tr>
+   <tr><td width="200" valign="top">Ship to Name and Address:</td>
+       <td width="550" valign="top">{!Shipping_Instruction__c.Address_Line_1__c}<br></br>
+           {!Shipping_Instruction__c.Address_Line_2__c}<br></br>
+           {!Shipping_Instruction__c.Address_Line_3__c}<br></br>
+           {!Shipping_Instruction__c.Address_Line_4__c}<br></br>
+           {!Shipping_Instruction__c.City__c}, {!Shipping_Instruction__c.State__c} {!Shipping_Instruction__c.Postal_Code__c} {!Shipping_Instruction__c.Country__c}
+       </td>
+   </tr>
+   </table>
+   
+   <br></br>
+   <br></br>
+   <br></br>
+   
+   <table border="1" cellspacing="0" cellpadding="5" width="750">
+   <tr><td width="750" valign="top">Enter the following shipping instructions:<br></br>
+                                    ZOTCCSR --><img width="196" height="27" src="/servlet/servlet.FileDownload?file=015500000006rZ1"/><br></br>
+                                    <u>Tab = Carrier Instructions from Ship to</u>
+                                    
+       </td>
+   </tr>
+   <tr><td width="750" valign="top"><h3><u>General Instructions:- Shipping Instruction: {!Shipping_Instruction__c.Name}</u></h3>
+       </td>
+   </tr>
+   <tr><td width="750" valign="top">(Applies to all shipments - - note: for 3<sup>rd</sup> party shipments, these instructions <u><b>must</b></u> be copied and pasted into the purchasing requisition)
+       </td>
+   </tr>
+   <tr><td width="750" valign="top"><apex:outputText value="Contact with main contact is mandatory" rendered="{!Shipping_Instruction__c.Is_Contact_with_Main_Contact_Mandatory__c == 'Yes'}"></apex:outputText>
+                                    <apex:outputText rendered="{!Shipping_Instruction__c.Primary_Contact__c != null}" value="Main Contact: {!Shipping_Instruction__c.Primary_Contact__r.Name}"><br></br></apex:outputText>
+                                    <apex:outputText rendered="{!Shipping_Instruction__c.Primary_Contact__r.Phone != null}" value="Main Contact Phone Number: {!Shipping_Instruction__c.Primary_Contact__r.Phone}"><br></br></apex:outputText>
+                                    <apex:outputText rendered="{!Shipping_Instruction__c.Secondary_Contact__c != null}" value="Secondary Contact: {!Shipping_Instruction__c.Secondary_Contact__r.Name}"><br></br></apex:outputText>
+                                    <apex:outputText rendered="{!Shipping_Instruction__c.Secondary_Contact__r.Phone != null}" value="Secondary Contact Phone Number: {!Shipping_Instruction__c.Secondary_Contact__r.Phone}"><br></br></apex:outputText>
+                                    <apex:outputText rendered="{!Shipping_Instruction__c.Is_Delivery_Appointment_Necessary__c == 'Yes'}" value="Delivery appt is necessary"><br></br></apex:outputText>
+                                    <apex:outputText rendered="{!Shipping_Instruction__c.Is_Contact_with_Main_Contact_Mandatory__c != 'Yes'}" value="Delivery Days and Hours are: {!Shipping_Instruction__c.Delivery_Days_Hours__c}"><br></br></apex:outputText>
+                                    <apex:outputText rendered="{!Shipping_Instruction__c.Additional_Information__c != null}" value="Additional Information: {!Shipping_Instruction__c.Additional_Information__c}"><br></br></apex:outputText>
+                                    <apex:outputText rendered="{!Shipping_Instruction__c.Photo_ID_Required__c == 'Yes'}" value="Photo ID is required."><br></br></apex:outputText>
+                                    <apex:outputText rendered="{!Shipping_Instruction__c.Certificate_of_Analysis_Required__c == 'Yes'}" value="Warehouse: Certificate of analysis required."><br></br></apex:outputText>
+                                    <apex:outputText rendered="{!Shipping_Instruction__c.Certificate_of_Analysis_Required__c == 'Yes'}" value="Warehouse: {!Shipping_Instruction__c.Certificate_of_analysis_delivery_method__c} Certificate of analysis."><br></br></apex:outputText>
+                                    <apex:outputText rendered="{!Shipping_Instruction__c.Certificate_of_Analysis_Required__c == 'Yes'}" value="Warehouse: Certificate of analysis attention {!Shipping_Instruction__c.Certificate_of_Analysis_attention__c}."><br></br></apex:outputText>
+                                    <apex:outputText rendered="{!Shipping_Instruction__c.Certificate_of_Analysis_Required__c == 'Yes' && CONTAINS(Shipping_Instruction__c.Certificate_of_analysis_delivery_method__c, 'Fax') == True  && Shipping_Instruction__c.Certificate_of_Analysis_fax_number__c != null}" value="Warehouse: FAX Certificate of analysis to: {!Shipping_Instruction__c.Certificate_of_Analysis_fax_number__c}."><br></br></apex:outputText>
+       </td>
+    </tr>
+   </table>
+   
+   <apex:repeat value="{!ShipInsProd}" var="shp">
+   
+   <br></br>
+   <br></br>
+   <br></br>
+   
+   <table border="1" cellspacing="0" cellpadding="5" width="750">
+     
+   <tr><td valign="top" colspan="2"><apex:outputText rendered="{!shp.RecordType.Name == 'Pro-Serv'}"><h3><u>ProServ - Product: {!shp.Name}</u></h3></apex:outputText>
+                                    <apex:outputText rendered="{!shp.RecordType.Name == 'Bulk (3rd-Party)'}"><h3><u>3<sup>rd</sup> Party Bulk - Product: {!shp.Name}</u></h3></apex:outputText>
+                                    <apex:outputText rendered="{!shp.RecordType.Name == 'Bulk (Regular)'}"><h3><u>Bulk - Product: {!shp.Name}</u></h3></apex:outputText>
+                                    <apex:outputText rendered="{!shp.RecordType.Name == 'Ultra-Serv'}"><h3><u>UltraServ - Product: {!shp.Name}</u></h3></apex:outputText>
+                                    <apex:outputText rendered="{!shp.RecordType.Name == 'Packaged Goods'}"><h3><u>Packaged Goods (Regular) - Product: {!shp.Name}</u></h3></apex:outputText>
+                                    <apex:outputText rendered="{!shp.RecordType.Name == 'Packaged Goods (3rd-Party)'}"><h3><u>Packaged Goods (3<sup>rd</sup> Party) - Product: {!shp.Name}</u></h3></apex:outputText>
+       </td>
+   </tr>
+   
+   <tr><td valign="top" colspan="2"><apex:outputText rendered="{!shp.RecordType.Name != 'Ultra-Serv'}"><u>note: for 3<sup>rd</sup> party shipments, these instructions <b>must</b> be copied and pasted into the purchasing requisition)</u></apex:outputText>
+       </td>
+   </tr>
+   
+   <tr><td valign="top" colspan="2">Enter the following shipping instructions:<br></br>
+                                    ZOTCCSR --><img width="196" height="27" src="/servlet/servlet.FileDownload?file=015500000006rZ1"/><br></br>
+                                    <u>Tab = Carrier Instructions from Ship to</u>
+       </td>
+   </tr>
+   
+   <apex:outputText rendered="{!OR(shp.RecordType.Name == 'Pro-Serv', shp.RecordType.Name == 'Bulk (3rd-Party)', shp.RecordType.Name == 'Bulk (Regular)')}">
+   <tr><td valign="top">Additional program delivery information</td>
+       <td valign="top">{!shp.Additional_Program_Delivery_Information__c}</td>
+   </tr>
+   </apex:outputText>
+   <apex:outputText rendered="{!OR(shp.RecordType.Name == 'Pro-Serv', shp.RecordType.Name == 'Bulk (3rd-Party)', shp.RecordType.Name == 'Bulk (Regular)')}">
+   <tr><td valign="top">Required driver personal protective safety equipment</td>
+       <td valign="top">{!shp.Req_driver_personal_protect_safety_equip__c}</td>
+   </tr>
+   </apex:outputText>
+   <apex:outputText rendered="{!OR(shp.RecordType.Name == 'Pro-Serv', shp.RecordType.Name == 'Bulk (3rd-Party)', shp.RecordType.Name == 'Bulk (Regular)')}">
+   <tr><td valign="top">Other safety equipment</td>
+       <td valign="top">{!shp.Other_safety_equipment__c}</td>
+   </tr>
+   </apex:outputText>
+   <apex:outputText rendered="{!OR(shp.RecordType.Name == 'Pro-Serv', shp.RecordType.Name == 'Bulk (3rd-Party)', shp.RecordType.Name == 'Bulk (Regular)')}">
+   <tr><td valign="top">Trailer type</td>
+       <td valign="top">{!shp.Trailer_type__c}</td>
+   </tr>
+   </apex:outputText>
+   <apex:outputText rendered="{!OR(shp.RecordType.Name == 'Pro-Serv', shp.RecordType.Name == 'Bulk (3rd-Party)', shp.RecordType.Name == 'Bulk (Regular)')}">
+   <tr><td valign="top">On site scaling required</td>
+       <td valign="top">{!shp.On_site_scaling_required__c}</td>
+   </tr>
+   </apex:outputText>
+   <apex:outputText rendered="{!OR(shp.RecordType.Name == 'Pro-Serv', shp.RecordType.Name == 'Bulk (3rd-Party)', shp.RecordType.Name == 'Bulk (Regular)')}">
+   <tr><td valign="top">DREW weight ticket required</td>
+       <td valign="top">{!shp.DREW_weight_ticket_required__c}</td>
+   </tr>
+   </apex:outputText>
+   <apex:outputText rendered="{!OR(shp.RecordType.Name == 'Pro-Serv', shp.RecordType.Name == 'Bulk (3rd-Party)', shp.RecordType.Name == 'Bulk (Regular)')}">
+   <tr><td valign="top">Multiple drops of the same product required</td>
+       <td valign="top">{!shp.Multiple_drops_of_the_same_product_req_d__c}</td>
+   </tr>
+   </apex:outputText>
+   
+   <apex:outputText rendered="{!shp.RecordType.Name == 'Ultra-Serv'}">
+   <tr><td valign="top">Low/narrow clearances</td>
+       <td valign="top">{!shp.Describe_any_low_narrow_clearances__c}</td>
+   </tr>
+   </apex:outputText>
+   <apex:outputText rendered="{!shp.RecordType.Name == 'Ultra-Serv'}">
+   <tr><td valign="top">Required driver personal protective safety equipment</td>
+       <td valign="top">{!shp.Req_driver_personal_protect_safety_equip__c}</td>
+   </tr>
+   </apex:outputText>
+   <apex:outputText rendered="{!shp.RecordType.Name == 'Ultra-Serv'}">
+   <tr><td valign="top">Other safety equipment</td>
+       <td valign="top">{!shp.Other_safety_equipment__c}</td>
+   </tr>
+   </apex:outputText>
+   
+   <apex:outputText rendered="{!OR(shp.RecordType.Name == 'Packaged Goods', shp.RecordType.Name == 'Packaged Goods (3rd-Party)')}">
+   <tr><td valign="top">Hydraulic liftgate required</td>
+       <td valign="top">{!shp.Is_hydraulic_liftgate_delivery_required__c}</td>
+   </tr>
+   </apex:outputText>
+   <apex:outputText rendered="{!OR(shp.RecordType.Name == 'Packaged Goods', shp.RecordType.Name == 'Packaged Goods (3rd-Party)')}">
+   <tr><td valign="top">Forklift on site</td>
+       <td valign="top">{!shp.Forklift_on_site__c}</td>
+   </tr>
+   </apex:outputText>
+   <apex:outputText rendered="{!OR(shp.RecordType.Name == 'Packaged Goods', shp.RecordType.Name == 'Packaged Goods (3rd-Party)')}">
+   <tr><td valign="top">Low/narrow clearances</td>
+       <td valign="top">{!shp.Describe_any_low_narrow_clearances__c}</td>
+   </tr>
+   </apex:outputText>
+   <apex:outputText rendered="{!OR(shp.RecordType.Name == 'Packaged Goods', shp.RecordType.Name == 'Packaged Goods (3rd-Party)')}">
+   <tr><td valign="top">Additional program delivery information</td>
+       <td valign="top">{!shp.Additional_Program_Delivery_Information__c}</td>
+   </tr>
+   </apex:outputText>
+   
+   <tr><td valign="top" colspan="2"><u><h4>Customer Material</h4></u><apex:outputText rendered="{!shp.RecordType.Name != 'Ultra-Serv'}">(These items will appear on the purchasing req and purchase order to 3<sup>rd</sup> party vendors)</apex:outputText>
+       </td>
+   </tr>
+   
+   <tr><td valign="top" colspan="2">Enter the following shipping instructions:<br></br>
+                                    ZOTCCSR --><img width="196" height="27" src="/servlet/servlet.FileDownload?file=015500000006rZ1"/><br></br>
+                                    {!shp.CIS_Materials__r.Material_Number__c} - {!shp.CIS_Materials__r.Name}<br></br>
+                                    <u>Tab =<apex:outputText rendered="{!OR(shp.RecordType.Name == 'Bulk (3rd-Party)', shp.RecordType.Name == 'Bulk (Regular)')}"> Instructions to 3<sup>rd</sup> Party Vendor<br></br>AND<br></br></apex:outputText> Carrier Instructions from Item</u>
+       </td>
+   </tr>
+   
+   <apex:outputText rendered="{!OR(shp.RecordType.Name == 'Pro-Serv', shp.RecordType.Name == 'Bulk (3rd-Party)', shp.RecordType.Name == 'Bulk (Regular)')}">
+   <tr><td valign="top">Transfer Method</td>
+       <td valign="top">{!shp.Transfer_method__c}</td>
+   </tr>
+   </apex:outputText>
+   <apex:outputText rendered="{!OR(shp.RecordType.Name == 'Pro-Serv', shp.RecordType.Name == 'Bulk (3rd-Party)', shp.RecordType.Name == 'Bulk (Regular)')}">
+   <tr><td valign="top">Fill line connection size</td>
+       <td valign="top">{!shp.Fill_line_connection_size__c}</td>
+   </tr>
+   </apex:outputText>
+   <apex:outputText rendered="{!OR(shp.RecordType.Name == 'Pro-Serv', shp.RecordType.Name == 'Bulk (3rd-Party)', shp.RecordType.Name == 'Bulk (Regular)')}">
+   <tr><td valign="top">Fill line fitting</td>
+       <td valign="top">{!shp.Fill_line_fitting__c}</td>
+   </tr>
+   </apex:outputText>
+   <apex:outputText rendered="{!OR(shp.RecordType.Name == 'Pro-Serv', shp.RecordType.Name == 'Bulk (3rd-Party)', shp.RecordType.Name == 'Bulk (Regular)')}">
+   <tr><td valign="top">Hose length/size required</td>
+       <td valign="top">{!shp.Hose_length_size_required__c}</td>
+   </tr>
+   </apex:outputText>
+   <apex:outputText rendered="{!OR(shp.RecordType.Name == 'Pro-Serv', shp.RecordType.Name == 'Bulk (3rd-Party)', shp.RecordType.Name == 'Bulk (Regular)', shp.RecordType.Name == 'Ultra-Serv')}">
+   <tr><td valign="top">Warehouse: Special labels/codes on BOL/packing list</td>
+       <td valign="top">{!shp.Special_labels_codes_on_BOL_pckg_list__c}</td>
+   </tr>
+   </apex:outputText>
+   <apex:outputText rendered="{!OR(shp.RecordType.Name == 'Pro-Serv', shp.RecordType.Name == 'Bulk (3rd-Party)', shp.RecordType.Name == 'Bulk (Regular)', shp.RecordType.Name == 'Ultra-Serv')}">
+   <tr><td valign="top">Warehouse: Describe special labels/codes on BOL/packing list</td>
+       <td valign="top">{!shp.Desc_spcl_labels_codes_on_BOL_pckg_list__c}</td>
+   </tr>
+   </apex:outputText>
+   
+   <apex:outputText rendered="{!OR(shp.RecordType.Name == 'Packaged Goods', shp.RecordType.Name == 'Packaged Goods (3rd-Party)')}">
+   <tr><td valign="top">Warehouse: Palletizing required</td>
+       <td valign="top">{!shp.Palletizing_required__c}</td>
+   </tr>
+   </apex:outputText>
+   <apex:outputText rendered="{!OR(shp.RecordType.Name == 'Packaged Goods', shp.RecordType.Name == 'Packaged Goods (3rd-Party)')}">
+   <tr><td valign="top">Warehouse: Stretch Wrap required</td>
+       <td valign="top">{!shp.Stretch_wrapping_required__c}</td>
+   </tr>
+   </apex:outputText>
+   <apex:outputText rendered="{!OR(shp.RecordType.Name == 'Packaged Goods', shp.RecordType.Name == 'Packaged Goods (3rd-Party)')}">
+   <tr><td valign="top">Special labels/codes on containers</td>
+       <td valign="top">{!shp.Special_labels_codes_on_containers__c}</td>
+   </tr>
+   </apex:outputText>
+   <apex:outputText rendered="{!OR(shp.RecordType.Name == 'Packaged Goods', shp.RecordType.Name == 'Packaged Goods (3rd-Party)')}">
+   <tr><td valign="top">Describe special labels/codes on containers</td>
+       <td valign="top">{!shp.Desc_special_labels_codes_on_containers__c}</td>
+   </tr>
+   </apex:outputText>
+   <apex:outputText rendered="{!OR(shp.RecordType.Name == 'Packaged Goods', shp.RecordType.Name == 'Packaged Goods (3rd-Party)')}">
+   <tr><td valign="top">Special labels/codes on BOL/packing list</td>
+       <td valign="top">{!shp.Special_labels_codes_on_BOL_pckg_list__c}</td>
+   </tr>
+   </apex:outputText>
+   <apex:outputText rendered="{!OR(shp.RecordType.Name == 'Packaged Goods', shp.RecordType.Name == 'Packaged Goods (3rd-Party)')}">
+   <tr><td valign="top">Describe special labels/codes on BOL/packing list</td>
+       <td valign="top">{!shp.Desc_spcl_labels_codes_on_BOL_pckg_list__c}</td>
+   </tr>
+   </apex:outputText>
+   <apex:outputText rendered="{!OR(shp.RecordType.Name == 'Packaged Goods', shp.RecordType.Name == 'Packaged Goods (3rd-Party)')}">
+   <tr><td valign="top">Additional program delivery information</td>
+       <td valign="top">{!shp.Additional_Program_Delivery_Information__c}</td>
+   </tr>
+   </apex:outputText>
+   
+   <tr><td valign="top" colspan="2"><u>Enter the following comments on the tab labeled: <b>Invoice comments from Ship to</b></u></td> 
+   </tr>
+   
+   <tr><td valign="top">Special labels/codes on the invoice</td>
+       <td valign="top"><apex:outputText value="{!shp.Special_labels_codes_on_the_invoice__c}"></apex:outputText></td>
+   </tr>
+   <tr><td valign="top">Describe special labels/codes on the invoice</td>
+       <td valign="top"><apex:outputText value="{!shp.Desc_special_labels_codes_on_the_invoice__c}"></apex:outputText></td>
+   </tr>
+   </table>
+   
+   </apex:repeat>
+   
+   <FORM NAME="PrintInformationBottom" ID="PrintInformationBottom">
+    <INPUT TYPE="button" NAME="PrintInformationBottom" VALUE=" Print Screen" ONCLICK="window.print()"/>
+   </FORM>
+   
+  </body>
+  </html>
+  
+</apex:page>

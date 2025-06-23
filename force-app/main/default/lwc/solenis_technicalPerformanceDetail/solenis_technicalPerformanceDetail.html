@@ -1,0 +1,123 @@
+<template>
+	<div class="card">
+		<lightning-layout class="tright">
+			<lightning-layout-item size="9">
+				<img class="floatLeft backbtn" style="cursor: pointer;" alt="Back to Home" title="Back to Home" src={backIcon} height="20" width="20" onclick={backToHome}/>
+			</lightning-layout-item>
+			<lightning-layout-item size="1">
+				<!-- <div class="calender btn" title="Select a date range">
+					<img alt="calender btn" src={calenderIcon} height="20" width="20" onclick={handleCalenderClick}/>
+				</div> -->
+			</lightning-layout-item>
+			<lightning-layout-item size="2">
+				<lightning-combobox class="paddRgt padd5pxTop backGrnd" name="dateRange" value={value} options={options} variant="label-hidden"
+					onchange={handleChange}>
+				</lightning-combobox>
+			</lightning-layout-item>
+		</lightning-layout>
+		<hr class="hrClass">
+		<div class="heading">TECHNICAL PERFORMANCE</div>
+	    <div class="caption">Solenis IoT empowers you with data driven decision making tools</div>
+		<table class="custom-table">
+			<!-- <thead> -->
+				<tr class='header'>
+					<th class="textCenter tabHeading">Sites</th>
+					<th class="textCenter tabHeading">No.of Applications</th>
+					<th class="textCenter tabHeading">Cooling Towers</th>
+					<th class="textCenter tabHeading">Deformer</th>
+					<th class="textCenter tabHeading">Boiler</th>
+					<th class="textCenter tabHeading">Waste Water</th>
+					<th class="textCenter tabHeading"></th>
+				</tr>
+			<!-- </thead> -->
+			<!-- <tbody> -->
+				<!-- <template for:each={rows} for:item="row">
+					<tr key={row.id}>
+						<td class="textCenter fix_height">
+							<div class='tdClass'>
+								<span>
+                                    <lightning-icon icon-name='action:approval' alternative-text='approval' size='xx-small'
+								        title='approval'></lightning-icon>{row.column1}
+                                </span>
+							</div>
+						</td>
+						<td class="textCenter fix_height">
+							<div class='tdClass'><span>{row.column2}</span></div>
+						</td>
+						<td class="textCenter fix_height">
+							<div class='tdClass'><span>
+							<lightning-icon icon-name='action:approval' alternative-text='approval' size='xx-small'
+								title='approval'></lightning-icon></span></div>
+						</td>
+						<td class="textCenter fix_height">
+							<div class='tdClass'><span>
+							<lightning-icon icon-name='action:approval' alternative-text='approval' size='xx-small'
+								title='approval'></lightning-icon></span></div>
+						</td>
+						<td class="textCenter fix_height">
+							<div class='tdClass'><span>
+							<lightning-icon icon-name='utility:alert' alternative-text='alert' size='xx-small'
+								title='alert'></lightning-icon></span></div>
+						</td>
+						<td class="textCenter fix_height">
+							<div class='tdClass'><span>
+							<lightning-icon icon-name='action:approval' alternative-text='approval' size='xx-small'
+								title='approval'></lightning-icon></span></div>
+						</td>
+					</tr>
+				</template> -->
+
+                <template for:each={finalData} for:item="row">
+					<tr key={row.Id}>
+						<td class="textCenter fix_height tabContent">
+							<div class='tdClass'>
+								<p>
+                                    <img class="img1" alt="successIcon" src={row.titleIcon} height="20" width="20"/>&nbsp; {row.titleName}
+                                </p>
+							</div>
+						</td>
+						<td class="textCenter fix_height tabContent">
+							<div class='tdClass'><span>{row.noOfApplications}</span></div>
+						</td>
+						<td class="textCenter fix_height tabContent">
+							<div class='tdClass'><span><img class="img1" alt="successIcon" src={row.Coolingtower} height="20" width="20"/></span></div>
+						</td>
+						<td class="textCenter fix_height tabContent">
+							<div class='tdClass'><span><img class="img1" alt="successIcon" src={row.Defoamer} height="20" width="20"/></span></div>
+						</td>
+						<td class="textCenter fix_height tabContent">
+							<div class='tdClass'><span><img class="img1" alt="successIcon" src={row.Boiler} height="20" width="20"/></span></div>
+						</td>
+						<td class="textCenter fix_height tabContent">
+							<div class='tdClass'><span><img class="img1" alt="successIcon" src={row.Wastewater} height="20" width="20"/></span></div>
+						</td>
+						<td class="fix_height tabContent lastCol">
+                            <div class="slds-float_left">
+                                <img class="imgFooter btn" alt="flipButton" src={flipButtonIcon} height="20" width="20"/>
+                            </div>
+						</td>
+					</tr>
+				</template>
+			<!-- </tbody> -->
+		</table>
+		<hr class="horizontal-line">
+	</div>
+	<!-- Date Range Selector Modal -->
+	<template if:true={showDatePicker}>
+		<section onkeyup={handleKeyUp} class="slds-modal slds-fade-in-open">
+			<div class="slds-modal__container">
+				<button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeDatePickerModal}>
+					<lightning-icon icon-name="utility:close"
+						alternative-text="close"
+						variant="inverse"
+						size="small" ></lightning-icon>
+					<span class="slds-assistive-text">Close</span>
+				</button>
+				<div class="slds-modal__content slds-p-around_medium">
+					<c-solenis_-date-range-picker range-in-millisecs={range} start-date-label="From" end-date-label="To" start-date={startDate} end-date={endDate} ongetdatevalues={handleGetDates}></c-solenis_-date-range-picker>
+				</div>
+			</div>
+		</section>
+		<div class="slds-backdrop slds-backdrop_open" role="presentation" onclick={closeDatePickerModal}></div>
+	</template>
+</template>

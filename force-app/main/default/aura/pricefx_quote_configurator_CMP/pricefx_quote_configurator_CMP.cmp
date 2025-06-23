@@ -1,0 +1,5 @@
+<aura:component implements="force:appHostable,lightning:isUrlAddressable" access="global"> 
+    <aura:attribute name="recordId" type="String" access="global" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <force:canvasApp width="100%" developerName="pricefx_quote_configurator"/>
+</aura:component>

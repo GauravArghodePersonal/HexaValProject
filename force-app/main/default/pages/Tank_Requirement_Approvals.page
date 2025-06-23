@@ -1,0 +1,5 @@
+<apex:page controller="TankRequestApprovals"
+           action="{!initActionTRC}" sidebar="false" 
+           tabStyle="Tank_Requirement__c">
+    <apex:include pageName="TankRequestApprovals"/>
+</apex:page>

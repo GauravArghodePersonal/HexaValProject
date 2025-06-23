@@ -1,0 +1,107 @@
+<template>
+	<!-- Header -->
+	<header>
+        <div class="slds-clearfix">
+            <div class="slds-float_left">        
+                <p class='headingContent'>ORDERS</p>
+                <span class='captionContent'>Track, reorder</span>
+			</div>
+            <!-- <div class="slds-float_right">
+                <lightning-combobox class="combobox" name="Select" value={value} options={options} onchange={handleChange}
+					variant="label-hidden">
+				</lightning-combobox>
+			</div>
+            <div class="slds-float_right">
+                <div class="calender btn" title="Select a date range">
+                    <img alt="calender btn" src={calenderIcon} height="20" width="20" onclick={handleCalenderClick}/>
+                </div>
+			</div> -->
+		</div>
+	</header>
+	<!-- Body -->
+	<section>
+		<!-- Column 1 -->
+		<nav>
+			<span class='navContent'>LATEST ORDERS</span><br/>
+			<template if:true={isLoading}>
+				<div class="exampleHolder">
+					<lightning-spinner class="slds-align_absolute-center" alternative-text="Loading" size="medium"></lightning-spinner>
+					<p class="exampleHolderText">Loading...</p>
+				</div>
+			</template>
+			<template if:false={isLoading}>
+				<template if:true={noOrderData}>
+					<div class="slds-align_absolute-center">No Data Found</div>
+				</template>
+				<template if:false={noOrderData}>
+					<div class="tiles">
+						<template for:each={orderShowList} for:item="order">
+							<div key={order.id} class="tile">
+								<div class="flip-card">
+									<div class="flip-card-inner">
+										<div class="flip-card-front">
+											<div class="tileHeader">
+												<p>Order Number - </p>
+											</div>
+											<div class="tileBody">
+												<p class="orderNumber highlightColor">{order.sapOrderNumber}</p></br>
+												<p>Order Placed Date: <span>{order.effectivedate}</span></p>
+											</div>
+											<div class="tileFooter">
+												<p>Order Status - <span class="highlightColor">{order.status}</span></p>
+											</div>
+										</div>
+										<div class="flip-card-back">
+											<div class="tileHeader">
+												<p class="flipBackHeaderContent">Order Number - <span class="highlightColor">{order.sapOrderNumber}</span></p>
+											</div>
+											<div class="tileBody">
+												<!-- <p>Order Date: <span>{order.effectivedate}</span></p> -->
+												<p>P.O. Number: <span>{order.poNumber}</span></p>
+												<p>Ship To Number: <span>{order.ShiptoNumber}</span></p>
+											</div>
+											<div class="tileFooter">
+												<p>Order Status - <span class="highlightColor">{order.status}</span></p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</template>
+					</div>
+				</template>
+			</template>
+		</nav>
+	</section>
+	<!-- Footer -->
+	<footer>
+		<div class="slds-clearfix">
+			<div class="slds-float_right paddingRight8px" onclick={handleExploreMore}>
+				<a href="javascript:void(0)" class="visitPortal" onclick={handleExploreMore}>
+					<span class="slds-m-right_xx-small" onclick={handleExploreMore}>Explore more</span>
+					<svg class="slds-button__icon slds-button__icon_medium" aria-hidden="true">
+						<use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#chevronright"></use>
+					</svg>
+				</a>
+			</div>
+		</div>
+	</footer>
+	<!-- Date Range Selector Modal -->
+	<template if:true={showDatePicker}>
+		<section onkeyup={handleKeyUp} class="slds-modal slds-fade-in-open">
+			<div class="slds-modal__container">
+				<button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeDatePickerModal}>
+					<lightning-icon icon-name="utility:close"
+						alternative-text="close"
+						variant="inverse"
+						size="small" ></lightning-icon>
+					<span class="slds-assistive-text">Close</span>
+				</button>
+				<div class="slds-modal__content slds-p-around_medium">
+					<c-solenis_-date-range-picker range-in-millisecs={range} start-date-label="From" end-date-label="To" start-date={startDate} end-date={endDate} ongetdatevalues={handleGetDates}></c-solenis_-date-range-picker>
+				</div>
+			</div>
+		</section>
+		<div class="slds-backdrop slds-backdrop_open" role="presentation" onclick={closeDatePickerModal}></div>
+	</template>
+</template>

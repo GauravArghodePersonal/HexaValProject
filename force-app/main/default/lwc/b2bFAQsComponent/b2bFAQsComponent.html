@@ -1,0 +1,25 @@
+<template>
+    <div class="product">
+        <img  src={brandLogo} alt="Logo" height='10%' width='10%'/>
+    </div>
+    <div class="header-name">
+        
+        <h1>Frequently Asked Questions (<b>FAQ</b>s)</h1>
+            
+    </div>
+    <div class="maincontainer slds-m-around_medium slds-scrollable_y">
+        <lightning-accordion active-section-name="" allow-multiple-sections-open onsectiontoggle={onsectiontoggle}>
+            <template if:true={dataList}>
+                <template for:each={dataList} for:item="faqsList">
+                    <div class="box" key={faqsList.FAQ_Number__c}>
+                        <lightning-accordion-section name={faqsList.FAQ_Questions__c} label={faqsList.FAQ_Questions__c}>
+                            <div class="answer-data">
+                                <lightning-formatted-rich-text value={faqsList.FAQ_Answers__c}></lightning-formatted-rich-text>
+                            </div>
+                        </lightning-accordion-section>
+                    </div>
+                </template>
+            </template>
+        </lightning-accordion>
+    </div>
+</template>

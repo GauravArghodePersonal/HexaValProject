@@ -1,0 +1,39 @@
+<template>
+	<div class="slideshow-container">
+        <template for:each={appMenu} for:item="page">
+            <div key={page.page_no} class="mySlides fade">
+                <table class='innertable'>
+                    <template for:each={page.column_1_data} for:item="application">
+                        <tr key={application.applicationId}>
+                            <td class="bodyContent1 pad-bottom-3px" title={application.applicationName}>{application.applicationName}</td>
+                            <td class="bodyContent2 pad-bottom-3px">
+                                <img class="img1" alt="successIcon" src={application.applicationStateIcon} height="10" width="10"/>
+                            </td>
+                        </tr>
+                    </template>
+                </table>
+                <table class='innertablefloatright'>
+                    <template for:each={page.column_2_data} for:item="application">
+                        <tr key={application.applicationId}>
+                            <td class="bodyContent1 pad-bottom-3px" title={application.applicationName}>{application.applicationName}</td>
+                            <td class="bodyContent2 pad-bottom-3px">
+                                <img class="img1" alt="successIcon" src={application.applicationStateIcon} height="10" width="10"/>
+                            </td>
+                        </tr>
+                    </template>
+                </table>
+            </div>
+        </template>
+
+        <template if:true={showSlider}>
+            <a class="prev" data-direction="backward" title="PREVIOUS" onclick={plusSlides}>❮</a>
+            <a class="next" data-direction="forward" title="NEXT" onclick={plusSlides}>❯</a>
+        </template>
+	</div>
+
+	<div if:true={showSlider} class="slider-pagination">
+        <template for:each={appMenu} for:item="page">
+		    <span key={page.page_no} class="dot" data-pagenumber={page.page_no} onclick={currentSlide}></span>
+        </template>
+	</div>
+</template>

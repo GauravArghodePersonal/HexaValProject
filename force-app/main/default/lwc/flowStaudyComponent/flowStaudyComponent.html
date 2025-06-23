@@ -1,0 +1,26 @@
+<template>
+    <lightning-card title="Heat Exchanger Summary">
+        <lightning-layout multiple-rows>
+            <lightning-layout-item size="12" padding="around-small">
+                <div class="form-row">
+                    <label for="hxType" style="font-weight: bold">Heat Exchanger Type : </label>
+                    {hxType}
+                </div>
+            </lightning-layout-item>
+
+            <lightning-layout-item size="12" padding="around-small">
+                <div class="form-row">
+                    <label for="orientation" style="font-weight: bold">Orientation : </label>
+                    {orientation}
+                </div>
+            </lightning-layout-item>
+
+            <lightning-layout-item size="12" padding="around-small">
+                <div class="form-row">
+                    <label for="tubeType" style="font-weight: bold">Tube Type : </label>
+                    {tubeType}
+                </div>
+            </lightning-layout-item>
+        </lightning-layout>
+    </lightning-card>
+</template>

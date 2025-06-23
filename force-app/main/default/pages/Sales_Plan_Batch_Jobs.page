@@ -1,0 +1,55 @@
+<apex:page id="thePage" controller="Sales_Plan_Controller" 
+           title="Sales Plan Batch Jobs" sidebar="false">
+
+    <apex:form id="theForm">
+        <apex:pageMessages />
+
+        <apex:pageBlock >
+            <apex:facet name="header"><apex:outputPanel layout="block"><table class="bold">
+                <tr class="pbtr1">
+                    <td class="pbtd11">Next Year Sales Plans</td>
+                    <td class="left">
+                    <apex:actionStatus id="pb1Btns">
+                        <apex:facet name="start">
+                            <apex:outputText styleClass="bold" value=" Please wait ...">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop">
+                            <apex:outputPanel styleClass="nowrap">
+                            <apex:commandButton action="{!createNextYearProdPlans}"
+                                                disabled="{!disableProdPlanCrtJobBtn}"
+                                                rerender="theForm" status="pb1Btns" 
+                                                value="Create Next Year Product Sales Plans"/>&nbsp;&nbsp;
+                            <apex:commandButton action="{!activateNextYearProdPlans}"
+                                                disabled="{!disableProdPlanActJobBtn}"
+                                                rerender="theForm" status="pb1Btns" 
+                                                value="Activate Next Year Product Sales Plans"/>&nbsp;&nbsp;
+                            </apex:outputPanel>
+                        </apex:facet>
+                    </apex:actionStatus>    
+                    </td>
+                </tr>
+            </table></apex:outputPanel></apex:facet>
+
+        </apex:pageBlock>
+
+    </apex:form>
+
+    <script type="text/javascript">
+
+    </script>
+    
+    <style>
+        .tbl {border-spacing: 0; border-collapse: collapse; width: 100%;}
+        .tbl td {padding: 4px; vertical-align: top; width: 16%; white-space: nowrap;}
+        .chkbx {text-align: center; width: 20px;}
+        .bold {font-weight: bold;}
+        .center {text-align: center;}
+        .left {text-align: left;}
+        .right {text-align: right;}
+        .nowrap {white-space: nowrap;}
+        .pbtr1 {background-color: aqua; text-align: center;}
+        .pbtd11 {font-size: 1.6em; padding-left: 12px; text-align: left; width: 16%;}
+    </style>
+</apex:page>

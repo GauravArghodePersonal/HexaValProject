@@ -1,0 +1,347 @@
+<template>
+    <lightning-record-edit-form
+        object-api-name={objectApiName}  columns="4"
+        >
+        <!--<lightning-input-field field-name="Type_of_Requests__c" onchange={handlereqchange}></lightning-input-field>
+        <lightning-input-field field-name="Related_Opportunity__c" onchange={handleoppchange}></lightning-input-field> -->   
+        <div class="slds-form" role="list">
+            <article class="slds-card">
+                <div class="slds-card__header slds-grid">
+                  <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                    <div class="slds-media__figure">
+                      <span class="slds-icon_container slds-icon-standard-account" title="account">
+                        <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                          <use xlink:href="/assets/icons/standard-sprite/svg/symbols.svg#account"></use>
+                        </svg>
+                        <span class="slds-assistive-text">account</span>
+                      </span>
+                    </div>
+                    <div class="slds-media__body">
+                      <h2 class="slds-card__header-title">
+                          <span>Regulatory Customer Request Detail</span>
+                      </h2>
+                    </div>
+                  </header>
+                </div>
+              </article>
+                    <div class="slds-form__row">
+                        <div class="slds-form__item" role="listitem">
+                            <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                                    <lightning-input-field field-name="Type_of_Requests__c" onchange={handlereqchange} required data-id="typereq" value='Select a value'></lightning-input-field>
+                            </div>
+                        </div>
+                        <div class="slds-form__item" role="listitem">
+                            <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                                    <lightning-input-field field-name="Status__c" onchange={handlestatus}></lightning-input-field>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-form__row">
+                        <div class="slds-form__item" role="listitem">
+                            <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                                <lightning-input-field field-name="Type_of_Request_Other__c" onchange={handletypereqother}></lightning-input-field>
+                            </div>
+                        </div>
+                        <div class="slds-form__item" role="listitem">
+                            <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                                <lightning-input-field field-name="Reason_for_Rejection__c" onchange={handlerejection}></lightning-input-field>	
+                            </div>
+                        </div>
+                </div>
+                
+                <div class="slds-form__row">
+                        <div class="slds-form__item" role="listitem">
+                            <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                                <lightning-input-field field-name="Related_Opportunity__c" onchange={handleoppchange}></lightning-input-field>
+                            </div>
+                        </div>
+                        <div class="slds-form__item" role="listitem">
+                            <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                                <lightning-input-field   field-name="Priority__c" onchange={handlepriority} data-id="datapriority" required value='Select a value'></lightning-input-field>	
+                            </div>
+                        </div>
+                </div>
+                
+                <div class="slds-form__row">
+                        <div class="slds-form__item" role="listitem">
+                            <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                                <lightning-input-field field-name="Request_Date__c" onchange={handlereqdate} required data-id="datareqdate" ></lightning-input-field>
+                            </div>
+                        </div>
+                        <div class="slds-form__item" role="listitem">
+                            <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                                <lightning-input-field field-name="Due_date__c" onchange={handleduedate}></lightning-input-field>	
+                            </div>
+                        </div>
+                </div>
+                
+                
+                <div class="slds-form__row">
+                        <div class="slds-form__item" role="listitem">
+                            <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                                <lightning-input-field field-name="Customer__c" onchange={handlecustomer} value={recordId}  required data-id="datacust"></lightning-input-field>
+                            </div>
+                        </div>
+                        <div class="slds-form__item" role="listitem">
+                            <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                                <lightning-input-field field-name="Closure_Date__c" onchange={handleclosuredate}></lightning-input-field>	
+                            </div>
+                        </div>
+                </div>
+            
+        
+        <!--<div class="slds-form__row">
+                <div class="slds-form__item" role="listitem">
+                    <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                        <lightning-input-field field-name="Regulatory_Material__c" onchange={handlerm}></lightning-input-field>
+                    </div>
+                </div>
+        </div>-->
+        
+        <div class="slds-form__row">
+            <div class="slds-form__item" role="listitem">
+              <div class="slds-form-element slds-form-element_horizontal slds-is-editing slds-form-element_1-col">
+                    <lightning-input-field field-name="Comments__c" onchange={handcomment}></lightning-input-field>
+              </div>
+            </div>
+        </div>
+        
+        <article class="slds-card">
+            <div class="slds-card__header slds-grid">
+              <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                  <span class="slds-icon_container slds-icon-standard-account" title="account">
+                    <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                      <use xlink:href="/assets/icons/standard-sprite/svg/symbols.svg#account"></use>
+                    </svg>
+                    <span class="slds-assistive-text">account</span>
+                  </span>
+                </div>
+                <div class="slds-media__body">
+                  <h2 class="slds-card__header-title">
+                      <span>Project Action Required</span>
+                  </h2>
+                </div>
+              </header>
+            </div>
+          </article>
+
+        <div class="slds-form__row">
+                <div class="slds-form__item" role="listitem">
+                    <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                        <lightning-input-field field-name="Project_1_Type__c" onchange={handleproj1}></lightning-input-field>
+                    </div>
+                </div>
+                <div class="slds-form__item" role="listitem">
+                    <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                        <lightning-input-field field-name="Project_1_Created_Date__c" onchange={handleproj1createdate}></lightning-input-field>	
+                    </div>
+                </div>
+        </div>
+        
+        <div class="slds-form__row">
+                <div class="slds-form__item" role="listitem">
+                    <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                        <lightning-input-field field-name="Project_1_Owner__c" onchange={handleproj1owner}></lightning-input-field>
+                    </div>
+                </div>
+                <div class="slds-form__item" role="listitem">
+                    <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                        <lightning-input-field field-name="Project_1_Closed_Date__c" onchange={handleproj1closedate}></lightning-input-field>	
+                    </div>
+                </div>
+        </div>
+        
+        
+        <div class="slds-form__row">
+                <div class="slds-form__item" role="listitem">
+                    <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                        <lightning-input-field field-name="Project_2_Type__c" onchange={handleproj2}></lightning-input-field>
+                    </div>
+                </div>
+                <div class="slds-form__item" role="listitem">
+                    <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                        <lightning-input-field field-name="Project_2_Created_Date__c" onchange={handleproj2createdate}></lightning-input-field>	
+                    </div>
+                </div>
+        </div>
+        
+        <div class="slds-form__row">
+                <div class="slds-form__item" role="listitem">
+                    <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                        <lightning-input-field field-name="Project_2_Owner__c" onchange={handleproj2owner}></lightning-input-field>
+                    </div>
+                </div>
+                <div class="slds-form__item" role="listitem">
+                    <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                        <lightning-input-field field-name="Project_2_Closed_Date__c" onchange={handleproj2closedate}></lightning-input-field>	
+                    </div>
+                </div>
+        </div>
+        
+        <div class="slds-form__row">
+                <div class="slds-form__item" role="listitem">
+                    <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                        <lightning-input-field field-name="Project_3_Type__c" onchange={handleproj3}></lightning-input-field>
+                    </div>
+                </div>
+                <div class="slds-form__item" role="listitem">
+                    <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                        <lightning-input-field field-name="Project_3_Created_Date__c" onchange={handleproj3createdate}></lightning-input-field>	
+                    </div>
+                </div>
+        </div>
+        
+        <div class="slds-form__row">
+                <div class="slds-form__item" role="listitem">
+                    <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                        <lightning-input-field field-name="Project_3_Owner__c" onchange={handleproj3owner}></lightning-input-field>
+                    </div>
+                </div>
+                <div class="slds-form__item" role="listitem">
+                    <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                        <lightning-input-field field-name="Project_3_Closed_Date__c" onchange={handleproj3closedate}></lightning-input-field>	
+                    </div>
+                </div>
+        </div>
+        
+        <div class="slds-form__row">
+                <div class="slds-form__item" role="listitem">
+                    <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                        <lightning-input-field field-name="Project_4_Type__c" onchange={handleproj4}></lightning-input-field>
+                    </div>
+                </div>
+                <div class="slds-form__item" role="listitem">
+                    <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                        <lightning-input-field field-name="Project_4_Created_Date__c" onchange={handleproj4createdate}></lightning-input-field>	
+                    </div>
+                </div>
+        </div>
+        
+        <div class="slds-form__row">
+                <div class="slds-form__item" role="listitem">
+                    <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                        <lightning-input-field field-name="Project_4_Owner__c" onchange={handleproj4owner} ></lightning-input-field>
+                    </div>
+                </div>
+                <div class="slds-form__item" role="listitem">
+                    <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                        <lightning-input-field field-name="Project_4_Closed_Date__c" onchange={handleproj4closedate}></lightning-input-field>	
+                    </div>
+                </div>
+        </div>
+        
+        <article class="slds-card">
+            <div class="slds-card__header slds-grid">
+              <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                  <span class="slds-icon_container slds-icon-standard-account" title="account">
+                    <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                      <use xlink:href="/assets/icons/standard-sprite/svg/symbols.svg#account"></use>
+                    </svg>
+                    <span class="slds-assistive-text">account</span>
+                  </span>
+                </div>
+                <div class="slds-media__body">
+                  <h2 class="slds-card__header-title">
+                      <span>RCR Section</span>
+                  </h2>
+                </div>
+              </header>
+            </div>
+          </article>
+
+        <div class="slds-form__row">
+                <div class="slds-form__item" role="listitem">
+                    <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                        <lightning-input-field field-name="Attributed_To__c" onchange={handleattribute}  data-id="dataattri"  value="" ></lightning-input-field>
+                    </div>
+                </div>
+                <div class="slds-form__item" role="listitem">
+                    <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                        <lightning-input-field field-name="Days_in_On_Hold_Pending_Sales_Status__c" onchange={handledayshold}></lightning-input-field>	
+                    </div>
+                </div>
+        </div>
+        
+        <div class="slds-form__row">
+                <div class="slds-form__item" role="listitem">
+                    <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                        <lightning-input-field field-name="On_Hold_Date__c" onchange={handleholddate}></lightning-input-field>
+                    </div>
+                </div>
+                <div class="slds-form__item" role="listitem">
+                    <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                        <lightning-input-field field-name="Days_Past_Customer_Expectation__c" onchange={handlecustomerexpectation}></lightning-input-field>	
+                    </div>
+                </div>
+        </div>
+        
+        <div class="slds-form__row">
+                <div class="slds-form__item" role="listitem">
+                    <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                        <lightning-input-field field-name="Off_Hold_Date__c" onchange={handleoffhold}></lightning-input-field>
+                    </div>
+                </div>
+                <div class="slds-form__item" role="listitem">
+                    <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                        <lightning-input-field field-name="Actual_Time_Spent_Hour__c" onchange={handleactualtimespent}></lightning-input-field>	
+                    </div>
+                </div>
+        </div>
+        
+        <div class="slds-form__row">
+                <div class="slds-form__item" role="listitem">
+                    <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                        <lightning-input-field field-name="Hold_Time_Days__c" onchange={handleholdtime}></lightning-input-field>
+                    </div>
+                </div>
+                <div class="slds-form__item" role="listitem">
+                    <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                        <lightning-input-field field-name="Days_Past_Due_RCR_commitment_Date__c" onchange={handleduercr}></lightning-input-field>	
+                    </div>
+                </div>
+        </div>
+        
+        <div class="slds-form__row">
+                <div class="slds-form__item" role="listitem">
+                    <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                        <lightning-input-field field-name="Total_Time_Days__c" onchange={handletotaltime}></lightning-input-field>
+                    </div>
+                </div>
+                <div class="slds-form__item" role="listitem">
+                    <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                        <lightning-input-field field-name="Reason_on_Negative_For_Requirements__c" onchange={handlenegativereq}></lightning-input-field>	
+                    </div>
+                </div>
+        </div>
+        
+        <div class="slds-form__row">
+                <div class="slds-form__item" role="listitem">
+                    <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                        <lightning-input-field field-name="RCR_Time_Days__c" onchange={handletimedays}></lightning-input-field>
+                    </div>
+                </div>
+                <div class="slds-form__item" role="listitem">
+                    <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                        <lightning-input-field field-name="Sale_Commitment_Date__c" onchange={handlecommitmentdate}></lightning-input-field>	
+                    </div>
+                </div>
+        </div>
+        
+        <div class="slds-form__row">
+                <div class="slds-form__item" role="listitem">
+                    <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                        <lightning-input-field field-name="Negative_For_Requirements__c" onchange={handlenegativereq}></lightning-input-field>
+                    </div>
+                </div>
+        </div>
+
+        </div>
+        <div style="text-align:center;">
+            <div class="slds-m-top_medium">
+                <lightning-button class="slds-m-top_small" label="Next" onclick={handlesubmit} type="submit"></lightning-button>
+            </div>
+        </div>
+</lightning-record-edit-form>
+</template>

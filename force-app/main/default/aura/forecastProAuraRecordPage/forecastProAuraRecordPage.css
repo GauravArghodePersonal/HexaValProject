@@ -1,0 +1,17 @@
+.THIS .slds-modal__container{
+    max-width: 85rem;
+    width: 85rem;
+    Overflow :Hidden;
+}
+
+.THIS .alignMiddle{
+    text-align: center;
+    padding-top: 30px;
+}
+.THIS .modal-content-id-1{
+    Overflow :Hidden;
+}
+.THIS .slds-modal__content{
+    Overflow :Hidden;
+    height : 350px;
+}

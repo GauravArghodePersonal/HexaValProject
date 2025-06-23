@@ -1,0 +1,241 @@
+<apex:page controller="AccountRollupAttachmentController" showHeader="false" sidebar="false">
+
+	<apex:includeScript value="{!URLFOR($Resource.jQuery1x,'jQuery/jquery-1.8.0.min.js')}" />
+	<apex:includeScript value="{!URLFOR($Resource.jQuery1x,'jQuery/jquery-ui-1.8.20.custom.min.js')}" />
+	<apex:includeScript value="{!URLFOR($Resource.jQuery1x,'jQueryPlugins/blockUI/jquery.blockUI.js')}" />
+	<apex:includeScript value="{!URLFOR($Resource.AccountRollupResources,'js/general.js')}" />
+	<apex:includeScript value="{!URLFOR($Resource.jQuery1x,'jQueryPlugins/splitter/splitter.js')}" />  
+	<apex:stylesheet value="{!URLFOR($Resource.jQuery1x,'jQueryPlugins/splitter/splitter.css')}" />  
+	<apex:stylesheet value="{!URLFOR($Resource.AccountRollupResources,'css/style.css')}" />
+	
+	<script>
+		if (!window.console) window.console = {};	
+		if (!window.console.log) window.console.log = function () { };
+	</script>
+
+    <style type="text/css">
+        @import "{!URLFOR($Resource.jQuery, 'css/redmond/jquery-ui-1.8.16.custom.css')}";
+    </style>
+
+	<style type="text/css">
+	    body{background:#F8F8F8;}
+        .bold {font-weight: bold;}
+        .center {text-align: center;}
+        .right {text-align: right;}
+        .nowrap {white-space: nowrap;}
+        .warning {font-color: red; font-weight: bold;}
+        .txtbox1 {background-color: #f8f8f8; border: 1px solid #7f9db9; 
+                  width: 14em;}
+        .txtbox2 {width: 14em;}
+	</style>
+
+	<style>
+		#attachmentSplitter {
+			height: 800px;
+			width: 100%;
+			border: 5px solid #aaa;
+		}
+		
+		#attachmentSplitter .vsplitbar {
+			width: 16px;
+			background: #aaa;
+		}
+
+		.noItemSelectedText {
+			font-size:14px;
+			font-weight:bold;
+		}
+	</style>
+
+	<script language="javascript">
+	    var j$ = jQuery.noConflict();
+
+        j$(document).ready(function(){
+            AttachmentSection_applyJQueryStyling();
+        });
+
+        function showAddAttachmentDialog() {
+            j$("#addAttachmentDiv").dialog("open");
+        }
+
+        function saveAttachmentComplete() {
+            j$("#addAttachmentDiv").dialog("close");
+        }
+
+        function AttachmentSection_applyJQueryStyling() {
+            j$.unblockUI();
+
+            j$('.pbSubheader').css('background-color','#1797C0');
+        
+            resizeIframe();
+
+            parent.AdvancedTabbar_IframeResizeRequest();
+            j$(window).resize(function() {resizeTreePanel();});
+	   		resizeTreePanel();
+            
+            var currDataObject;
+            var currTargetId = '';
+            var currFilter1 = '';
+            var currFilter2 = '';
+            var currFilter3 = '';
+            
+            //Add Tree Event Handler
+	        j$('#tree').on('selectionChanged', function(e, data) {
+	        	TreePanelSelectionHandler(data);
+//	        	if (data != null) {
+//	        		showBlockUIMessage('Please Wait');
+//	        	
+//		        	processSelectionChange(data.targetId,data.targetObjectType);
+//		        	
+//		        	var targetId = '';
+//		        	var filter1 = '';
+//		        	var filter2 = '';
+//		        	var filter3 = '';
+//
+//		        	filter1 = 'Parent_Object_Type__c = \'' + data.targetObjectType + '\'';
+//
+//		        	if (data.targetObjectType == 'Account') {
+//		        		targetId = data.targetId;
+//		        	}
+//		        	else {
+//		        		targetId = data.ultimateParentId;
+//			        	filter2 = 'Parent_Id__c = \'' + data.targetId + '\'';
+//		        	}
+//		        	currTargetId = targetId;
+//		        	currFilter1 = filter1;
+//		        	currFilter2 = filter2;
+//		        	currFilter3 = filter3;
+//		        	AdvancedDataTable_ApplyNewStartingIdAndDynamicFilters(targetId,filter1,filter2,filter3);
+//		        }
+//		        else {
+//		        	processSelectionChange('','');
+//		        } 
+    		});
+    		
+	   		j$("#attachmentSplitter").splitter({minAsize:325,maxAsize:600,splitVertical:true,A:j$('#leftPane'),B:j$('#rightPane'),closeableto:1});
+	   		
+	   		j$('#AdvancedDataTableEvents').on('refresh', 
+				function(e) {
+	            	resizeIframe();
+	            	resizeTreePanel();
+	            	parent.AdvancedTabbar_IframeResizeRequest();
+	    		}
+	    	);
+	    	
+	    	/*
+		    j$("#addAttachmentDiv").dialog({
+		    	autoOpen: false,
+		        height: 450,
+		        width: 700,
+		        modal: true,
+		        buttons: {
+		            Cancel: function() {
+		                j$( this ).dialog( "close" );
+		            }
+		        },
+		        close: function() {}
+		    });
+		    */
+        }
+        
+        function TreePanelSelectionHandler(data) {
+        
+        	//alert(data);
+        
+        	if (data != null) {
+        		showBlockUIMessage('Please Wait');
+        	
+	        	processSelectionChange(data.targetId,data.targetObjectType);
+	        	
+	        	var targetId = '';
+	        	var filter1 = '';
+	        	var filter2 = '';
+	        	var filter3 = '';
+
+	        	filter1 = 'Parent_Object_Type__c = \'' + data.targetObjectType + '\'';
+
+	        	if (data.targetObjectType == 'Account') {
+	        		targetId = data.targetId;
+	        	}
+	        	else {
+	        		targetId = data.ultimateParentId;
+		        	filter2 = 'Parent_Id__c = \'' + data.targetId + '\'';
+	        	}
+	        	currTargetId = targetId;
+	        	currFilter1 = filter1;
+	        	currFilter2 = filter2;
+	        	currFilter3 = filter3;
+	        	currDataObject = data;
+	        	AdvancedDataTable_ApplyNewStartingIdAndDynamicFilters(targetId,filter1,filter2,filter3);
+	        }
+	        else {
+	        	processSelectionChange('','');
+	        } 
+        }
+        
+        function resizeTreePanel() {
+	   		j$("[id*=treeView]").height(j$("[id*=rightPane]").height()); 
+			resizeTree(j$("[id*=leftPane]").height());
+        }
+        
+        function showBlockUIMessage(message) {
+        	j$.blockUI({ message: '<BR/><h1><img src="{!URLFOR($Resource.AccountRollupResources, 'images/busy.gif')}" /> ' + message + '...</h1><BR/><BR/>'});
+		}
+
+		function fileUploadingHandler() {
+			showBlockUIMessage('Uploading Attachment, Please Wait');
+		}
+
+		function fileUploadErrorHandler(errorMessage) {
+			alert(errorMessage);
+            j$.unblockUI();
+		}
+
+		function fileUploadedHandler() {
+			//alert(currDataObject.toString());
+			alert('File Uploaded');
+			j$.unblockUI();
+			//TreePanelSelectionHandler(currDataObject);
+	    	//console.log('Calling AdvancedDataTable_ApplyNewStartingIdAndDynamicFilters - ' + currTargetId + ' - ' + currFilter1 + ' - ' + currFilter2 + ' - ' + currFilter3);
+			//AdvancedDataTable_ApplyNewStartingIdAndDynamicFilters(currTargetId,currFilter1,currFilter2,currFilter3);
+		}		
+	</script>
+
+ 	<apex:Form >
+ 		<!-- AttachmentAdvancedDataTable  -->
+		<apex:actionFunction action="{!processSelectionChange}" name="processSelectionChange" rerender="attachmentTableTitle" oncomplete="j$.unblockUI();">
+			<apex:param name="selectedId" assignTo="{!selectedId}" value="" />
+			<apex:param name="objectType" assignTo="{!objectType}" value="" />
+		</apex:actionFunction>
+	
+		<apex:actionFunction name="refreshAttachmentsTab" action="{!refreshAttachmentsTab}" rerender="attachmentSplitter" oncomplete="AttachmentSection_applyJQueryStyling();"></apex:actionFunction>
+	
+		<apex:pageMessages id="pageMessages" />
+	
+ 		<div id="attachmentSplitter" style="overflow:visible;">
+			<div id="leftPane" style="overflow:hidden;">
+	        	<c:TreeView id="treeView" selectable="false" value="{!selectedValues}" JsonData="{!JsonString}"/>
+	        </div>
+			<div id="rightPane" style="overflow:auto">
+ 				<apex:outputPanel id="AttachmentAdvancedDataTable" >
+ 					<apex:outputPanel layout="block" rendered="{!not(ItemSelected)}" style="height:300px;">
+ 						<apex:image id="theImage" value="{!URLFOR($Resource.AccountRollupResources,'images/selectanItem.png')}"/>
+ 					</apex:outputPanel>
+ 					 
+ 					<apex:outputPanel layout="block" rendered="{!ItemSelected}"> 
+		 				<apex:outputPanel id="attachmentTableTitle" styleClass="toolbarGroup fullWidthToolbar-centered pageStatusToolbarText">
+							<apex:outputText styleClass="toolbarItem" value="{!attachmentTitle}" escape="false"/>
+							<c:App_AttachAttachmenttoSalesforce_WebApp id="AttachFileFlexSWF" parentId="{!selectedId}"/>
+			 				<apex:outputPanel layout="block"  id="attachmentTableUploadButton" styleClass="fullWidthToolbar-centered">
+							</apex:outputPanel>
+						</apex:outputPanel>
+						<div id="dataTableDiv" style="display:inline-block">
+  			           		<c:AdvancedDataTable id="advancedDataTableObject" dataTableDefinitionName="attachmentSection" startingId="{!selectedId}" dynamicFilter1="{!dynamicFilter1}"/>
+			           	</div>
+ 					</apex:outputPanel>
+				</apex:outputPanel> 
+           	</div>
+ 		</div>
+ 		
+	</apex:Form>
+ </apex:page>

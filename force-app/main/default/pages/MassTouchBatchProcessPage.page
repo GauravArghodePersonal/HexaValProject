@@ -1,0 +1,54 @@
+<apex:page controller="MassTouchBatchProcessController">
+
+    <apex:pageBlock >
+        <apex:pageBlockSection title="Batch Updates" id="block1" collapsible="false" columns="1">
+            <apex:form >
+                <p>
+                <apex:outputLabel value="Object"/><br/>
+                <apex:selectList value="{!objectName}" size="1" styleClass="slist">
+                    <apex:selectOptions value="{!objNames}"/>
+                </apex:selectList>
+                </p>
+
+                <p>
+                <apex:outputLabel value="Batch Size"/><br/>
+                <apex:selectList value="{!batchSize}" size="1" styleClass="slist">
+                    <apex:selectOptions value="{!batchSizes}"/>
+                </apex:selectList>
+                </p>
+
+                <p>             
+                <apex:outputLabel value="Number of Records"/><br/>
+                <apex:inputText size="20" value="{!recordLimit}"/>
+                </p>
+                
+                <p>             
+                <apex:outputLabel value="Last Modified DateTime (YYYY-MM-DD HH:MM:SS) (Records modified before this time will be selected to touch)" 
+                                  for="dateTimeString"/><br/>
+                <apex:inputText id="dateTimeString" size="20" value="{!dateTimeString}"/>
+                </p>
+                
+                <p>             
+                <apex:commandButton value="Submit Update Batch Job" action="{!submitUpdateBatchJob}"
+                                  onclick="return getConfirm('Submit Update Batch Job?');"/>
+                </p>
+            </apex:form>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+
+	<script>
+	    function getConfirm(q) {
+	        answer = confirm(q);
+	        return (answer != 0);
+	    }
+	</script>
+
+    <style>
+        .bold {font-weight: bold;}
+        .center {text-align: center;}
+        .right {text-align: right;}
+        .nowrap {white-space: nowrap;}
+        .pbhdr {text-align: center; font-weight: bold; font-family: monospace;}
+        .slist {font-weight: bold; font-family: monospace;}
+    </style>
+</apex:page>

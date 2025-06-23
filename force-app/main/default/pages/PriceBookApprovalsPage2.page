@@ -1,0 +1,206 @@
+<apex:page standardController="Price_Book__c"
+                           id="thePage" 
+                   extensions="PriceBookApprovalController"
+                        title="Price Book: {!Price_Book__c.Description__c}">
+
+    <apex:includeScript value="{!$Resource.PendingApprovalFunctions}" />
+    <apex:messages />
+    <apex:form id="theForm">
+        <apex:variable var="decimals" value="4"/>
+        <apex:variable var="locale" value="{!userLocale}"/>
+
+        <!-- do not delete the next line -->
+        <apex:outputText value="{!Price_Book__c.Product_Segment_Code__c}" rendered="false"/>
+        
+        <apex:pageBlock >
+
+            <apex:pageBlockButtons >
+                <apex:panelGrid rendered="{!isViewType2}">
+                    <apex:panelGroup styleClass="nowrap">
+                        <apex:commandButton value="Approve the Price Book"
+                            action="{!approvePriceBook}" />
+                        <apex:commandButton value="Reject the Price Book"
+                            onclick="return paf_validateForm3(this.form);"
+                            action="{!rejectPriceBook}" />
+                        <apex:commandButton value="Return to Price Book List"
+                            action="{!gotoPriceBookApprovalsPage}" />
+                        <input type="button" class="btn" value="Price Book Viewer"
+                            onclick="javascript:top.location.href='/apex/PriceBookViewer?id={!Price_Book__c.id}'"
+                            />
+                    </apex:panelGroup>
+                </apex:panelGrid>
+                <apex:panelGrid rendered="{!isViewType1}">
+                    <apex:panelGroup styleClass="nowrap">
+                        <apex:commandButton value="Edit Price Book"
+                            action="{!gotoPriceBookEditPage}" />
+                        <input type="button" class="btn" value="Price Book Viewer"
+                            onclick="javascript:top.location.href='/apex/PriceBookViewer?id={!Price_Book__c.id}'"
+                            />
+                    </apex:panelGroup>
+                </apex:panelGrid>
+            </apex:pageBlockButtons>
+
+            <apex:pageBlockSection title="Approve / Reject Comments" 
+                                   id="block0" columns="1" collapsible="false"
+                                   rendered="{!isViewType2}">
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Approve / Reject Comments"/>
+                    <apex:inputTextArea title="Approve / Reject Comments" 
+                                        id="userComments" value="{!userComments}" 
+                                        rows="1" cols="100"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection title="Price Book Details" id="block1">
+                <apex:pageBlockSectionItem helpText="PriceBook Number">
+                    <apex:outputLabel value="Price Book Number"/>
+                    <apex:outputField value="{!Price_Book__c.Name}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="PriceBook Owner">
+                    <apex:outputLabel value="Price Book Owner"/>
+                    <apex:outputField value="{!Price_Book__c.Owner.Name}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="Description">
+                    <apex:outputLabel value="Description"/>
+                    <apex:outputField value="{!Price_Book__c.Description__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="Effective Date">
+                    <apex:outputLabel value="Effective Date"/>
+                    <apex:outputField value="{!Price_Book__c.Effective_Date__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="Regions">
+                    <apex:outputLabel value="Regions"/>
+                    <apex:outputText escape="false" value="{!regions}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="Number of Materials">
+                    <apex:outputLabel value="Number of Materials"/>
+                    <apex:outputField value="{!Price_Book__c.Number_of_Materials_on_Price_Book__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="Sales Orgs">
+                    <apex:outputLabel value="Sales Orgs"/>
+                    <apex:outputText escape="false" value="{!salesOrgs}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="Number of Services">
+                    <apex:outputLabel value="Number of Services"/>
+                    <apex:outputField value="{!Price_Book__c.Number_of_Services__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="Distribution Channel Name and Code">
+                    <apex:outputLabel value="Distribution Channel"/>
+                    <apex:outputText value="{!Price_Book__c.Dist_Channel_Description__c} - {!Price_Book__c.Dist_Channel_Code__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="Product Lines">
+                    <apex:outputLabel value="Product Lines"/>
+                    <apex:outputText escape="false" value="{!productLines}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="Division Name and Code">
+                    <apex:outputLabel value="Division"/>
+                    <apex:outputText value="{!Price_Book__c.Division_Description__c} - {!Price_Book__c.Division_Code__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="Product Families">
+                    <apex:outputLabel value="Product Families"/>
+                    <apex:outputText escape="false" value="{!families}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="Price Book Status">
+                    <apex:outputLabel value="Price Book Status"/>
+                    <apex:outputText escape="false" value="{!Price_Book__c.Record_Status__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="Customer Groups">
+                    <apex:outputLabel value="Customer Groups"/>
+                    <apex:outputText escape="false" value="{!customerGroups}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="PriceBook Cloned From">
+                    <apex:outputLabel value="PriceBook Cloned From"/>
+                    <apex:outputField value="{!Price_Book__c.Cloned_From__r.Name}"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection rendered="{!renderPBMaterialSection}" 
+                                   title="Price Book Materials" id="block2" columns="1">
+                    <apex:pageBlockTable value="{!priceBookEntries}" var="p">
+<!--                    
+                        <apex:column headervalue="PriceBook Entry"
+                            value="{!p.priceBookEntry.Name}" />
+-->                            
+                        <apex:column >
+                            <apex:facet name="header">Material Name and Number</apex:facet>
+                            <apex:outputLink value="/{!p.priceBookEntry.Material_Sales_Data2__c}"> 
+                                <apex:outputText value="{!p.priceBookEntry.Material_Name__c} - {!p.materialNumber}"/>
+                            </apex:outputLink>
+<!--                            
+                            <br/><apex:outputText value="{!p.materialNumber}"/> 
+-->
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Sales Org</apex:facet>
+                            <apex:outputField value="{!p.priceBookEntry.Sales_Org_Desc__c}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Volume UOM</apex:facet>
+                            <apex:outputField value="{!p.priceBookEntry.Volume_UOM__c}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Selling UOM</apex:facet>
+                            <apex:outputField value="{!p.priceBookEntry.Selling_UOM__c}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Floor Price</apex:facet>
+                            <c:Currency value="{!p.scaledPricing.Floor_Price__c}"
+                                        code="{!p.scaledPricing.CurrencyIsoCode}"
+                                        decimals="{!decimals}" locale="{!locale}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Market Price</apex:facet>
+                            <c:Currency value="{!p.scaledPricing.Selling_Price__c}"
+                                        code="{!p.scaledPricing.CurrencyIsoCode}"
+                                        decimals="{!decimals}" locale="{!locale}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">GP %</apex:facet>
+                            <apex:outputField value="{!p.priceBookEntry.GPPct__c}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Scale Pricing<br/>Min.Vol - Max.Vol - FloorPrice - CeilPrice</apex:facet>
+                            <apex:outputText escape="false" value="{!p.pricingScales}"/>
+                        </apex:column>
+                    </apex:pageBlockTable>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection rendered="{!renderPBServiceSection}" 
+                                   title="Price Book Services" id="block3" columns="1">
+                    <apex:pageBlockTable value="{!priceBookServices}" var="p">
+<!--                    
+                        <apex:column headervalue="PriceBook Service"
+                            value="{!p.priceBookService.Name}" />
+-->                            
+                        <apex:column >
+                            <apex:facet name="header">Description</apex:facet>
+                            <apex:outputField value="{!p.priceBookService.Description__c}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Service Type</apex:facet>
+                            <apex:outputField value="{!p.priceBookService.Service_Type__c}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Service Cost</apex:facet>
+                            <c:Currency value="{!p.priceBookService.Service_Cost__c}"
+                                        code="{!p.priceBookService.CurrencyIsoCode}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Service UOM</apex:facet>
+                            <apex:outputField value="{!p.priceBookService.Service_UOM__c}"/>
+                        </apex:column>
+                    </apex:pageBlockTable>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+
+    <style>
+        table.pscales {border-collapse: collapse; empty-cells: show; width: 100%}
+        table.pscales td {border:solid silver 1px; padding:5px; text-align:right; width: 50px;}
+        table {border-collapse: collapse;}
+        .textAlignCenter {text-align: center;}
+        .textAlignRight {text-align: right;}
+        .nowrap {white-space: nowrap;}
+    </style>    
+
+</apex:page>

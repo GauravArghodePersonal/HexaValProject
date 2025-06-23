@@ -1,0 +1,205 @@
+<template>
+    <lightning-card title="Heat Exchanger Summary">
+        <lightning-layout multiple-rows>
+    <lightning-layout-item size="3" flexibility="auto" padding="horizontal-small" class="slds-text-align_left">
+        <lightning-button variant="brand" label="Export to Excel" title="Primary action" onclick={handleExport} class="slds-m-left_x-small"></lightning-button>
+    </lightning-layout-item>
+        <lightning-layout-item size="9" flexibility="auto" padding="horizontal-small" class="slds-text-align_right">
+                <lightning-button class="slds-m-around_xx-small" variant="brand" type="search" label="Search" disabled={noButtonsVisible} onclick={handleSearch}></lightning-button>
+                <lightning-button class="slds-m-around_xx-small" label="Clear" onclick={handleCancel}></lightning-button>
+        </lightning-layout-item>
+        </lightning-layout>
+
+        <div class="slds-grid slds-gutters slds-var-p-around_x-large">
+            <div class="slds-col slds-size_1-of-4" > 
+            <lightning-record-picker 
+               label="Unique Customer ID"
+               class="bold-label"
+               placeholder="Enter Unique Identifier here" 
+               object-api-name="Account" 
+               onchange={handleAccountIdChange}
+               matching-info={matchingInfo} 
+               display-info={displayInfo}
+               filter={filter}>
+            </lightning-record-picker>
+            
+ <div class="slds-col">
+    <div class="slds-grid slds-wrap">
+        <div class="slds-col slds-size_1-of-1 slds-var-p-around_xxx-small bold-label"
+             for:each={uniqueIdArry} for:item="pn" key={pn}>
+            <lightning-pill class="slds-float_left slds-truncate"
+                            label={pn} onremove={removePillItem} name={pn}>
+            </lightning-pill>
+        </div>
+    </div>
+</div>
+</div>   
+            <div class="slds-col slds-size_1-of-4">
+                <lightning-combobox
+                    name="RecordType"
+                    label="Unit Of Measurement"
+                    value={value}
+                    placeholder="Select Measurement Unit here"
+                    options={options}
+                    class="bold-label"
+                    onchange={handleChange}>
+                </lightning-combobox>
+            </div>
+            <div class="slds-col slds-size_1-of-4">
+                <lightning-input class="slds-m-bottom_medium bold-label" type="date" placeholder="Enter Start Date here" label="Start Date" onchange={handleStartDateChange}></lightning-input>
+            </div>
+            <div class="slds-col slds-size_1-of-4">
+                <lightning-input class="slds-m-bottom_medium bold-label" type="date" placeholder="Enter End Date here" label="End Date" onchange={handleEndDateChange}></lightning-input>
+                </div>
+        </div>
+<!-- Custom Data table start -->
+        <div class="center-align-table slds-scrollable_y slds-scrollable_x" style={datatableHeight}>
+        <template if:true={heatExchangerData}>
+            <template if:true={datavisibilityFlag}>
+                <table class="slds-table slds-table_cell-buffer">
+  <thead>
+    <tr>
+      <!-- Add table headers based on column labels -->
+      <th>Heat Exchanger Name</th>
+      <th>Flow Study Date</th>
+      <th>Heat Exchanger Tag Number</th>
+      <th>Tube Metallurgy</th>
+      <th>Years Since Last Replacement</th>
+      <th>Years Since Last Cleaning</th>
+      <th>Heat Exchanger Type</th>
+      <th>Orientation</th>
+      <th>Unique Customer ID</th>
+      <th>Cooling Tower Name</th>
+      <th>Production Unit</th>
+      <th>Sub Unit</th>
+     <th>Non-Essential Heat Exchanger?</th>
+      <th>Number of Flow Studies</th>
+      <th>Latest HTSC</th>
+      <th>Number of Passes</th>
+      <th>Latest is Flow Throttled</th>
+      <th>Latest CW Flow</th>
+      <th>Latest Flow Study Water Velocity</th>
+      <th>Decrease in Flow – Year over Year (%)</th>
+      <th>Decrease in Flow from Baseline (%)</th>
+      <th>Latest Flow Study Surface Temperature</th>
+      <th>Latest Flow Study Performance Vulnerability</th>
+      <th>Latest Flow Study Retention Time (seconds)</th>
+      <th>Inlet Temperature</th>
+      <th>Outlet Temperature</th>
+      <th>Process Inlet Temperature</th>
+      <th>Process Outlet Temperature</th>
+      <th>Surface Area-Inner</th>
+      <th>Approximate Volatility</th>
+      <th>Direction of Leak</th>
+      <th>Shell-Side Fluid</th>
+      <th>Have Tubes Been Coated?</th>
+      <th>Date of Most Recent Cleaning</th>
+      <th>Date of Most Recent Retube or Replacement</th>
+      <th>Total Times Cleaned</th>
+      <th>Total Number of Leaks</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Loop through your data and create table rows -->
+    <template for:each={recordsToDisplay} for:item="record">
+      <tr key={record.heatExchangerLink}>
+        <!-- Populate table cells with data -->
+        <td><a href={record.heatExchangerLink} target="_blank">{record.heatExchangerName}</a></td>
+        <td>{record.flowStudyDate}</td>
+        <td>{record.heatExchangerTagNumber}</td>
+        <td>{record.tubeMetallurgy}</td>
+        <td>{record.yearsSinceLastReplacement}</td>
+        <td>{record.yearsSinceLastCleaning}</td>
+        <td>{record.heatExchangerType}</td>
+        <td>{record.orientation}</td>
+        <td><a href={record.accountId} target="_blank">{record.accountName}</a></td>
+        <td><a href={record.coolingTowerLink} target="_blank">{record.coolingTowerName}</a></td>
+        <td><a href={record.productionUnitLink} target="_blank">{record.productionUnit}</a></td>
+        <td>{record.subUnit}</td>
+        <td>{record.nonEssentialHeatExchangerDisplay}</td> 
+        <td>{record.numberOfFlowStudies}</td>
+        <td class={record.cellColor}>{record.latestHTSC}</td>
+        <td>{record.Numberofpasses}</td>
+        <td>{record.LatestisFlowThrottled}</td>
+        <td>{record.cwFlow}</td>
+        <td class={record.cellColor1}>{record.flowSWtrVelo}</td>
+        <td class={record.cellColor4}>{record.decFlowoverYr}</td>
+        <td class={record.cellColor3}>{record.decFlowBaseline}</td>
+        <td class={record.cellColor2}>{record.flowSurTemp}</td>
+        <td>{record.flowSPerVul}</td>
+        <td>{record.flowSRetTime}</td>
+        <td>{record.flowInletTemp}</td>
+        <td>{record.flowOutLetTemp}</td>
+        <td>{record.flowProcessInletTemp}</td>
+        <td>{record.flowProcessOutletTemp}</td>
+        <td>{record.surAreaIn}</td>
+        <td>{record.approximateVolatility}</td>
+        <td>{record.directLeak}</td>
+        <td>{record.shellsideFluid}</td>
+        <td>{record.haveTubeCoted}</td>
+        <td>{record.dateOfMostRecentCleaning}</td>
+        <td>{record.dateOfMostRecentRetube}</td>
+        <td>{record.totalClean}</td>
+        <td>{record.totalTubeLeak}</td>
+      </tr>
+    </template>
+  </tbody>
+</table>
+</template>
+</template>
+</div> 
+<!-- Custom Data table end -->
+          <template if:false={heatExchangerData}>  
+             <template if:false={datavisibilityFlag}> 
+            <div style="display: flex; justify-content: center; align-items: center; height: 1vh;">
+                  <p style="font-size: 24px; font-weight: bold;">No Data Available...!</p>
+            </div>
+             </template> 
+          </template> 
+        <!-- Records per page dropdown start-->
+        <div class="slds-grid slds-grid_vertical-align-center slds-grid_align-spread" style="padding-top: 0.5em;">
+        <div class="slds-col">
+            <div class="slds-list_inline slds-p-bottom_xx-small">
+                <label class="slds-text-color_weak slds-p-horizontal_x-small" for="recordsPerPage">Page Size:</label>
+                <div class="slds-select_container">
+                    <select class="slds-select" id="recordsPerPage" onchange={handleRecordsPerPage}>
+                        <template for:each={pageSizeOptions} for:item="option">
+                            <option key={option} value={option}>{option}</option>
+                        </template>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <!-- Records per page dropdown end-->
+
+       <!-- Pagination controls start-->
+       <div class="slds-align_absolute-center" style="height:5rem">
+        <lightning-button disabled={bDisableFirst} icon-name="utility:jump_to_left" label="First" class="slds-p-horizontal_x-small" alternative-text="first page" onclick={firstPage}></lightning-button>
+
+        <lightning-button disabled={bDisableFirst} icon-name="utility:chevronleft" label="Previous" alternative-text="Previous" onclick={previousPage}></lightning-button>
+        &nbsp;
+        <span class="slds-badge">Showing {pageNumber} &nbsp;of&nbsp; {totalPages} &nbsp;&nbsp;Page(s)</span>
+        &nbsp;
+        <lightning-button disabled={bDisableLast} icon-name="utility:chevronright" label="Next" alternative-text="Next" onclick={nextPage} class="slds-p-horizontal_x-small" icon-position="right"></lightning-button>
+
+        <lightning-button disabled={bDisableLast} icon-name="utility:jump_to_right" label="Last" alternative-text="last page" onclick={lastPage} icon-position="right"></lightning-button>
+       </div>
+        <!-- Pagination controls end-->
+
+        <!-- Total records start-->
+        <div class="slds-clearfix">
+            <div class="slds-float_right slds-m-right_medium">
+                <span class="slds-badge"> Total Records: {totalRecords}</span>
+            </div>
+        </div>
+    </div>
+     <!-- Total records end-->
+     <!-- Spinner Start-->
+        <template if:true={showSpinnerFlag}>
+            <div class="exampleHolder">
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </div>
+        </template> 
+     <!-- Spinner end-->
+    </lightning-card>
+</template>

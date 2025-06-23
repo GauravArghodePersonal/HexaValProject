@@ -1,0 +1,187 @@
+/*  tag selectors  */
+body { color: #000; background-color : #FFF; margin : -10px 0  0 -10px; font : 11px verdana, sans-serif; }
+html body { margin : 0; padding : 0; }
+form { display : inline; margin : 0; }
+label { cursor : pointer; cursor : hand; }
+p, li, ul, blockquote, td { font : 11px verdana, sans-serif; }
+a { color : #039; text-decoration : none; }
+a.textlink:hover { color : #666; text-decoration : none; border-bottom: #666; border-width: 0px 0px 1px 0px; border-style: none none dotted none; }
+a.privacylink { color : #FFF; }
+a.plainlink { color : #000; text-decoration : none; }
+a.helplink { text-decoration : none; color : #3366cc; cursor : help; }
+h2 {
+	padding : 0px;
+	margin-left : 0px;
+	margin-top : 0px;
+	margin-bottom : 0px;
+	font : bold 18px verdana, sans-serif;
+	color : #03349D;
+}
+h3 {
+	padding : 0px;
+	margin-left : 0px;
+	margin-top : 4px;
+	margin-bottom : 4px;
+	font : bold 14px verdana, sans-serif;
+	color : #000;
+}
+
+.mcheader { padding : 4px 0px 4px 8px; color : #FFFFFF; background-color : #00349A; text-align : left; font-size : 14px; font-weight : bold; }
+.mcfirstbg, .mcbg { background-color : #e3e3e3; }
+.mcfirstmsgtitle { padding : 8px 0px 4px 8px; font-size : 12px; font-weight : bold; color : #000; }
+.mcfirstmsgbody { color : #000; padding : 8px; }
+.mcdate { text-align : right; font-size : 10px; color : #00349A; padding-right : 8px; }
+.mcmsgseperator { background-color : #e3e3e3; padding : 4px 0px 6px 0px; }
+.mcmsgtitle { padding : 8px 0px 4px 8px; font-size : 12px; font-weight : bold; color : #000; }
+.mcarchivetitle { padding : 6px 0px 4px 8px; font-size : 11px; }
+.mcmsgbody { color : #000; padding : 8px; }
+
+/* id selectors */
+#errormsg { width : 85%; margin-top : 10px; padding : 5px; color : #ff0000; font-weight : bold; border : 2px solid #ff0000; }
+#userinfo { background-color : #CCC; color : #039; font-size : 10px; padding : 10px 4px 10px 4px; }
+#content { width : 340px; }
+#sidebar { float : right; width : 200px; border : 1px solid #AAA; }
+#sidebarlms { float : right; width : 220px; border : 1px solid #AAA; }
+#adwizardselections td { font : 10px verdana; }
+
+/*  class selectors  */
+.sidebartitle { background-color : #0096D6; color : #FFF; padding : 6px; font : bold 14px verdana, arial; text-align : center; }
+.sidebarcontent { padding : 6px; }
+
+.navimage { border : 0; }
+.navitem { background-color : #0096D6; }
+.navitemns { background-color : #0096D6; }
+.navitemhover { background-color : #00309C; cursor : pointer; cursor : hand; }
+.navitemselected { background-color : #00309C; }
+.navitemselectedexpand { background-color : #00309C; cursor : pointer; cursor : hand; }
+.navitemtext { color : #FFF; font : 11px verdana, arial, sans-serif; }
+.navseperator { background-color :#00309C; }
+
+.subnavitem { background-color : #94BEDE; }
+.subnavitemns { background-color : #94BEDE; font-size : 10px; }
+.subnavitemselected { background-color : #85AAC5; }
+.subnavitemhover { background-color : #9C9A9C; cursor : pointer; cursor : hand; }
+.subnavitemtext { color : #FFF; font : 11px verdana, arial, sans-serif; }
+.subnavseperator { background-color :#9C9A9C; }
+
+.didyouknow { padding-left : 4px; font : bold 15px 'Helvetica Condensed', helvetica, arial, verdana, sans-serif; color : #777; }
+.didyouknowimg { border : 0; padding-left : 10px; padding-bottom : 4px; }
+.didyouknowtext { padding-left : 34px; padding-right : 14px; padding-top : 6px; margin : 0; }
+
+.errormsg { color : #cc0000; }
+.seperatorimage { display : block; }
+.fineprint { font-size : 10px; }
+
+.copyright { font : 10px verdana; color : #FFF; background-color : #CCC; height : 25px; text-align : center; vertical-align : middle; }
+
+/* ad-wizard classes */
+
+.adwsidebartitle { background-color : #003399; color : #FFF; padding : 0px; font : bold 12px verdana, arial; text-align : left;  border : 1px solid #AAA;}
+.adwsidebartitle2 { background-color : #003399; color : #FFF; padding-left : 8px; padding-top:4px; padding-bottom:4px; font : bold 11px verdana, arial; text-align : left;  border : 1px solid #AAA;}
+.adwtitle {color:#FF0000;}
+.adwsidebarcontent { padding : 3px; background-color : #e5e5e5; border-left : 1px solid #AAA; border-right : 1px solid #AAA; border-bottom : 1px solid #AAA;}
+#adwpagetitle { width : 340px; }
+#adwsidebar { float : right; width : 200px; }
+#adwsidebar2 { float : right; width : 200px; color: #6699CC;}
+#adwsidebar3 { float : right; width : 188px; border: 1px solid black; padding : 6px;}
+#adwerrormsg { background-color: #FF6300; color:#FFFFFF; border: 1px solid #AAAAAA; padding : 8px; font : bold 11px verdana, arial; width : 340px;}
+.adwinput {border : 1px solid #000000;font : 11px verdana, arial; }
+
+h1#header{ text-indent:-9999px; width:338px; height:85px; background:url(../img/prvaFlint.jpg) no-repeat; margin-left:20px; }
+
+input.locationradio {
+	display: block;
+	float: left;
+	clear: left;
+}
+label.radiotext {
+	display: block;
+	margin-left: 5px;
+	position: relative;
+	float: left;
+	margin-bottom: 10px;
+}
+
+.floatright {
+	display:block;
+	float:right;
+}
+
+input.smallerbutton {
+	font-size: 0.9em;
+}
+
+td.separator {
+	background: url('../img/separator_bg.gif') top left repeat-x transparent;
+	height: 10px;
+	border-top: 1px solid #979797;
+	border-bottom: 1px solid #979797;
+}
+
+.clear {
+	clear: both;
+}
+
+.taskleft {
+	height: 80px;
+	width: 460px;
+	display: block;
+	float: left;
+	border-top: 1px solid #6f6f6f;
+	border-left: 1px solid #6f6f6f;
+	border-bottom: 1px solid #6f6f6f;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.tasktitle {
+	background-color: #c6e3f9;
+	height: 24px; /* original: 40 */
+	width: 444px; /* original: 460 */
+	display: block;
+	padding: 8px;
+}
+
+.taskbody {
+	background-color: #94bede;
+	height: 24px; /* original: 40 */
+	width: 444px; /* original: 460 */
+	font-size: 0.9em;
+	display: block;
+	padding: 8px;
+}
+
+.taskbutton {
+	background-color: #708a9d;
+	height: 80px;
+	width: 124px;
+	display: block;
+	float: left;
+	border-top: 1px solid #6f6f6f;
+	border-right: 1px solid #6f6f6f;
+	border-bottom: 1px solid #6f6f6f;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.taskbutton input {
+	display: block;
+	margin: 27px auto 0 auto;
+	width: 100px;
+	font-size: 0.9em;
+}
+
+.tasktitle h4 {
+	font-size: 1.6em;
+	font-weight: bold;
+	margin: 0;
+	padding: 0;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #2f3030;
+}
+
+.tasktitle h4 span.caps {
+	text-transform: uppercase;
+	color: #6997bb;
+	margin-right: 10px;
+}

@@ -1,0 +1,265 @@
+<template>
+    
+    <lightning-card>
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" variant="brand" size="large">
+            </lightning-spinner>
+       </template>
+        <div class="headerBG slds-section__title-action">
+            CapEx Calculations
+        </div>
+    <lightning-record-edit-form record-id={recordId} object-api-name="DCFROR__c">
+<div class="smalldeviceHidden">
+        <lightning-layout multiple-rows="true">
+            <lightning-layout-item  size="2" small-device-size="12" medium-device-size="12" large-device-size="2">
+                <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                    <div class="header-column slds-text-title_bold"></div>
+                    <!--<div class="borderdiv slds-p-around_medium slds-text-align_center"><b>CapEx</b></div>-->
+                    </lightning-layout-item>
+
+            </lightning-layout-item>
+            <lightning-layout-item  size="12" small-device-size="12" medium-device-size="12" large-device-size="10">
+                <lightning-layout multiple-rows="true">
+                <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                    <div class="header-column slds-text-title_bold"><b>1</b> </div>
+                </lightning-layout-item>
+                <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                    <div class="header-column slds-text-title_bold"><b>2</b> </div>
+                </lightning-layout-item>
+                <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                    <div class="header-column slds-text-title_bold"> <b>3</b> </div>
+                </lightning-layout-item>
+                <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                    <div class="header-column slds-text-title_bold"> <b>4</b> </div>
+                </lightning-layout-item>
+                <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                    <div class="header-column slds-text-title_bold"> <b>5</b> </div>
+                </lightning-layout-item>
+                <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                    <div class="header-column slds-text-title_bold">  <b>Total</b> </div>
+                </lightning-layout-item>
+            </lightning-layout>
+            </lightning-layout-item>
+        </lightning-layout>
+    </div>
+        <lightning-layout multiple-rows="true">
+
+            <lightning-layout-item  class="custom-box slds-box tabledisplay slds-p-around_medium slds-text-align_center" size="12" small-device-size="12" medium-device-size="12" large-device-size="2">
+                <lightning-layout-item  size="12" flexibility="auto"  small-device-size="12" medium-device-size="12" large-device-size="12"  padding="0"  >
+                    
+                   Incremental Yearly Revenue
+                    </lightning-layout-item>
+                  
+            </lightning-layout-item>
+        <lightning-layout-item  size="12" small-device-size="12" medium-device-size="12" large-device-size="10">
+            <lightning-layout multiple-rows="true">
+                <lightning-layout-item class="custom-box slds-box tabledisplay slds-p-around_medium slds-text-align_center" size="12" flexibility="auto" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                    
+                <div class="smalldevice"> (Year 1) <br/></div><lightning-output-field field-name="Incremental_Yearly_Revenue_Year_1__c" variant="label-hidden">  </lightning-output-field> 
+                
+                </lightning-layout-item>
+                <lightning-layout-item  class="custom-box slds-box tabledisplay slds-p-around_medium slds-text-align_center" size="12" flexibility="auto" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                    <div class="smalldevice"> (Year 2) <br/></div><lightning-output-field field-name="Incremental_Yearly_Revenue_Year_2__c" variant="label-hidden"> </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item  class="custom-box slds-box tabledisplay slds-p-around_medium slds-text-align_center" size="12" flexibility="auto" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                    <div class="smalldevice"> (Year 3) <br/></div><lightning-output-field field-name="Incremental_Yearly_Revenue_Year_3__c" variant="label-hidden"> </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item   class="custom-box slds-box tabledisplay slds-p-around_medium slds-text-align_center" size="12" flexibility="auto" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                    <div class="smalldevice"> (Year 4) <br/></div><lightning-output-field field-name="Incremental_Yearly_Revenue_Year_4__c" variant="label-hidden"> </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item class="custom-box slds-box tabledisplay slds-p-around_medium slds-text-align_center"  size="12" flexibility="auto" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+    
+                   <div class="smalldevice"> (Year 5) <br/></div><lightning-output-field field-name="Incremental_Yearly_Revenue_Year_5__c" variant="label-hidden"> </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item size="12"  class="custom-boxTotal slds-box tabledisplay slds-p-around_medium slds-text-align_center"  flexibility="auto" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                  
+                   <div class="smalldevice"> (Total) <br/></div><lightning-output-field field-name="Incremental_Yearly_Revenue_Total__c" variant="label-hidden"> </lightning-output-field> 
+                </lightning-layout-item>
+                
+        </lightning-layout>
+        </lightning-layout-item>
+        </lightning-layout>
+
+        <lightning-layout multiple-rows="true">
+            
+            <lightning-layout-item  class="custom-box slds-box tabledisplay slds-p-around_medium slds-text-align_center" size="12" small-device-size="12" medium-device-size="12" large-device-size="2">
+                <lightning-layout-item size="12" flexibility="auto"  small-device-size="12" medium-device-size="12" large-device-size="12"  padding="0"  >
+                    
+                    Est Monthly Program Revenue
+                    </lightning-layout-item>
+                  
+            </lightning-layout-item>
+            <lightning-layout-item  size="12" small-device-size="12" medium-device-size="12" large-device-size="10">
+                <lightning-layout multiple-rows="true">
+                    <lightning-layout-item class="custom-box slds-box tabledisplay slds-p-around_medium slds-text-align_center"  size="12" flexibility="auto" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                        <div class="smalldevice"> (Year 1) <br/></div><lightning-output-field field-name="Est_Monthly_Program_Revenue_Year_1__c" variant="label-hidden"> </lightning-output-field>
+                   
+                    </lightning-layout-item>
+                    <lightning-layout-item class="custom-box slds-box tabledisplay slds-p-around_medium slds-text-align_center"  size="12" flexibility="auto" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                        <div class="smalldevice"> (Year 2) <br/></div><lightning-output-field field-name="Est_Monthly_Program_Revenue_Year_2__c" variant="label-hidden"> </lightning-output-field>
+                    </lightning-layout-item>
+                    <lightning-layout-item class="custom-box slds-box tabledisplay slds-p-around_medium slds-text-align_center"  size="12" flexibility="auto" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                        <div class="smalldevice"> (Year 3) <br/></div> <lightning-output-field field-name="Est_Monthly_Program_Revenue_Year_3__c" variant="label-hidden"> </lightning-output-field>
+                    </lightning-layout-item>
+                    <lightning-layout-item class="custom-box slds-box tabledisplay slds-p-around_medium slds-text-align_center"  size="12" flexibility="auto" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                        <div class="smalldevice"> (Year 4) <br/></div> <lightning-output-field field-name="Est_Monthly_Program_Revenue_Year_4__c" variant="label-hidden"> </lightning-output-field>
+                    </lightning-layout-item>
+                    <lightning-layout-item class="custom-box slds-box tabledisplay slds-p-around_medium slds-text-align_center"  size="12" flexibility="auto" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                        <div class="smalldevice"> (Year 5) <br/></div>  <lightning-output-field field-name="Est_Monthly_Program_Revenue_Year_5__c" variant="label-hidden"> </lightning-output-field>
+                    </lightning-layout-item>
+                    <lightning-layout-item class="custom-boxTotal slds-box tabledisplay slds-p-around_medium slds-text-align_center" size="12" flexibility="auto" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                        <div class="smalldevice"> (Total) <br/></div><lightning-output-field field-name="Est_Monthly_Program_Revenue_Total__c" variant="label-hidden"></lightning-output-field> 
+                    </lightning-layout-item>
+            </lightning-layout>
+            </lightning-layout-item>
+        </lightning-layout>
+
+
+        <lightning-layout multiple-rows="true">
+            <lightning-layout-item  class="custom-box slds-box tabledisplay slds-p-around_medium slds-text-align_center" size="12" small-device-size="12" medium-device-size="12" large-device-size="2">
+                <lightning-layout-item  size="12" flexibility="auto"  small-device-size="12" medium-device-size="12" large-device-size="12"  padding="0"  >
+                    
+                    Chemical Costs
+                    </lightning-layout-item>
+                  
+            </lightning-layout-item>
+           
+            <lightning-layout-item  size="12" small-device-size="12" medium-device-size="12" large-device-size="10">
+                <lightning-layout multiple-rows="true">
+                    <lightning-layout-item  class="custom-box slds-box tabledisplay slds-p-around_medium slds-text-align_center" size="12" flexibility="auto" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                        <div class="smalldevice"> (Year 1) <br/></div><lightning-output-field field-name="Chemical_Costs_Year_1__c" variant="label-hidden"> </lightning-output-field>
+                   
+                    </lightning-layout-item>
+                    <lightning-layout-item  class="custom-box slds-box tabledisplay slds-p-around_medium slds-text-align_center" size="12" flexibility="auto" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                        <div class="smalldevice"> (Year 2) <br/></div><lightning-output-field field-name="Chemical_Costs_Year_2__c" variant="label-hidden"> </lightning-output-field>
+                    </lightning-layout-item>
+                    <lightning-layout-item  class="custom-box slds-box tabledisplay slds-p-around_medium slds-text-align_center" size="12" flexibility="auto" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                        <div class="smalldevice"> (Year 3) <br/></div><lightning-output-field field-name="Chemical_Costs_Year_3__c" variant="label-hidden"> </lightning-output-field>
+                    </lightning-layout-item>
+                    <lightning-layout-item  class="custom-box slds-box tabledisplay slds-p-around_medium slds-text-align_center" size="12" flexibility="auto" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                        <div class="smalldevice"> (Year 4) <br/></div> <lightning-output-field field-name="Chemical_Costs_Year_4__c" variant="label-hidden"> </lightning-output-field>
+                    </lightning-layout-item>
+                    <lightning-layout-item  class="custom-box slds-box tabledisplay slds-p-around_medium slds-text-align_center" size="12" flexibility="auto" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                        <div class="smalldevice"> (Year 5) <br/></div><lightning-output-field field-name="Chemical_Costs_Year_5__c" variant="label-hidden"> </lightning-output-field>
+                    </lightning-layout-item>
+                    <lightning-layout-item  class="custom-boxTotal slds-box tabledisplay slds-p-around_medium slds-text-align_center" size="12" flexibility="auto" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                        <div class="smalldevice"> (Total) <br/></div><lightning-output-field field-name="Chemical_Costs_Total__c" variant="label-hidden"> </lightning-output-field> 
+                    </lightning-layout-item>
+            </lightning-layout>
+            </lightning-layout-item>
+        </lightning-layout>
+
+        <lightning-layout multiple-rows="true">
+            <lightning-layout-item  class="custom-box slds-box tabledisplay slds-p-around_medium slds-text-align_center" size="12" small-device-size="12" medium-device-size="12" large-device-size="2">
+                <lightning-layout-item size="12" flexibility="auto"  small-device-size="12" medium-device-size="12" large-device-size="12"  padding="0"  >
+                    
+                    Spare Parts Costs (Cosumables)
+                    </lightning-layout-item>
+                  
+            </lightning-layout-item>
+            
+
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="10">
+                <lightning-layout multiple-rows="true">
+                   
+                    <lightning-layout-item     class="custom-box slds-box tabledisplay slds-p-around_medium slds-text-align_center" size="12" flexibility="auto" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                        <div class="smalldevice"> (Year 1) <br/></div> <lightning-output-field field-name="Spare_Parts_Costs_Year_1__c" variant="label-hidden"> </lightning-output-field>
+                   
+                    </lightning-layout-item>
+                    <lightning-layout-item   class="custom-box slds-box tabledisplay slds-p-around_medium slds-text-align_center" size="12" flexibility="auto" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                        <div class="smalldevice"> (Year 2) <br/></div> <lightning-output-field field-name="Spare_Parts_Costs_Year_2__c" variant="label-hidden"> </lightning-output-field>
+                    </lightning-layout-item>
+                    <lightning-layout-item   class="custom-box slds-box tabledisplay slds-p-around_medium slds-text-align_center" size="12" flexibility="auto" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                        <div class="smalldevice"> (Year 3) <br/></div> <lightning-output-field field-name="Spare_Parts_Costs_Year_3__c" variant="label-hidden"> </lightning-output-field>
+                    </lightning-layout-item>
+                    <lightning-layout-item   class="custom-box slds-box tabledisplay slds-p-around_medium slds-text-align_center" size="12" flexibility="auto" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                        <div class="smalldevice"> (Year 4) <br/></div><lightning-output-field field-name="Spare_Parts_Costs_Year_4__c" variant="label-hidden"> </lightning-output-field>
+                    </lightning-layout-item>
+                    <lightning-layout-item   class="custom-box slds-box tabledisplay slds-p-around_medium slds-text-align_center" size="12" flexibility="auto" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                        <div class="smalldevice"> (Year 5) <br/></div><lightning-output-field field-name="Spare_Parts_Costs_Year_5__c" variant="label-hidden"> </lightning-output-field>
+                    </lightning-layout-item>
+                    <lightning-layout-item   class="custom-boxTotal slds-box tabledisplay slds-p-around_medium slds-text-align_center" size="12" flexibility="auto" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                        <div class="smalldevice"> (Total) <br/></div> <lightning-output-field field-name="Spare_Parts_Costs_Total__c" variant="label-hidden"> </lightning-output-field> 
+                    </lightning-layout-item>
+            </lightning-layout>
+            </lightning-layout-item>
+        </lightning-layout>
+
+        <lightning-layout multiple-rows="true">
+            
+            <lightning-layout-item  class="custom-box slds-box tabledisplay slds-p-around_medium slds-text-align_center" size="12" small-device-size="12" medium-device-size="12" large-device-size="2">
+                <lightning-layout-item  size="12" flexibility="auto"  small-device-size="12" medium-device-size="12" large-device-size="12"  padding="0"  >
+                    
+                    Service Costs
+                    </lightning-layout-item>
+                  
+            </lightning-layout-item>
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="10">
+                <lightning-layout multiple-rows="true">
+                   
+                    <lightning-layout-item   class="custom-box slds-box tabledisplay slds-p-around_medium slds-text-align_center" size="12" flexibility="auto" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                        <div class="smalldevice"> (Year 1) <br/></div> <lightning-output-field field-name="Service_Costs_Year_1__c" variant="label-hidden"> </lightning-output-field>
+                   
+                    </lightning-layout-item>
+                    <lightning-layout-item   class="custom-box slds-box tabledisplay slds-p-around_medium slds-text-align_center" size="12" flexibility="auto" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                        <div class="smalldevice"> (Year 2) <br/></div><lightning-output-field field-name="Service_Costs_Year_2__c" variant="label-hidden"> </lightning-output-field>
+                    </lightning-layout-item>
+                    <lightning-layout-item   class="custom-box slds-box tabledisplay slds-p-around_medium slds-text-align_center" size="12" flexibility="auto" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                        <div class="smalldevice"> (Year 3) <br/></div><lightning-output-field field-name="Service_Costs_Year_3__c" variant="label-hidden"> </lightning-output-field>
+                    </lightning-layout-item>
+                    <lightning-layout-item  class="custom-box slds-box tabledisplay slds-p-around_medium slds-text-align_center" size="12" flexibility="auto" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                        <div class="smalldevice"> (Year 4) <br/></div><lightning-output-field field-name="Service_Costs_Year_4__c" variant="label-hidden"> </lightning-output-field>
+                    </lightning-layout-item>
+                    <lightning-layout-item   class="custom-box slds-box tabledisplay slds-p-around_medium slds-text-align_center" size="12" flexibility="auto" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                        <div class="smalldevice"> (Year 5) <br/></div><lightning-output-field field-name="Service_Costs_Year_5__c" variant="label-hidden"> </lightning-output-field>
+                    </lightning-layout-item>
+                    <lightning-layout-item   class="custom-boxTotal slds-box tabledisplay slds-p-around_medium slds-text-align_center" size="12" flexibility="auto" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                        <div class="smalldevice"> (Total) <br/></div><lightning-output-field field-name="Service_Costs_Total__c" variant="label-hidden"> </lightning-output-field>
+                    </lightning-layout-item>
+            </lightning-layout>
+            </lightning-layout-item>
+        </lightning-layout>
+
+
+        <lightning-layout multiple-rows="true">
+            
+            <lightning-layout-item  class="custom-boxmargin slds-box tabledisplay slds-p-around_medium slds-text-align_center" size="12" small-device-size="12" medium-device-size="12" large-device-size="2">
+                <lightning-layout-item  size="12" flexibility="auto"  small-device-size="12" medium-device-size="12" large-device-size="12"  padding="0"  >
+                    
+                    Application Margin
+                    </lightning-layout-item>
+                  
+            </lightning-layout-item>
+            <lightning-layout-item  size="12" small-device-size="12" medium-device-size="12" large-device-size="10">
+                <lightning-layout multiple-rows="true">
+                   
+                    <lightning-layout-item   class="custom-boxmargin slds-box tabledisplay slds-p-around_medium slds-text-align_center" size="12" flexibility="auto" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                        <div class="smalldevice"> (Year 1) <br/></div><lightning-output-field field-name="Application_Margin_Year_1__c" variant="label-hidden"> </lightning-output-field>
+                   
+                    </lightning-layout-item>
+                    <lightning-layout-item   class="custom-boxmargin slds-box tabledisplay slds-p-around_medium slds-text-align_center" size="12" flexibility="auto" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                        <div class="smalldevice"> (Year 2) <br/></div><lightning-output-field field-name="Application_Margin_Year_2__c" variant="label-hidden"> </lightning-output-field>
+                    </lightning-layout-item>
+                    <lightning-layout-item   class="custom-boxmargin slds-box tabledisplay slds-p-around_medium slds-text-align_center"  size="12" flexibility="auto" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                        <div class="smalldevice"> (Year 3) <br/></div><lightning-output-field field-name="Application_Margin_Year_3__c" variant="label-hidden"> </lightning-output-field>
+                    </lightning-layout-item>
+                    <lightning-layout-item  class="custom-boxmargin slds-box tabledisplay slds-p-around_medium slds-text-align_center"  size="12" flexibility="auto" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                        <div class="smalldevice"> (Year 4) <br/></div> <lightning-output-field field-name="Application_Margin_Year_4__c" variant="label-hidden"> </lightning-output-field>
+                    </lightning-layout-item>
+                    <lightning-layout-item   class="custom-boxmargin slds-box tabledisplay slds-p-around_medium slds-text-align_center" size="12" flexibility="auto" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                        <div class="smalldevice"> (Year 5) <br/></div><lightning-output-field field-name="Application_Margin_Year_5__c" variant="label-hidden"> </lightning-output-field>
+                    </lightning-layout-item>
+                    <lightning-layout-item  size="12" flexibility="auto" small-device-size="12" medium-device-size="12" large-device-size="2" padding="0" >
+                       
+                    </lightning-layout-item>
+            </lightning-layout>
+            </lightning-layout-item>
+        </lightning-layout>
+</lightning-record-edit-form>
+</lightning-card>
+  
+        
+    
+            
+      
+</template>

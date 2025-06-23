@@ -1,0 +1,29 @@
+<template>
+    <h3 class="slds-p-bottom_xx-small">
+        {label}
+    </h3>
+    <template for:each={values} for:item="item" for:index="index">
+        <div key={item} class="slds-p-bottom_xxx-small">
+            <lightning-layout horizontal-align="spread">
+                <lightning-layout-item size="11">
+                    <lightning-input variant="label-hidden" type={type} value={item} read-only="true"></lightning-input>
+                </lightning-layout-item>
+                <lightning-layout-item size="1">
+                    <lightning-button-icon icon-name="utility:delete" class="slds-m-left_xx-small" data-index={index}
+                        onclick={removeValueClick}></lightning-button-icon>
+                </lightning-layout-item>
+            </lightning-layout>
+        </div>
+    </template>
+    <lightning-layout horizontal-align="spread">
+        <lightning-layout-item size="11">
+            <lightning-input variant="label-hidden" type={type} class="newValInput" required={isNewRequired}
+                onchange={handleNewValueChange} value={newValue}></lightning-input>
+        </lightning-layout-item>
+        <lightning-layout-item size="1">
+            <lightning-button-icon icon-name="utility:add" class="slds-m-left_xx-small" onclick={addValue}>
+            </lightning-button-icon>
+        </lightning-layout-item>
+    </lightning-layout>
+    <div key={item} class="slds-p-bottom_xxx-small"></div>
+</template>

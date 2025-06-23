@@ -1,0 +1,4 @@
+<aura:component implements="force:lightningQuickActionWithoutHeader,flexipage:availableForRecordHome,force:hasRecordId">
+    <aura:attribute name="recordId" type="String" />
+    <c:sendCIPFormLightning onfinish="{!c.handleFinish}" recordId="{!v.recordId}"></c:sendCIPFormLightning>
+</aura:component>

@@ -1,0 +1,13 @@
+<apex:page standardController="Account_To_Market_Price_Book_Entry__c" 
+                           id="App_MarketPriceToCustomer_Manage" 
+                      sidebar="false"
+                     tabStyle="Account_To_Market_Price_Book_Entry__c" 
+                        title="Manage Account to Market Price Entry Relationships"
+                   extensions="App_MarketPriceToCustomer_ManageExt"
+                 recordSetVar="marketPriceBookEntries">
+
+  <apex:form >
+	  <c:App_MarketPriceToCustomer_WebApp accountId="{!Id}" cancelURL="/{!Id}" returnURL="/{!Id}"/>
+  </apex:form>
+
+</apex:page>

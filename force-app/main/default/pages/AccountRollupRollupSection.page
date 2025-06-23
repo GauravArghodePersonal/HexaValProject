@@ -1,0 +1,111 @@
+<apex:page standardController="Account" tabStyle="Account" extensions="AccountRollupRollupSectionExtension" showHeader="false" sidebar="false">
+	<apex:includeScript value="{!URLFOR($Resource.jQuery1x,'jQuery/jquery-1.8.0.min.js')}" />
+	<apex:includeScript value="{!URLFOR($Resource.AccountRollupsStyling,'js/accountRollupsJS.js')}" />
+	<apex:stylesheet value="{!URLFOR($Resource.AccountRollupsStyling,'css/accountRollupsCSS.css')}" />
+
+	<script language="javascript">
+	    var j$= jQuery.noConflict();
+        j$(document).ready(function(){
+            AccountRollups_RollupSection_ApplyJQueryStyling();
+        });
+        
+        function AccountRollups_RollupSection_ApplyJQueryStyling() {
+            //console.log('AccountRollups_RollupSection_ApplyJQueryStyling Called');
+        
+            j$(window).resize(function() {resizeIframe();});
+            j$('.pbSubheader').css('background-color','#1797C0');
+            resizeIframe();
+            parent.AdvancedTabbar_IframeResizeRequest();
+        }
+	</script>
+
+	<style type="text/css">body{background:#F8F8F8;}
+	  .SFbutton {
+	  	font-size: 10pt; 
+	    font-weight: bold;
+	  	color: black;
+	    border-color: #B5B5B5 #B5B5B5 #7F7F7F;
+        border-image: none;
+	    border-radius: 3px 3px 3px 3px;
+	    border-style: solid;
+	    border-width: 1px;
+	    text-overflow: ellipsis;
+	    -moz-border-bottom-colors: none;
+	    -moz-border-left-colors: none;
+	    -moz-border-right-colors: none;
+	    -moz-border-top-colors: none;
+	    background: url("/img/alohaSkin/btn_sprite.png") repeat-x scroll right top; 
+	    margin: 1px;
+	    padding: 3px;
+	    font-family: Arial,Helvetica,sans-serif;
+	    cursor: pointer;
+	    display: inline;
+   		}	
+	</style>
+
+	<apex:form >
+		<apex:outputPanel id="rollupPanelSection" layout="block" style="padding-bottom:0;">
+			<apex:outputPanel id="rollupPanel_PendingUpdates" rendered="{!recalcPending}">
+				<apex:pageBlock >
+					<apex:pageMessage summary="There are pending updates to be processed.  Updates are recalculated hourly.  If you would like to recalculate immediately, click the 'Recalc Now' button below." severity="warning" strength="3">
+						<CENTER><apex:commandButton id="recalcNowButton" action="{!recalcAccountNow}" value="Recalc Now" styleClass="btn" status="recalcStatus" reRender="rollupPanelSection" oncomplete="AccountRollups_RollupSection_ApplyJQueryStyling();">
+						</apex:commandButton></CENTER>
+					</apex:pageMessage>
+				</apex:pageBlock>
+			</apex:outputPanel>
+
+			<apex:actionStatus id="recalcStatus">
+				<apex:facet name="start">
+					<apex:panelGrid width="100%" title="" id="Refreshing">
+						<BR />
+						<BR />
+						<BR />
+						<CENTER>Please Wait...</CENTER>
+						<BR />
+						<CENTER><img src="/img/waiting_dots.gif" border="0" width="156" height="25" alt="" /></CENTER>
+						<BR />
+						<BR />
+						<BR />
+						<BR />
+						<BR />
+						<BR />
+					</apex:panelGrid>
+				</apex:facet>
+				<apex:facet name="stop">
+					<apex:outputPanel id="rollupPanel">
+						<apex:pageBlock >
+							<apex:pageBlockSection title="Account Summary" columns="2" collapsible="false">
+								<apex:outputField value="{!RollupRec.Account_Count__c}" />
+								<apex:outputField value="{!RollupRec.Potential_Sales_Amount__c}" />
+							</apex:pageBlockSection>
+							<apex:pageBlockSection title="Opportunity Summary" columns="2" collapsible="false">
+								<apex:outputField value="{!RollupRec.Open_Opportunity_Count__c}" />
+								<apex:outputField value="{!RollupRec.Open_Opportunity_Amount__c}" />
+								<apex:outputField value="{!RollupRec.Opps_Closed_in_Prior_Fiscal_Year__c}" />
+								<apex:outputField value="{!RollupRec.Opps_Closed_in_Current_Fiscal_Year__c}" />
+								<apex:outputField value="{!RollupRec.Opps_Won_in_Prior_Fiscal_Year__c}" />
+								<apex:outputField value="{!RollupRec.Opps_Won_in_Current_Fiscal_Year__c}" />
+								<apex:outputField value="{!RollupRec.Prior_Fiscal_Year_Win_Percentage__c}" />
+								<apex:outputField value="{!RollupRec.Current_Fiscal_Year_Win_Percentage__c}" />
+								<apex:outputField value="{!RollupRec.Won_Opp_Amount_Prior_Fiscal_Year__c}" />
+								<apex:outputField value="{!RollupRec.Won_Opp_Amount_Current_Fiscal_Year__c}" />
+							</apex:pageBlockSection>
+							<apex:pageBlockSection rendered="{!ShowAdminPanel}" columns="1" title="Admin Panel" collapsible="false">
+								<apex:outputPanel id="AdminPanel">
+									<CENTER>
+										<apex:outputPanel >
+											<apex:outputLink styleClass="SFbutton" target="_blank" value="/apex/UltimateParentDataAnalyzer?id={!account.Id}">Analyze Relationships</apex:outputLink>
+										</apex:outputPanel>
+										<apex:commandButton id="AdminRecalcNowButton" action="{!recalcAccountNow}" value="Recalc Now (Admin)" style="font-size: 10pt; color: black" status="recalcStatus" reRender="rollupPanelSection" oncomplete="AccountRollups_RollupSection_ApplyJQueryStyling();"/>
+										<apex:commandButton id="AdminSubmitBatchJobRecalcRollups" action="{!submitBatchJob_RecalcRollups}" value="Submit Recalc Batch Job (Admin)" style="font-size: 10pt; color: black" status="recalcStatus" reRender="rollupPanelSection" oncomplete="AccountRollups_RollupSection_ApplyJQueryStyling();"/>
+										<apex:commandButton id="AdminSubmitBatchJobRecalcRollupsRefreshAll" action="{!submitBatchJob_RecalcRollups_RefreshAll}" value="Submit Recalc All Batch Job (Admin)" style="font-size: 10pt; color: black" status="recalcStatus" reRender="rollupPanelSection" oncomplete="AccountRollups_RollupSection_ApplyJQueryStyling();"/>
+								    </CENTER>
+								</apex:outputPanel>
+							</apex:pageBlockSection>
+						</apex:pageBlock>
+					</apex:outputPanel>
+				</apex:facet>
+			</apex:actionStatus>
+		</apex:outputPanel>
+	</apex:form>
+</apex:page>

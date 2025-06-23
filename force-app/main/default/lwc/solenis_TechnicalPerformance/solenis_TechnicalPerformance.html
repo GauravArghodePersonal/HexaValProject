@@ -1,0 +1,111 @@
+<template>
+	<div class="heading">TECHNICAL PERFORMANCE</div>
+	<div class="caption">Solenis IoT empowers you with data driven decision making tools</div>
+	<template if:true={isLoading}>
+        <div class="exampleHolder">
+            <lightning-spinner class="slds-align_absolute-center" alternative-text="Loading" size="medium"></lightning-spinner>
+            <p class="exampleHolderText">Loading...</p>
+        </div>
+	</template>
+    <template if:false={isLoading}>
+        <template if:true={noData}>
+            <div class="slds-align_absolute-center">No technical performance data available!</div>
+        </template>
+        <template if:false={noData}>
+                <template for:each={data} for:item="item">
+                        <!-- Start bear tile -->
+                        <div key={item.Id} class="tile">
+                            <div class="tileHeader">
+                                <img class="img1" alt="successIcon" src={item.titleIcon} height="20" width="20"/>
+                                <span class="slds-p-left_x-small tileHeaderContent" title={item.titleName}>{item.titleName}</span>
+                                <div class="slds-float_right notification">
+                                    <img class="img2 slds-m-right_small" alt="blankAlarmIcon" src={blankAlarmIcon} data-redirectlink={item.siteURL} height="20" width="20"/>
+                                    <template lwc:if={item.showAlarmCount}>
+                                        <span class="badge">{item.alarmCount}</span>
+                                    </template>
+                                    <span class="tooltiptext">
+                                        <div class="slds-grid slds-wrap">
+                                            <div class="slds-col slds-size_8-of-12 slds-p-top_xx-small">
+                                              <span class="slds-text-body_regular">Critical</span>
+                                            </div>
+                                            <div class="slds-col slds-size_3-of-12 slds-p-top_xx-small">
+                                              <span>[{item.alarmList.Critical}]</span>
+                                            </div>
+                                            <div class="slds-col slds-size_8-of-12 slds-p-top_xx-small">
+                                              <span class="slds-text-body_regular">Major</span>
+                                            </div>
+                                            <div class="slds-col slds-size_3-of-12 slds-p-top_xx-small">
+                                              <span>[{item.alarmList.Major}]</span>
+                                            </div>
+                                            <div class="slds-col slds-size_8-of-12 slds-p-top_xx-small">
+                                              <span class="slds-text-body_regular">Minor</span>
+                                            </div>
+                                            <div class="slds-col slds-size_3-of-12 slds-p-top_xx-small">
+                                              <span>[{item.alarmList.Minor}]</span>
+                                            </div>
+                                            <div class="slds-col slds-size_8-of-12 slds-p-top_xx-small">
+                                              <span class="slds-text-body_regular">Warning</span>
+                                            </div>
+                                            <div class="slds-col slds-size_3-of-12 slds-p-top_xx-small">
+                                              <span>[{item.alarmList.Warning}]</span>
+                                            </div>
+                                          </div>
+                                    </span>
+                                </div>
+                                <div class="slds-float_right">
+                                    <img class="img2 btn" alt="flipButton" src={flipButtonIcon} data-redirectlink={item.siteURL} onclick={handleSiteClick} height="20" width="20"/>
+                                </div>
+                            </div>
+                            <div class="tileBody1">
+                                <div class="tileBodyCola">
+                                    <table>
+                                        <tr>
+                                            <td class="tileBodyContent1 width83">No. of Applications</td>
+                                            <td class="tileBodyContent2">{item.noOfApplications}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="tileBodyColb">
+                                    <table>
+                                        <tr>
+                                            <td class="tileBodyContent1 width83">No. of Devices</td>
+                                            <td class="tileBodyContent2">{item.noOfDevices}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <c-solenis_slider app-list={item.applicationList}></c-solenis_slider>
+                        </div>
+                        <!-- End bear tile -->
+                </template>
+        </template>
+    </template>
+    <div class="slds-clearfix">
+        <div class="slds-float_right paddingRight8px">
+            <template if:true={showViewAllSites}>
+                <template if:true={showViewMore}>
+                    <a href="javascript:void(0)" class="visitPortal" onclick={handleViewAllSites}>
+                        <span class="slds-m-right_xx-small">View More</span>
+                        <svg class="slds-button__icon slds-button__icon_medium" aria-hidden="true" onclick={handleViewAllSites}>
+                            <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#chevronright" onclick={handleViewAllSites}></use>
+                        </svg>
+                    </a>
+                </template>
+                <template if:false={showViewMore}>
+                    <a href="javascript:void(0)" class="visitPortal" onclick={handleViewAllSites}>
+                        <span class="slds-m-right_xx-small">View Less</span>
+                        <svg class="slds-button__icon slds-button__icon_medium" aria-hidden="true" onclick={handleViewAllSites}>
+                            <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#chevronright" onclick={handleViewAllSites}></use>
+                        </svg>
+                    </a>
+                </template>
+            </template>
+            <a href="javascript:void(0)" class="visitPortal" onclick={handleExploreMore}>
+                <span class="slds-m-right_xx-small slds-m-left_medium">Explore more</span>
+                <svg class="slds-button__icon slds-button__icon_medium" aria-hidden="true" onclick={handleExploreMore}>
+                    <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#chevronright" onclick={handleExploreMore}></use>
+                </svg>
+            </a>
+        </div>
+    </div>
+</template>

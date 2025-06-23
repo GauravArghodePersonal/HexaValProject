@@ -1,0 +1,101 @@
+.bear-tile {
+	height: 265px;
+	width: 190px;
+    border: 1px solid #d2955d;
+    border-radius: 13px;
+    display: block;
+	position: relative;	
+	background-color: black;
+}
+.bear-silhouette {
+    height: 100px;
+}
+
+.heading {
+	font-style: normal;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 28px;
+    text-transform: uppercase;
+	color: #17344C;
+}
+
+.caption {
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 24px;
+	color: #687886;
+}
+
+.container {
+  /* position: relative; */
+  /* height: 400px; */
+  /* border: 2px solid #006100; */
+}
+
+.centered-element {
+	margin: 0;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+.bottom-element-left {
+	margin: 0;
+	position: absolute;
+	bottom: 0%;
+	left: 0%;
+	color: #ffffff;
+}
+.bottom-element-right {
+	margin: 0;
+	position: absolute;
+	bottom: 0%;
+	right: 0%;
+	color: #ffffff;
+}
+
+.tileValue {
+	font-weight: 400;
+	font-size: 25px;
+	line-height: 24px;
+	color: #ffffff;
+}
+.tileCaption {
+	font-weight: 400;
+	font-size: 12px;
+	line-height: 24px;
+	color: #ffffff;
+}
+.compare {
+	padding: 0px 0px 10px 17px;
+}
+.flipButton {
+	margin: 0px 14px 11px 0px;
+}
+
+.bg-image {  
+  /* Add the blur effect */
+  filter: blur(1px);
+  -webkit-filter: blur(1px);
+  z-index: -10;
+  border-radius: 13px;
+  opacity: 0.6;
+  
+  /* Height */
+  height: 263px;
+  
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.visitPortal {
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 28px;
+	color: #5B89B4;
+}

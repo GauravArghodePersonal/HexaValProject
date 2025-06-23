@@ -1,0 +1,79 @@
+<template>
+	<div class='orderPage'>
+		<div>
+			<lightning-layout multiple-rows>
+				<lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="2"
+					padding="around-small">
+					<div class="slds-truncate">Ord Number</div>
+				</lightning-layout-item>
+				<lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="2"
+					padding="around-small">
+					<div class="slds-truncate">SAP Ord Number</div>
+				</lightning-layout-item>
+				<lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="2"
+					padding="around-small">
+					<div class="slds-truncate">PO </br> Number</div>
+				</lightning-layout-item>
+				<lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="2"
+					padding="around-small">
+					<div class="slds-truncate">REQUESTED DELIVERY DATE</div>
+				</lightning-layout-item>
+				<lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="2"
+					padding="around-small">
+					<div class="slds-truncate">ESTIMATED SHIP DATE</div>
+				</lightning-layout-item>
+				<lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="2"
+					padding="around-small">
+					<div class="slds-truncate">SPECIAL </br> INSTRUCTIONS</div>
+				</lightning-layout-item>
+
+			</lightning-layout>
+		</div>
+		<lightning-layout multiple-rows>
+			<template for:each={Insreorder} for:item="orList" for:index="index">
+
+				<lightning-layout-item key={Insreorder.key} size="12" small-device-size="12" medium-device-size="12"
+					large-device-size="2" padding="around-small">
+
+					<lightning-formatted-url target="_blank" value={orList.Nameurl} label={orList.Name}>
+					</lightning-formatted-url><br/>
+                </lightning-layout-item>
+					<lightning-layout-item key={Insreorder.key} size="12" small-device-size="12" medium-device-size="12"
+						large-device-size="2" padding="around-small">
+
+						{orList.SAP_Order_Number__c}
+					</lightning-layout-item>
+					<lightning-layout-item key={Insreorder.key} size="12" small-device-size="12" medium-device-size="12"
+						large-device-size="2" padding="around-small">
+
+						{orList.Customer_PO_Number__c}
+					</lightning-layout-item>
+					<lightning-layout-item key={Insreorder.key} size="12" small-device-size="12" medium-device-size="12"
+						large-device-size="2" padding="around-small">
+
+						{orList.Requested_Delivery_Date__c}
+					</lightning-layout-item>
+					<lightning-layout-item key={Insreorder.key} size="12" small-device-size="12" medium-device-size="12"
+						large-device-size="2" padding="around-small">
+
+						{orList.Estimated_Ship_Date__c}
+					</lightning-layout-item>
+					<lightning-layout-item key={Insreorder.key} size="12" small-device-size="12" medium-device-size="12"
+						large-device-size="2" padding="around-small">
+
+						{orList.Special_Instructions__c}
+
+					</lightning-layout-item>
+					<lightning-layout-item key={Insreorder.key} size="12" small-device-size="12" medium-device-size="12"
+						large-device-size="12" padding="around-small">
+
+						<div>
+							<c-ex-file-uploader record-id={orList.Id}></c-ex-file-uploader>
+						</div>
+					</lightning-layout-item>
+
+			</template>
+		</lightning-layout>
+	</div>
+
+</template>

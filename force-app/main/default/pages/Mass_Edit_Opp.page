@@ -1,0 +1,362 @@
+<apex:page id="thePage" standardController="Opportunity" showHeader="false" applyHtmlTag="false" recordSetVar="Opportunities" extensions="Mass_Edit_Opp">
+
+    <apex:sectionHeader title="Opportunities" subTitle="Mass Edit"/>
+
+    <apex:pageMessage summary="The blank column values indicate that the field is not accessible to your profile." severity="info" strength="3" />
+
+    <!-- check for selecting atleast one Opportunity of the same record type in javascript -->
+    <script>
+        window.onload = function() {focus('{!$Component.thePage}');}
+
+        function focus(id) {document.getElementById(id).focus();}
+
+        if(!{!selOneOppFlag}) {
+            alert('Please select atleast one Opportunity');
+            window.top.document.location = "{!url}";
+        }
+
+        if(!{!selSameOppsFlag}) {
+            alert('Please select Opportunities with the same Record Type');
+            window.top.document.location = "{!url}";
+        }
+
+     </script>
+
+    <apex:form >
+
+        <!-- Any error message section in the top of the page -->
+        <apex:outputPanel styleClass="errorMsg" layout="block" rendered="{!isRenderErrorOnOtherPages}">
+            <center><strong>Error: Invalid Data<br/> {!errorOnOtherPage}</strong></center>
+        </apex:outputPanel>
+
+        <!------------------------Pagination codes--------------------------------------->
+        <apex:outputText >Page {!CurrPageNo} of {!TotalPageNo}</apex:outputText>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <apex:commandLink action="{!goFirst}" value="First" rendered="{!isPrevious}"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <apex:commandLink action="{!goPrevious}" value="Previous" rendered="{!isPrevious}"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <apex:commandLink action="{!goNext}" value="Next" rendered="{!isNext}"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <apex:commandLink action="{!goLast}" value="Last" rendered="{!isNext}"/>
+        <!------------------------Pagination codes--------------------------------------->
+
+        <apex:pageBlock >
+
+            <!-- Buttons Save & Cancel for the page -->
+            <apex:pageBlockButtons location="bottom">
+                <apex:actionStatus id="stageChangeStatus">
+                    <apex:facet name="start">
+                       <apex:outputText escape="false" style="font-weight: bold;"
+                                        value="&nbsp;Please wait...">
+                       </apex:outputText>
+                    </apex:facet>
+                    <apex:facet name="stop">
+                        <apex:commandButton value="Save" action="{!saveSelOpps}"/>
+                    </apex:facet>
+                </apex:actionStatus>
+                        <apex:commandButton value="Cancel" action="{!cancel}"/>
+            </apex:pageBlockButtons>
+
+            <apex:pageBlockTable value="{!paginationObjList}" var="opty">
+
+                <!-- Common read-only fields included for all record types -->
+                <apex:column headerValue="Opportunity Name">
+                    <apex:outputLink value="/{!opty.opp.Id}">{!opty.opp.Name}</apex:outputLink>
+                </apex:column>
+
+                <apex:column headervalue="Account Name">
+                <apex:inputfield value="{!opty.opp.AccountId}" required="true" rendered="{!isRenderSalesPriority}"/>
+                <apex:outputfield value="{!opty.opp.AccountId}" rendered="{!NOT(isRenderSalesPriority)}"/>
+                </apex:column>
+
+              <!--  <apex:column headerValue="Current Status" rendered="{!isRenderCurrentStatus}">
+                    <apex:inputField value="{!opty.opp.Current_Status__c}"/>
+                </apex:column> -->
+
+              <!--  <apex:column headerValue="Next Steps" rendered="{!isRenderNextSteps}">
+                    <apex:inputField value="{!opty.opp.Next_Steps__c}"/>
+                </apex:column> -->
+
+                <!-- <apex:column headerValue="Opportunity Record Type">
+                    <apex:outputText value="{!opty.opp.RecordType.Name}"/>
+                </apex:column>
+
+                <apex:column headerValue="Opportunity Currency">
+                    <apex:outputText value="{!opty.opp.CurrencyIsoCode}"/>
+                </apex:column> -->
+
+                <!-- Common editable fields included for all record types except that Water Opportunity will not have Amount field and Aqualon Opportunity will not have Stage field-->
+                <apex:column headerValue="Stage" rendered="{!isRenderStage}">
+                    <apex:outputPanel styleClass="requiredInput" layout="block">
+                        <apex:outputPanel styleClass="requiredBlock" layout="block"/>
+                        <apex:selectList value="{!opty.selectedStage}" size="1">
+                            <apex:selectOptions value="{!stage}"/>
+                            <apex:actionSupport event="onchange" action="{!stageOnChange}"
+                                                status="stageChangeStatus"
+                                                reRender="probability,primaryReason,secondaryReason,competitor">
+                                <apex:param assignTo="{!tempValue}" name="onchange" value="{!opty.opp.Id}"/>
+                            </apex:actionSupport>
+                        </apex:selectList>
+                        <apex:outputPanel styleClass="errorMsg" layout="block" rendered="{!AND(opty.selectedStage==null,isRenderError)}">
+                            <strong>Error:</strong> You must enter a value
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:column>
+
+                <!-- Common editable field for Aqualon record types -->
+                <apex:column headerValue="Probability" rendered="{!isRenderProbability}">
+                    <apex:outputPanel id="probability">
+                    <apex:inputField value="{!opty.opp.Probability}"/>
+                    </apex:outputPanel>
+                </apex:column>
+
+                <apex:column headerValue="Close Date">
+                    <apex:inputField value="{!opty.opp.CloseDate}"/>
+                </apex:column>
+
+                <apex:column headerValue="{!$ObjectType.Opportunity.Fields.Amount.Label}" rendered="{!isRenderAmount}">
+                    <apex:inputField value="{!opty.opp.Amount}" required="true"/>
+                </apex:column>
+
+                <apex:column headerValue="GP %" rendered="{!isRenderGrossProfit}">
+                    <apex:inputField value="{!opty.opp.Percent_Gross_Profit__c}"/>
+                </apex:column>
+
+                <!-- Common editable fields for all Distribution record types with a few exceptions as below -->
+                <!-- Fields included only for Distribution Targets record type -->
+                <apex:column headerValue="Annual Volume" rendered="{!isRenderAnnualVolume}">
+                    <apex:inputField value="{!opty.opp.V_Annual_Volume__c}" required="{!recTypeName!='Valvoline DIY'}"/>
+                </apex:column>
+
+                <apex:column headerValue="Opportunity Volume" rendered="{!isRenderOpportunityVolume}">
+                    <apex:inputField value="{!opty.opp.Opportunity_Volume__c}" required="true"/>
+                </apex:column>
+
+                <apex:column headerValue="Opportunity Gross Margin%" rendered="{!isRenderOpportunityGrossMarginPercent}">
+                    <apex:inputField value="{!opty.opp.Opportunity_Gross_Margin_Percent__c}" required="true"/>
+                </apex:column>
+
+                <!-- Annual Usage not inlcuded for Distribution Environmental Studies and Distribution Targets -->
+                <apex:column headerValue="Annual Usage" rendered="{!isRenderAnnualUsage}">
+                    <apex:inputField value="{!opty.opp.Annual_Usage__c}" required="true"/>
+                </apex:column>
+
+                <apex:column headerValue="Sales Priority" rendered="{!isRenderSalesPriority}">
+                        <apex:selectList value="{!opty.selectedSalesPriority}" size="1">
+                            <apex:selectOptions value="{!salesPriority}"/>
+                        </apex:SelectList>
+                </apex:column>
+
+                <apex:column headerValue="Target Price" rendered="{!isRenderTargetPrice}">
+                    <apex:inputField value="{!opty.opp.Target_Price__c}" required="{!recTypeName!='Distribution Environmental Services'}"/>
+                </apex:column>
+
+                <!-- Product of Interest not inlcuded for Distribution and PM -->
+                 <apex:column headerValue="SAP Material" rendered="{!isRenderSAPMaterial}">
+                    <apex:outputPanel styleClass="requiredInput" layout="block" >
+                      <apex:outputPanel styleClass="requiredBlock" layout="block" rendered="{!AND(ISNULL(opty.opp.SAP_Material__c),isRenderError)}"/>
+                        <apex:inputfield value="{!opty.opp.SAP_Material__c}"/>
+                        <apex:outputPanel styleClass="errorMsg" layout="block" rendered="{!AND(ISNULL(opty.opp.SAP_Material__c),isRenderError)}">
+                            <strong>Error:</strong> You must enter a value when Opp is Closed.
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:column>
+
+                <!-- Services only included for Distribution Environmental Studies -->
+               <!-- <apex:column headerValue="Services" rendered="{!isRenderServices}">
+                    <apex:inputField value="{!opty.opp.Services__c}" required="true"/>
+                </apex:column> -->
+
+                <apex:column headerValue="Nexeo Supplier" rendered="{!isRenderAshlandSupplier}">
+                    <apex:outputPanel styleClass="requiredInput" layout="block">
+                        <apex:outputPanel styleClass="requiredBlock" layout="block"/>
+                        <apex:selectList value="{!opty.selectedAshSupplier}" size="1">
+                            <apex:selectOptions value="{!ashSupplier}"/>
+                        </apex:selectList>
+                        <apex:outputPanel styleClass="errorMsg" layout="block" rendered="{!AND(opty.selectedAshSupplier==null,isRenderError)}">
+                            <strong>Error:</strong> You must enter a value
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:column>
+
+                <!-- Common editable field for Aqualon record types -->
+              <!--  <apex:column headerValue="SBU" rendered="{!isRenderSbu}">
+                    <apex:inputField value="{!opty.opp.SBU__c}"/>
+                </apex:column> -->
+
+                <!-- Editable fields for PM record types -->
+                <!--<apex:column headerValue="Platform" rendered="{!isRenderPlatform}">
+                    <apex:inputField value="{!opty.opp.Platform__c}" required="true"/>
+                </apex:column> -->
+
+            <!--    <apex:column headerValue="Code" rendered="{!isRenderCode}">
+                    <apex:inputField value="{!opty.opp.Code__c}" required="true"/>
+                </apex:column> -->
+
+                <apex:column headerValue="Target Volume" rendered="{!isRenderTargetVolume}">
+                    <apex:inputField value="{!opty.opp.Target_Volume__c}" required="true"/>
+                </apex:column>
+
+                <apex:column headerValue="Unit Gross Margin" rendered="{!isRenderUnitGrossMargin}">
+                    <apex:inputField value="{!opty.opp.T_UGM__c}" required="true"/>
+                </apex:column>
+
+                <apex:column headerValue="Product Family" rendered="{!isRenderProductFamily}">
+                <apex:actionRegion >
+                    <apex:outputPanel styleClass="requiredInput" layout="block">
+                        <apex:outputPanel styleClass="requiredBlock" layout="block"/>
+                        <apex:selectList value="{!opty.selectedProductFamily}" size="1">
+                            <apex:selectOptions value="{!productFamily}"/>
+                            <apex:actionSupport event="onchange" reRender="testing">
+                                <apex:param assignTo="{!testOpp}" name="assignOppId" value="{!opty.opp.Id}"/>
+                            </apex:actionSupport>
+                        </apex:selectList>
+                        <apex:outputPanel styleClass="errorMsg" layout="block" rendered="{!AND(opty.selectedProductFamily==null,isRenderError)}">
+                            <strong>Error:</strong> You must enter a value
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:actionRegion>
+                </apex:column>
+
+                <apex:column headerValue="Product Sub Family" rendered="{!isRenderSubFamily}">
+                    <apex:outputPanel id="testing">
+                        <apex:selectList value="{!opty.selectedProductSubfamily}" size="1" rendered="{!opty.SelectedProductFamily=='P&C - Packaging and Converting'}">
+                            <apex:selectOptions value="{!productSubFamily1}"/>
+                        </apex:SelectList>
+                        <apex:selectList value="{!opty.selectedProductSubfamily}" size="1" rendered="{!opty.SelectedProductFamily=='Structural & Industrial Adhesives'}">
+                            <apex:selectOptions value="{!productSubFamily2}"/>
+                        </apex:selectList>
+                        <apex:selectList value="{!opty.selectedProductSubfamily}" size="1" rendered="{!opty.SelectedProductFamily=='UPR - Unsaturated Polyester Resin'}">
+                            <apex:selectOptions value="{!productSubFamily3}"/>
+                        </apex:selectList>
+                        <apex:selectList value="{!opty.selectedProductSubfamily}" size="1" disabled="true" rendered="{!NOT(OR(opty.SelectedProductFamily=='UPR - Unsaturated Polyester Resin',opty.SelectedProductFamily=='Structural & Industrial Adhesives',opty.SelectedProductFamily=='P&C - Packaging and Converting'))}">
+                            <apex:selectOptions value="{!productSubFamily4}"/>
+                        </apex:selectList>
+                    </apex:outputPanel>
+                </apex:column>
+
+                <!-- Editable fields for Valvoline record types -->
+               <!-- <apex:column headerValue="Contract Expiration Date" rendered="{!isRenderContractExpDate}">
+                    <apex:inputField value="{!opty.opp.Contract_Expiration_Date__c}"/>
+                </apex:column> -->
+
+                <!-- Editable fields for Water record types -->
+                <apex:column headerValue="Annualized Gross Profit (GP)" rendered="{!isRenderAGP}">
+                    <apex:inputField value="{!opty.opp.Annualized_Gross_Profit_GP__c}" required="true"/>
+                </apex:column>
+
+                <apex:column headerValue="Primary Won/Lost Reason" rendered="{!isRenderPrimaryReasonWonLost}">
+                    <apex:outputPanel id="primaryReason">
+                    <apex:outputPanel styleClass="requiredInput" layout="block">
+                        <apex:outputPanel styleClass="requiredBlock" layout="block" rendered="{!OR(opty.selectedStage=='Closed',opty.selectedStage=='Dead', opty.selectedstage=='Lost Opportunity', opty.selectedstage=='Lost Business')}"/>
+                        <apex:selectList value="{!opty.selectedPrimaryWonLost}" size="1" disabled="{!NOT(OR(opty.selectedStage=='Closed',opty.selectedStage=='Dead', opty.selectedStage=='Dead', opty.selectedstage=='Lost Opportunity', opty.selectedstage=='Lost Business'))}">
+                            <apex:selectOptions value="{!primaryWonLost}"/>
+                        </apex:selectList>
+                        <apex:outputPanel styleClass="errorMsg" layout="block" rendered="{!AND(OR(opty.selectedStage=='Closed',opty.selectedStage=='Dead' , opty.selectedstage=='Lost Opportunity', opty.selectedstage=='Lost Business'),opty.selectedPrimaryWonLost==null,isRenderError)}">
+                            <strong>Error:</strong> You must enter a value
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:column>
+
+                <apex:column headerValue="Secondary Won/Lost Reason" rendered="{!isRenderSecondaryReasonWonLost}">
+                    <apex:outputPanel id="secondaryReason">
+                    <apex:outputPanel styleClass="requiredInput" layout="block">
+                        <apex:outputPanel styleClass="requiredBlock" layout="block" rendered="{!OR(opty.selectedStage=='Closed',opty.selectedStage=='Dead', opty.selectedstage=='Lost Opportunity', opty.selectedstage=='Lost Business')}"/>
+                        <apex:selectList value="{!opty.selectedSecondaryWonLost}" size="1" disabled="{!NOT(OR(opty.selectedStage=='Closed',opty.selectedStage=='Dead', opty.selectedstage=='Lost Opportunity', opty.selectedstage=='Lost Business'))}">
+                            <apex:selectOptions value="{!secondaryWonLost}"/>
+                        </apex:selectList>
+                        <apex:outputPanel styleClass="errorMsg" layout="block" rendered="{!AND(OR(opty.selectedStage=='Closed',opty.selectedStage=='Dead', opty.selectedstage=='Lost Opportunity', opty.selectedstage=='Lost Business'),opty.selectedSecondaryWonLost==null,isRenderError)}">
+                            <strong>Error:</strong> You must enter a value
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:column>
+
+                <apex:column headerValue="Competitor Lost To/Won From" rendered="{!isRenderCompetitorLostToWonFrom}">
+                    <apex:outputPanel id="competitor">
+                    <apex:outputPanel styleClass="requiredInput" layout="block">
+                        <apex:outputPanel styleClass="requiredBlock" layout="block" rendered="{!OR(opty.selectedstage=='Closed', opty.selectedstage=='Lost Opportunity', opty.selectedstage=='Lost Business')}"/>
+                        <apex:inputField value="{!opty.opp.Competitor_Lost_To_Won_From__c}"/>
+                        <apex:outputPanel styleClass="errorMsg" layout="block" rendered="{!AND(OR(opty.selectedstage=='Closed', opty.selectedstage=='Lost Opportunity', opty.selectedstage=='Lost Business'),opty.opp.Competitor_Lost_To_Won_From__c==null,isRenderError)}">
+                            <strong>Error:</strong> You must enter a value
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:column>
+
+                <apex:column headerValue="Application Support Requested" rendered="{!isRenderAppSupportRequested}">
+                    <apex:inputField value="{!opty.opp.Application_Support_Requested__c}"/>
+                </apex:column>
+
+                <apex:column headerValue="Application Support Engineer" rendered="{!isRenderAppSupportEngineer}">
+                    <apex:inputField value="{!opty.opp.Application_Support_Engineer__c}"/>
+                </apex:column>
+
+                <apex:column headerValue="Application Support Manager" rendered="{!isRenderAppSupportManager}">
+                    <apex:inputField value="{!opty.opp.Application_Support_Manager__c}"/>
+                    <apex:outputPanel styleClass="errorMsg" layout="block" rendered="{!And(recTypeName=='Water Opportunity',opty.opp.Application_Support_Requested__c,opty.opp.Application_Support_Manager__c==null,isRenderError)}">
+                        <strong>Error:</strong> Enter value for Application Support Manager. Application Support Manager must be selected when Application Support is Requested.
+                    </apex:outputPanel>
+                </apex:column>
+
+                <!-- Editable fields for PM record types -->
+                <apex:column headerValue="Customer Market" rendered="{!isRenderCustomerMarket}">
+                    <apex:outputPanel styleClass="requiredInput" layout="block">
+                        <apex:outputPanel styleClass="requiredBlock" layout="block"/>
+                        <apex:selectList value="{!opty.selectedCustomerMarket}" size="1">
+                            <apex:selectOptions value="{!customerMarket}"/>
+                        </apex:selectList>
+                        <apex:outputPanel styleClass="errorMsg" layout="block" rendered="{!AND(opty.selectedCustomerMarket==null,isRenderError)}">
+                            <strong>Error:</strong> You must enter a value
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:column>
+
+                <!-- Primary Competitor included for Aqualon, PM and Valvoline record types -->
+                <apex:column headerValue="Primary Competitor" rendered="{!isRenderPrimaryCompetitor}">
+                    <apex:inputField value="{!opty.opp.Primary_Competitor__c}" required="{!AND(recTypeName!='Aqualon Opportunity - EMEA',recTypeName!='Aqualon Opportunity - Latin Amer',recTypeName!='Aqualon Opportunity - NA')}"/>
+                </apex:column>
+
+                <apex:column headerValue="Reason Won/Lost" rendered="{!isRenderReasonWonLost}">
+                    <apex:selectList value="{!opty.selectedReasonWonLost}" size="1">
+                        <apex:selectOptions value="{!reasonWonLost}"/>
+                    </apex:selectList>
+                    <apex:outputPanel styleClass="errorMsg" layout="block" rendered="{!AND(OR(recTypeName=='Distribution Chemicals',recTypeName=='Distribution Plastics',recTypeName=='Distribution Targets'),OR(opty.selectedStage=='Closed Won',opty.selectedStage=='Closed - Not Awarded / Lost'),opty.selectedReasonWonLost==null,isRenderError)}">
+                        <strong>Error:</strong> Must enter a value for Reason Won/Lost
+                    </apex:outputPanel>
+                </apex:column>
+
+                <!-- Editable fields for PM record types -->
+              <!--  <apex:column headerValue="Metal Castings" rendered="{!isRenderMetalCastings}">
+                    <apex:inputField value="{!opty.opp.Metal_Castings__c}" required="true"/>
+                </apex:column> -->
+
+              <!--  <apex:column headerValue="Specific Mold/Casting Process" rendered="{!isRenderSpecificCasting}">
+                    <apex:inputField value="{!opty.opp.Specific_Molding_Casting_Process__c}" required="true"/>
+                </apex:column> -->
+
+             <!--   <apex:column headerValue="Material Won or Lost?" rendered="{!isRenderMaterialWonLost}">
+                    <apex:inputField value="{!opty.opp.Material_won_or_lost__c}"/> 
+                    <apex:outputPanel styleClass="errorMsg" layout="block" rendered="{!AND(recTypeName=='Performance Materials - PM',opty.selectedStage=='Closed Won',opty.opp.Material_won_or_lost__c==null,isRenderError)}">
+                        <strong>Error:</strong> Field can not be blank for status "Closed Won"
+                    </apex:outputPanel>
+                </apex:column> -->
+
+                <!-- Description included for Aqualon and Valvoline record types -->
+                <apex:column headerValue="Description" rendered="{!isRenderDescription}">
+                    <apex:inputField value="{!opty.opp.Description}"/>
+                </apex:column>
+
+            </apex:pageBlockTable>
+
+        </apex:pageBlock>
+
+        <!------------------------Pagination codes--------------------------------------->
+        <apex:outputText >Page {!CurrPageNo} of {!TotalPageNo}</apex:outputText>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <apex:commandLink action="{!goFirst}" value="First" rendered="{!isPrevious}"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <apex:commandLink action="{!goPrevious}" value="Previous" rendered="{!isPrevious}"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <apex:commandLink action="{!goNext}" value="Next" rendered="{!isNext}"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <apex:commandLink action="{!goLast}" value="Last" rendered="{!isNext}"/>
+        <!------------------------Pagination codes--------------------------------------->
+
+    </apex:form>
+
+</apex:page>

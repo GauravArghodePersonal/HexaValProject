@@ -1,0 +1,474 @@
+<apex:page controller="priceViewController" showHeader="false" standardStylesheets="false" sidebar="false" applyBodyTag="true" docType="html-5.0" readOnly="true">
+  <head>
+     <title>Price Book Viewer</title>
+      <meta charset="utf-8"/>
+      <meta name="viewport" content="width=device-width, initial-scale=1"/>
+      <apex:includeScript value="{!$Resource.jquery_min}"/>
+      <apex:includeScript value="{!$Resource.bootstrap_min}"/>
+      <apex:stylesheet value="{!$Resource.bootstrap_min_css}" />
+    </head>
+    <apex:form >
+        <div class="container"  style="min-width: 326px !important;">
+            <div class="img clearfix">
+                <div class="logo_holder left">
+                    <apex:image title="Solenis Logo" alt="Solenis Logo" styleClass="logo_size" url="{!URLFOR($Resource.PriceView,'PriceView/sole2.jpg')}" />
+                </div>          
+                <div class="home_wrapper left">
+                    <a class="homePageDesign" href="..">
+                       <apex:image title="Click to return to salesforce" alt="Home Button" styleClass="homeImage" url="{!URLFOR($Resource.PriceView,'PriceView/home.png')}" />
+                    </a>
+                </div>
+            </div>
+            <div class="selector_div">
+                <div class="pickListSet row">
+                    <div class="input_wrapper clearfix">
+                        <div class="left pickset set1 clearfix col-xs-12 col-sm-6 col-md-4">
+                            <div class="lbl left">
+                                <span class="label label-default">Region</span>
+                            </div>
+                            <div class="picklist left">
+                                <apex:selectList value="{!selectedRegion}" size="1" styleClass="form-control regionPick">
+                                <apex:actionFunction name="checkReq" action="{!actionSupMethod}" reRender="outptText"/>
+                                <!--<apex:actionSupport action="{!actionSupMethod}" event="onchange" reRender="outptText" status="waitStatus"/>-->
+                                    <apex:selectOptions value="{!RegionOptions}"/>
+                                </apex:selectList>
+                            </div>
+                        </div>
+                        <div class="left pickset set2 clearfix col-xs-12 col-sm-6 col-md-4">
+                            <div class="lbl left">
+                                <span class="label label-default">Business</span>
+                            </div>
+                            <div class="picklist left" id="businessDiv">
+                                <apex:selectList value="{!selectedCountry2}" size="1" styleClass="form-control businessPick">
+                                <!--<apex:actionSupport action="{!actionSupMethod}" event="onchange" reRender="outptText"  status="waitStatus"/>-->
+                                    <apex:selectOptions value="{!countriesOptions}"/>
+                                 </apex:selectList>
+                            </div>
+                        </div>
+                        <div class="left pickset set3 clearfix col-xs-12 col-sm-6 col-md-4">
+                            <div class="lbl left">
+                                <span class="label label-default">Market</span>
+                            </div>
+                            <div class="picklist left">
+                                <apex:selectList value="{!selectedMarket}" size="1" styleClass="form-control marketPick">
+                                    <apex:actionSupport action="{!actionSupMethod}" event="onchange" reRender="outptText"  status="waitStatus"/>
+                                    <apex:selectOptions value="{!MarketOptions}"/>
+                            </apex:selectList>
+                            </div>
+                        </div>
+                        <div class="left pickset set4 clearfix col-xs-12 col-sm-6 col-md-4">
+                                <div class="lbl left">
+                                    <span class="label label-default">Product Family</span>
+                                </div>
+                                <div class="picklist left">
+                                    <apex:selectList value="{!selectedProduct}" size="1" styleClass="form-control prodPick">
+                                        <apex:actionSupport action="{!actionSupMethod}" event="onchange" reRender="outptText"  status="waitStatus"/>
+                                        <apex:selectOptions value="{!ProdOptions}"/>
+                                    </apex:selectList>
+                                </div>
+                        </div>
+                        <div class="left pickset set4 clearfix col-xs-12 col-sm-6 col-md-4">
+                                <div class="lbl left">
+                                    <span class="label label-default">Pack Size</span>
+                                </div>
+                                <div class="picklist left">
+                                    <apex:selectList value="{!selectedPackage}" size="1" styleClass="form-control packPick">
+                                        <apex:actionSupport action="{!actionSupMethod}" event="onchange" reRender="outptText"  status="waitStatus"/>
+                                        <apex:selectOptions value="{!PackageOptions}"/>
+                                    </apex:selectList>
+                                </div>
+                        </div>
+                        <div class="left pickset desc_text clearfix col-xs-12 col-sm-6 col-md-4">
+                                <div class="lbl left">
+                                    <span class="label label-default desc" style="display:none;">Material Description</span>
+                                </div>
+                                <div class="left txt_box input-group">
+                                    <span class="input-group-addon">Material Description</span>
+                                    <apex:inputText value="{!inputtext3}" styleClass="form-control txt" html-placeholder="Enter Key Words">
+                                    <apex:actionSupport action="{!actionSupMethod}" event="onkeyup" reRender="outptText" status="waitStatus"/>
+                                    </apex:inputtext>
+                                </div>
+                        </div>
+                    </div>
+                </div> 
+            </div>
+            <div class="row tbl_div" id="table_wrapper">
+                    <apex:actionStatus id="waitStatus" styleClass="test2 ">     
+                        <div class="test">
+                            <apex:facet name="start">
+                                <apex:image value="/img/loading.gif" title="Processing..." styleClass="inner"/>
+                            </apex:facet>
+                            <apex:facet name="stop">
+                            </apex:facet>
+                        </div>
+                    </apex:actionStatus>
+                    <div class="info_text clearfix">
+                        <div class="infos info_1 left">
+                            <span class="label label-info">Prices listed do not include freight and other upcharges</span>
+                        </div>
+                        <div class="infos info_2 right">
+                            <span class="label label-info">Prices Last Updated: 11/30/2017</span>
+                        </div> 
+                    </div>
+                    <div class="table-responsive">
+                        <apex:datatable value="{!accList}" var="acc" id="outptText" styleClass="col-xs-12 col-sm-12 col-md-12 col-lg-12 table table-hover table-bordered" Style="overflow-y: hidden;">
+                            <apex:column value="{!acc.Material_Description__c}" StyleClass="" headerValue="Material Description"/>
+                            <apex:column value="{!acc.Rating__c}" StyleClass="" headerValue="Rating"/>
+                            <apex:column value="{!acc.List_Price__c}" StyleClass="testing" headerValue="List Price"/>
+                            <apex:column value="{!acc.TargetPrice__c}" StyleClass="" headerValue="Target Price"/>
+                            <apex:column value="{!acc.Product_Family_Description__c}" StyleClass="" headerValue="Product Family Code Desc"/>
+                            <apex:column value="{!acc.Market__c}" StyleClass="" headerValue="Market"/>
+                            <apex:column value="{!acc.Pack_Size_Priced__c}" StyleClass="" headerValue="Pack Size Price"/>
+                            <apex:column value="{!acc.CurrencyIsoCode}" StyleClass="" headerValue="Currency"/>
+                            <apex:column value="{!acc.Region__c}" StyleClass="" headerValue="Region"/>
+                            <apex:column value="{!acc.Business__c}" StyleClass="" headerValue="Business"/>
+                            <apex:column value="{!acc.SKU__c}" StyleClass="" headerValue="Sku"/>
+                        </apex:datatable>
+                    </div>
+            </div>
+        </div>
+    </apex:form>
+    <script>
+    $(document).ready(function(){
+        $("#table_wrapper").css("display", "none");
+        var $window_size = $(window).width();
+        //alert($window_size);
+        $(".container").css({"width":$window_size+"px"});
+        //$("#table_wrapper").css("display", "block");
+        var selectedPick = $("select.regionPick").val();
+              if(selectedPick=="Select"){
+                $(".businessPick,.marketPick").addClass("disabled-link");
+            }
+            var selPick = $("select.marketPick").val();
+            if(selPick=="Select"){
+                $(".set4").addClass("hideClass");
+                $(".desc_text").addClass("hideClass");
+            }
+            $("select").on('change',function () {
+                var selectedValue = $(this).val();
+                var changedClass;
+                if($(this).hasClass("regionPick")){
+                    console.log("I ma inside hasClass businessPick");
+                   if(selectedValue=="Select" && $("select.businessPick").val()!="Select" && $("select.marketPick").val()!="Select"){
+                        console.log("I ma inside hasClass businessPick - selectedValue==Select");
+                        $("select.businessPick").val('Select');
+                        $("select.businessPick").prop("selectedIndex", 0);
+                        $("select.marketPick").val('Select');
+                        $("select.businessPick").prop("selectedIndex", 0);
+                        $(".businessPick,.marketPick").addClass("disabled-link");
+                    }
+                    if(selectedValue=="Select" && $("select.businessPick").val()=="Select"){
+                        console.log("I ma inside hasClass businessPick - selectedValue==Select");
+                        $("select.businessPick").val('Select');
+                        $("select.marketPick").val('Select');
+                        $(".businessPick,.marketPick").addClass("disabled-link");
+                    }
+                    if(selectedValue=="Select" && $("select.businessPick").val()!="Select"){
+                        console.log("I ma inside hasClass businessPick - selectedValue==Select");
+                        $("select.businessPick").val('Select');
+                        $("select.marketPick").val('Select');
+                        $(".businessPick,.marketPick").addClass("disabled-link");
+                    }
+                    if(selectedValue=="Select" && $("select.marketPick").val()=="Select"){
+                        console.log("I ma inside hasClass businessPick - selectedValue==Select");
+                        $("select.packPick").prop("selectedIndex", 0);
+                        $("select.prodPick").prop("selectedIndex", 0);
+                        $('input[type=text]').each(function(){ $(this).val(''); });
+                        $(".set4").addClass("hideClass");
+                        $(".desc_text").addClass("hideClass");
+                    }
+                    if(selectedValue=="Select" && $("select.marketPick").val()!="Select"){
+                        console.log("I ma inside hasClass businessPick - selectedValue==Select");
+                        $("select.packPick").prop("selectedIndex", 0);
+                        $("select.prodPick").prop("selectedIndex", 0);
+                        $('input[type=text]').each(function(){ $(this).val(''); });
+                        $(".set4").addClass("hideClass");
+                        $(".desc_text").addClass("hideClass");
+                    }
+                    if($("select.regionPick").val()!="Select" && $("select.businessPick").val()=="Select"){
+                        console.log("I ma inside hasClass businessPick - else if");
+                        $(".businessPick").removeClass("disabled-link");
+                        $(".marketPick").addClass("disabled-link");
+                    }
+                    if(selectedValue!="Select" && $("select.businessPick").val()!="Select"){
+                        console.log("final else part");
+                        $(".businessPick,.marketPick").removeClass("disabled-link");
+                    }
+                }
+                if($(this).hasClass("businessPick")){
+                    if(selectedValue=="Select"){
+                        $("select.packPick").prop("selectedIndex", 0);
+                        $("select.prodPick").prop("selectedIndex", 0);
+                        $('input[type=text]').each(function(){ $(this).val(''); });
+                        $(".set4").addClass("hideClass");
+                        $(".desc_text").addClass("hideClass");
+                        $("select.marketPick").prop("selectedIndex", 0);
+                        $(".marketPick").addClass("disabled-link");
+                    }
+                    else{
+                        $(".marketPick").removeClass("disabled-link");
+                    }
+                }
+                if($(this).hasClass("marketPick")){
+                    if(selectedValue=="Select"){
+                        $("select.packPick").prop("selectedIndex", 0);
+                        $("select.prodPick").prop("selectedIndex", 0);
+                        $('input[type=text]').each(function(){ $(this).val(''); });
+                        $(".set4").addClass("hideClass");
+                        $(".desc_text").addClass("hideClass");
+                    }
+                    else{
+                        $(".set4").removeClass("hideClass");
+                        $(".desc_text").removeClass("hideClass");
+                    }
+                }
+                if ($("select.regionPick").val()!="Select" && $("select.businessPick").val()!="Select" && $("select.marketPick").val()!="Select"){
+                 checkReq();
+                 $("#table_wrapper").css("display", "block");
+                 }
+                 else{
+                     $("#table_wrapper").css("display", "none");
+                 } 
+            });
+            $("input:text").keypress(function(event) {
+            if (event.keyCode == 13) {
+                event.preventDefault();
+                return false;
+            }
+        }); 
+    });
+    </script>
+    <style>
+    *{
+        padding : 0px;
+        margin : 0px;
+    }
+    .row {
+        margin-left: 0px !important;
+        margin-right: 0px !important;
+        
+    }
+    .container{
+          padding : 0px;
+          position : relative;
+          min-width : 325px;
+          
+    }
+    .homePageDesign {
+              width: 15px;
+                margin: 0 auto;
+    }
+    .test {
+            border: 2px solid red;
+            height: 50px;
+            width: 100%;
+    }
+    .pbBody > span {
+            display: block;
+    }
+    .inner {
+            display: block;
+            height: 15px;
+            margin: 0 auto !important;
+            width: 15px;
+    }
+    .apexp {
+            overflow-x: auto;
+    }
+    .left{
+            float : left;
+    }
+    .right{
+            float : right;
+    }
+    .lbl > .label{
+            display :block;
+            height: 31px;
+            padding-top: 10px;
+            width: 86px;
+    }
+    .picklist.left > select {
+            background-color: #337ab7;
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+            width: 200px;
+    }
+    select{
+            text-align : center;
+    }
+    .desc{
+            width: 121px !important;    
+    }
+    .desc_text{
+            padding-top: 2px;    
+    }
+    .pickListSet > div {
+        padding-top : 2px;
+    }
+    .picklist.left {
+        margin-left: 10px;
+    }
+    .selector_div {
+        background-color: white;
+        position : absolute;   
+    }
+    .tbl_div{
+         margin-left : 0px;   
+    }
+    .tbl_div {
+        margin-top: 202px;
+    }
+    .input_wrapper > div {
+        padding-top : 2px;    
+    }
+    .input-group {
+        width: 166px;
+        
+    }
+    .input-group-addon {
+        background-color: #777777;
+        color: white;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 6px 2px;
+    }
+    .txt {
+        color: #337ab7 !important;
+        font-size: 11px;
+        font-weight: 700;
+        width: 180px !important;
+    }
+    .logo_size {
+        height: 41px;
+        width: 129px;
+    }
+    .homePage{
+        margin-left : 49%;
+    }
+    .disabled-link{
+        background-color:#ffffff !important;
+        color:#aaa !important;
+        pointer-events: none; 
+    }
+    .hideClass{
+            display : none !important;
+    }
+    .home_wrapper{
+            display : none;
+    }
+    .infos {
+        padding-left : 0px;
+        padding-right : 0px;
+        
+    }
+    .info_1 {
+        text-align : left;
+        width: 328px;
+    }
+    .info_2 {
+        padding-left : 0px
+        padding-right: 0px
+        text-align : right;
+         width: 182px;
+    }
+    <!-- Style for Tablets and Desktop -->
+    @media only screen and (max-width: 530px) {
+        .info_2 {
+            float : none !important;
+        }
+        .info_1 {
+            float : none !important;
+        }    
+    }
+    <!-- Style for Lanscape view -->
+    @media screen and (max-width: 768px) and (min-width: 660px) {
+        .row {
+            margin-left: 0px !important;
+            margin-right: 0px !important;
+        }
+        .pickset{
+            width : 50%;
+        }
+        .tbl_div {
+            margin-top: 204px;
+        }
+        .logo_size {
+            height: 57px;
+            width: 169px;
+        }
+        .inner{
+            margin-bottom: 10px;
+        }
+        .desc_text {
+            padding-top: 0 !important;
+        }
+    }
+    <!-- Style for Tablets and Desktop -->
+    @media only screen and (min-width: 768px) {
+        .row {
+                margin-left: 0px !important;
+                margin-right: 0px !important;
+        }
+        .tbl_div {
+            margin-top: 104px;
+        }
+        .home_wrapper{
+            display : block !important;
+            margin-top: 12px;
+            margin-left : 28%;
+        }
+        .homeImage {
+            width: 35px;
+        }
+    }
+    <!-- Style for Desktop and large screen -->
+    @media only screen and (min-width: 992px) {
+        .row {
+                margin-left: 0px !important;
+                margin-right: 0px !important;
+        }
+        .txt_box {
+            float : none;
+            margin : 0px;
+        }
+        .tbl_div {
+            margin-top: 80px;
+        }
+        .logo_size {
+            border-top-left-radius: 14px;
+            height: 74px;
+            margin-top: 30px;
+            width: 250px;
+        }
+        .selector_div {
+            margin-top : 10px; 
+            position : static;  
+        }
+        .emoji_size{
+            width : 30px;
+            height : 24px;
+        }
+        marquee {
+            color: #337ab7 !important;
+            font-weight: 700;
+        }
+        .quote_size {
+            height: 142px;
+            width: 304px;
+        }
+        .set4_inner {
+            margin: 20px auto 0;
+            width: 307px;
+        }
+        .home_wrapper{
+            display : block !important;
+            margin-top: 30px;
+            margin-left : 28%;
+        }
+        .homeImage {
+            width: 50px;
+        }
+    }
+    </style>
+</apex:page>

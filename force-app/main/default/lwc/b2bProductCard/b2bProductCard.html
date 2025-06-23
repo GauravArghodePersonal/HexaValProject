@@ -1,0 +1,80 @@
+<template>
+    <div class="slds-card slds-var-p-around_x-small box">
+        <template if:true={recordId}>
+            
+            <div class="imgdiv">
+                <a href={producturl}>
+                    <img if:true={imageUrl} src={imageUrl}
+                        class="product"
+                        alt="Product picture"/>
+                </a>
+            </div>
+
+            <span slot="title" class="title">{productName}</span>
+            
+            <br/>
+
+            <span style="color: #17b;">Sku #: {oldMaterialNumber}</span>
+
+            <div class="slds-grid slds-wrap">
+                <div class="slds-col slds-size_12-of-12">
+                   <!-- <h1 style="font-size: 20px; color:#1d3951;"><template if:true={showPrice}>
+                        {productPrice} </template>{currency}</h1> -->
+                        <template if:true={showPrice}>
+                      <h1 style="font-size: 20px; color:#1d3951;">   <lightning-formatted-number
+                        format-style="currency"
+                        currency-code={productPrice}
+                        currency-display-as="code"
+                        maximum-fraction-digits="2"
+                        value={currency}
+                    ></lightning-formatted-number> </h1>
+                        </template>
+                        <template if:false={showPrice}>
+                      <h1 style="font-size: 20px; color:#1d3951;"> Price Not Available </h1>
+                        </template>
+                </div>
+            </div>
+            
+            <hr class="hr"/>
+            
+            <div class="slds-grid slds-wrap">
+                <div class="slds-col slds-size_6-of-12">
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-col slds-size_5-of-12">
+                            <input type="number" min="1" class="slds-input txt" onchange={quantityChange} value={quantity}/>
+                        </div>
+                        <div class="slds-col slds-size_1-of-12">
+                            <br/>
+                        </div>
+                        <div class="slds-col slds-size_5-of-12">
+                            <input disabled class="slds-input txt" value={uom}/>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_6-of-12">
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-col slds-size_6-of-12">
+                            <br/>
+                        </div>
+                        <div class="slds-col slds-size_3-of-12" style="text-align: center; padding-top: 5px;">
+                            <lightning-icon if:false={isFav} style="cursor: pointer;" icon-name="utility:favorite" size="x-small" title="Add to favorite" onclick={createAndAddToList}></lightning-icon>
+                            <div class="yellow" if:true={isFav}>
+                                <img src={faviconurl} style="width: 25px;cursor: pointer;" title="Remove from favorite" onclick={removeWishlistItem}>
+                            </div>
+                        </div>
+                        <div class="slds-col slds-size_3-of-12" style="text-align: center; padding-top: 5px;">
+                            <template if:true={showPrice}>
+                                <lightning-icon style="cursor: pointer;" icon-name="utility:cart" size="x-small" title="Add to cart" onclick={addToCart}></lightning-icon>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+        <template if:false={recordId}>
+            <div class="slds-var-p-around_large">
+                <p class="placeholder">Select a product to see details</p>
+            </div>
+        </template>
+    </div>
+</template>

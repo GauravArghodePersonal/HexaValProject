@@ -1,0 +1,266 @@
+<template>
+    <!-- <div class="slds-m-around_large">
+        <div if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading..." variant="brand">
+            </lightning-spinner>
+        </div>
+    </div> -->
+    <div class="slds-is-relative" style="margin-left:5%; margin-right: 5%;">
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading..." variant="brand">
+            </lightning-spinner>
+        </template>
+
+        <lightning-card if:false={showCreateIdeaSection} style="padding:5%">
+            <lightning-layout style="padding-left:5%;padding-right:5%">
+                <lightning-layout-item size="12" padding="around-small">
+                    <lightning-layout class="slds-m-bottom_small">
+                        <lightning-layout-item size="12" class="slds-p-right_small">
+                            <lightning-input type="search" label="Search existing ideas" onchange={handleSearchChange} value={filterParams.searchString}
+                                data-item="searchInput">
+                            </lightning-input>
+                        </lightning-layout-item>
+                    </lightning-layout>
+
+                    <lightning-layout if:true={showSearchResult} class="slds-show_small">
+                        <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                            <thead>
+                                <tr class="slds-line-height_reset">
+                                    <th class="" scope="col">Idea Title</th> 
+                                    <th class="" scope="col">Status</th> 
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template for:each={ideas} for:item="item" for:index="index">
+                                    <tr key={item.oIdea.id}>
+                                        <th scope="col">
+                                            <a onclick={viewClicked} name={item.oIdea.Id}>{item.oIdea.Name}</a>
+                                        </th> 
+                                        <th scope="col">
+                                            <div>{item.oIdea.Status__c}</div>
+                                        </th> 
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </lightning-layout>
+                    
+                    <template if:true={showSearchMsg}>
+                        <div>
+                            No idea found for matching search criteria
+                        </div>
+                    </template>
+
+                    <lightning-layout if:true={showSearchResult} class="slds-hide_small">
+                        <lightning-layout-item size="12">
+                            <template for:each={ideas} for:item="item" for:index="index">
+                                <lightning-layout key={item.oIdea.id}>
+                                    <lightning-layout-item size="12">
+                                        <lightning-layout>
+                                            <lightning-layout-item size="12">
+                                                <b>Idea Title:</b>&nbsp;<a onclick={viewClicked} name={item.oIdea.Id}>{item.oIdea.Name}</a>
+                                                <br />
+                                                <b>Status:</b> {item.oIdea.Status__c}
+                                            </lightning-layout-item>
+                                        </lightning-layout>
+                                    </lightning-layout-item>
+                                    <hr />
+                                </lightning-layout>
+                            </template>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </lightning-layout-item>
+            </lightning-layout>
+            <lightning-layout horizontal-align="start" multiple-rows="true" style="padding-left:5%;padding-right:5%">
+                <!--
+                <lightning-layout-item size="12" padding="around-small">
+                    <div class="slds-clearfix">
+                        <div class="slds-align_absolute-right">
+                            <lightning-button variant="brand" label="Continue Post an Idea" title="Continue Post an Idea" onclick={showIdeaSectionHandle}></lightning-button>
+                            &nbsp;
+                            <lightning-button variant="brand" label="Cancel" title="Cancel" onclick={handleCancel}></lightning-button>
+                        </div>
+                    </div>
+                </lightning-layout-item>
+                -->
+                <lightning-layout-item flexibility="no-grow" padding="around-small">
+                    <lightning-button variant="brand" label="Continue to Post a New Idea" title="Continue Post an Idea" onclick={showIdeaSectionHandle}></lightning-button>
+                </lightning-layout-item>
+                <lightning-layout-item flexibility="no-grow" padding="around-small">
+                    <lightning-button variant="brand" label="Cancel" title="Cancel" onclick={handleCancel}></lightning-button>
+                </lightning-layout-item>
+            </lightning-layout>
+        </lightning-card>
+
+        <lightning-card if:true={showCreateIdeaSection}>
+            <lightning-layout title={formHeading} horizontal-align="center"  style="padding-left:5%;padding-right:5%" multiple-rows="true">
+                <div class="slds-card__header slds-grid" style="padding-left:5%;padding-right:5%;">
+                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                        <div class="slds-media__body">
+                            <h2 class="slds-card__header-title">
+                                <span class="slds-text-heading_small slds-truncate"><b>{formHeading}</b></span>
+                            </h2>
+                        </div>
+                        <div class="slds-no-flex" >
+                            <slot name="actions">
+                                
+                            </slot>
+                        </div>
+                    </header>
+                </div>
+            </lightning-layout>
+            
+            <lightning-layout if:true={adminFieldEditable} horizontal-align="center" style="padding-left:5%;padding-right:5%" multiple-rows="true">
+                <lightning-layout-item size="12" padding="around-small">
+                    <lightning-combobox name="category" label="Category" value={selectedIdeaCategory} required="true"
+                                options={options} onchange={categorySelected} data-item="Category" class="categorySelected">
+                        </lightning-combobox>
+                </lightning-layout-item>
+
+                <lightning-layout-item size="12" padding="around-small">
+                    <lightning-input type="text" label="Subject: Title of the Idea" class="title" maxlength="80" value={title} required="true"></lightning-input>
+                </lightning-layout-item>
+
+                <lightning-layout-item size="12" padding="around-small">
+                    <lightning-textarea label="What problem does your idea address?" maxlength="255" class="problemAddress" value={yourIdeaAddress} required="true"></lightning-textarea>
+                </lightning-layout-item>
+
+                <lightning-layout-item size="12" padding="around-small">
+                    <lightning-textarea label="What is your Idea / Solution? : Detailed description of the idea" maxlength="255" class="ideaDescription" value={ideaDescription} required="true"></lightning-textarea>
+                </lightning-layout-item> 
+            </lightning-layout>
+
+            <lightning-layout if:true={adminStatusField} horizontal-align="center" style="padding-left:5%;padding-right:5%" multiple-rows="true">
+                <lightning-layout-item size="12" padding="around-small">
+                    <lightning-combobox name="status" label="Status" value={selectedStatus} options={statusOptions} onchange={statusSelected} data-item="status">  </lightning-combobox>
+                </lightning-layout-item> 
+            </lightning-layout>    
+
+            <lightning-layout if:false={adminFieldEditable}  horizontal-align="center"  style="padding-left:5%;padding-right:5%" multiple-rows="true">
+                <lightning-layout-item size="12" padding="around-small">
+                    <label for="category" class="slds-form-element__label">Category</label>
+                    <div id="category">{selectedIdeaCategory}</div>
+                </lightning-layout-item>
+
+                <lightning-layout-item size="12" padding="around-small">
+                    <label for="title" class="slds-form-element__label"><b>Subject of the Idea</b></label>
+                    <div id="title">{title}</div>
+                </lightning-layout-item>
+
+                <lightning-layout-item size="12" padding="around-small">
+                    <label for="prblmAdd" class="slds-form-element__label"><b>What problem does your idea address?</b></label>
+                    <div id="prblmAdd">{yourIdeaAddress}</div>
+                </lightning-layout-item>
+                
+                <lightning-layout-item size="12" padding="around-small">
+                    <label for="description" class="slds-form-element__label"><b>Detailed description of the idea</b></label>
+                    <div id="description">{ideaDescription}</div>
+                </lightning-layout-item>
+                
+                <lightning-layout-item size="12" padding="around-small"  >
+                    <label for="statusText" class="slds-form-element__label">Status</label>
+                    <div id="statusText">{selectedStatus}</div>
+                </lightning-layout-item>
+ 
+            </lightning-layout>
+
+            <lightning-layout horizontal-align="center"  style="padding-left:5%;padding-right:5%" multiple-rows="true">
+                <lightning-layout-item size="12" padding="around-small">
+                    <lightning-dual-listbox name="businessCategory"
+                                label="Business Category"
+                                size="4"
+                                value={selectedBusCategory}
+                                source-label="Available"
+                                selected-label="Selected"
+                                options={businessOptions}
+                                onchange={busCategorySelected}></lightning-dual-listbox>
+                </lightning-layout-item>
+
+                <lightning-layout-item size="12" padding="around-small">
+                    <lightning-dual-listbox name="application"
+                                label="Application"
+                                size="4"
+                                value={selectedApplication}
+                                source-label="Available"
+                                selected-label="Selected"
+                                options={applicationOptions}
+                                onchange={applicationSelected}></lightning-dual-listbox>
+                </lightning-layout-item>
+
+                <lightning-layout-item size="12" padding="around-small">
+                    <lightning-dual-listbox name="customerValuedrivers"
+                                label="Customer Value drivers"
+                                size="4"
+                                value={selectedDriver}
+                                source-label="Available"
+                                selected-label="Selected"
+                                options={driverOptions}
+                                onchange={driverSelected}></lightning-dual-listbox>
+                </lightning-layout-item>
+
+                <lightning-layout-item size="12" padding="around-small">
+                    <lightning-dual-listbox name="whoBenefits"
+                                label="Who Benefits from this solution?"
+                                size="4"
+                                value={selectedBenefit}
+                                source-label="Available"
+                                selected-label="Selected"
+                                options={whoBenefitOptions}
+                                onchange={whoBenefitSelected}></lightning-dual-listbox>
+                </lightning-layout-item>
+                
+                <lightning-layout-item size="12" padding="around-small">
+                    <lightning-dual-listbox name="industry"
+                                label="Industry"
+                                size="4"
+                                value={selectedIndustry}
+                                source-label="Available"
+                                selected-label="Selected"
+                                options={industryOptions}
+                                onchange={industrySelected}></lightning-dual-listbox>
+                </lightning-layout-item>
+            </lightning-layout>
+
+            <lightning-layout if:true={ideaId}  horizontal-align="center" style="padding-left:5%;padding-right:5%" multiple-rows="true">
+                
+
+            </lightning-layout>
+
+            <lightning-record-edit-form object-api-name="Idea__c">
+                <lightning-layout  horizontal-align="center"  style="padding-left:5%;padding-right:5%" multiple-rows="true">
+                    <lightning-layout-item  size="12" padding="around-small">
+                        <label for="selectedAcc" class="slds-form-element__label"><b>Account</b></label>
+                        <lightning-input-field onchange={handleAccountChange} variant="label-hidden" id="selectedAcc" field-name="Account__c" label="Account" value={selectedAccountId}></lightning-input-field>
+                    </lightning-layout-item>
+                </lightning-layout>
+            </lightning-record-edit-form>
+            
+            <lightning-layout horizontal-align="center"  style="padding-left:5%;padding-right:5%" multiple-rows="true">
+                <lightning-layout-item size="12" padding="around-small" if:true={attachmentName}>
+                    <label for="uploadFile" class="slds-form-element__label"><b>Attachment</b></label>
+                    <div><a onclick={handleAttachmentClick} target = "_Blank"> {attachmentName} </a></div>
+                </lightning-layout-item>
+
+                <lightning-layout-item size="12" padding="around-small">
+                    <lightning-input type="file" onchange={onFileUpload} name="uploadFile" label="Upload Attachment (One File Only)"></lightning-input>  
+                    <template if:true={fileName}>
+                        <div>{fileName}</div>
+                    </template>
+                </lightning-layout-item>
+            </lightning-layout>
+
+            <lightning-layout>
+                <lightning-layout-item size="12" padding="around-small">
+                    <div class="slds-clearfix"  style="padding:5%">
+                        <div class="slds-align_absolute-right">
+                            <lightning-button variant="brand" label="Submit" type="Submit" title="Submit" onclick={handleSubmit}></lightning-button>
+                            &nbsp;
+                            <lightning-button variant="brand" label="Cancel" title="Cancel" onclick={handleCancel}></lightning-button>
+                        </div>
+                    </div>
+                </lightning-layout-item>
+            </lightning-layout>
+
+        </lightning-card>
+    </div>
+</template>

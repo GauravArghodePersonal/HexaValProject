@@ -1,0 +1,136 @@
+<apex:page standardController="Apex_Job_Schedule__c" extensions="Apex_Job_Schedule_Controller" 
+           action="{!initAction}" tabStyle="Apex_Scheduled_Jobs__tab">
+
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-1.6.2.min.js')}" />
+
+    <apex:form id="theForm">
+        <apex:pageBlock id="pblock1">
+            <table class="ajstbl">
+                <caption class="bold">Apex Scheduled Jobs<br/><br/></caption>
+
+            <tr>
+                <td class="center"><apex:inputCheckbox id="allcb1" 
+                        rendered="{!renderlist1}" value="{!allSelected1}" 
+                        onclick="onClick_AllChkbox('achkbx', this);"/></td>
+                <td class="boldCenter" width="20px">#</td>
+                <td><apex:actionStatus id="astat1">
+                      <apex:facet name="start">
+                        <apex:outputText escape="false" styleClass="bold" 
+                                         value="&nbsp;Please Wait ...">
+                          <apex:image value="{!$Resource.spinner}"/>
+                        </apex:outputText>
+                      </apex:facet>
+                      <apex:facet name="stop">
+                        <apex:commandButton action="{!deleteScheduleJobs}" 
+                            rendered="{!renderlist1}" status="astat1" rerender="theForm" 
+                            value="Delete Selected Scheduled Jobs"/>
+                      </apex:facet>
+                    </apex:actionStatus></td>
+                <td class="boldCenter" width="40px">Hour</td>
+                <td class="boldCenter" width="40px">Minute</td>
+                <td class="boldCenter" width="80px">Scheduled?</td>
+                <td class="boldCenter" width="140px">
+                    <apex:commandLink action="{!sortOnNextRunTime}" 
+                                      value="Next Run Time"/>&nbsp;
+                        <apex:image value="{!sortImage}" height="5px"
+                                    rendered="{!renderNRTSortImage}"/>
+                    </td>
+            </tr>
+            
+            <apex:repeat value="{!alist}" var="a">
+                <tr class="{!a.styleClass}">
+                    <td class="center"><apex:inputCheckbox styleClass="achkbx" value="{!a.selected}"
+                         onclick="onClick_RowChkbox('achkbx', '{!$Component.theForm.pblock1.allcb1}');"/></td>
+                    <td class="center"><apex:outputText value="{!a.recNum}"/></td>
+                    <td><apex:outputField value="{!a.ajs.Job_Name__c}"/></td>
+                    <td class="center"><apex:outputField value="{!a.ajs.Hours__c}"/></td>
+                    <td class="center"><apex:outputField value="{!a.ajs.Minutes__c}"/></td>
+                    <td class="center"><apex:outputField value="{!a.ajs.Scheduled__c}"/></td>
+                    <td class="center"><apex:outputField value="{!a.ct.NextFireTime}"/></td>
+                </tr>
+            </apex:repeat>
+            
+            <tr><td colspan="99">&nbsp;</td></tr>
+
+            <tr>
+                <td class="center"><apex:inputCheckbox id="allcb2"
+                        rendered="{!renderlist2}" value="{!allSelected2}" 
+                        onclick="onClick_AllChkbox('bchkbx', this);"/></td>
+                <td>&nbsp;</td>
+                <td><apex:actionStatus id="astat2">
+                      <apex:facet name="start">
+                        <apex:outputText escape="false" styleClass="bold" 
+                                         value="&nbsp;Please Wait ...">
+                          <apex:image value="{!$Resource.spinner}"/>
+                        </apex:outputText>
+                      </apex:facet>
+                      <apex:facet name="stop">
+                        <apex:commandButton action="{!startSchedulableJobs}" 
+                            rendered="{!renderlist2}" status="astat2" rerender="theForm" 
+                            value="Start Selected Schedulable Jobs"/>
+                      </apex:facet>
+                    </apex:actionStatus></td>
+                <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+            </tr>
+            
+            <apex:repeat value="{!blist}" var="b">
+                <tr class="{!b.styleClass}">
+                    <td class="center"><apex:inputCheckbox styleClass="bchkbx" value="{!b.selected}"
+                         onclick="onClick_RowChkbox('bchkbx', '{!$Component.theForm.pblock1.allcb2}');"/></td>
+                    <td class="center"><apex:outputText value="{!b.recNum}"/></td>
+                    <td><apex:outputField value="{!b.ajs.Job_Name__c}"/></td>
+                    <td class="center"><apex:outputField value="{!b.ajs.Hours__c}"/></td>
+                    <td class="center"><apex:outputField value="{!b.ajs.Minutes__c}"/></td>
+                    <td class="center"><apex:outputField value="{!b.ajs.Scheduled__c}"/></td>
+                    <td class="center">&nbsp;</td>
+                </tr>
+            </apex:repeat>
+            </table>
+        </apex:pageBlock>
+    </apex:form>
+
+    <script type="text/javascript">
+        var $j = jQuery.noConflict();
+        
+        function onClick_AllChkbox(rowCbClass, allChkbox) {
+            $j("."+rowCbClass).each(function() {
+                if (this.disabled == false) {
+                    this.checked = allChkbox.checked;
+                }
+            });
+        }
+
+        function onClick_RowChkbox(rowCbClass, allChkboxId) {
+            var allChkbox = document.getElementById(allChkboxId);
+            allChkbox.checked = true;
+            $j("."+rowCbClass).each(function() {
+                if (!this.checked) {
+                    allChkbox.checked = false;
+                    return false;
+                }
+            });
+        }
+
+    </script>
+    
+    <style>
+        TABLE.ajstbl {border: #dadada 1px solid; cell-spacing: 0px; padding: 0px; 
+                      margin: 0px; border-collapse: collapse; width: 600px;}
+        TABLE.ajstbl TD {font-weight: normal; font-size: 8pt; border: #dadada 1px solid; 
+                         border-collapse: collapse; align: left; text-align: left; 
+                         vertical-align: middle; padding: 5px; margin: 0px;
+                          white-space: nowrap;}
+        TABLE.ajstbl TD.bold {font-weight: bold;}
+        TABLE.ajstbl TD.center {text-align: center;}
+        TABLE.ajstbl TD.boldCenter {font-weight: bold; text-align: center;}
+        TABLE.ajstbl TR.row1 {background-color: #ddeeff;}
+        .bold {font-weight: bold;}
+        .center {text-align: center;}
+        .right {text-align: right;}
+        .nowrap {white-space: nowrap;}
+        .warning {font-color: red; font-weight: bold;}
+        .txtbox1 {background-color: #f8f8f8; border: 1px solid #7f9db9; 
+                  width: 14em;}
+        .txtbox2 {width: 14em;}
+    </style>
+</apex:page>

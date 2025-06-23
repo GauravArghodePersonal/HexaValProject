@@ -1,0 +1,41 @@
+<apex:page controller="FlintSiteHomeController">
+    <form name="theForm" id="theForm" method="POST" >
+        <table class="tbl1">
+            <tr>
+                <td class="td1">
+                    <apex:outputText value=" Please Wait ... ">
+                        <apex:image value="{!$Resource.spinner}"/>
+                    </apex:outputText></td>
+              <!--  <td>
+                    <input type="hidden" name="UniqueID"  value="{!biwUniqueIdEnc}"/>            
+                    <input type="hidden" name="TimeStamp"  value="{!biwTimestampEnc}"/>           
+                    <input type="hidden" name="HashString"  value="{!biwHashStringEnc}"/>
+                </td>-->
+            </tr>
+
+          <!--  <apex:outputPanel rendered="{!showDbugMsgs}">
+            <tr class="tr1"><td class="td1">  UniqueIdTxt : </td><td>{!biwUniqueIdTxt}</td></tr>
+            <tr class="tr2"><td class="td1">  UniqueIdEnc : </td><td>{!biwUniqueIdEnc}</td></tr>
+            <tr><td>&nbsp;</td></tr>
+            <tr class="tr1"><td class="td1"> TimeStampTxt : </td><td>{!biwTimestampTxt}</td></tr>
+            <tr class="tr2"><td class="td1"> TimeStampEnc : </td><td>{!biwTimestampEnc}</td></tr>
+            <tr><td>&nbsp;</td></tr>
+            <tr class="tr1"><td class="td1">HashStringTxt : </td><td>{!biwHashStringTxt}</td></tr>
+            <tr class="tr2"><td class="td1">HashStringEnc : </td><td>{!biwHashStringEnc}</td></tr>
+            </apex:outputPanel>-->
+        </table>                 
+    </form>
+    
+    <script type="text/javascript">
+        window.onload=submitForm;  
+        
+        function submitForm() {     
+            document.theForm.submit();
+        }
+    </script>
+
+    <style>
+        table.tbl1 td     {font-family: Consolas, monaco, monospace; font-size: 1.2em;}
+        table.tbl1 td.td1 {font-weight: bold; text-align: right;}
+    </style>    
+</apex:page>

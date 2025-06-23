@@ -1,0 +1,10 @@
+<apex:page standardController="Pricing_Condition_Scaled_Pricing__c" 
+           tabStyle="Pricing_Condition_Scaled_Pricing__c" 
+           sidebar="false" 
+           title="Edit Ship and Bill Pricing">
+
+  <apex:form >
+	<c:App_PricingWizard_WebApp id="Pricing_Wizard" accountId="{!Pricing_Condition_Scaled_Pricing__c.Pricing_Condition__r.Account__c}" pricingConditionIds="{!Pricing_Condition_Scaled_Pricing__c.Pricing_Condition__c}" cancelURL="/{!Pricing_Condition_Scaled_Pricing__c.Pricing_Condition__r.Account__c}" returnURL="/{!Pricing_Condition_Scaled_Pricing__c.Pricing_Condition__r.Account__c}"/>
+  </apex:form>
+
+</apex:page>

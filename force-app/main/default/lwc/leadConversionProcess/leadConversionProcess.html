@@ -1,0 +1,84 @@
+<template>
+    <template if:true={isLoading}>
+        <div>
+            <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+        </div>
+    </template>
+
+       <lightning-record-edit-form record-id={recordId} object-api-name="Lead"
+            onsuccess={handleSuccess} onsubmit ={handleSubmit} onerror={handleError} onload={handleLoad}>
+        
+        <lightning-card class="slds-align_absolute-center" title="Convert Lead"></lightning-card>
+        <lightning-card class="slds-card__header" title="Enter Required Information">
+
+
+            <lightning-input-field name="Company" class="Company"
+                field-name="Company" onchange={handleChange} required>
+            </lightning-input-field>
+
+            
+            <lightning-input-field name="Business_Team__c" class="Business_Team__c" field-name="Business_Team__c"
+                onchange={handleChange} required>
+            </lightning-input-field>
+
+            <lightning-input-field name="W_Account_Potential_Year__c" class="W_Account_Potential_Year__c" field-name="W_Account_Potential_Year__c"
+                onchange={handleChange} required>
+            </lightning-input-field>
+
+            <lightning-input-field name="Prospect_Sales_Org__c" class="Prospect_Sales_Org__c"
+                field-name="Prospect_Sales_Org__c" onchange={handleChange} required>
+            </lightning-input-field>
+            <lightning-input-field name="Prospect_Dist_Channel__c" class="Prospect_Dist_Channel__c"
+                field-name="Prospect_Dist_Channel__c" onchange={handleChange} required>
+            </lightning-input-field>
+            <lightning-input-field name="Prospect_Division__c" class="Prospect_Division__c" field-name="Prospect_Division__c"
+                onchange={sethighlightOnChange} required>
+            </lightning-input-field>
+
+            <lightning-input-field name="Prospect_Sales_District__c" class="Prospect_Sales_District__c"
+                field-name="Prospect_Sales_District__c" onchange={handleChange} required>
+  
+            </lightning-input-field>
+            <lightning-input-field name="Prospect_Sales_Office__c" class="Prospect_Sales_Office__c"
+                field-name="Prospect_Sales_Office__c" onchange={handleChange} required>
+            </lightning-input-field>
+            <lightning-input-field name="Prospect_Sales_Group__c" class="Prospect_Sales_Group__c"
+                field-name="Prospect_Sales_Group__c" onchange={handleChange} required>
+            </lightning-input-field>
+
+            <lightning-input-field name="Prospect_Customer_Group__c" class="Prospect_Customer_Group__c" field-name="Prospect_Customer_Group__c"
+                onchange={handleChange} required>
+            </lightning-input-field>
+
+            <lightning-input-field name="Prospect_Customer_Group1__c" class="Prospect_Customer_Group1__c" field-name="Prospect_Customer_Group1__c"
+                onchange={handleChange} required>
+            </lightning-input-field>
+            
+
+
+
+             <lightning-layout>
+
+                <template if:false={saveSubmitButtonCheck}>
+                    <lightning-layout-item padding="around-small">
+                        <lightning-button class="slds-m-top_small" variant="success" type="submit"
+                            name="submit" label="Save & Next" onclick={onsaveandnext}>
+                            </lightning-button>
+                    </lightning-layout-item>
+                </template>
+
+                <template if:false={cancelButtonCheck}>
+                    <lightning-layout-item padding="around-small">
+                        <lightning-button class="slds-m-top_small" variant="destructive" type="button"
+                           name="cancel" label="Cancel" onclick={closeModal}>
+                        </lightning-button>
+                    </lightning-layout-item>
+                </template>
+
+            </lightning-layout>
+
+        </lightning-card>
+
+    </lightning-record-edit-form>
+
+</template>

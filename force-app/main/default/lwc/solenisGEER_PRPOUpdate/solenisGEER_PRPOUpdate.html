@@ -1,0 +1,26 @@
+<template>
+    <template if:true={isLoading}>
+        <div > 
+            <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+        </div>
+    </template>
+    <lightning-card title="PR/PO Update">
+        <div class="slds-m-around_medium">
+
+            <template if:true={eoli.data}>
+                <lightning-datatable wrap-text-max-lines="5" key-field="Id"
+                data={eoli.data}
+                columns={columns}
+                onsave={handlesave}
+                draft-values={draftValues}
+                hide-checkbox-column="true">
+                >
+                </lightning-datatable>
+            </template>
+            <template if:true={eoli.error}>
+<!--Handle-->
+            </template>
+        </div>
+
+    </lightning-card>
+</template>

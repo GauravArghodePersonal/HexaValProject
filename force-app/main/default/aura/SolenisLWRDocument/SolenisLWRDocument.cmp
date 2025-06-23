@@ -1,0 +1,15 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global" >
+    
+    <br/>
+    	&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://solenis.sharepoint.com/teams/gt/LWRTemplate/Shared%20Documents/Forms/AllItems.aspx" target="_blank">All
+    </a><br/>
+    	&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://solenis.sharepoint.com/teams/gt/LWRTemplate/Shared%20Documents/APAC" target="_blank">APAC
+    </a><br/>
+    	&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://solenis.sharepoint.com/teams/gt/LWRTemplate/Shared%20Documents/EMEA" target="_blank">EMEA
+    </a><br/>
+    	&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://solenis.sharepoint.com/teams/gt/LWRTemplate/Shared%20Documents/LATAM" target="_blank">LATAM
+    </a><br/>
+    	&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://solenis.sharepoint.com/teams/gt/LWRTemplate/Shared%20Documents/NA" target="_blank">NA
+    </a><br/>
+    
+</aura:component>

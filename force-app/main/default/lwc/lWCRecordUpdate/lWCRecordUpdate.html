@@ -1,0 +1,468 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 06-22-2023
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+    <template if:true={isLoading}>
+        <div>
+            <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+        </div>
+    </template>
+    <lightning-record-edit-form record-id={recordId} object-api-name="Customer_Creation_Request__c"
+        onsuccess={handleSuccess} onsubmit={handleSubmit} onerror={handleError} onload={handleLoad}>
+        <lightning-card class="slds-card__header" title="Change Request" icon-name="action:new_note"></lightning-card>
+        <lightning-card class="slds-card__header" title="SAP Commmercial Information" icon-name="standard:account">
+
+            <template if:true={isLoading}>
+                <div>
+                    <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+                </div>
+            </template>
+
+            <lightning-output-field field-name="Region__c">
+            </lightning-output-field>
+            <!--  <div class={CreditClass}>-->
+            <lightning-input-field name="Company_Legal_Name__c" class="Company_Legal_Name__c"
+                field-name="Company_Legal_Name__c" onchange={sethighlightOnChange}>
+            </lightning-input-field>
+
+            <lightning-input-field name="Name_2__c" class="Name_2__c" field-name="Name_2__c"
+                onchange={sethighlightOnChange}>
+            </lightning-input-field>
+
+            <lightning-input-field name="Name_3__c" class="Name_3__c" field-name="Name_3__c"
+                onchange={sethighlightOnChange}>
+            </lightning-input-field>
+            <!--</div> -->
+            <lightning-output-field field-name="CCR_Sales_Organization__c">
+            </lightning-output-field>
+            <lightning-output-field field-name="CCR_DIst_Channel__c">
+            </lightning-output-field>
+            <lightning-output-field field-name="CCR_Division__c">
+            </lightning-output-field>
+
+            <lightning-input-field name="CCR_Sales_District__c" class="CCR_Sales_District__c"
+                field-name="CCR_Sales_District__c" onchange={sethighlightOnChange} disabled={DogValueCheck}>
+            </lightning-input-field>
+            <lightning-input-field name="CCR_Sales_Office__c" class="CCR_Sales_Office__c"
+                field-name="CCR_Sales_Office__c" onchange={sethighlightOnChange} disabled={DogValueCheck}>
+            </lightning-input-field>
+            <lightning-input-field name="Sales_Group__c" class="Sales_Group__c" field-name="Sales_Group__c"
+                onchange={sethighlightOnChange} disabled={DogValueCheck}>
+            </lightning-input-field>
+
+            <lightning-input-field name="CCR_Customer_Group__c" class="CCR_Customer_Group__c"
+                field-name="CCR_Customer_Group__c" onchange={sethighlightOnChange} disabled={DogValueCheck}>
+            </lightning-input-field>
+            <lightning-input-field name="CCR_Customer_Group1__c" class="CCR_Customer_Group1__c"
+                field-name="CCR_Customer_Group1__c" onchange={sethighlightOnChange} disabled={DogValueCheck}>
+            </lightning-input-field>
+            <lightning-input-field name="CCR_Customer_Group2__c" class="CCR_Customer_Group2__c"
+                field-name="CCR_Customer_Group2__c" onchange={sethighlightOnChange} disabled={DogValueCheck}>
+            </lightning-input-field>
+
+            <!-- <lightning-input-field name="Customer_Group_3__c" class="Customer_Group_3__c" field-name="Customer_Group_3__c" onchange={sethighlightOnChange} disabled={DogValueCheck}>
+    </lightning-input-field>  -->
+
+            <lightning-input-field name="Incoterms__c" class="Incoterms__c" field-name="Incoterms__c"
+                onchange={sethighlightOnChange} disabled={DogValueCheck}>
+            </lightning-input-field>
+
+            <lightning-input-field name="Incoterms_2__c" class="Incoterms_2__c" field-name="Incoterms_2__c"
+                onchange={sethighlightOnChange} disabled={DogValueCheck}>
+            </lightning-input-field>
+
+            <lightning-input-field name="Currency__c" class="Currency__c" field-name="Currency__c"
+                onchange={sethighlightOnChange}>
+            </lightning-input-field>
+
+        </lightning-card>
+        <lightning-card class="slds-card__header" title="Address Information" icon-name="standard:address">
+
+            <lightning-input-field name="BillingStreet__c" class="BillingStreet__c" field-name="BillingStreet__c"
+                onchange={sethighlightOnChange}>
+            </lightning-input-field>
+            <!-- <lightning-input-field  field-name="Street_1__c">
+</lightning-input-field> -->
+            <lightning-input-field name="Street_2__c" class="Street_2__c" field-name="Street_2__c"
+                onchange={sethighlightOnChange}>
+            </lightning-input-field>
+            <lightning-input-field name="Street_3__c" class="Street_3__c" field-name="Street_3__c"
+                onchange={sethighlightOnChange}>
+            </lightning-input-field>
+            <lightning-input-field name="House_Number1__c" class="House_Number1__c" field-name="House_Number1__c"
+                onchange={sethighlightOnChange}>
+            </lightning-input-field>
+            <lightning-input-field name="House_Number2__c" class="House_Number2__c" field-name="House_Number2__c"
+                onchange={sethighlightOnChange}>
+            </lightning-input-field>
+            <lightning-input-field name="PO_Box__c" class="PO_Box__c" field-name="PO_Box__c"
+                onchange={sethighlightOnChange}>
+                <lightning-helptext content="postal code range should be same as old format"></lightning-helptext>
+            </lightning-input-field>
+
+            <lightning-input-field name="City__c" class="City__c" field-name="City__c" onchange={sethighlightOnChange}>
+            </lightning-input-field>
+            <!--<lightning-card class="slds-card__header" title="PO Box Address" variant="narrow"></lightning-card> -->
+            <div style="text-align:center; background-color:powderblue;">
+                <b>PO Box Address</b>
+            </div>
+            <lightning-input-field name="Postal_Code__c" class="Postal_Code__c" field-name="Postal_Code__c"
+                onchange={sethighlightOnChange}>
+            </lightning-input-field>
+
+            <lightning-input-field name="PO_Box_postal_code__c" class="PO_Box_postal_code__c"
+                field-name="PO_Box_postal_code__c" onchange={sethighlightOnChange}>
+            </lightning-input-field>
+
+            <!-- <lightning-input-field  field-name="Country__c">
+</lightning-input-field>
+<lightning-input-field  field-name="State_Region__c">
+</lightning-input-field> -->
+
+            <!--BillingStreet  BillingCity BillingPostalCode BillingCountry BillingState Postal_Code__c Acc_Country_Code__c Country__c Parent_Account__c HQAccount__c Owner.Name-->
+
+        </lightning-card>
+        <div if:true={SalesOrgCheck}>
+            <lightning-card class="slds-card__header" title="Address Information(International Version)"
+                icon-name="standard:address" disable={SalesOrgCheck}>
+                <div style="text-align:center; background-color:powderblue;">
+                    <b>Please populate the same fields that have been updated in the above Customer name or address
+                        section.</b>
+                        <p><b>English for Russia and China</b></p>
+                            <p><b>   Chinese for Taiwan</b></p>
+                            
+                </div>
+                <lightning-input-field field-name="IV_Company_Legal_Name__c">
+                </lightning-input-field>
+                <lightning-input-field field-name="IV_Name_2__c">
+                </lightning-input-field>
+                <lightning-input-field field-name="IV_Street__c">
+                </lightning-input-field>
+                <lightning-input-field field-name="IV_Street_2__c">
+                </lightning-input-field>
+                <lightning-input-field field-name="IV_Street_3__c">
+                </lightning-input-field>
+                <lightning-input-field field-name="IV_House_Number_1__c">
+                </lightning-input-field>
+                <lightning-input-field field-name="IV_House_Number_2__c">
+                </lightning-input-field>
+                <lightning-input-field field-name="IV_Postal_Code__c">
+                </lightning-input-field>
+                <lightning-input-field field-name="IV_City__c">
+                </lightning-input-field>
+                <div style="text-align:center; background-color:powderblue;">
+                    <b>PO Box Address</b>
+                </div>
+                <lightning-input-field field-name="IV_PO_Box__c">
+                </lightning-input-field>
+                <lightning-input-field field-name="IV_PO_Box_postal_code__c">
+                </lightning-input-field>
+
+
+            </lightning-card>
+        </div>
+        <lightning-card class="slds-card__header" title="Account Relationship" icon-name="standard:event">
+            <template if:true={isLoading}>
+                <div>
+                    <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+                </div>
+            </template>
+            <!--<lightning-input-field  field-name="Parent_Account__c">
+</lightning-input-field> -->
+
+            <lightning-input-field name="Account_Owner__c" class="Account_Owner__c" field-name="Account_Owner__c"
+                onchange={sethighlightOnChange} disabled={DogValueCheck}>
+            </lightning-input-field>
+            <!--<lightning-input-field  field-name="HQAccount__c">
+</lightning-input-field> -->
+
+
+            <!--BillingStreet  BillingCity BillingPostalCode BillingCountry BillingState Postal_Code__c Acc_Country_Code__c Country__c Parent_Account__c HQAccount__c Owner.Name-->
+        </lightning-card>
+
+
+        <lightning-card class="slds-card__header" icon-name="action:approval" title="Action & Comments">
+
+
+
+            <template if:true={isLoading}>
+                <div>
+                    <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+                </div>
+            </template>
+            <lightning-messages if:false={closeError}>
+            </lightning-messages>
+            <lightning-input-field class="Account__c" field-name="Account__c" disabled>
+            </lightning-input-field>
+
+            <lightning-input-field name="Status__c" class="Status__c" field-name="Status__c" disabled>
+            </lightning-input-field>
+            <lightning-input-field field-name="Additional_Comments__c">
+            </lightning-input-field>
+            <div hidden>
+                <lightning-input-field class="ChangeReqComRSD__c" field-name="ChangeReqComRSD__c">
+                </lightning-input-field>
+                <lightning-input-field class="ChangeReqCredit__c" field-name="ChangeReqCredit__c">
+                </lightning-input-field>
+                <lightning-input-field class="ChangeReqDOGTeam__c" field-name="ChangeReqDOGTeam__c">
+                </lightning-input-field>
+
+                <lightning-input-field class="ChangeReqPricing__c" field-name="ChangeReqPricing__c">
+                </lightning-input-field>
+                <lightning-input-field class="changeReqAddress__c" field-name="changeReqAddress__c">
+                </lightning-input-field>
+                <lightning-input-field class="changeReqCur__c" field-name="changeReqCur__c">
+                </lightning-input-field>
+                <lightning-input-field class="changeReqInco2__c" field-name="changeReqInco2__c">
+                </lightning-input-field>
+                <lightning-input-field class="changeReqCusGroup__c" field-name="changeReqCusGroup__c">
+                </lightning-input-field>
+
+            </div>
+            
+
+            
+           
+            <lightning-layout>
+                <template if:false={SaveButtonCheck}>
+                    <lightning-layout-item padding="around-small">
+                        <lightning-button class="slds-m-top_small" variant="brand" type="submit" name="save" label="Save"
+                        disabled={SaveButtonCheck}></lightning-button>
+                    </lightning-layout-item>
+                </template>
+                <template if:false={saveSubmitButtonCheck}>
+                    <lightning-layout-item padding="around-small">
+                        <lightning-button class="slds-m-top_small" variant="success" type="button"
+                            onclick={submitFunction} name="submit" label="Save & Submit"
+                            disabled={saveSubmitButtonCheck}></lightning-button>
+                    </lightning-layout-item>
+                </template>
+                <template if:false={rejectButtonCheck}>
+                    <lightning-layout-item padding="around-small">
+                        <lightning-button class="slds-m-top_small" variant="destructive" type="button"
+                            onclick={rejectFunction} name="reject" label="Reject" disabled={rejectButtonCheck}>
+                        </lightning-button>
+                    </lightning-layout-item>
+                </template>
+                <template if:false={cancelButtonCheck}>
+                    <lightning-layout-item padding="around-small">
+                        <lightning-button class="slds-m-top_small" variant="destructive" type="button"
+                            onclick={cancelFunction} name="cancel" label="Cancel" disabled={cancelButtonCheck}>
+                        </lightning-button>
+                    </lightning-layout-item>
+                </template>
+
+            </lightning-layout>
+            <lightning-layout>
+                <!--<template if:false={completedButtonCheck}>
+                    <lightning-layout-item padding="around-small">
+                        <lightning-button class="slds-m-top_small" variant="success" type="button"
+                            onclick={completeFunction} name="cancel" label="Completed" disabled={completedButtonCheck}>
+                        </lightning-button>
+                    </lightning-layout-item>
+                </template>
+
+            -->
+            </lightning-layout>
+
+
+
+
+        </lightning-card>
+    </lightning-record-edit-form>
+
+    
+    <template if:true={isModalOpen}>
+        <!-- Modal/Popup Box LWC starts here -->
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+            aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <!-- Modal/Popup Box LWC header here -->
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                        title="Close" onclick={closeModal}>
+                        <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse"
+                            size="small"></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">User Confirmation
+                    </h2>
+                </header>
+                <!-- Modal/Popup Box LWC body starts here -->
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <p><b>Are you sure to Submit the Change Request?
+                        </b></p>
+
+                    </br>
+                <template if:true={SAPFields}>
+                    <div style="color: red;">
+                    <p><b>Be Aware: DOG Fileds Will get Update Every Quater Dates: Mar 20, Jun 20, Sep 20 and Dec 20.
+                        </b></p>
+                    </div>
+                </br>
+                    <div style="color: Green;">
+                        <p><b>Other Fields WIll Update Right Away.
+                        </b></p>
+                    </div>
+                    </template>
+                </div>
+                <!-- Modal/Popup Box LWC footer starts here -->
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" onclick={closeModal}
+                        title="Cancel">Cancel</button>
+                    <button class="slds-button slds-button_brand" onclick={submitDetails} title="OK">OK</button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+<!--Cancel-->
+<template if:true={isModalOpenCancel}>
+    <!-- Modal/Popup Box LWC starts here -->
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+        aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+            <!-- Modal/Popup Box LWC header here -->
+            <header class="slds-modal__header">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                    title="Close" onclick={closeModalCancel}>
+                    <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse"
+                        size="small"></lightning-icon>
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                <h2 id="modal-heading-03" class="slds-text-heading_medium slds-hyphenate">User Confirmation
+                </h2>
+            </header>
+            <!-- Modal/Popup Box LWC body starts here -->
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-3">
+                <p><b>Are you sure change the status to Cancelled?
+                    </b></p>
+                <p><b>Note: if the Request cancelled then it cannot be resubmitted and it will be
+                        permanently cancelled
+                    </b></p>
+
+            </div>
+            <!-- Modal/Popup Box LWC footer starts here -->
+            <footer class="slds-modal__footer">
+                <button class="slds-button slds-button_neutral" onclick={closeModalCancel}
+                    title="Cancel">No</button>
+                <button class="slds-button slds-button_brand" onclick={submitDetailsCancel}
+                    title="OK">Yes</button>
+            </footer>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+</template>
+ <!--Completed-->
+ <template if:true={isModalOpenComplete}>
+    <!-- Modal/Popup Box LWC starts here -->
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+        aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+            <!-- Modal/Popup Box LWC header here -->
+            <header class="slds-modal__header">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                    title="Close" onclick={closeModalComplete}>
+                    <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse"
+                        size="small"></lightning-icon>
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                <h2 id="modal-heading-04" class="slds-text-heading_medium slds-hyphenate">Confirmation</h2>
+            </header>
+            <!-- Modal/Popup Box LWC body starts here -->
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-4">
+                <p><b>Are you sure to Complete the Change Request?
+                    </b></p>
+
+            </div>
+            <!-- Modal/Popup Box LWC footer starts here -->
+            <footer class="slds-modal__footer">
+                <button class="slds-button slds-button_neutral" onclick={closeModalComplete}
+                    title="Cancel">Cancel</button>
+                <button class="slds-button slds-button_brand" onclick={submitDetailsComplete}
+                    title="OK">OK</button>
+            </footer>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+</template>
+ <!--Reject-->
+ <template if:true={isModalOpenReject}>
+    <!-- Modal/Popup Box LWC starts here -->
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+        aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+            <!-- Modal/Popup Box LWC header here -->
+            <header class="slds-modal__header">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                    title="Close" onclick={closeModalReject}>
+                    <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse"
+                        size="small"></lightning-icon>
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                <h2 id="modal-heading-02" class="slds-text-heading_medium slds-hyphenate">User Confirmation
+                </h2>
+            </header>
+            <!-- Modal/Popup Box LWC body starts here -->
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-2">
+                <p><b>Are you sure to Reject the ChangeRequest?
+                    </b></p>
+
+            </div>
+            <!-- Modal/Popup Box LWC footer starts here -->
+            <footer class="slds-modal__footer">
+                <button class="slds-button slds-button_neutral" onclick={closeModalReject}
+                    title="Cancel">Cancel</button>
+                <button class="slds-button slds-button_brand" onclick={submitDetailsReject}
+                    title="OK">Reject</button>
+            </footer>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+</template>
+
+<!--Reject-->
+<template if:true={isDuplicate}>
+    <!-- Modal/Popup Box LWC starts here -->
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+        aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+            <!-- Modal/Popup Box LWC header here -->
+            <header class="slds-modal__header">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                    title="Close" onclick={closeModalDuplicate}>
+                    <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse"
+                        size="small"></lightning-icon>
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                <h2 id="modal-heading-06" class="slds-text-heading_medium slds-hyphenate">Duplicate Change Request Alert
+                </h2>
+            </header>
+            <!-- Modal/Popup Box LWC body starts here -->
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-6">
+                <p><b>Change Request Number: {duplicateReqNumber}
+                    </b></p>
+                    <p><b>Created by: {duplicateReqCreatedBy}
+                    </b></p>
+                    <p><b>Status: {duplicateReqStatus}
+                    </b></p>
+                    
+                    <p><b>Kindly wait untill the above request complete.</b></p>
+
+            </div>
+            <!-- Modal/Popup Box LWC footer starts here -->
+            <footer class="slds-modal__footer">
+                <button class="slds-button slds-button_neutral" onclick={closeModalDuplicate}
+                    title="Cancel">OK</button>
+               
+            </footer>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+</template>
+
+</template>

@@ -1,0 +1,67 @@
+<apex:component controller="FlintSiteHomeController">
+<!--
+    <apex:attribute name="p_showDebugMsgs"  assignTo="{!showDebugMsgs}"  type="Boolean" description=""
+                    default="false"/>
+
+    <apex:attribute name="p_headerHeight"   assignTo="{!headerHeight}"   type="Integer" description=""
+                    default="120"/>
+
+    <apex:attribute name="p_renderTopImage" assignTo="{!renderTopImage}" type="Boolean" description=""
+                    default="false"/>
+
+    <apex:attribute name="p_accountId"      assignTo="{!accountId}"      type="String"  description=""/>
+
+    <apex:variable var="topImage"     value="{!topImage}"/>
+    <apex:variable var="topBarImage"  value="{!topBarImage}"/>
+    <apex:variable var="renderBanner" value="{!renderDefaultBanner}"/>
+    <apex:variable var="renderMenu"   value="{!renderMenuBtns}"/>
+
+    <div style="position: relative; margin-top: 18px; height: {!headerHeight}px;"><apex:form >
+        <img src="{!URLFOR($Resource.VIResources2, 'img/Valvoline_Logo.png')}"
+             style="position: absolute; z-index: 1; left: 0px; top: -32px;" />
+
+        <img src="{!URLFOR($Resource.VIResources2, topBarImage)}"
+             style="position: absolute; z-index: 0; left: 0px; top: 0px;" />
+
+        <apex:outputPanel rendered="{!renderTopImage}">
+        <img src="{!URLFOR($Resource.VIResources2, topImage)}"
+             style="position: absolute; z-index: 0; left: 0px; top: 65px; background-color: #878785;" />
+        </apex:outputPanel>
+
+        <apex:outputPanel rendered="{!renderBanner}">
+            <table class="VI-hpHdrTbl" width="755px">
+                <tr><td style="font-size: 1.3em;">ValvolineInstaller.com</td>
+                    <td style="text-align: right;" class="VI-hpTblTd">
+                        <a href="http://www.facebook.com/valvoline/" target="_blank">
+                           <img src="{!URLFOR($Resource.VIResources2, 'img/Facebook_Icon.png')}"/>Like Us</a>
+                           &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="http://www.twitter.com/valvoline/" target="_blank">
+                           <img src="{!URLFOR($Resource.VIResources2, 'img/Twitter_Icon.png')}"/>Follow Us</a>
+                    </td>
+                </tr>
+            </table>
+        </apex:outputPanel>
+
+        <apex:outputPanel rendered="{!renderMenu}">
+            <div style="position: absolute; z-index: 1; left: 450px; top: 65px; white-space: nowrap">
+                <apex:commandLink action="{!gotoHomePage}">
+                    <img src="{!URLFOR($Resource.VIResources2, 'img/Home_Tab.jpg')}" />
+                </apex:commandLink>
+
+                <apex:commandLink action="{!gotoPromotions}" rendered="{!!customerPortal}">
+                    <img src="{!URLFOR($Resource.VIResources2, 'img/Promotions_Tab.jpg')}" />
+                </apex:commandLink>
+
+                <apex:commandLink action="{!gotoLocations}">
+                    <img src="{!URLFOR($Resource.VIResources2, 'img/MyLocations_Tab.jpg')}" />
+                </apex:commandLink>
+
+                <apex:commandLink action="{!gotoLogout}" title="{!username}">
+                    <img src="{!URLFOR($Resource.VIResources2, 'img/Logout_Tab.jpg')}" />
+                </apex:commandLink>
+            </div>
+        </apex:outputPanel>
+
+    </apex:form></div>
+    -->
+</apex:component>

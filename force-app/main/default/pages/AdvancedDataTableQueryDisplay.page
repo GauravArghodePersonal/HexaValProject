@@ -1,0 +1,28 @@
+<apex:page standardController="Advanced_Data_Table_Definition__c" tabStyle="Advanced_Data_Table_Definition__c" extensions="AdvancedDataTableQueryDisplayExtension" id="AdvancedDataTableQueryDisplayExtensionPage">
+<!-- Begin Default Content REMOVE THIS -->
+
+	<apex:includeScript value="{!URLFOR($Resource.jQuery1x,'jQuery/jquery-1.8.0.min.js')}" />
+	<apex:includeScript value="{!URLFOR($Resource.AccountRollupsStyling,'js/accountRollupsJS.js')}" />
+
+	<style type="text/css">body{background:#F8F8F8;}</style>
+
+	<script type="text/javascript">
+        var j$= jQuery.noConflict();
+        j$(document).ready(function(){
+            resizeIframe();
+        });
+    </script>
+	<apex:form >
+		<apex:pageBlock id="mainPageBlock">
+		
+			<apex:pageBlockSection id="adminPanel" columns="2" title="Queries" collapsible="false">
+					<apex:outputText value="RetrieveCountSOQL = "/>
+					<apex:outputText value="{!RetrieveCountSOQL}"/>
+					<apex:outputText value="RetrieveRelatedRecordsSOQL = "/>
+					<apex:outputText value="{!RetrieveRelatedRecordsSOQL}"/>
+					<apex:inputText value="{!StartingId}"/>
+					<apex:commandButton value="refresh" action="{!refreshSOQL}" rerender="adminPanel"/>
+			</apex:pageBlockSection>
+		</apex:pageBlock>
+	</apex:form>
+</apex:page>

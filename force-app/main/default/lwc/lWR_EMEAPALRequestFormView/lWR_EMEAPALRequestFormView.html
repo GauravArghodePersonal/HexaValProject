@@ -1,0 +1,64 @@
+<template>    
+    <template if:true={wrapperInstance}> 
+        <div class="slds-box slds-card">          
+            <template if:true={wrapperInstance.sampleTestInformation}>
+                <lightning-layout multiple-rows="true">            
+                    <lightning-layout-item padding="around-small" size="12">
+                        <lightning-input type="text" label="SBU Area" value={wrapperInstance.sampleTestInformation.sbuOrArea}
+                        disabled>
+                        </lightning-input>
+                    </lightning-layout-item>
+                    <lightning-layout-item padding="around-small" size="12">
+                        <lightning-input type="text" label="Contact person" disabled value={sbu}></lightning-input>
+                    </lightning-layout-item>
+                    <lightning-layout-item padding="around-small" size="12">
+                        <lightning-textarea max-length="100" label="Additional Comments" value={wrapperInstance.sampleTestInformation.addlComments} disabled>
+                        </lightning-textarea>
+                    </lightning-layout-item>
+                </lightning-layout>
+                <lightning-layout>
+                    <lightning-layout-item padding="around-small" size="12">
+                        <lightning-button variant="base" label="Collapse All" title="Collapse All Tests"
+                            onclick={toggleAccordionSections} class="slds-m-left_x-small slds-float_right" data-name="collapseAll">
+                        </lightning-button>
+                        <lightning-button variant="base" label="Expand All" title="Expand All Tests"
+                            onclick={toggleAccordionSections} class="slds-m-left_x-small slds-float_right" data-name="expandAll">
+                        </lightning-button>
+                    </lightning-layout-item>
+                </lightning-layout>
+            </template>
+            <template if:true={wrapperInstance.referencesByAreaAndTest}>
+                <lightning-accordion class="example-accordion" active-section-name={activeSections} allow-multiple-sections-open>
+                    <lightning-layout>
+                        <lightning-layout-item padding="around-small" size="12">
+                            <template for:each={wrapperInstance.referencesByAreaAndTest} for:item="areaOrSbuAndTest">
+                                <lightning-accordion-section name={areaOrSbuAndTest.areaOrSbuAndTest} label={areaOrSbuAndTest.areaOrSbuAndTest} key={areaOrSbuAndTest.areaOrSbuAndTest}>
+                                    <lightning-layout multiple-rows="true">
+                                        <template for:each={areaOrSbuAndTest.references} for:item="reference">
+                                            <lightning-layout-item padding="around-small" size="6" key={reference.recordId}>
+                                                <template if:true={reference.textType}>
+                                                    <lightning-input type="text" onchange={handleReferenceValueChange} label={reference.addlReference} value={reference.information} disabled>
+                                                    </lightning-input>
+                                                </template>
+                                                <template if:true={reference.checkboxType}>
+                                                    <template if:true={reference.selected}>                                                                                                
+                                                        <lightning-input type="checkbox" label={reference.addlReference} checked disabled>
+                                                    </lightning-input>
+                                                    </template>
+                                                    <template if:false={reference.selected}>                                                
+                                                        <lightning-input type="checkbox" label={reference.addlReference} disabled>
+                                                    </lightning-input>
+                                                    </template>
+                                                </template>
+                                            </lightning-layout-item>
+                                        </template>
+                                    </lightning-layout>
+                                </lightning-accordion-section>
+                            </template>
+                        </lightning-layout-item>
+                    </lightning-layout>   
+                </lightning-accordion>
+            </template> 
+        </div> 
+    </template>
+</template>

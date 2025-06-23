@@ -1,0 +1,209 @@
+<apex:component controller="TreeViewController" layout="none">
+<!--     <apex:attribute name="roleOrUserId" required="true" type="String" assignTo="{!roleOrUserId}" description="Enter Role or User Id to build the hierarchy. Pass null if you are passing JSON data as a parameter" />
+ -->
+    <apex:attribute name="selectable" type="Boolean" assignTo="{!selectable}" description="Do you want nodes to be selectable?" />
+    <apex:attribute name="value" type="String" description="IDs of selected Nodes in CSV format" />
+    <apex:attribute name="JsonData" type="String" assignTo="{!JsonData}" description="JSON input for the tree component" />
+    <apex:inputHidden id="selectedKeys" value="{!value}" />
+    
+    <apex:includeScript value="{!URLFOR($Resource.jQuery1x,'jQuery/jquery-1.8.0.min.js')}"/>  
+    <apex:includeScript value="{!URLFOR($Resource.TreeViewResources,'js/general.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.TreeViewResources,'css/style.css')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.jQuery1x, 'jQueryPlugins/dynatree/jquery/jquery-ui.custom.js' )}" />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery1x, 'jQueryPlugins/dynatree/jquery/jquery.cookie.js' )}" />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery1x, 'jQueryPlugins/dynatree/src/jquery.dynatree.min.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.jQuery1x,    'jQueryPlugins/dynatree/src/skin/ui.dynatree.css')}" />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery1x, 'jQueryPlugins/TextChange/jquery.textchange.min.js')}"/>
+
+    <script type="text/javascript">
+        var j$= jQuery.noConflict();
+        
+        var prevKey = '';
+        
+        j$(document).ready(function(){
+        
+	        j$("#tree").dynatree({
+	            minExpandLevel:1,
+	            clickFolderMode:1,
+	            persist: false,
+	            checkbox: {!selectable},
+	            generateIds: false,
+	            classNames: {
+	                checkbox: "dynatree-checkbox",
+	                expanded: "dynatree-expanded"
+	            },
+	            selectMode: 1,
+	            autoCollapse: false,
+	            activeVisible: false,
+	            fx: null, // { height: "toggle", duration: 200 },
+	            children: {!JsonData},
+	            
+	            onActivate: function(node) {
+		            if(node.tree.isUserEvent()) {
+		            	if(!node.data.unselectable) {
+		            	
+		            		if (node.data.key != prevKey) {
+				                // Fire Selection Change Event
+				                newTreeSelection(node.data);
+				                
+				                prevKey = node.data.key;
+				                
+								var tree = j$("#tree").dynatree("getTree");
+								DeselectNodes(tree);
+				                node.select(true);
+				            }
+			            }
+		            }
+    			}
+	        });
+
+	        //Fix CSS so bottom scrollbar fully shows in tree
+	        j$('ul.dynatree-container').css({"height":"99%"});
+	        
+	        resizeTree(j$("[id*=leftPane]").height());
+	        
+	        j$("#TreeView_FilterText").bind('textchange', function (event,previousText) {
+	        	filteronText(j$(this).val());
+	        });
+
+	        j$("#TreeView_ClearFilterButton").bind('click', function (event) {
+	        	j$("#TreeView_FilterText").attr('value','');
+	        	filteronText('');
+	        });
+	        
+	        j$("#TreeView_ExpandAllButton").click(function() {expandAll();});
+	        j$("#TreeView_CollapseAllButton").click(function() {collapseAll();});
+	        j$("#TreeView_ClearFilterButton").addClass('hidden');
+	    });
+	      
+	    function resizeTree(heightIn) {
+	    	var panelHeight = heightIn;
+	    	var toolbarHeight = 45; 
+	    	var newHeight = panelHeight - toolbarHeight;
+	    
+	    	j$("#tree").height(newHeight);
+	    }  
+	       
+	    function newTreeSelection(nodeData) {
+            j$('#tree').trigger('selectionChanged',nodeData);
+	    }   
+	       
+	    function DeselectNodes(tree) {
+        	var nodeList = [];
+        	tree.visit(function(node){
+	            if(node.isSelected() ) {node.select(false);}
+        	});
+	        return nodeList;
+        }
+        
+        function filterNodes(searchTerm) {
+		    // Only show nodes matching the specified search term
+		    var startNode = j$("#tree").dynatree("getRoot");
+		    
+		    //Start by making everything visible
+		    startNode.visit(function(node) {node.expand(true);j$(node.li).show();j$(node.li).select(false);});
+
+		    
+		    startNode.visit(
+		    	function(node) {
+			        if (node.isVisible() && node.data.title) {
+			        
+			            // Filter currently visible non-root nodes.
+			            if (node.data.title.toLowerCase().indexOf(searchTerm.toLowerCase()) >= 0) {
+			            
+			                // Make sure we and all our parents are visible
+			                node.visitParents(
+			                    function(node) {
+							    	j$(node.li).show();
+							        return (node.parent != null);
+			                    }, 
+			                    true
+			                );
+			            }
+			            else {
+			                // Hide the node.
+			                j$(node.li).hide();
+			            }
+			        }
+		    	}
+		    );
+		    
+		    newTreeSelection(null);
+		}
+        
+        function expandAll() {
+	        j$("#tree").dynatree("getRoot").visit(function(node){node.expand(true);});
+        }
+        
+        function collapseAll() {
+	        j$("#tree").dynatree("getRoot").visit(function(node){node.expand(false);});
+			var tree = j$("#tree").dynatree("getTree");
+			DeselectNodes(tree);
+			newTreeSelection(null);
+        }
+        
+        function filteronText(value) {
+	        filterNodes(value);
+	        
+	        if (value != '' && value != null) {
+	        	j$("#TreeView_ClearFilterButton").removeClass('hidden');
+	        }
+	        else {
+	        	j$("#TreeView_ClearFilterButton").addClass('hidden');
+	        }
+        }
+         
+    </script>
+    
+    <style>
+    
+    	img.ClearFilterButton {
+                height : 20px ;
+                padding-left : 1px ;
+                padding-bottom : 5px;
+                vertical-align : middle ;
+		}
+    
+    	img.ExpandAllButton {
+                height : 36px ;
+                padding-left : 10px ;
+                padding-bottom : 5px;
+                vertical-align : middle ;
+		}
+    
+    	img.CollapseAllButton {
+                height : 36px ;
+                padding-left : 1px ;
+                padding-bottom : 5px;
+                vertical-align : middle ;
+		}
+    
+    	input.hidden {
+    		display:none;
+    	}
+    	
+    	input.visible {
+    		display:inline;
+    	}
+    	
+    	::-ms-clear {
+      		display: none;
+  		}
+    	
+    	input[type=text]::-ms-clear {
+    		display: none;
+		}
+    </style>
+    
+	<apex:outputPanel id="TreeView_Panel" style="overflow:hidden;" >
+		<apex:outputPanel id="TreeView_Toolbar" style="align='center';overflow:hidden;padding-top:5px;padding-left:5px;" >
+			<apex:outputText value=" Filter:" style="color:#FFFFFF;"/>
+			<input id="TreeView_FilterText" value=""/>
+			<img id="TreeView_ClearFilterButton" title="Clear Filter" src="{!URLFOR($Resource.TreeViewResources,'images/205-close.png')}" class="ClearFilterButton" />
+			<img id="TreeView_ExpandAllButton" title="Expand All" src="{!URLFOR($Resource.TreeViewResources,'images/ExpandFolder.png')}" class="ExpandAllButton"/>
+			<img id="TreeView_CollapseAllButton" title="Collapse All" src="{!URLFOR($Resource.TreeViewResources,'images/CollapseFolder.png')}" class="CollapseAllButton"/>
+		</apex:outputPanel>
+    	<div id="tree" style="height:400px;width:100%;overflow:hidden;"/>
+    </apex:outputPanel>
+
+</apex:component>

@@ -1,0 +1,723 @@
+<apex:page controller="AccountRollupTeamSectionController"
+	showHeader="false" sidebar="false">
+
+	<apex:includeScript value="{!URLFOR($Resource.jQuery1x,'jQuery/jquery-1.8.0.min.js')}" />
+	<apex:includeScript value="{!URLFOR($Resource.jQuery1x,'jQuery/jquery-ui-1.8.20.custom.min.js')}" />
+	<apex:includeScript value="{!URLFOR($Resource.jQuery1x,'jQueryPlugins/blockUI/jquery.blockUI.js')}" />
+	<apex:includeScript value="{!URLFOR($Resource.AccountRollupResources,'js/general.js')}" />
+	<apex:stylesheet value="{!URLFOR($Resource.AccountRollupResources,'css/style.css')}" />
+
+
+	<!-- 
+	<apex:includeScript value="{!URLFOR($Resource.jQuery1x,'jQuery/jquery-1.8.0.min.js')}" />
+	<apex:includeScript value="{!URLFOR($Resource.AccountRollupsStyling,'js/accountRollupsJS.js')}" />
+	<apex:stylesheet value="{!URLFOR($Resource.AccountRollupsStyling,'css/accountRollupsCSS.css')}" />
+ -->
+
+	<script language="javascript">
+	    var j$= jQuery.noConflict();
+	    j$.fn.exists = function(){return this.length>0;}
+	    
+        j$(document).ready(function(){
+            applyJQueryStyling();
+        });
+        
+        //-------------------
+		// PAGE INIT METHODS
+		//-------------------
+        
+        function applyJQueryStyling() {
+            j$(window).resize(function() {resizeIframe();});
+            j$('.pbSubheader').css('background-color','#1797C0');
+
+        	j$.unblockUI();
+
+            resizeIframe();
+            parent.AdvancedTabbar_IframeResizeRequest();
+        }
+        
+		function showBlockUIMessage(message) {
+        	j$.blockUI({ message: '<BR/><h1><img src="{!URLFOR($Resource.AccountRollupResources, 'images/busy.gif')}" /> ' + message + '...</h1><BR/><BR/>'});
+		}
+		
+		function blockAllExcept(itemToUnblock) {
+			j$.blockUI({ message: null});
+			unblockItem(itemToUnblock);
+		}
+		
+		function unblockItem(item) {
+			j$(item).unblock();
+		}
+		
+		//-----------------------
+		// EDIT SPECIFIC METHODS
+		//-----------------------
+
+        function CreateItem(objectType,tablePointer) {
+        
+    		showBlockUIMessage('Creating New Item');
+        
+        	switch(objectType) { 
+        	
+        	case 'TeamMember' :
+	        	//--------------------------
+	        	// Add an Empty Team Member
+	        	//--------------------------
+				newTeamMember();
+				break;
+
+        	case 'AdvisoryBoardTeamMember' :
+	        	//-----------------------------------------
+	        	// Add an Empty Advisory Board Team Member
+	        	//-----------------------------------------
+				newAdvisoryBoardTeamMember();
+				break;
+
+        	case 'CustomerTeamMember' :
+	        	//-----------------------------------
+	        	// Add an Empty Customer Team Member
+	        	//-----------------------------------
+				newCustomerTeamMember();
+				break;
+        	}
+        }
+        
+        function CheckForRecordNeedingEditing(objectType,tablePointer) {
+			if (tablePointer.find('.editMode').exists()) {
+				EditTable(objectType,tablePointer);
+			}
+			else {
+	     		//------------------------------------
+	       		// Locate the new Row and set to Edit
+	     		//------------------------------------
+	     		var newItemCount = 0;
+	     		
+	        	tablePointer.find('.newItem').each(function() {
+	      			j$(this).parent().parent().find('.nonEdit').addClass('hideMe');
+		       		j$(this).parent().parent().find('.edit').removeClass('hideMe');
+		       		newItemCount++; 
+	        	});
+	        	
+	        	if (newItemCount > 0) {
+		     		//---------------------------------
+		       		// Change the Buttons to Edit Mode
+		     		//---------------------------------
+		       		tablePointer.find('.hideWhenEditing').addClass('hideMe');
+		       		tablePointer.find('.showWhenEditing').removeClass('hideMe');
+		       	}
+		    }
+        	
+        	applyJQueryStyling(); 
+        }
+        
+        function EditTable(objectType,tablePointer) {
+
+	       	switch(objectType) { 
+	        	case 'TeamMember' : beginEditingTeamMembers();break;
+	        	case 'AdvisoryBoardTeamMember' : beginEditingAdvisoryBoardTeamMembers();break;
+	        	case 'CustomerTeamMember' : beginEditingCustomerTeamMembers();break;
+	        	case 'StrategicAccountManager' : 
+	        		beginEditingStrategicAccountManager();
+	        		j$('[id*=executiveSponsorSectionItem]').find('.hideWhenEditing').addClass('hideMe');
+	        		break;
+	        	case 'ExecutiveSponsor' : 
+	        		beginEditingExecutiveSponsor();
+	        		j$('[id*=strategicAccountManagerSectionItem]').find('.hideWhenEditing').addClass('hideMe');
+	        		break;
+			}
+        
+        
+     		//--------------------------------------
+        	// Change the Table Fields to Edit Mode
+     		//--------------------------------------
+        	tablePointer.find('.nonEdit').addClass('hideMe');
+       		tablePointer.find('.edit').removeClass('hideMe');
+       		
+     		//---------------------------------
+       		// Change the Buttons to Edit Mode
+     		//---------------------------------
+       		tablePointer.find('.hideWhenEditing').addClass('hideMe');
+       		tablePointer.find('.showWhenEditing').removeClass('hideMe');
+
+        	applyJQueryStyling(); 
+
+        }
+
+        function DeleteItem(objectType,item,id) {
+            var isConfirmed = confirm("Are you sure you wish to Delete this?");
+      		if (isConfirmed) {
+	        	//-----------------
+	        	// Turn on Spinner
+	        	//-----------------
+				j$(item).next().removeClass('hideMe');
+				j$(item).addClass('hideMe');
+	        
+	            showBlockUIMessage('Deleting Record');
+	        
+	        	switch(objectType) { 
+	        	
+	        	case 'TeamMember' :
+		        	//---------------------------------
+		        	// Remove the Selected Team Member
+		        	//---------------------------------
+		        	deleteTeamMemberBasedOnId(id);
+		        	break;
+
+	        	case 'AdvisoryBoardTeamMember' :
+		        	//------------------------------------------------
+		        	// Remove the Selected Advisory Board Team Member
+		        	//------------------------------------------------
+		        	deleteAdvisoryBoardTeamMemberBasedOnId(id);
+		        	break;
+
+	        	case 'CustomerTeamMember' :
+		        	//------------------------------------------
+		        	// Remove the Selected Customer Team Member
+		        	//------------------------------------------
+		        	deleteCustomerTeamMemberBasedOnId(id);
+		        	break;
+	      		}
+    	    }
+        }
+		
+	</script>
+
+	<style type="text/css">
+body {
+	background: #F8F8F8;
+}
+</style>
+
+	<style>
+.headerText {
+	color: #000000;
+	font-size: 1.3em;
+	margin: 0;
+	font-family: Arial, Helvetica, sans-serif;
+	/* font-weight:bold; */
+}
+
+.hideIt {
+	visibility: hidden;
+}
+
+.hideMe {
+	display: none;
+}
+
+.TextCenterAlign {
+	text-align: center;
+}
+
+.noDivWrap {
+	white-space: nowrap;
+}
+
+.boldText {
+	font-weight: bold;
+}
+
+.paddingLeft {
+	padding-left: 10px;
+}
+
+.paddingRight {
+	padding-right: 10px;
+}
+
+</style>
+
+	<apex:outputPanel id="mainform">
+		<apex:pageBlock title="Ultimate Parent Team">
+			<apex:form id="accountTeamMemberForm">
+
+				<apex:pageMessages id="pageMessages" />
+
+				<apex:actionRegion >
+
+					<apex:actionFunction name="beginEditingStrategicAccountManager"
+						action="{!beginEditingStrategicAccountManager}" rerender="">
+					</apex:actionFunction>
+
+					<apex:actionFunction name="beginEditingExecutiveSponsor"
+						action="{!beginEditingExecutiveSponsor}" rerender="">
+					</apex:actionFunction>
+
+					<apex:outputPanel id="strategicTeamMembersSection">
+
+						<apex:pageBlockSection title="Strategic Team Members" columns="3"
+							collapsible="false">
+							
+							<apex:pageBlockSectionItem id="strategicAccountManagerSectionItem" labelStyle="width:16%;vertical-align:middle;"
+								dataStyle="width:16%;vertical-align:middle;">
+								<apex:outputText value="{!$ObjectType.Account.fields.Strategic_Account_Manager__c.label}:" styleClass="{!IF(editingStrategicAccountManager,'editMode','')}"/>
+								<apex:outputPanel >
+									<apex:outputPanel layout="block" styleClass="nonEdit">
+										<apex:outputLink value="/{!account.Strategic_Account_Manager__c}" target="_top" styleClass="paddingRight">{!account.Strategic_Account_Manager__r.Name}</apex:outputLink>
+										<input type="button" value="Change"
+											class="btn editBtn hideWhenEditing"
+											onclick="EditTable('StrategicAccountManager',j$('[id*=strategicAccountManagerSectionItem]'));"/>
+									</apex:outputPanel>
+	
+									<apex:outputPanel layout="block" styleClass="edit hideMe">									
+										<table style="width: 95%;">
+											<tr>
+												<td>
+													<apex:inputField id="strategicAccountManagerInput" value="{!account.Strategic_Account_Manager__c}" styleClass="paddingRight"/>
+												</td>
+												<td>
+													<apex:commandButton value="Save"
+														styleClass="saveBtn showWhenEditing hideMe"
+														action="{!updateStrategicAccountManager}"
+														onclick="showBlockUIMessage('Saving');"
+														oncomplete="applyJQueryStyling();CheckForRecordNeedingEditing('StrategicAccountManager',j$('[id*=strategicAccountManagerSectionItem]'));"
+														rerender="strategicTeamMembersSection,pageMessages" />
+												</td>
+												<td>
+													<apex:commandButton value="Cancel"
+														styleClass="cancelBtn showWhenEditing hideMe"
+														action="{!cancelEditOfStrategicAccountManager}"
+														onclick="showBlockUIMessage('Cancelling');"
+														oncomplete="applyJQueryStyling();"
+														rerender="strategicTeamMembersSection,pageMessages" immediate="true" />
+												</td>
+											</tr>
+										</table>
+									</apex:outputPanel>
+								</apex:outputPanel>								
+							</apex:pageBlockSectionItem>
+							
+							<apex:pageBlockSectionItem id="executiveSponsorSectionItem" labelStyle="width:16%;vertical-align:middle;"
+								dataStyle="width:16%;vertical-align:middle;">
+								<apex:outputText value="Executive Sponsor:" styleClass="{!IF(editingExecutiveSponsor,'editMode','')}"/>
+								<apex:outputPanel >
+									<apex:outputPanel layout="block" styleClass="nonEdit">
+										<apex:outputLink value="/{!account.Executive_Sponsor__c}" target="_top" styleClass="paddingRight">{!account.Executive_Sponsor__r.Name}</apex:outputLink>
+										<input type="button" value="Change"
+											class="btn editBtn hideWhenEditing"
+											onclick="EditTable('ExecutiveSponsor',j$('[id*=executiveSponsorSectionItem]'));"/>
+									</apex:outputPanel>
+	
+									<apex:outputPanel layout="block" styleClass="edit hideMe">	
+										<table style="width: 95%;">
+											<tr>
+												<td>
+													<apex:inputField value="{!account.Executive_Sponsor__c}" styleClass="paddingRight"/>
+												</td>
+												<td>
+													<apex:commandButton value="Save"
+														styleClass="saveBtn showWhenEditing hideMe"
+														action="{!updateExecutiveSponsor}"
+														onclick="showBlockUIMessage('Saving');"
+														oncomplete="applyJQueryStyling();CheckForRecordNeedingEditing('ExecutiveSponsor',j$('[id*=executiveSponsorSectionItem]'));"
+														rerender="strategicTeamMembersSection,pageMessages" />
+												</td>
+												<td>
+													<apex:commandButton value="Cancel"
+														styleClass="cancelBtn showWhenEditing hideMe"
+														action="{!cancelEditOfExecutiveSponsor}"
+														onclick="showBlockUIMessage('Cancelling');"
+														oncomplete="applyJQueryStyling();"
+														rerender="strategicTeamMembersSection,pageMessages" immediate="true" />
+												</td>
+											</tr>
+										</table>
+									</apex:outputPanel>
+								</apex:outputPanel>								
+							</apex:pageBlockSectionItem>
+							
+							<apex:pageBlockSectionItem labelStyle="width:16%;vertical-align:middle;"
+								dataStyle="width:16%;vertical-align:middle;">
+								<apex:outputText value="Region:" />
+								<apex:outputField value="{!account.SAP_Region_Desc__c}" />
+							</apex:pageBlockSectionItem>
+						</apex:pageBlockSection>
+					</apex:outputPanel>
+				</apex:actionRegion>
+
+
+				<apex:outputPanel layout="block" id="SectionsPanel">
+					<apex:pageBlock id="SectionsPageBlock" rendered="true">
+
+						<apex:actionRegion >
+							<apex:actionFunction name="newTeamMember"
+								action="{!newTeamMember}"
+								rerender="teamMembersTable,pageMessages"
+								oncomplete="applyJQueryStyling();CheckForRecordNeedingEditing('TeamMember',j$('[id*=teamMembersTable]'));">
+							</apex:actionFunction>
+
+							<apex:actionFunction name="deleteTeamMemberBasedOnId"
+								action="{!deleteTeamMemberBasedOnId}"
+								rerender="teamMembersTable,pageMessages"
+								oncomplete="applyJQueryStyling();"
+								>
+								<apex:param name="idToDelete" assignTo="{!idToDelete}" value="" />
+							</apex:actionFunction>
+
+							<apex:actionFunction name="beginEditingTeamMembers"
+								action="{!beginEditingTeamMembers}" rerender="">
+							</apex:actionFunction>
+
+							<apex:outputPanel id="teamMembersTable">
+								<apex:pageBlockSection title="Team Members" columns="1"
+									collapsible="false">
+									<apex:outputPanel styleClass="{!IF(editingTeamMembers,'editMode','')}">
+										<apex:pageBlockTable value="{!teamMembers}" var="item">
+											<apex:facet name="header">
+												<apex:outputPanel layout="block"
+													styleClass="TextCenterAlign">
+													<input type="button" value="Create New Team Member"
+														class="btn newBtn hideWhenEditing"
+														onclick="CreateItem('TeamMember',j$('[id*=teamMembersTable]'));" />
+													<!-- 														
+													<input type="button" value="Edit Team Members"
+														class="btn editBtn hideWhenEditing"
+														onclick="EditTable('TeamMember',j$('[id*=teamMembersTable]'));" />
+ -->
+													<apex:commandButton value="Save"
+														styleClass="saveBtn showWhenEditing hideMe"
+														action="{!updateTeamMembers}"
+														onclick="showBlockUIMessage('Saving');"
+														oncomplete="applyJQueryStyling();CheckForRecordNeedingEditing('TeamMember',j$('[id*=teamMembersTable]'));"
+														rerender="teamMembersTable,pageMessages" />
+													<apex:commandButton value="Cancel"
+														styleClass="cancelBtn showWhenEditing hideMe"
+														action="{!cancelEditOfTeamMembers}"
+														onclick="showBlockUIMessage('Cancelling');"
+														oncomplete="applyJQueryStyling();"
+														rerender="teamMembersTable,pageMessages" immediate="true" />
+												</apex:outputPanel>
+											</apex:facet>
+
+											<apex:column headerValue="Action"
+												headerClass="actionColumnHeader hideWhenEditing"
+												styleClass="actionColumn hideWhenEditing"
+												style="width: 1%;white-space: nowrap;">
+												<apex:outputPanel layout="block"
+													styleClass="actionLinks TextCenterAlign hideWhenEditing">
+													<input type="button" value="Delete"
+														class="btn deleteBtn hideWhenEditing"
+														onclick="DeleteItem('TeamMember',j$(this),'{!item.Id}');" />
+													<apex:image id="loadingImage" styleClass="hideMe"
+														value="{!URLFOR($Resource.AccountRollupResources, 'images/spin_24x24_loading.gif')}"
+														width="24" height="24" />
+												</apex:outputPanel>
+											</apex:column>
+
+
+											<apex:column headerValue="{!$ObjectType.AccountTeamMember.fields.UserId.label}">
+												<apex:outputPanel styleClass="itemName {!IF(item.Id == '','newItem','')}" />
+
+												<apex:outputPanel layout="block" styleClass="nonEdit">
+													<apex:outputLink value="/{!item.UserId}" target="_top">{!item.User.Name}</apex:outputLink>
+												</apex:outputPanel>
+
+												<apex:outputPanel layout="block"
+													styleClass="edit required hideMe">
+													<apex:inputField value="{!item.UserId}" style="width:95%;"
+														required="true" />
+												</apex:outputPanel>
+											</apex:column>
+
+											<apex:column headerValue="{!$ObjectType.User.fields.Department.label}">
+												<apex:outputPanel layout="block">
+													<apex:outputField value="{!item.User.Department}" />
+												</apex:outputPanel>
+											</apex:column>
+
+											<apex:column headerValue="{!$ObjectType.User.fields.Title.label}">
+												<apex:outputPanel layout="block">
+													<apex:outputField value="{!item.User.Title}" />
+												</apex:outputPanel>
+											</apex:column>
+
+											<apex:column headerValue="{!$ObjectType.UserRole.fields.Name.label}">
+												<apex:outputPanel layout="block">
+													<apex:outputField value="{!item.User.UserRole.Name}" />
+												</apex:outputPanel>
+											</apex:column>
+
+											<apex:column headerValue="{!$ObjectType.User.fields.Country.label}">
+												<apex:outputPanel layout="block">
+													<apex:outputField value="{!item.User.Country}" />
+												</apex:outputPanel>
+											</apex:column>
+
+										</apex:pageBlockTable>
+									</apex:outputPanel>
+								</apex:pageBlockSection>
+							</apex:outputPanel>
+						</apex:actionRegion>
+
+
+
+
+						<apex:actionRegion >
+							<apex:actionFunction name="newAdvisoryBoardTeamMember"
+								action="{!newAdvisoryBoardTeamMember}"
+								rerender="advisoryBoardTeamMembersTable,pageMessages"
+								oncomplete="applyJQueryStyling();CheckForRecordNeedingEditing('AdvisoryBoardTeamMember',j$('[id*=advisoryBoardTeamMembersTable]'));">
+							</apex:actionFunction>
+
+							<apex:actionFunction name="deleteAdvisoryBoardTeamMemberBasedOnId"
+								action="{!deleteAdvisoryBoardTeamMemberBasedOnId}"
+								rerender="advisoryBoardTeamMembersTable,pageMessages"
+								oncomplete="applyJQueryStyling();">
+								<apex:param name="idToDelete" assignTo="{!idToDelete}" value="" />
+							</apex:actionFunction>
+
+							<apex:actionFunction name="beginEditingAdvisoryBoardTeamMembers"
+								action="{!beginEditingAdvisoryBoardTeamMembers}" rerender="">
+							</apex:actionFunction>
+
+							<apex:outputPanel id="advisoryBoardTeamMembersTable">
+								<apex:pageBlockSection title="Advisory Board Team Members"
+									columns="1" collapsible="false">
+									<apex:outputPanel styleClass="{!IF(editingAdvisoryBoardTeamMembers,'editMode','')}">
+										<apex:pageBlockTable value="{!advisoryBoardTeamMembers}"
+											var="item">
+											<apex:facet name="header">
+												<apex:outputPanel layout="block"
+													styleClass="TextCenterAlign">
+													<input type="button"
+														value="Create New Advisory Board Team Member"
+														class="btn newBtn hideWhenEditing"
+														onclick="CreateItem('AdvisoryBoardTeamMember',j$('[id*=advisoryBoardTeamMembersTable]'));" />
+													<!-- 														
+													<input type="button" value="Edit Advisory Board Team Members"
+														class="btn editBtn hideWhenEditing"
+														onclick="EditTable('AdvisoryBoardTeamMember',j$('[id*=advisoryBoardTeamMembersTable]'));" />
+ -->
+													<apex:commandButton value="Save"
+														styleClass="saveBtn showWhenEditing hideMe"
+														action="{!updateAdvisoryBoardTeamMembers}"
+														onclick="showBlockUIMessage('Saving');"
+														oncomplete="applyJQueryStyling();CheckForRecordNeedingEditing('AdvisoryBoardTeamMember',j$('[id*=advisoryBoardTeamMembersTable]'));"
+														rerender="advisoryBoardTeamMembersTable,pageMessages" />
+													<apex:commandButton value="Cancel"
+														styleClass="cancelBtn showWhenEditing hideMe"
+														action="{!cancelEditOfAdvisoryBoardTeamMembers}"
+														onclick="showBlockUIMessage('Cancelling');"
+														oncomplete="applyJQueryStyling();"
+														rerender="advisoryBoardTeamMembersTable,pageMessages"
+														immediate="true" />
+												</apex:outputPanel>
+											</apex:facet>
+
+											<apex:column headerValue="Action"
+												headerClass="actionColumnHeader hideWhenEditing"
+												styleClass="actionColumn hideWhenEditing"
+												style="width: 1%;white-space: nowrap;">
+												<apex:outputPanel layout="block"
+													styleClass="actionLinks TextCenterAlign hideWhenEditing">
+													<input type="button" value="Delete"
+														class="btn deleteBtn hideWhenEditing"
+														onclick="DeleteItem('AdvisoryBoardTeamMember',j$(this),'{!item.Id}');" />
+													<apex:image id="loadingImage" styleClass="hideMe"
+														value="{!URLFOR($Resource.AccountRollupResources, 'images/spin_24x24_loading.gif')}"
+														width="24" height="24" />
+												</apex:outputPanel>
+											</apex:column>
+
+
+											<apex:column headerValue="{!$ObjectType.AccountTeamMember.fields.UserId.label}">
+												<apex:outputPanel styleClass="itemName {!IF(item.Id == '','newItem','')}" />
+
+												<apex:outputPanel layout="block" styleClass="nonEdit">
+													<apex:outputLink value="/{!item.UserId}" target="_top">{!item.User.Name}</apex:outputLink>
+												</apex:outputPanel>
+
+												<apex:outputPanel layout="block"
+													styleClass="edit required hideMe">
+													<apex:inputField value="{!item.UserId}" style="width:95%;"
+														required="true" />
+												</apex:outputPanel>
+											</apex:column>
+
+											<apex:column headerValue="{!$ObjectType.User.fields.Department.label}">
+												<apex:outputPanel layout="block">
+													<apex:outputField value="{!item.User.Department}" />
+												</apex:outputPanel>
+											</apex:column>
+
+											<apex:column headerValue="{!$ObjectType.User.fields.Title.label}">
+												<apex:outputPanel layout="block">
+													<apex:outputField value="{!item.User.Title}" />
+												</apex:outputPanel>
+											</apex:column>
+
+											<apex:column headerValue="{!$ObjectType.UserRole.fields.Name.label}">
+												<apex:outputPanel layout="block">
+													<apex:outputField value="{!item.User.UserRole.Name}" />
+												</apex:outputPanel>
+											</apex:column>
+
+											<apex:column headerValue="{!$ObjectType.User.fields.Country.label}">
+												<apex:outputPanel layout="block">
+													<apex:outputField value="{!item.User.Country}" />
+												</apex:outputPanel>
+											</apex:column>
+
+										</apex:pageBlockTable>
+									</apex:outputPanel>
+								</apex:pageBlockSection>
+							</apex:outputPanel>
+						</apex:actionRegion>
+
+
+
+
+						<apex:actionRegion >
+							<apex:actionFunction name="newCustomerTeamMember"
+								action="{!newCustomerTeamMember}"
+								rerender="customerTeamMembersTable,pageMessages"
+								oncomplete="applyJQueryStyling();CheckForRecordNeedingEditing('CustomerTeamMember',j$('[id*=customerTeamMembersTable]'));">
+							</apex:actionFunction>
+
+							<apex:actionFunction name="deleteCustomerTeamMemberBasedOnId"
+								action="{!deleteCustomerTeamMemberBasedOnId}"
+								rerender="customerTeamMembersTable,pageMessages"
+								oncomplete="applyJQueryStyling();">
+								<apex:param name="idToDelete" assignTo="{!idToDelete}" value="" />
+							</apex:actionFunction>
+
+							<apex:actionFunction name="beginEditingCustomerTeamMembers"
+								action="{!beginEditingCustomerTeamMembers}" rerender="">
+							</apex:actionFunction>
+
+							<apex:outputPanel id="customerTeamMembersTable">
+								<apex:pageBlockSection title="Customer Team Members"
+									columns="1" collapsible="false">
+									<apex:outputPanel styleClass="{!IF(editingCustomerTeamMembers,'editMode','')}">
+										<apex:pageBlockTable value="{!customerTeamMembers}" var="item">
+											<apex:facet name="header">
+												<apex:outputPanel layout="block"
+													styleClass="TextCenterAlign">
+													<input type="button"
+														value="Create New Customer Team Member"
+														class="btn newBtn hideWhenEditing"
+														onclick="CreateItem('CustomerTeamMember',j$('[id*=customerTeamMembersTable]'));" />
+
+													<input type="button" value="Edit Customer Team Members"
+														class="btn editBtn hideWhenEditing"
+														onclick="EditTable('CustomerTeamMember',j$('[id*=customerTeamMembersTable]'));" />
+
+													<apex:commandButton value="Save"
+														styleClass="saveBtn showWhenEditing hideMe"
+														action="{!updateCustomerTeamMembers}"
+														onclick="showBlockUIMessage('Saving');"
+														oncomplete="applyJQueryStyling();CheckForRecordNeedingEditing('CustomerTeamMember',j$('[id*=customerTeamMembersTable]'));"
+														rerender="customerTeamMembersTable,pageMessages" />
+													<apex:commandButton value="Cancel"
+														styleClass="cancelBtn showWhenEditing hideMe"
+														action="{!cancelEditOfCustomerTeamMembers}"
+														onclick="showBlockUIMessage('Cancelling');"
+														oncomplete="applyJQueryStyling();"
+														rerender="customerTeamMembersTable,pageMessages"
+														immediate="true" />
+												</apex:outputPanel>
+											</apex:facet>
+
+											<apex:column headerValue="Action"
+												headerClass="actionColumnHeader hideWhenEditing"
+												styleClass="actionColumn hideWhenEditing"
+												style="width: 1%;white-space: nowrap;">
+												<apex:outputPanel layout="block"
+													styleClass="actionLinks TextCenterAlign hideWhenEditing">
+													<input type="button" value="Delete"
+														class="btn deleteBtn hideWhenEditing"
+														onclick="DeleteItem('CustomerTeamMember',j$(this),'{!item.Id}');" />
+													<apex:image id="loadingImage" styleClass="hideMe"
+														value="{!URLFOR($Resource.AccountRollupResources, 'images/spin_24x24_loading.gif')}"
+														width="24" height="24" />
+												</apex:outputPanel>
+											</apex:column>
+
+
+											<apex:column headerValue="{!$ObjectType.Contact.fields.Name.label}">
+												<apex:outputPanel styleClass="itemName {!IF(item.Id == '','newItem','')}" />
+
+												<apex:outputPanel layout="block" styleClass="nonEdit">
+													<apex:outputLink value="/{!item.Id}" target="_top">{!item.Name}</apex:outputLink>
+												</apex:outputPanel>
+
+												<apex:outputPanel layout="block"
+													styleClass="edit required hideMe noDivWrap">
+													<table style="width: 95%;">
+														<tr>
+															<td>
+															<div style="boldText">{!$ObjectType.Contact.fields.FirstName.label}:</div>
+															</td>
+															<td>
+															<apex:inputField value="{!item.FirstName}"
+																style="width:95%;" required="true" /></td>
+															<td>
+															<div style="boldText">{!$ObjectType.Contact.fields.LastName.label}:</div>
+															</td>
+															<td>
+															<apex:inputField value="{!item.LastName}"
+																style="width:95%;" required="true" /></td>
+														</tr>
+													</table>
+												</apex:outputPanel>
+											</apex:column>
+
+											<apex:column headerValue="{!$ObjectType.Contact.fields.Title.label}">
+												<apex:outputPanel layout="block" styleClass="nonEdit">
+													<apex:outputField value="{!item.Title}" />
+												</apex:outputPanel>
+												<apex:outputPanel layout="block" styleClass="edit hideMe">
+													<apex:inputField value="{!item.Title}" style="width:95%;" />
+												</apex:outputPanel>
+											</apex:column>
+
+											<apex:column headerValue="{!$ObjectType.Contact.fields.Department.label}">
+												<apex:outputPanel layout="block" styleClass="nonEdit">
+													<apex:outputField value="{!item.Department}" />
+												</apex:outputPanel>
+												<apex:outputPanel layout="block" styleClass="edit hideMe">
+													<apex:inputField value="{!item.Department}"
+														style="width:95%;" />
+												</apex:outputPanel>
+											</apex:column>
+
+											<apex:column headerValue="{!$ObjectType.Contact.fields.MailingCountry.label}">
+												<apex:outputPanel layout="block" styleClass="nonEdit">
+													<apex:outputField value="{!item.MailingCountry}" />
+												</apex:outputPanel>
+												<apex:outputPanel layout="block" styleClass="edit hideMe">
+													<apex:inputField value="{!item.MailingCountry}"
+														style="width:95%;" />
+												</apex:outputPanel>
+											</apex:column>
+
+										</apex:pageBlockTable>
+									</apex:outputPanel>
+								</apex:pageBlockSection>
+							</apex:outputPanel>
+						</apex:actionRegion>
+
+
+					</apex:pageBlock>
+				</apex:outputPanel>
+			</apex:form>
+		</apex:pageBlock>
+	</apex:outputPanel>
+
+
+	<!--  
+
+		<apex:pageBlockSection title="Customer Team Members" columns="1" collapsible="false">
+			<apex:pageBlockTable value="{!customerTeamMembers}" var="item">
+				<apex:column headerValue="Contact Name">
+					<apex:outputLink value="/{!item.Id}" target="_top">{!item.Name}</apex:outputLink>
+				</apex:column>
+				<apex:column value="{!item.Title}"/>
+				<apex:column value="{!item.Department}"/>
+				<apex:column value="{!item.MailingCountry}"/>
+			</apex:pageBlockTable>
+		</apex:pageBlockSection>
+	</apex:pageBlock>
+ -->
+
+</apex:page>

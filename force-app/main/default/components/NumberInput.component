@@ -1,0 +1,48 @@
+<apex:component controller="NumberController">
+    <apex:attribute name="p_number" type="NumberClass" 
+                    assignTo="{!numClass}" description="" required="true"/>
+
+    <apex:attribute name="p_blankZero" type="Boolean" description="" 
+                    required="false" assignTo="{!blankZero}" default="true"/>
+
+    <apex:attribute name="p_decimals" type="Integer" description="" 
+                    required="false" assignTo="{!decimals}" default="2"/>
+
+    <apex:attribute name="p_locale" type="String" description="" 
+                    required="false" assignTo="{!locale}" default="en_US"/>
+
+    <apex:attribute name="p_rendered" type="Boolean" description="" 
+                    required="false" assignTo="{!rendered}" default="true"/>
+
+    <apex:attribute name="p_required" type="Boolean" description="" 
+                    required="false" assignTo="{!required}" default="false"/>
+
+    <apex:attribute name="p_size" type="Integer" description="" 
+                    required="false" assignTo="{!size}" default="10"/>
+
+    <apex:attribute name="p_style" type="String" description="" 
+                    required="false" assignTo="{!style}"/>
+
+    <apex:attribute name="p_styleClass" type="String" description="" 
+                    required="false" assignTo="{!styleClass}"/>
+
+    <apex:inputText value="{!numClass.valStr}" 
+                    onkeypress="return numInp1(event, this, {!decimals});"
+                    required="{!required}" rendered="{!rendered}" 
+                    size="{!size}" style="{!style}" styleClass="{!styleClass}"/>
+
+    <script type="text/javascript">
+	    function numInp1(e, tb, n) {
+	        //console.log(tb.value);
+	        var k = e.which || e.keyCode;
+	        //console.log(k);
+	        //console.log(String.fromCharCode(k));
+	        if (k < 48) {return;}
+	        var val = tb.value + String.fromCharCode(k);
+	        //console.log(val);
+	        var re = new RegExp("^[\\+,-]?(\\d*[\\.,]?\\d{0," + n + "})$");
+	        if (re.test(val)) {return true;}
+	        return false;
+	    }
+    </script>
+</apex:component>

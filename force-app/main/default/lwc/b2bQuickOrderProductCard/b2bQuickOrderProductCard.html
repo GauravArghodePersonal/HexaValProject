@@ -1,0 +1,77 @@
+<template>
+    <div class="tr_item" style="margin: 20px 20px;">
+
+        <template if:true={recordId}>
+            <div class="td_item item_img">
+                <div class="imgdiv">
+                
+                    <a href={producturl}>
+                        <img if:true={imageUrl} src={imageUrl}
+                            class="product"
+                            alt="Product picture"/>
+                    </a>
+                </div>
+            </div>
+            <div class="td_item item_name">
+                <label class="main">{productName}</label>
+                <label class="sub">{oldMaterialNumber}</label>
+                <label class="" style="color: #666; font-size: 12px;">Sales Unit: {SUOM}</label>
+            </div>
+            
+            <div class="td_item item_qty" style="display: flex;" >
+                       <template if:true={showPrice}>
+                <span>QTY -
+                <input type="number" min="1" value={quantity}  class="quantityClass"  onchange={quantityChange} style="height:30px;  width:70px; border:none;  ">
+                </span>
+                       </template>
+            </div>
+
+            <div class="td_item item_color">
+                <template if:true={showPrice}>
+                    <lightning-formatted-number
+                        format-style="currency"
+                        currency-code={currencyCode}
+                        currency-display-as="code"
+                        maximum-fraction-digits="2"
+                        value={currency}
+                    ></lightning-formatted-number>
+                 <!--   <label> {currencycode} {currency}</label> -->
+                </template>
+                <template if:false={showPrice}>
+                   <!-- <label style="font-size: 13px; color:black;"> {currency}</label> -->
+                </template>
+            </div>
+            
+            <div class="td_item item_price slds-col slds-size_12-of-12 ">
+                
+                <div class="slds-col slds-size_12-of-12 ">
+                 
+                    <template if:true={showPrice}>
+                           <label style="font-size: 10px; color:black;">Total Price</label><br/>
+                   <!-- <lightning-formatted-number
+                        format-style="currency"
+                        currency-code={currencyCode}
+                        currency-display-as="code"
+                        maximum-fraction-digits="2"
+                        value={totalPrice}
+                    ></lightning-formatted-number> -->
+                       <label style="font-size: 15px; color:#666;"> {currencycode} {totalPrice}</label>
+                    </template>
+                    <template if:false={showPrice}>
+                        <label style="font-size: 13px; color:black;">Price Not Available</label>
+                    </template>
+                </div>
+            </div>
+            <div class="td_item item_remove">
+
+                <span class="material-icons-outlined"  onclick={removeProduct}>close</span>
+            </div> 
+        </template>
+        <template if:false={recordId}>
+            <div class="slds-var-p-around_large">
+                <p class="placeholder">Select a product to see details</p>
+            </div>
+        </template>
+    </div>
+    
+</template>

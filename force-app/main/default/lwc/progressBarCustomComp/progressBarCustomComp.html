@@ -1,0 +1,10 @@
+<template>
+  <div class="slds-p-top_xx-small slds-p-bottom_xx-small">
+    <p class="slds-text-align_center"><strong>{percentageCompleted}%</strong></p>
+    <div class="slds-progress-bar slds-progress-bar_circular" aria-valuemin="0" aria-valuemax="100" aria-valuenow={percentageCompleted} role="progressbar">
+          <span class="slds-progress-bar__value" style={progressStyle}>
+            <span class="slds-assistive-text">Progress: {percentageCompleted}%</span>
+          </span>
+      </div>
+  </div>
+</template>

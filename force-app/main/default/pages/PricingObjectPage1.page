@@ -1,0 +1,20 @@
+<apex:page standardController="Pricing__c"
+                           id="thePage" 
+                   extensions="PricingController"
+                      sidebar="false"
+                        title="Pricing: {!Pricing__c.Name}">
+    <apex:form id="theForm">
+        <apex:pageBlock >
+            <apex:pageBlockSection columns="1" title="Pricing" collapsible="false">
+                <apex:inputField value="{!pricing.Pricing_Type__c}" required="true"/>
+	            <apex:inputField value="{!pricing.Account__c}" required="true"/>
+                <apex:inputField value="{!pricing.Comments__c}"/>
+                <apex:pageBlockSectionItem >
+	                <apex:outputText value=""/>
+	                <apex:commandButton action="{!submitForApproval}" 
+	                                    value="Submit for Approval"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

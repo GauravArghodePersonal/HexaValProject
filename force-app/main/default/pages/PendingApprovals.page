@@ -1,0 +1,23 @@
+<apex:page controller="PendingApprovalsController" id="thePage"
+    title="Pending Approvals" action="{!pageAction}" tabStyle="Pending_Approvals__tab" lightningStylesheets="true">
+    <apex:variable var="renderSelectionList" value="{!renderObjectSelectionList}"/>
+    <apex:form >
+        <apex:pageBlock id="paBlock" title="Pending Approvals">
+            <apex:pageBlockSection columns="1" rendered="{!renderSelectionList}">
+                <apex:pageBlockSectionItem >
+                    <apex:selectList value="{!objectName}" multiselect="false">
+                        <apex:selectOptions value="{!objectSelectionList}" />
+                        <apex:actionSupport event="onchange"
+                            action="{!getPendingApprovals}" />
+                    </apex:selectList>
+                    <apex:commandButton value="Go" action="{!getPendingApprovals}" />
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection columns="1" rendered="{!NOT(renderSelectionList)}">
+                <apex:pageBlockSectionItem dataStyle="text-align: center;font-weight: bolder;">
+                    <apex:outputText value="No Items are pending for Approval"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

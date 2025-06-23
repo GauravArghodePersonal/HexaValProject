@@ -1,0 +1,10 @@
+<apex:page standardController="Pricing_Condition__c"
+           extensions="PricingConditionListController"
+           recordSetVar="pricingConditions"
+           sidebar="false">
+
+  <apex:form >
+  	<c:App_PricingWizard_WebApp id="Pricing_Wizard" accountId="{!accountId}" cancelURL="/{!accountId}" returnURL="/{!accountId}"/>
+  </apex:form>
+
+</apex:page>

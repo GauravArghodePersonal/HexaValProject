@@ -1,0 +1,84 @@
+<template>
+ 
+       
+        <template if:true={recordId}>
+
+            <lightning-layout multiple-rows>
+                <lightning-layout-item size="12" padding="around-small" small-device-size="3" medium-device-size="6" large-device-size="2" >
+             <div class="imgdiv">
+                        <a class="hide-for-print" href={producturl}>
+                            <img if:true={imageUrl} src={imageUrl}
+                                class="product"
+                                alt="Product picture"/>
+                        </a>
+                        <a class="print-only">
+                            <img if:true={imageUrl} src={imageUrl}
+                                class="product"
+                                alt="Product picture"/>
+                        </a>
+                    </div>
+                </lightning-layout-item>
+                <lightning-layout-item size="12" padding="around-small" small-device-size="3" medium-device-size="6" large-device-size="3">
+                      <br/>
+                    <span class="title">{orderItem.Product2.Name}</span>
+                    <br/><br/>
+                    <span style="color: #17b;">Sku #: {orderItem.Product2.Old_Material_Number__c}</span>
+                </lightning-layout-item>
+                <lightning-layout-item size="12" padding="around-small" small-device-size="3" medium-device-size="6" large-device-size="1">
+                    <br/><br/><br/>
+                    <h1 class="itemvalue">QTY {orderItem.Quantity}</h1>
+                </lightning-layout-item>
+                <lightning-layout-item size="12" padding="around-small" small-device-size="3" medium-device-size="6" large-device-size="2">
+                    <br/><br/><br/>
+                    <!--<template if:true={showUOM}>
+                 <h1 class="itemvalue">UOM: {orderItem.SalesUOM__c}</h1>
+                   <h1 class="itemvalue">UOM: {orderItem.SAP_Base_UOM__c}</h1>
+                </template> 
+                <template if:false={showUOM}> -->
+                   <!-- <h1 class="itemvalue">UOM: {orderItem.Product2.Sales_Unit_Of_Mesure__c}</h1> -->
+                   <h1 class="itemvalue">UOM: {orderItem.Unit_of_measure__c}</h1>
+              <!--  </template> -->
+                </lightning-layout-item>
+                
+                <lightning-layout-item size="12" padding="around-small" small-device-size="3" medium-device-size="6" large-device-size="2">
+                    <br/><br/><span>Unit Price</span><br/>
+                    <span class="itemvaluelight"><!--{unitPrice} {orderItem.Product2.CurrencyIsoCode} -->
+<lightning-formatted-number
+                        format-style="currency"
+                        currency-code= {orderItem.Product2.CurrencyIsoCode}
+                        currency-display-as="code"
+                        maximum-fraction-digits="2"
+                        value={unitPrice}
+                    ></lightning-formatted-number> 
+
+                    </span>
+                    <br/>
+                         
+                    <template if:true={orderItem.SAP_Base_UOM__c}>
+                       <span class="itemvaluelight">per {orderItem.SAP_Base_UOM__c}
+                       </span>
+                    </template>
+                </lightning-layout-item>
+                     <lightning-layout-item size="12" padding="around-small" small-device-size="3" medium-device-size="6" large-device-size="2">
+                    <br/><br/><span>Total Price</span><br/>
+                    <h1 class="itemvalue"><!--{totalPrice} {orderItem.Product2.CurrencyIsoCode} -->
+<lightning-formatted-number
+                        format-style="currency"
+                        currency-code= {orderItem.Product2.CurrencyIsoCode}
+                        currency-display-as="code"
+                        maximum-fraction-digits="2"
+                        value={totalPrice}
+                    ></lightning-formatted-number> 
+
+                    </h1>
+                </lightning-layout-item>
+            </lightning-layout>
+      
+        </template>
+        <template if:false={recordId}>
+            <div class="slds-var-p-around_large">
+                <p class="placeholder">Product Not found</p>
+            </div>
+        </template>
+    
+</template>

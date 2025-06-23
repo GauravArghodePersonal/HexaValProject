@@ -1,0 +1,61 @@
+<apex:page controller="SalesDogUpdationClass" tabStyle="Lead" sidebar="false">
+ <apex:pageMessages ></apex:pageMessages>
+<apex:form >
+   <apex:pageBlock rendered="{!Display}" >
+      <apex:pageBlockSection title="SAP Information" collapsible="false" >
+        <apex:pageBlockSectionItem >
+            <apex:outputLabel >Country</apex:outputLabel>
+            <apex:inputField value="{!acc.Country_picklist__c}" required="true"/>
+        </apex:pageBlockSectionItem><br/>
+           <apex:pageBlockSectionItem >
+        <apex:outputLabel >Prospect Sales Org</apex:outputLabel>
+        <apex:inputField value="{!acc.Prospect_Sales_Org__c}" required="true" />
+     </apex:pageBlockSectionItem><br/>
+     <apex:pageBlockSectionItem > 
+        <apex:outputLabel >Prospect Dist Channel</apex:outputLabel>
+        <apex:inputField value="{!acc.Prospect_Dist_Channel__c}" required="true"/>
+     </apex:pageBlockSectionItem><br/>
+     <apex:pageBlockSectionItem >
+        <apex:outputLabel >Prospect Division</apex:outputLabel>
+        <apex:inputField value="{!acc.Prospect_Division__c}" required="true"/>
+     </apex:pageBlockSectionItem><br/>
+     <apex:pageBlockSectionItem >
+        <apex:outputLabel >Prospect Sales District</apex:outputLabel>
+        <apex:inputField value="{!acc.Prospect_Sales_District__c}" required="true"/>
+     </apex:pageBlockSectionItem><br/>
+     <apex:pageBlockSectionItem >
+        <apex:outputLabel >Prospect Sales Office</apex:outputLabel>
+        <apex:inputField value="{!acc.Prospect_Sales_Office__c}" required="true"/>
+     </apex:pageBlockSectionItem><br/>   
+     <apex:pageBlockSectionItem >
+        <apex:outputLabel >Prospect Sales Group</apex:outputLabel>
+        <apex:inputField value="{!acc.Prospect_Sales_Group__c}" required="true"/>
+     </apex:pageBlockSectionItem>  <br/>
+     <apex:pageBlockSectionItem >
+        <apex:outputLabel >Prospect Customer Group</apex:outputLabel>
+        <apex:inputField value="{!acc.Prospect_Customer_Group__c}" required="true"/>
+     </apex:pageBlockSectionItem><br/>
+     <apex:pageBlockSectionItem >
+        <apex:outputLabel >Prospect Customer Group1</apex:outputLabel>
+         <apex:inputField value="{!acc.Prospect_Customer_Group1__c}" required="true"/>
+     </apex:pageBlockSectionItem> <br/>
+     <apex:pageBlockSectionItem >
+      <apex:outputLabel >Prospect Customer Group2</apex:outputLabel>
+      <apex:inputField value="{!acc.Prospect_Customer_Group2__c}" required="true"/>
+     </apex:pageBlockSectionItem> <br/>
+      <apex:pageBlockSectionItem >
+      <apex:outputLabel >Prospect Customer Price Group Desc</apex:outputLabel>
+      <apex:inputField value="{!acc.Prospect_Customer_Price_Group_Desc__c }" />
+     </apex:pageBlockSectionItem> <br/><br/> 
+      </apex:pageBlockSection>
+   <center >
+     <apex:commandButton value="Save" action="{!dosave}"/>
+   </center >
+   </apex:pageBlock>
+
+<centre >
+  <apex:actionPoller interval="8" action="{!redirecttoaccount}" rendered="{!Not(Display)}"/>
+</centre>
+
+</apex:form>
+</apex:page>

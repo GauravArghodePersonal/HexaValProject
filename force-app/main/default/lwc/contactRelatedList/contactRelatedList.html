@@ -1,0 +1,56 @@
+<template>
+	<div class="spinner">
+		<template if:true={isLoading}>
+			<lightning-spinner alternative-text="Loading" variant="brand" size="large">
+			</lightning-spinner>
+		</template>
+	</div>
+	<lightning-card title="* Survey Name">
+		<!--select class="slds-select" name = "Survey Name">
+            <option value="OPTION A">Solenis Survey</option>
+        </select-->
+		<lightning-combobox name="surveys" value={value} label="Survey Name" variant="label-hidden" options={statusOptions} onchange={handleChange} required>
+		</lightning-combobox>
+	</lightning-card>
+	<lightning-card title="Contact Records">
+		<table class="tableContainer">
+			<tr>
+				<th></th>
+				<th>First Name</th>
+				<th>Last Name</th>
+				<th>Language</th>
+				<th>Email</th>
+				<th>Influencer Type</th>
+				<th>Area of Responsibility</th>
+			</tr>
+			<template for:each={contacts.data} for:item="conList" for:index="index">
+				<tr key={conList.Id}>
+					<td>
+						<lightning-input data-id="flag" type="checkbox" value={conList.ASI_Comm_Area_Coatings__c}>
+						</lightning-input>
+						<lightning-input style="display: none" data-id="ConId" type="text" value={conList.Id} disabled>
+						</lightning-input>
+					</td>
+					<td>{conList.FirstName} </td>
+					<td>{conList.LastName}</td>
+					<td>
+						<lightning-combobox variant="label-hidden" name="Language" data-id="selectedLanguage"
+							options={LanguagePicklist} value="English" style="width: 90%;">
+						</lightning-combobox></td>
+					<td>{conList.Email}</td>
+					<td>{conList.W_Decision_Maker_Type__c}</td>
+					<td>{conList.V_Area_of_Responsibility__c}</td>
+				</tr>
+			</template>
+		</table><br/>
+		<div class="slds-align_absolute-center">
+			<lightning-button class="slds-m-top_small" variant="brand" label={buttonLabel}
+				onclick={handleSelectedContacts} name="openConfirmation">
+			</lightning-button>
+		</div>
+	</lightning-card>
+	<c-confirmation-dialog title='Confirmation' message='Do you want to send survey to the selected contacts ?'
+		confirm-label='Yes' cancel-label='No' visible={isDialogVisible} original-message={originalMessage}
+		name="confirmModal" onclick={handleConfirmation}>
+	</c-confirmation-dialog>
+</template>

@@ -1,0 +1,10 @@
+<design:component>
+	<design:attribute name="AlertMessage" label="Alert Message" description="Alert Message here"
+                      default=""/>
+    
+    <design:attribute name="width" label="Alert Message" description="Alert Message here"
+                      default=""/>
+    
+    
+    
+</design:component>

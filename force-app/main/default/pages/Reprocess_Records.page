@@ -1,0 +1,15 @@
+<apex:page standardController="PriceFx_Webservice_Logs__c"
+  recordSetVar="accounts"
+  extensions="quickReprocessController">
+  <apex:form >
+     <apex:pageBlock >
+     <apex:pageMessages escape="false" id="showmsg"></apex:pageMessages>
+       <apex:pageBlockTable value="{!selected}" var="account">
+         <apex:column value="{!account.name}"/>
+       </apex:pageBlockTable>
+       <apex:pageBlockButtons location="bottom">
+         <apex:commandButton value="Submit for Reprocess" action="{!doSomething}"/>
+       </apex:pageBlockButtons>
+     </apex:pageBlock>
+  </apex:form>
+</apex:page>

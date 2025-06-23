@@ -1,0 +1,334 @@
+<apex:page standardController="Price_Book__c" id="thePage" 
+                   extensions="PriceBookViewController"
+                      sidebar="false" tabStyle="Price_Book__c" 
+                        title="Price Book: {!Price_Book__c.Description__c}">
+
+    <script type="text/javascript">
+        function getConfirm(q) {answer = confirm(q); return (answer != 0);}
+    </script>
+
+    <apex:form id="theForm">
+        <apex:variable var="decimals" value="4"/>
+        <apex:variable var="locale" value="{!userLocale}"/>
+
+        <!-- do not delete the next line -->
+        <apex:outputText value="{!Price_Book__c.Product_Segment_Code__c}" rendered="false"/>
+        
+        <apex:pageMessages />
+        
+        <apex:pageBlock id="block1" rendered="{!renderPriceBookDetails}" title="Price Book Details">
+
+            <apex:pageBlockButtons location="top">
+                <apex:panelGrid columns="1" styleClass="textAlignCenter">
+                    <apex:panelGroup styleClass="nowrap">
+                        <apex:commandButton value="Sharing"
+                            rendered="true"
+                            action="{!gotoSharingPage}" />&nbsp;&nbsp;
+
+                        <apex:commandButton value="Edit Price Book"
+                            rendered="{!renderEditPriceBookButton}"
+                            action="{!gotoPriceBookEditPage}" />&nbsp;&nbsp;
+
+                        <apex:commandButton value="Expire Price Book"
+                            rendered="{!renderExpirePriceBookButton}"
+                            onclick="return getConfirm('Expire the Price Book?');"
+                            action="{!expirePriceBook}" />&nbsp;&nbsp;
+
+                        <apex:commandButton value="Delete Price Book"
+                            rendered="{!renderDeletePriceBookButton}"
+                            onclick="return getConfirm('Delete the Price Book?');"
+                            action="{!deletePriceBook}" />&nbsp;&nbsp;
+
+                        <apex:commandButton value="Extend Price Book to other Sales Orgs"
+                            rendered="{!renderExtendPriceBookButton}"
+                            action="{!extendPriceBook}" />
+                    </apex:panelGroup>
+                </apex:panelGrid>
+            </apex:pageBlockButtons>
+
+            <apex:pageBlockSection >
+                <apex:pageBlockSectionItem helpText="PriceBook Number">
+                    <apex:outputLabel value="Price Book Number"/>
+                    <apex:outputField value="{!Price_Book__c.Name}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="PriceBook Owner">
+                    <apex:outputLabel value="Price Book Owner"/>
+                    <apex:outputPanel >
+                        <apex:outputField value="{!Price_Book__c.Owner.Name}"/>
+                        <apex:outputPanel rendered="{!renderEditPriceBookButton}">
+                        &nbsp;&nbsp;&nbsp;
+                        (<apex:commandLink action="{!gotoChangeOwnerPage}" value="Change Owner"/>&nbsp;)
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="Description">
+                    <apex:outputLabel value="Description"/>
+                    <apex:outputField value="{!Price_Book__c.Description__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="Effective Date">
+                    <apex:outputLabel value="Effective Date"/>
+                    <apex:outputField value="{!Price_Book__c.Effective_Date__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="Regions">
+                    <apex:outputLabel value="Regions"/>
+                    <apex:outputText escape="false" value="{!regions}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="Number of Materials">
+                    <apex:outputLabel value="Number of Materials"/>
+                    <apex:outputField value="{!Price_Book__c.Number_of_Materials_on_Price_Book__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="Sales Orgs">
+                    <apex:outputLabel value="Sales Orgs"/>
+                    <apex:outputText escape="false" value="{!salesOrgs}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="Number of Services">
+                    <apex:outputLabel value="Number of Services"/>
+                    <apex:outputField value="{!Price_Book__c.Number_of_Services__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="Distribution Channel Name and Code">
+                    <apex:outputLabel value="Distribution Channel"/>
+                    <apex:outputText value="{!Price_Book__c.Dist_Channel_Description__c} - {!Price_Book__c.Dist_Channel_Code__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="SBU">
+                    <apex:outputLabel value="SBU"/>
+                    <apex:outputText escape="false" value="{!productLines}"/>
+                </apex:pageBlockSectionItem>
+                <!--<apex:pageBlockSectionItem helpText="Product Lines">
+                    <apex:outputLabel value="Product Lines"/>
+                    <apex:outputText escape="false" value="{!productLines}"/>
+                </apex:pageBlockSectionItem>-->
+                <apex:pageBlockSectionItem helpText="Division Name and Code">
+                    <apex:outputLabel value="Division"/>
+                    <apex:outputText value="{!Price_Book__c.Division_Description__c} - {!Price_Book__c.Division_Code__c}"/>
+                </apex:pageBlockSectionItem>
+                 <apex:pageBlockSectionItem helpText="Business">
+                    <apex:outputLabel value="Business"/>
+                    <apex:outputText escape="false" value="{!families}"/>
+                </apex:pageBlockSectionItem>
+                <!--<apex:pageBlockSectionItem helpText="Product Families">
+                    <apex:outputLabel value="Product Families"/>
+                    <apex:outputText escape="false" value="{!families}"/>
+                </apex:pageBlockSectionItem>-->
+                <apex:pageBlockSectionItem helpText="Price Book Status">
+                    <apex:outputLabel value="Price Book Status"/>
+                    <apex:outputText escape="false" value="{!Price_Book__c.Record_Status__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="Customer Groups">
+                    <apex:outputLabel value="Customer Groups"/>
+                    <apex:outputText escape="false" value="{!customerGroups}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="PriceBook Cloned From">
+                    <apex:outputLabel value="PriceBook Cloned From"/>
+                    <apex:outputField value="{!Price_Book__c.Cloned_From__r.Name}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="PriceBook Currency">
+                    <apex:outputLabel value="PriceBook Currency"/>
+                    <apex:outputField value="{!Price_Book__c.CurrencyIsoCode}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="PriceBook Expired By"
+                                           rendered="{!renderExpiredBy}">
+                    <apex:outputLabel value="PriceBook Expired By"/>
+                    <apex:outputField value="{!Price_Book__c.Expired_By__r.Name}"/>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="VCP Grade"/>
+                    <apex:outputtext value="{!Price_Book__c.VCP_Grade__c}"></apex:outputtext>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Price Book Group"/>
+                    <apex:outputtext value="{!Price_Book__c.Price_Book_Group__r.Name}"></apex:outputtext>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        
+        <apex:actionStatus id="pbeStatMsg">
+            <apex:facet name="start">
+                <apex:outputPanel layout="block" styleClass="statusMsg">
+                    <apex:outputText value="Please Wait ... "/>
+                    <apex:image value="{!$Resource.spinner}"/>
+                </apex:outputPanel>
+            </apex:facet>
+            <apex:facet name="stop">
+        <apex:pageBlock rendered="{!renderPBMaterialSection}" id="block2" 
+                        title="Price Book Materials">
+            <apex:pageBlockButtons >
+                <apex:panelGrid columns="6" width="100%" styleClass="bold">
+                    <apex:panelGroup styleClass="nowrap">
+                        <apex:outputLabel value="Business : "/><br/>
+                        <apex:selectList value="{!productFmly}" size="1" styleClass="slist">
+                            <apex:selectOptions value="{!pfmlySelOpts}" />
+                            <apex:actionSupport event="onchange" action="{!changeProductFamily}"
+                                                rerender="block2" status="pbeStatMsg" />
+                        </apex:selectList>
+                    </apex:panelGroup>
+                    
+                    <apex:panelGroup styleClass="nowrap">
+                        <apex:outputLabel value="SBU : "/><br/>
+                        <apex:selectList value="{!productLine}" size="1" styleClass="slist">
+                            <apex:selectOptions value="{!plineSelOpts}" />
+                            <apex:actionSupport event="onchange" action="{!changeProductLine}"
+                                                rerender="block2" status="pbeStatMsg" />
+                        </apex:selectList>
+                    </apex:panelGroup>
+
+                    <apex:panelGroup styleClass="nowrap">
+                        <apex:outputText value="per Page:"/><br/>
+                        <apex:selectList value="{!pc.pageSize}" size="1" 
+                                         title="Materials per Page" styleClass="slist">
+                            <apex:actionSupport event="onchange" rerender="block2" status="pbeStatMsg"/>
+                            <apex:selectOption itemLabel="50" itemValue="50"/>
+                            <apex:selectOption itemLabel="100" itemValue="100"/>
+                            <apex:selectOption itemLabel="200" itemValue="200"/>
+                        </apex:selectList>
+                    </apex:panelGroup>
+                    
+                    <apex:panelGroup styleClass="nowrap">
+                        &nbsp;&nbsp;&nbsp;Previous<br/>
+                        <apex:commandButton action="{!pc.first}" disabled="{!NOT(pc.hasPrevious)}" 
+                            rerender="block2" status="pbeStatMsg" title="First Page" value="<<"/>
+                        &nbsp;&nbsp;
+                        <apex:commandButton action="{!pc.previous}" disabled="{!NOT(pc.hasPrevious)}" 
+                            rerender="block2" status="pbeStatMsg" title="Prev Page" value="<"/>
+                    </apex:panelGroup>
+
+                    <apex:panelGroup styleClass="nowrap">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Next<br/>
+                        <apex:commandButton action="{!pc.next}" disabled="{!NOT(pc.hasNext)}"
+                            rerender="block2" status="pbeStatMsg" title="Next Page" value=">"/>
+                        &nbsp;&nbsp;
+                        <apex:commandButton action="{!pc.last}" disabled="{!NOT(pc.hasNext)}"
+                            rerender="block2" status="pbeStatMsg" title="Last Page" value=">>"/>
+                    </apex:panelGroup>
+
+                    <apex:panelGroup styleClass="nowrap">
+                        <apex:outputText value="Page: {!pc.pageNumber} of {!pc.lastPageNumber}"/><br/>
+                        <apex:outputText value="Materials: {!pc.recordFrom}-{!pc.recordTo} of {!pc.resultSize}" 
+                                         styleClass="nowrap"/>
+                    </apex:panelGroup>
+
+                </apex:panelGrid>
+            </apex:pageBlockButtons>
+
+            <apex:pageBlockTable value="{!priceBookEntries}" var="p">
+                <apex:column headerClass="right" styleClass="right" width="20px">
+                    <apex:facet name="header">#</apex:facet>
+                    <apex:outputText value="{!p.recordNumber}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Material Name and Number</apex:facet>
+                    <apex:outputLink value="/{!p.priceBookEntry.Material_Sales_Data2__c}"> 
+                        <apex:outputText value="{!p.priceBookEntry.Material_Name__c} - {!p.materialNumber}"/>
+                    </apex:outputLink>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Sales Org</apex:facet>
+                    <apex:outputField value="{!p.priceBookEntry.Sales_Org_Desc__c}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Plant<br/>Notes</apex:facet>
+                    <apex:outputField value="{!p.priceBookEntry.Plant_Notes__c}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Volume<br/>UOM</apex:facet>
+                    <apex:outputField value="{!p.priceBookEntry.Volume_UOM__c}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Selling<br/>UOM</apex:facet>
+                    <apex:outputField value="{!p.priceBookEntry.Selling_UOM__c}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Floor Price</apex:facet>
+                    <c:Currency value="{!p.scaledPricing.Floor_Price__c}"
+                                code="{!p.scaledPricing.CurrencyIsoCode}"
+                                decimals="{!decimals}" locale="{!locale}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Market Price</apex:facet>
+                    <c:Currency value="{!p.scaledPricing.Selling_Price__c}"
+                                code="{!p.scaledPricing.CurrencyIsoCode}"
+                                decimals="{!decimals}" locale="{!locale}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">GP %</apex:facet>
+                    <apex:outputField value="{!p.priceBookEntry.GPPct__c}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Scale Pricing<br/>Min.Vol - Max.Vol - FloorPrice - CeilPrice</apex:facet>
+                    <apex:outputText escape="false" value="{!p.pricingScales}"/>
+                </apex:column>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+            </apex:facet>
+        </apex:actionStatus>
+
+        <apex:pageBlock rendered="{!renderPBServiceSection}" id="block3" title="Price Book Services">
+            <apex:pageBlockTable value="{!priceBookServices}" var="p">
+                <apex:column >
+                    <apex:facet name="header">Description</apex:facet>
+                    <apex:outputField value="{!p.priceBookService.Description__c}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Service Type</apex:facet>
+                    <apex:outputField value="{!p.priceBookService.Service_Type__c}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Service Cost</apex:facet>
+                    <c:Currency value="{!p.priceBookService.Service_Cost__c}"
+                                code="{!p.priceBookService.CurrencyIsoCode}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Service UOM</apex:facet>
+                    <apex:outputField value="{!p.priceBookService.Service_UOM__c}"/>
+                </apex:column>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+
+        <apex:pageBlock rendered="{!renderOwnerEditBlock}" id="block4">
+            <apex:pageBlockSection columns="1">
+                <apex:pageBlockSectionItem helpText="PriceBook Number">
+                    <apex:outputLabel value="Price Book Number"/>
+                    <apex:outputField value="{!Price_Book__c.Name}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="Description">
+                    <apex:outputLabel value="Description"/>
+                    <apex:outputField value="{!Price_Book__c.Description__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="PriceBook Owner">
+                    <apex:outputLabel value="Price Book Owner"/>
+                    <apex:inputField value="{!tempObject.OwnerId}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="Send Notification Email">
+                    <apex:outputLabel value="Send Notification Email"/>
+                    <apex:inputCheckbox value="{!sendOwnerChangeEmail}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value=""/>
+                    <apex:outputPanel >
+                        <apex:commandButton action="{!changeOwner}" value="Change Owner"/>
+                        <apex:commandButton action="{!gotoPriceBookTabPage}" value="Cancel"/>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+
+    </apex:form>
+    
+    <apex:relatedList list="ProcessSteps" rendered="{!renderApprovalHistory}" id="block5"/>
+
+    <style>
+        table.pscales {border-collapse: collapse; empty-cells: show; width: 100%}
+        table.pscales td {border:solid silver 1px; padding:5px; text-align:right; width: 50px;}
+        table {border-collapse: collapse;}
+        .textAlignCenter {text-align: center;}
+        .textAlignRight {text-align: right;}
+        .nowrap {white-space: nowrap;}
+        .slist {font-size: 96%;}
+        .bold {font-weight: bold;}
+        .center {text-align: center;}
+        .right {text-align: right;}
+        .bPageBlock .pbTitle {width: 10%;}
+        .statusMsg {border:solid silver 1px; font-weight: bold; text-align: center;}
+    </style>    
+
+</apex:page>

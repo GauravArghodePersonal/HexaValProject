@@ -1,0 +1,54 @@
+<template>
+    <div class={currentAccount}>
+        <div class="inner">
+            <a href={accountUrl}>
+                <template if:true={accountCard}>{accountCard.Title}</template>
+            </a>
+        </div>
+        <table>
+            <tr>
+                <td style="width: 45px;" if:true={isActiveAccount}>
+                    <span class="outer-current-checkbox" ></span>
+                </td>
+                <td>
+                    <table class={isCurrentRecord}>  
+                        <colgroup>
+                            <col span="1" style="width: 4%;">
+                            <col span="1" style="width: 10%;">
+                            <col span="1" style="width: 22%;">
+                            <col span="1" style="width: 10%;">
+                            <col span="1" style="width: 22%;">
+                            <col span="1" style="width: 10%;">
+                            <col span="1" style="width: 22%;">
+                        </colgroup>       
+
+                        <tbody>
+                            <tr>
+                                <td rowspan="3"><template if:true={shouldDecorate}><a href={shouldNavigateToRecord} class={arrowOrCheckmark}>&NonBreakingSpace;</a></template></td>
+                                <td colspan="4"><p><template if:true={accountCard}>{parsedAddress}</template></p></td>
+                                <td class="data-title"><b>Sales District:</b></td>
+                                <td><template if:true={accountCard}>{accountCard.SalesDistrict}</template></td>
+                            </tr>
+                            <tr>
+                                <td class="data-title"><b>Sales Area:</b></td>
+                                <td><template if:true={accountCard}>{accountCard.SalesArea}</template></td>
+                                <td class="data-title"><b>Cust Group:</b></td>
+                                <td><template if:true={accountCard}>{accountCard.CustomGroup}</template></td>
+                                <td class="data-title"><b>Sales Office:</b></td>
+                                <td><template if:true={accountCard}>{accountCard.SalesOffice}</template></td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td><template if:true={accountCard}>{accountCard.SalesArea1}</template></td>
+                                <td class="data-title"><b>Cust Group1:</b></td>
+                                <td><template if:true={accountCard}>{accountCard.CustomGroup1}</template></td>
+                                <td class="data-title"><b>Sales Group:</b></td>
+                                <td><template if:true={accountCard}>{accountCard.SalesGroup}</template></td>
+                            </tr>        
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+</template>

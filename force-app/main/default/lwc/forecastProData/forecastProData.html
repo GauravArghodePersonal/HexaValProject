@@ -1,0 +1,37 @@
+<template>
+    <template if:true={isSpinner}>
+        <lightning-spinner alternative-text="Loading"></lightning-spinner>
+    </template>
+    <lightning-record-edit-form object-api-name="Forecast_PRO__c" density="comfy" form-class="slds-form-element slds-form-element_stacked" onsubmit={handleSave} record-id={recordId} onsuccess={handleSuccess} onerror={handleError}>
+        <div class="slds-card slds-p-left_large">
+            <div class="slds-grid slds-no-flex">
+                <div class="slds-col slds-size_1-of-6 slds-p-right_large">
+                    <lightning-input-field field-name={forecastFiscalYear} value={currentFiscalYear} class="" read-only></lightning-input-field>
+                </div>
+                <div class="slds-col slds-size_1-of-6 slds-p-right_large">
+                    <lightning-input-field field-name={sapSalesGroup} class="slds-form-element slds-form-element_stacked" required></lightning-input-field>
+                </div>
+                <div class="slds-col slds-size_1-of-6 slds-p-right_large">
+                    <lightning-combobox name="monthSelection" label="Forecast Month" value={forecastMonth} placeholder="Select Month" required options={monthOptions} onchange={handleChange} ></lightning-combobox>
+                    <!--<lightning-input-field field-name={forecastMonth} value={lstMonthOptions} placeholder="Select Month" class="slds-form-element slds-form-element_stacked"></lightning-input-field>-->
+                </div>
+                <div class="slds-col slds-size_1-of-6 slds-p-right_large">
+                    <lightning-input-field field-name={monthlyRevenueEstimated} required class="slds-form-element slds-form-element_stacked"></lightning-input-field>
+                </div>
+                <div class="slds-col slds-size_1-of-6 slds-p-right_large">
+                    <lightning-input-field field-name={monthlyGPEstimated} required class="slds-form-element slds-form-element_stacked"></lightning-input-field>
+                </div>
+                <div class="slds-col slds-size_1-of-6 slds-p-right_large">
+                    <lightning-input-field field-name={note}  class="slds-form-element slds-form-element_stacked"></lightning-input-field>
+                </div>
+                <div class="slds-col slds-size_1-of-6 slds-p-right_large slds-hide">
+                    <lightning-input-field field-name={forecastEntryDate} value={currentMonth} class="slds-form-element slds-form-element_stacked"></lightning-input-field>
+                </div>
+                <!--<div class="slds-col slds-size_1-of-6 slds-p-right_large">
+                    <lightning-icon icon-name="utility:add" alternative-text="Add" variant="brand" onclick={addRecord} ></lightning-icon>
+                </div>-->
+            </div>            
+        </div>
+    </lightning-record-edit-form>
+   
+</template>

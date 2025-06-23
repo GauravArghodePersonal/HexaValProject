@@ -1,0 +1,216 @@
+<apex:page standardController="Pricing_Condition__c" 
+           extensions="PricingConditionApproversController"
+           action="{!setStandardSetController}"
+           sidebar="false">
+    <apex:form id="theForm">
+        <apex:pageBlock rendered="{!pageBlockNumber = 1}">
+            <apex:pageBlockSection columns="1">
+                <apex:pageBlockSectionItem dataStyle="text-align: center;font-weight: bolder;">
+                    <apex:outputText value="No Pricing Conditions found to be Approved"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        <apex:pageBlock title="Pricing Conditions to be Approved" 
+                        rendered="{!pageBlockNumber = 2}">
+            <apex:panelGrid columns="2" width="100%">
+                <apex:panelGroup >
+                    <apex:outputLabel value="Sales Office : " style="font-weight: bold;"/>
+                    <apex:actionStatus id="salesOfficeStatus">
+                        <apex:facet name="start">
+                            <apex:outputText escape="false" style="font-weight: bold;" 
+                                             value="&nbsp;Please wait...">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop">
+                            <apex:selectList value="{!salesOffice}" size="1">
+                                <apex:selectOptions value="{!salesOfficeList}" />
+                                <apex:actionSupport event="onchange"
+                                                    action="{!changeSalesOffice}"
+                                                    rerender="theForm" 
+                                                    status="salesOfficeStatus" />
+                            </apex:selectList>
+                        </apex:facet>
+                    </apex:actionStatus>
+                </apex:panelGroup>
+                <apex:panelGroup rendered="{!renderSendEmailButton}"
+                                 style="float: right;">
+                    <apex:commandButton value=" Send Emails to Approvers "
+                                        action="{!gotoPageBlock3}"/>
+                </apex:panelGroup>
+            </apex:panelGrid>
+            <apex:pageBlockSection columns="1">
+                <apex:pageBlockSectionItem >
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockTable id="list" value="{!pclist}" var="p"
+                                 rowClasses="row1,row2">
+                <apex:column >
+                    <apex:facet name="header">Pricing<br/>Condition</apex:facet>
+                    <apex:outputLink value="/{!p.pricingCondition.Id}"> 
+                        <apex:outputField value="{!p.pricingCondition.Name}"/>
+                    </apex:outputLink>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Sales Office</apex:facet>
+                    <apex:outputText value="{!p.pricingCondition.Account_Sales_Office__c}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Account Name<br/>and Number</apex:facet>
+                    <apex:outputLink value="/{!p.pricingCondition.Account__r.Id}"> 
+                        <apex:outputText value="{!p.pricingCondition.Account__r.Name}"/>
+                    </apex:outputLink>
+                    <br/><apex:outputText value="{!p.accountNumber}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Account<br/>Owner</apex:facet>
+                    <apex:outputText value="{!p.sellerName}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Material Name<br/>and Number</apex:facet>
+                    <apex:outputLink value="/{!p.pricingCondition.Material2__r.Id}"> 
+                        <apex:outputText value="{!p.pricingCondition.Material2__r.Material_Desc__c}"/>
+                    </apex:outputLink>
+                    <br/><apex:outputText value="{!p.materialNumber}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Valid<br/>From To</apex:facet>
+                    <apex:outputField value="{!p.pricingCondition.Valid_From_Date__c}"/><br/>
+                    <apex:outputField value="{!p.pricingCondition.Valid_To_Date__c}"/>
+                </apex:column>
+<!--
+                <apex:column>
+                    <apex:facet name="header">Record<br/>Status</apex:facet>
+                    <apex:outputField value="{!p.pricingCondition.Record_Status__c}"/>
+                </apex:column>
+                <apex:column>
+                    <apex:facet name="header">Active</apex:facet>
+                    <apex:outputField value="{!p.pricingCondition.Active__c}"/>
+                </apex:column>
+-->
+                <apex:column >
+                    <apex:facet name="header">Submitted<br/>Date and Time</apex:facet>
+                    <apex:outputText value="{!p.submittedTime}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Approver<br/>Name</apex:facet>
+                    <apex:outputText escape="false" value="{!p.approvers}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Request<br/>Reason</apex:facet>
+                    <apex:outputText escape="false" value="{!p.pricingCondition.Request_Reason_Desc__c}"/>
+                </apex:column>
+                <apex:column breakBefore="true" colspan="99" 
+                             rendered="{!NOT(ISBLANK(p.pricingCondition.Comments__c))}">
+                    <apex:outputText styleClass="bold" value="Comments : "/>
+                    <apex:outputText value="{!p.pricingCondition.Comments__c}"/>
+                </apex:column>
+            </apex:pageBlockTable>        
+            <apex:pageBlockButtons location="top">
+                <apex:panelGrid bgcolor="#f8f8f8" columns="3" width="100%">
+<!--                
+                    <apex:panelGroup styleClass="nowrap">
+                        <apex:commandButton value="Submit Batch Job to update Approvers"
+                                            action="{!submitApproversBatchJob}" 
+                                            disabled="{!disableSubmitButton}" 
+                                            immediate="true" status="jobStatus" rerender="theForm"/>
+                        <apex:actionStatus startText="Submitting Batch Job..." stopText="" id="jobStatus"/>
+                    </apex:panelGroup>
+-->                    
+                    <apex:outputText value="Records: {!recordFrom}-{!recordTo} of {!resultSize}" styleClass="nowrap"/>
+                    <apex:outputText value="Page: {!pageNumber} of {!lastPageNumber}" styleClass="nowrap"/>
+                </apex:panelGrid>
+            </apex:pageBlockButtons>
+            <apex:facet name="footer">
+                <apex:panelGrid bgcolor="#f8f8f8" columns="4" width="100%">
+                    <apex:panelGroup styleClass="nowrap">
+                        <apex:outputText value="Records per Page:"/>
+                        <apex:selectList id="pageSize" value="{!pageSize}" size="1" title="Records per Page">
+                            <apex:actionSupport event="onchange" rerender="theForm"/>
+                            <apex:selectOption itemLabel="10" itemValue="10"/>
+                            <apex:selectOption itemLabel="25" itemValue="25"/>
+                            <apex:selectOption itemLabel="50" itemValue="50"/>
+                            <apex:selectOption itemLabel="100" itemValue="100"/>
+                        </apex:selectList>
+                    </apex:panelGroup>
+                    <apex:outputText value="Records: {!recordFrom}-{!recordTo} of {!resultSize}" styleClass="nowrap"/>
+                    <apex:panelGroup styleClass="nowrap">
+                        <apex:commandButton action="{!first}" title="First Page" value="<<"/>
+                        &nbsp;&nbsp;
+                        <apex:commandButton action="{!previous}" title="Prev Page" value="<"/>
+                        Previous&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Next&nbsp;
+                        <apex:commandButton action="{!next}" title="Next Page" value=">"/>
+                        &nbsp;&nbsp;
+                        <apex:commandButton action="{!last}" title="Last Page" value=">>"/>
+                    </apex:panelGroup>
+                    <apex:panelGroup styleClass="nowrap">
+                        <apex:outputText value="Page: {!pageNumber} of {!lastPageNumber}"/>
+                    </apex:panelGroup>
+                </apex:panelGrid>
+            </apex:facet>
+        </apex:pageBlock>
+        <apex:pageBlock rendered="{!pageBlockNumber = 3}" 
+                        title="Send Emails to Approvers">
+            <apex:pageBlockSection columns="1">
+                <!-- ------------------------------------------------------- 
+                    Render the following item to set the test mode.
+                    In test mode, the emails are sent just to the cc Ids 
+                    only and not to the approvers of the Pricing Conditions  
+                ------------------------------------------------------------ -->
+                <apex:pageBlockSectionItem rendered="true">
+                    <apex:outputLabel for="emailCcOnlyId" value="Email Cc: only?"/>
+                    <apex:outputPanel style="font-weight: bold; vertical-align: middle;">
+                        <apex:inputCheckbox id="emailCcOnlyId" value="{!emailCcOnly}"/>&nbsp;
+                        <apex:outputText value="Check this to send the emails just to the cc Ids only and not to the approvers"/>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <!-- ------------------------------------------------------------ -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel for="emailCc" escape="false">
+                        Email Cc: (optional)<br/><br/>Enter Email Ids separated by a Comma
+                    </apex:outputLabel>
+                    <apex:inputTextArea id="emailCc" rows="3" cols="90" value="{!emailCc}"
+                                        title="Enter Email Ids separated by a Comma"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem dataStyle="vertical-align: middle;">
+                    <apex:outputLabel value=""/>
+                    <apex:actionStatus id="sendEmailStatus">
+                        <apex:facet name="start">
+                            <apex:outputText escape="false" style="font-weight: bold;" 
+                                             value="&nbsp;Please wait...">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop">
+                            <apex:outputPanel styleClass="btn">
+                                <apex:outputText value=" Send Emails " />
+                                <apex:actionSupport event="onclick" 
+                                                    action="{!sendEmails}"
+                                                    rerender="theForm" 
+                                                    status="sendEmailStatus"/>
+                            </apex:outputPanel>
+                        </apex:facet>
+                    </apex:actionStatus>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        <apex:pageBlock rendered="{!pageBlockNumber = 4}">
+            <apex:pageBlockSection columns="1">
+                <apex:pageBlockSectionItem dataStyle="text-align: center;font-weight: bolder;">
+                    <apex:outputText value="Emailed the details of Pricing Conditions Pending Approval"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+    <style>
+        table.approvers {border-collapse: collapse; empty-cells: show; width: 100%}
+        table.approvers td {border-style: none; padding:0px; white-space: nowrap;}
+        table {border-collapse: collapse;}
+        .textAlignCenter {text-align: center;}
+        .textAlignRight {text-align: right;}
+        .nowrap {white-space: nowrap;}
+        .bold {font-weight: bold;}
+        .row1 {background-color: #f3f3ec;}
+        .row2 {background-color: #f8f8f8;}
+    </style>
+</apex:page>

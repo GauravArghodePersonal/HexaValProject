@@ -1,0 +1,37 @@
+<apex:page showHeader="false" sidebar="false">
+  <html>
+      <head>
+        <style>
+            body {margin:0px;}
+            .wrapper {width:880px;     margin-left: 50px;margin-top: 100px;}
+            .logo_info{width: 269px;}
+            .header{margin-top: 20px;font-weight: bold;font-size: 23px;}
+            .other{font-weight: lighter !important;margin-top: 20px;font-size: 19px;}
+            .linebreak{font-weight: lighter !important;font-size: 21px;}
+        </style>
+      </head>
+      <body>
+          <div class="wrapper">
+              <div class="logo">
+                  <apex:image styleClass="logo_info" value="{!$Resource.solenis_logo_new}"/>
+              </div>
+              <div class="content">
+                  <div class="header">
+                      Sign in
+                  </div>
+                  <div class="other">
+                      Sorry, but we're having trouble signing you in.
+                      </div>
+                      <div class="other">
+                      If this is the first time you try to log in SFDC, <span style="margin-top:5px;">please submit an access request using the <a href="https://servicedesk.solenis.com/app/itsmservicedesk/HomePage.do">IT Help Ticket.
+                 </a></span> 
+                  </div>
+                   <div class="other">
+                    Otherwise, please send an Email to <a href="mailto:SFDC@solenis.com">SFDC@solenis.com </a>for assistance.
+                    </div>
+
+             </div> 
+          </div>
+      </body>
+  </html>
+</apex:page>

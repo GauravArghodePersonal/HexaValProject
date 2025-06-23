@@ -1,0 +1,370 @@
+<!--Author: AWT Sys Admin
+Purpose : To Display Label Request Custom Page from Account Create Label Request Button. To Display Images.
+Created Date : 4/22/2014 5:47 PM
+Last Modified By :  Srinivasan Muthu (TechMahindra)
+Last Modified Date: 19/02/2015 -->
+
+<apex:page standardcontroller="Label_Request__c"
+    extensions="Label_Request_Display_Extension">
+    <apex:form id="theForm">
+   
+        <apex:sectionheader title="Label Request Edit"
+            subtitle="{!IF(LR.id == null, 'New Label Request', LR.name)}" />
+        <apex:pageMessages />
+        <apex:outputpanel rendered="{!NOT(displaycontactpopup)}">
+            <apex:pageblock >
+
+                <apex:pageblockbuttons location="top">
+                    <apex:commandbutton value="Save and Submit"
+                        action="{!createreqsubmit}" rerender="theForm"/>
+                    <apex:commandbutton value="Save Only" action="{!createreq}" rerender="theForm" />
+                    <apex:commandbutton value="Cancel" action="{!cancel}" />
+                </apex:pageblockbuttons>
+                <apex:pageblocksection title="Information">
+                    <apex:pageblocksectionitem >
+                        <apex:outputlabel value="Label Request Number" />
+                        <apex:outputField value="{!LR.name}" />
+                    </apex:pageblocksectionitem>
+                    <apex:pageblocksectionitem >
+                        <apex:outputlabel value="Status" />
+                        <apex:outputField value="{!LR.Status__c}" />
+                    </apex:pageblocksectionitem>
+                    <apex:pageblocksectionitem >
+                        <apex:outputlabel value="Delivery Method" /> 
+                        <!-- apex:inputfield styleClass="fld1" value="{!LR.Delivery_Method__c}" required="true" / -->
+                        <apex:outputPanel >
+                            <ul style="padding: 0px;">
+                                <li><b>Delivery Method: </b>All items are shipped by UPS Ground</li>
+                                <li><b>Lead times: </b>1 week for Labels and 2 weeks for Placard Signs</li>
+                                <li><b>FOB: </b>Hackettstown, NJ</li>
+                            </ul>
+                        </apex:outputPanel>
+                    </apex:pageblocksectionitem>
+                    <apex:pageblocksectionitem >
+                        <apex:outputlabel value="Tank Requirement" />
+                        <apex:inputfield styleClass="fld1" value="{!LR.Tank_Requirement__c}" />
+                    </apex:pageblocksectionitem>
+                    <apex:pageblocksectionitem >
+                    </apex:pageblocksectionitem>
+                    <apex:pageblocksectionitem >
+                        <apex:outputlabel value="Shipping Instruction Product" />
+                        <apex:inputfield styleClass="fld1" value="{!LR.Shipping_Instruction_Product__c}" />
+                    </apex:pageblocksectionitem>
+                </apex:pageblocksection>
+                <apex:pageblocksection title="Ship-To Information">
+                    <apex:pageblocksectionitem >
+                        <apex:outputlabel value="Customer / Prospect " />
+                        <apex:outputfield value="{!LR.Customer_Prospect__c}" />
+                    </apex:pageblocksectionitem>
+                    <apex:pageblocksectionitem helptext="Select 'Create New Contact' to Create a New Contact on this Account.">
+                        <apex:outputlabel value="Contact" />
+                        <apex:outputPanel layout="block" styleClass="requiredInput">
+                            <div class="requiredBlock"></div>
+                            <apex:selectlist styleClass="fld1" value="{!selectedcontact}" size="1">
+                                <apex:selectoptions value="{!contacts}" />
+                                <apex:actionSupport event="onchange" action="{!opencontactpanel}"
+                                                    rerender="theForm" status="contactStatus"/>
+                            </apex:selectlist>&nbsp;&nbsp;
+                            <apex:actionStatus id="contactStatus" startText=" please wait ..." stopText=""/>
+                        </apex:outputPanel>
+                    </apex:pageblocksectionitem>
+                    <apex:pageblocksectionitem helptext="Defaults to Account Address. You may change to a custom address for this Label Request.">
+                        <apex:outputlabel value="Address" />
+                        <apex:inputfield styleClass="address" value="{!LR.Full_Address__c}" required="true"/>
+                    </apex:pageblocksectionitem>
+                    <apex:pageblocksectionitem >
+                        <apex:outputlabel value="Contact Phone " />
+                        <apex:inputfield styleClass="fld1" value="{!LR.Contact_Phone__c}"/>
+                    </apex:pageblocksectionitem>
+                </apex:pageblocksection>
+                
+                <!--Changed For : Ticket 711057 - SFDC Label Request Changes for the incident #711057  84 to 99-->
+                
+                <apex:pageblocksection columns="1" title="Material Details" >
+                <apex:outputText style="color:red;text-align:right !important;"  ></apex:outputText>
+                    <apex:pageblocksectionItem >
+                        <apex:outputlabel value="Program Type" />
+                        <apex:inputfield styleClass="fld1" value="{!LR.Program_Type__c}" >
+                           
+                         </apex:inputfield>
+                </apex:pageblocksectionItem>
+                    
+                    <apex:pageblocksectionItem >
+                        <apex:outputlabel value="SAP Material" />
+                        <apex:outputPanel >
+                             <div class="requiredInput">
+                                <div class="requiredBlock"></div>
+                                <apex:inputfield styleClass="fld1" value="{!LR.SAP_Material__c}"  />
+                            </div>
+                        </apex:outputPanel>
+                       
+                        
+                        
+                    </apex:pageblocksectionItem>
+                    
+                    <apex:pageblocksectionItem helptext="Language for the Labels and Placards">
+                         <apex:outputlabel value="Language" />
+                        <apex:outputPanel >
+                             <div class="requiredInput">
+                                <div class="requiredBlock"></div>
+                                 <apex:inputfield styleClass="fld1" value="{!LR.Language__c}" />
+                            </div>
+                        </apex:outputPanel>
+                    </apex:pageblocksectionItem>
+                    <apex:pageblocksectionItem helptext="Only required for Ultra-Serv Tank Placards or Standard Tank Placards.">
+                        <apex:outputlabel value="Capacity (Gallons)" />
+                        <apex:inputfield styleClass="fld1" value="{!LR.Capacity__c}" />
+                    </apex:pageblocksectionItem>
+                    <apex:pageblocksectionItem helptext="Only required for Ultra-Serv Tank Placards or Standard Tank Placards.">
+                        <apex:outputlabel value="Tank Model" />
+                        <apex:inputfield styleClass="fld1" value="{!LR.Model__c}" />
+                    </apex:pageblocksectionItem>
+                    <apex:pageblocksectionItem helptext="Only required for Ultra-Serv Tank Placards or Standard Tank Placards.">
+                        <apex:outputlabel value="Tank Number" />
+                        <apex:inputfield styleClass="fld1" value="{!LR.Asset_Number__c}" />
+                    </apex:pageblocksectionItem>
+                </apex:pageblocksection>
+
+                <!--Changed For : Ticket 711057 - SFDC Label Request Changes for the incident #711057 130 to 152-->
+                
+                <apex:pageblocksection columns="2" title="Product Information"
+                    collapsible="false">
+                      <apex:pageblocksectionItem >
+                     <apex:outputText style="color:red;text-align:right !important;"></apex:outputText>
+
+                     </apex:pageblocksectionItem> 
+                     <apex:pageblocksectionItem />
+                     
+                    <apex:pageblocksectionItem >
+                        <apex:outputlabel value="Solenis Label Cover" />
+                        <apex:inputfield styleClass="fld1" value="{!LR.Solenis_Label_Cover__c}" />
+                    </apex:pageblocksectionItem>
+                    <apex:pageblocksectionItem >
+                        <apex:outputlabel value="Hot Line Sticker" />
+                        <apex:inputfield styleClass="fld1" value="{!LR.Hot_Line_Sticker__c}" />
+                    </apex:pageblocksectionItem>
+
+                    <apex:pageblocksectionItem >
+                        <apex:outputlabel value="Solenis Label Cover" />
+                        <apex:outputlink value="{!pic9big}" target="_blank">
+                            <apex:image url="{!pic9small}" />
+                        </apex:outputlink>
+                    </apex:pageblocksectionItem>
+                    <apex:pageblocksectionItem >
+                        <apex:outputlabel value="Hot Line Sticker" />
+                        <apex:outputlink value="{!pic10big}" target="_blank">
+                            <apex:image url="{!pic10small}" />
+                        </apex:outputlink>
+                    </apex:pageblocksectionItem>
+                    
+                  <!--  <apex:pageblocksectionItem >
+                        <apex:outputlabel value="Stick On Packaged Goods Label" />
+                        <apex:inputfield styleClass="fld1" value="{!LR.Stick_on_Packaged_Goods_Label__c}" />
+                    </apex:pageblocksectionItem>-->
+                    <apex:pageblocksectionItem >
+                        <apex:outputlabel value="Laminated Label Quantity" />
+                        <apex:inputfield styleClass="fld1" value="{!LR.Laminated_Lable__c}" />
+                    </apex:pageblocksectionItem>
+
+                 <apex:pageblocksectionItem >
+                        <!-- <apex:outputlabel value="Stick On Packaged Goods" />
+                        <apex:outputlink value="{!pic17big}" target="_blank">
+                            <apex:image url="{!pic17small}" />
+                        </apex:outputlink>-->
+                    </apex:pageblocksectionItem>
+                    <apex:pageblocksectionItem >
+                        <apex:outputlabel value="Laminated Label" />
+                        <apex:outputlink value="{!pic18big}" target="_blank">
+                            <apex:image url="{!pic18small}" />
+                        </apex:outputlink>
+                    </apex:pageblocksectionItem>
+                </apex:pageblocksection>
+
+            </apex:pageblock>
+            <apex:pageblock >
+                <apex:pageblocksection columns="2" collapsible="false">
+                    <apex:pageblocksectionItem >
+                        <apex:outputlabel value="Stick On Tank Label Quantity" />
+                        <apex:inputfield styleClass="fld1" value="{!LR.Stick_On_Label_Quantity__c}" />
+                    </apex:pageblocksectionItem>
+                    <apex:pageblocksectionItem >
+                        <apex:outputlabel value="Fill Line Sign" />
+                        <apex:inputfield styleClass="fld1" value="{!LR.Fill_Line_Sign_Quantity__c}" />
+                    </apex:pageblocksectionItem>
+
+                    <apex:pageblocksectionItem >
+                        <apex:outputlabel value="Stick On Tank Label" />
+                        <apex:outputlink value="{!pic19big}" target="_blank">
+                            <apex:image url="{!pic19small}" />
+                        </apex:outputlink>
+                    </apex:pageblocksectionItem>
+                    <apex:pageblocksectionItem >
+                        <apex:outputlabel value="Fill Line Sign" />
+                        <apex:outputlink value="{!pic5big}" target="_blank">
+                            <apex:image url="{!pic5small}" />
+                        </apex:outputlink>
+                    </apex:pageblocksectionItem>
+
+                </apex:pageblocksection>
+            </apex:pageblock>
+            <apex:pageblock >
+                <apex:pageblocksection columns="2" collapsible="false">
+
+                    <apex:pageblocksectionItem >
+                        <apex:outputlabel value="Line Tag Quantity" />
+                        <apex:inputfield styleClass="fld1" value="{!LR.Line_Tag__c}" />
+                    </apex:pageblocksectionItem>
+                    
+                    <apex:pageblocksectionItem >
+                        <apex:outputlabel value="Heavy Duty Line Tag Quantity" />
+                        <apex:inputfield styleClass="fld1" value="{!LR.GHS_Cover_label__c}" />
+                    </apex:pageblocksectionItem>
+                    
+
+
+                    <apex:pageblocksectionItem >
+                        <apex:outputlabel value="Line Tag" />
+                        <apex:outputlink value="{!pic16big}" target="_blank">
+                            <apex:image url="{!pic16small}" />
+                        </apex:outputlink>
+                    </apex:pageblocksectionItem>
+                    
+                    <apex:pageblocksectionItem >
+                        <apex:outputlabel value="Heavy Duty Line Tag" />
+                        <apex:outputlink value="{!pic16big}" target="_blank">
+                            <apex:image url="{!pic16small}" />
+                        </apex:outputlink>
+                    </apex:pageblocksectionItem>
+                    
+                </apex:pageblocksection>
+            </apex:pageblock>
+            
+            <apex:pageblock >
+                <apex:pageblocksection columns="2" collapsible="false">
+                    <apex:pageblocksectionItem >
+                        <apex:outputlabel value="Indoor Tank Placard Quantity" />
+                        <apex:inputfield styleClass="fld1" value="{!LR.Tank_Placard_Quantity__c}" />
+                    </apex:pageblocksectionItem>
+                    
+                    <apex:pageblocksectionItem >
+                        <apex:outputlabel value="Outdoor Tank Placard Quantity" />
+                        <apex:inputfield styleClass="fld1" value="{!LR.Outdoor_Tank_Placard__c}" />
+                    </apex:pageblocksectionItem>
+                    
+                    <apex:pageblocksectionItem >
+                        <apex:outputlabel value="Indoor Tank Placard" />
+                        <apex:outputlink value="{!pic20big}" target="_blank">
+                            <apex:image url="{!pic20small}" />
+                        </apex:outputlink>
+                    </apex:pageblocksectionItem>
+                    
+                    <apex:pageblocksectionItem >
+                        <apex:outputlabel value="Outdoor Tank Placard" />
+                        <apex:outputlink value="{!pic20big}" target="_blank">
+                            <apex:image url="{!pic20small}" />
+                        </apex:outputlink>
+                    </apex:pageblocksectionItem>
+             
+                </apex:pageblocksection>
+                
+                 <apex:PageBlock >
+                <apex:pageblocksection columns="1" collapsible="false">
+                
+                <apex:pageblocksectionItem >
+                        <apex:outputlabel value="Ultra-Serv Inv Mgmt Sign w/Label Qty" />
+                        <apex:inputfield styleClass="fld1" value="{!LR.Ultra_Serv_Inv_Mgmt_Sign_w_Label_Qty__c}" />
+                    </apex:pageblocksectionItem>
+                    
+                    <apex:pageblocksectionItem >
+                        <apex:outputlabel value="Ultra-Serv Inv Mgmt Sign w/Label" />
+                        <apex:outputlink value="{!pic15big}" target="_blank">
+                            <apex:image url="{!pic15small}" />
+                        </apex:outputlink>
+                    </apex:pageblocksectionItem>
+                
+                  <!--   <apex:pageblocksectionItem >
+                        <apex:outputlabel value="GHS Cover Labels Quantity" />
+                        <apex:inputfield styleClass="fld1" value="{!LR.GHS_Cover_label__c}" />
+                    </apex:pageblocksectionItem>  
+                    
+                    <apex:pageblocksectionItem >
+                        <apex:outputlabel value="GHS Cover Labels"  />
+                        <apex:outputlink value="{!pic13big}" target="_blank">
+                            <apex:image url="{!pic13small}" />
+                        </apex:outputlink>
+                    </apex:pageblocksectionItem>-->
+                    
+                 </apex:pageblocksection>
+                  </apex:PageBlock>                  
+                      
+                <apex:pageblocksection title="Comments" columns="1">
+                    <apex:pageblocksectionItem >
+                        <apex:outputlabel value="Label Request Comments" />
+                        <apex:inputtextarea value="{!LR.Label_Request_Comments__c}"
+                            cols="80" rows="10" />
+                    </apex:pageblocksectionItem>
+                </apex:pageblocksection>
+
+                <apex:pageblocksection title="System Information">
+                    <apex:pageblocksectionItem >
+                        <apex:outputlabel value="Record Type" />
+                        <apex:outputlabel value="{!LR.recordtype.name}" />
+                    </apex:pageblocksectionItem>
+
+                </apex:pageblocksection>
+                
+                <apex:pageblockbuttons location="bottom">
+                    <apex:commandbutton value="Save and Submit"
+                        action="{!createreqsubmit}" />
+                    <apex:commandbutton value="Save Only" action="{!createreq}" />
+                    <apex:commandbutton value="Cancel" action="{!cancel}" />
+                </apex:pageblockbuttons>
+
+            </apex:pageblock>
+            
+        </apex:outputpanel>
+
+        <apex:outputPanel id="Contact">
+            <apex:outputPanel layout="block" rendered="{!displaycontactpopup}">
+                <apex:pageblock >
+                    <apex:pageblockbuttons >
+                        <apex:commandButton value="OK" action="{!createcontact}" />
+                        <apex:commandButton value="Cancel" action="{!hideContactPopup}"
+                            immediate="true" />
+                    </apex:pageblockbuttons>
+                    <apex:pageblocksection title="Create Contact">
+                        <apex:pageblocksectionitem >
+                            <apex:outputlabel value="First Name" />
+                            <apex:outputPanel styleClass="nowrap fld1">
+                            <apex:inputfield value="{!Contact.Salutation}"/>&nbsp;
+                            <apex:inputfield value="{!Contact.FirstName}" />
+                            </apex:outputPanel>
+                        </apex:pageblocksectionitem>
+                        <apex:pageblocksectionitem >
+                            <apex:outputlabel value="Last Name" />
+                            <apex:inputfield styleClass="fld1" value="{!Contact.LastName}" />
+                        </apex:pageblocksectionitem>
+                        <apex:pageblocksectionitem >
+                            <apex:outputlabel value="Phone" />
+                            <apex:inputfield styleClass="fld1" value="{!Contact.Phone}" />
+                        </apex:pageblocksectionitem>
+                        <apex:pageblocksectionitem >
+                            <apex:outputlabel value="Account" />
+                            <apex:outputfield value="{!LR.Customer_Prospect__c}" />
+                        </apex:pageblocksectionitem>
+                    </apex:pageblocksection>
+
+
+                </apex:pageblock>
+            </apex:outputPanel>
+        </apex:outputPanel>
+
+    </apex:form>
+    
+    <style>
+        .reqd {border: 3px solid red;}
+        .address {height: 60px; width: 200px; resize: none; overflow: auto;}
+        .fld1 {width: 200px;}
+        .nowrap {white-space: nowrap;}
+    </style>
+</apex:page>

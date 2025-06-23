@@ -1,0 +1,232 @@
+<apex:page standardController="Internal_Complaint__c" >
+    <apex:stylesheet value="{!$Resource.MessageBoxCSS}"/>
+    <style>
+    td.label {
+    width:26%;
+    text-align:right;
+    font-weight:bold;
+    }
+    td.reso {
+    border:3px solid red;
+    height:40px;
+    }
+
+    </style>
+
+
+
+    <apex:sectionHeader title="Internal Suggestions"/>
+    <apex:form >
+
+        <apex:pageBlock mode="edit" title="Internal Suggestion Edit">
+            <apex:pageBlockButtons >
+                <apex:image value="/img/lock_small.gif" alt="Lock" width="16" height="16" title="Lock"
+                rendered="{!OR(Internal_Complaint__c.Status__c = 'Final Review', Internal_Complaint__c.Status__c='Closed - Resolved')}">
+                This record is locked for editing.</apex:image>
+                <apex:commandButton value="Save" action="{!save}" />
+                <apex:commandButton value="Cancel" action="{!cancel}"/>
+
+
+            </apex:pageBlockButtons>
+
+        <apex:pageBlockSection >
+
+            <body>
+                <div class="roundbox boxshadow" style="width: 200%; border: solid 2px steelblue" >
+                <div class="boxcontenttext">
+                <p>Please note - This internal suggestion system has been designed to alert management to concerns or issues that are
+                impeding the growth of our business. DO NOT enter customer complaints in this form.
+
+        <br></br><br></br>Customer complaints requiring a formal response need to be entered into the SIRS Complaints System (requires a sales order),
+         OTC can enter or you can enter it by clicking here:<a class="link" href="Notes://LPAPP61/8525751300523654/" target="_blank">Solenis Incident
+         Reporting System</a>&nbsp;</p>
+                <br></br>
+                </div>
+                </div>
+            </body>
+
+        </apex:pageBlockSection>
+
+        <apex:pageBlockSection columns="1" title="Submitter Information" >
+
+            <apex:panelGrid columns="4" width="75%" border="0" id="topTable" columnClasses="fieldsCol, data" styleClass="topTable"
+                            cellpadding="4" rendered="{!AND(Internal_Complaint__c.Submitter_Check__c=='Yes')}">
+
+                <apex:outputText value="Business Unit"/>
+                <apex:inputField required="true" value="{!Internal_Complaint__c.Business_Unit__c}"/>
+
+                <apex:outputText value="Originated by"/>
+                <table width="100%"><tr align="left"><td>{!Internal_Complaint__c.CreatedBy.FirstName} {!Internal_Complaint__c.CreatedBy.LastName}</td></tr></table>
+
+                <apex:outputText value="Region"/>
+                <apex:inputField required="true" value="{!Internal_Complaint__c.Region__c}"/>
+
+                <apex:outputText value="Email"/>
+                <table width="100%"><tr align="left"><td>{!Internal_Complaint__c.CreatedBy.Email}</td></tr></table>
+
+                <apex:outputText value="Topic"/>
+                <apex:inputField required="true" value="{!Internal_Complaint__c.Topic__c}"/>
+
+                <apex:outputText value="Phone"/>
+                <table width="100%"><tr align="left"><td>{!Internal_Complaint__c.CreatedBy.Phone} &nbsp;&nbsp;&nbsp; <!-- <a href="https://{!$Label.SFDC_URL}/apex/UpdatePhone" style="color:red; font-weight:bold;">edit</a> --> </td></tr></table>
+
+                <apex:outputText value="Concern/Issue"/>
+                <apex:inputField required="true" value="{!Internal_Complaint__c.Concern_Issue__c}"/>
+
+                <apex:outputText value="Mobile"/>
+                <apex:inputField value="{!Internal_Complaint__c.Mobile__c}" />
+            </apex:panelGrid>
+
+            <apex:panelGrid columns="4" width="75%" border="0" id="topTableRes" columnClasses="fieldsCol, data" styleClass="topTable"
+                            cellpadding="4" rendered="{!AND(Internal_Complaint__c.Submitter_Check__c=='No')}">
+
+                 <apex:outputText value="Business Unit"/>
+                <table width="100%"><tr align="left"><td>{!Internal_Complaint__c.Business_Unit__c}</td></tr></table>
+
+                <apex:outputText value="Originated by"/>
+                <table width="100%"><tr align="left"><td>{!Internal_Complaint__c.CreatedBy.FirstName} {!Internal_Complaint__c.CreatedBy.LastName}</td></tr></table>
+
+                <apex:outputText value="Region"/>
+                <table width="100%"><tr align="left"><td>{!Internal_Complaint__c.Region__c}</td></tr></table>
+
+                <apex:outputText value="Email"/>
+                <table width="100%"><tr align="left"><td>{!Internal_Complaint__c.CreatedBy.Email}</td></tr></table>
+
+                <apex:outputText value="Topic"/>
+                <table width="100%"><tr align="left"><td>{!Internal_Complaint__c.Topic__c}</td></tr></table>
+
+                <apex:outputText value="Phone"/>
+                <table width="100%"><tr align="left"><td>{!Internal_Complaint__c.CreatedBy.Phone} &nbsp;&nbsp;&nbsp; <!-- <a href="https://{!$Label.SFDC_URL}/apex/UpdatePhone" style="color:red; font-weight:bold;">edit</a> --> </td></tr></table>
+
+                <apex:outputText value="Concern/Issue"/>
+                <apex:outputText value="{!Internal_Complaint__c.Concern_Issue__c}"/>
+
+                <apex:outputText value="Mobile"/>
+                <apex:outputText value="{!Internal_Complaint__c.Mobile__c}" />
+
+            </apex:panelGrid>
+           </apex:pageBlockSection>
+           <apex:pageBlockSection title="Suggestion Information" columns="1">
+           <apex:panelGrid columns="2" width="75%" border="0" id="topTable" columnClasses="fieldsCol, data" styleClass="topTable"
+                            cellpadding="4" rendered="{!AND(Internal_Complaint__c.Submitter_Check__c=='Yes')}">
+
+               <apex:outputText value="Issue"/>
+               <apex:inputField required="true" value="{!Internal_Complaint__c.Issue__c}" style="width:100%"/>
+
+               <apex:outputText value="Detail"/>
+               <apex:inputField required="true" value="{!Internal_Complaint__c.Description__c}" style="width: 100%; height: 40px"/>
+
+               <apex:outputText value="Expected Resolution" />
+               <apex:inputField required="true" value="{!Internal_Complaint__c.Suggested_Resolution__c}" style="width: 100%; height: 90px"/>
+           </apex:panelGrid>
+
+           <apex:panelGrid columns="2" width="75%" border="0" id="topTableRes" columnClasses="fieldsCol, data" styleClass="topTable"
+                            cellpadding="4" rendered="{!AND(Internal_Complaint__c.Submitter_Check__c=='No')}">
+
+               <apex:outputText value="Issue"/>
+               <apex:outputField value="{!Internal_Complaint__c.Issue__c}" style="width:100%"/>
+
+               <apex:outputText value="Detail"/>
+               <apex:outputField value="{!Internal_Complaint__c.Description__c}" style="width: 100%; height: 40px"/>
+
+               <apex:outputText value="Expected Resolution" />
+               <apex:outputField value="{!Internal_Complaint__c.Suggested_Resolution__c}" style="width: 100%; height: 90px"/>
+           </apex:panelGrid>
+
+           </apex:pageBlockSection>
+           <apex:pageBlockSection title="Resolver Information" columns="1">
+           <apex:panelGrid columns="4" width="75%" border="0" id="topTable" columnClasses="fieldsCol, data" styleClass="topTable"
+                            cellpadding="4">
+
+                <apex:outputText value="Internal Suggestion Name"/>
+                <apex:outputText value="{!Internal_Complaint__c.Name}"/>
+
+                <apex:outputText value="Suggestion Owner"/>
+                <apex:outputText value="{!Internal_Complaint__c.Owner.Name}"/>
+
+
+                <apex:outputText value="Status"/>
+                <apex:outputField value="{!Internal_Complaint__c.Status__c}"/>
+
+                <apex:outputText value="Escalation Manager"/>
+                <apex:outputText value="{!Internal_Complaint__c.Escalation_Manager__r.Name}"/>
+
+           </apex:panelGrid>
+           </apex:pageBlockSection>
+
+           <apex:outputPanel id="resolver" rendered="{!AND(Internal_Complaint__c.Resolver_Check__c=='Yes')}">
+
+           <span id="resolver">
+
+           <table  width="75%" >
+           <tr>
+           <td class="label">
+
+               <apex:outputText value="Resolution" style="font-weight:bold"/></td>
+
+           <td class="reso"><apex:inputField value="{!Internal_Complaint__c.Resolution__c}" style="width: 99%; height: 160px"/></td>
+           </tr>
+           <tr>
+           <td>
+           </td>
+           <td>
+          Before submitting for approval, enter your resolution here and click 'Save'.
+           </td>
+           </tr>
+           </table>
+           </span>
+
+           </apex:outputPanel>
+
+           <apex:outputPanel id="submitter" rendered="{!AND(Internal_Complaint__c.Resolver_Check__c=='No')}">
+           <span id="submitter">
+
+           <table  width="75%" >
+           <tr>
+           <td class="label">
+
+               <apex:outputText value="Resolution" style="font-weight:bold"/></td>
+
+           <td class="reso"><apex:outputField value="{!Internal_Complaint__c.Resolution__c}"/></td>
+           </tr>
+           <tr>
+           <td>
+           </td>
+           <td>
+           Resolution suggested by <b>{!Internal_Complaint__c.Owner.FirstName} {!Internal_Complaint__c.Owner.LastName}</b>.  Please 'Approve' or 'Reject' and enter your comments in the Approval History section below.
+           </td>
+           </tr>
+           </table>
+           </span>
+           </apex:outputPanel>
+
+
+         <apex:pageBlockSection title="System Information" columns="1" rendered="{!AND(Internal_Complaint__c.Resolver_Check__c=='Yes')}">
+           <!--  <apex:pageBlockSection title="System Information" columns="1" rendered="{!$User.Id}={!Internal_Complaint__c.Owner.Id}"> -->
+           <apex:panelGrid columns="4" width="75%" border="0" id="topTable" columnClasses="fieldsCol, data" styleClass="topTable"
+                            cellpadding="4">
+
+
+                    <apex:outputText value="Days Open"/>
+                    <apex:outputField value="{!Internal_Complaint__c.Days_Open__c}"/>
+
+                    <apex:outputText value="Days Under Review"/>
+                    <apex:outputText value="{!Internal_Complaint__c.Days_in_Under_Review__c}"/>
+
+                    <apex:outputText Value="Resolver?"/>
+                    <apex:outputText Value="{!Internal_Complaint__c.Resolver_Check__c}"/>
+
+                    <apex:outputText value="Created Date"/>
+                    <apex:outputText value=" {0,date,MM/dd/yy }">
+                        <apex:param value="{!Internal_Complaint__c.CreatedDate}"/>
+                    </apex:outputText>
+
+           </apex:panelGrid>
+           </apex:pageBlockSection>
+
+       </apex:pageBlock>
+
+    </apex:form>
+
+
+</apex:page>

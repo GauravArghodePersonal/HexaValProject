@@ -1,0 +1,9 @@
+<apex:page id="Market_Price_Book_Page" 
+           sidebar="false"
+           title="Market Price Book Search Tool">
+
+  <apex:form >
+       <c:App_MarketPriceBookSearchTool_WebApp cancelURL="/" returnURL="/" viewURL="/apex/App_MarketPriceBookViewer_WebApp_View?id={*ID*}" editURL="/apex/App_MarketPriceBookWizard_WebApp_Edit?id={*ID*}&retURL=%2Fapex%2FApp_MarketPriceBookViewer_WebApp_View%3Fid%3D{*ID*}" />
+  </apex:form>
+ 
+</apex:page>

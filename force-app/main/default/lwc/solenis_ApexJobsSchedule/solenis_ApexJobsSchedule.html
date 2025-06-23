@@ -1,0 +1,138 @@
+<template>
+    <template if:true={data}>
+        <lightning-card>
+           <p><b>Apex Scheduled Jobs</b></p>
+        <table id="scheduledtblId" class="scheduledtblcls">
+           <tr>
+              <th >
+                <lightning-input type="checkbox" value={data.allSelected1}  onclick={handleAllCheckTbl1}></lightning-input>
+              </th>
+              <th>
+                 #
+              </th>
+              <th class="scheduledJobsButton">
+                 <div class="slds-m-top_small slds-m-bottom_medium">
+                    <!-- Brand outline variant: Identifies the primary action in a group of buttons, but has a lighter look -->
+                    <lightning-button variant="brand" label="Delete Selected Scheduled Jobs"
+                     title="Delete Selected Scheduled Jobs" onclick={onDeleteScheduleJobs} class="slds-m-left_x-small"></lightning-button>
+                 </div>
+              </th>
+              <th>
+                 Hour
+              </th>
+              <th>
+                 Minute
+              </th>
+              <th>
+                 Scheduled?
+              </th>
+              <th>
+                 <a href="#" onclick={onSOrt}>Next Run Time</a>
+                 <!--template if:true={data.renderNRTSortImage}>
+                    <img src={data.sortImage} height="5px"/>
+                 </template-->
+              </th>
+           </tr>
+     
+           <template for:each={alist} for:item="al">
+              <tr key={al.ajs.Id}>
+                <td>
+                      <lightning-input type="checkbox" data-key={al.recNum} value={al.selected} class="m-chk-tbl-1" ></lightning-input>
+                </td>
+                <td>
+                   {al.recNum}
+                </td>
+                <td class="scheduledJobs">
+                   {al.ajs.Job_Name__c}
+                </td>
+                <td>
+                   {al.ajs.Hours__c}
+                </td>
+                <td>
+                   {al.ajs.Minutes__c}
+                </td>
+                <td>
+                   <lightning-input type="checkbox" value={al.ajs.Scheduled__c} checked={al.ajs.Scheduled__c}  disabled></lightning-input>
+                </td>
+                <td>
+                  {al.ct1}
+                </td>
+           </tr>
+           </template>
+           
+           <tr>
+                 <td class="tdBlank" colspan="7">
+                     
+                 </td>
+           </tr>
+           <tr>
+              <td>
+                 <template if:true={data.renderlist2}>
+                   <lightning-input type="checkbox" value={data.allSelected2}  onclick={handleAllCheckTbl2}></lightning-input>
+                </template>
+              </td>
+              <td>
+     
+              </td>
+              <td class="scheduledJobsButton">
+                 <div class="slds-m-top_small slds-m-bottom_medium">
+                    <!-- Brand outline variant: Identifies the primary action in a group of buttons, but has a lighter look -->
+                    <template if:true={data.renderlist2}>
+                      <lightning-button variant="brand" onclick={onStartSchedulableJobs} label="Start Selected Schedulable Jobs" 
+                      title="Start Selected Schedulable Jobs" class="slds-m-left_x-small"></lightning-button>
+                   </template>
+                 </div>
+              </td>
+              <td>
+                 
+              </td>
+              <td>
+                 
+              </td>
+              <td>
+                 
+              </td>
+              <td>
+                 
+              </td>
+           </tr>
+           <template if:true={blist}>
+             <template for:each={blist} for:item="bl">
+                <tr key={bl.ajs.Id}>
+                <td>
+                   <lightning-input data-key={bl.recNum} type="checkbox" 
+                               value={bl.selected}  class="m-chk-tbl-2"></lightning-input>
+                </td>
+                <td>
+                   {bl.recNum}
+                </td>
+                <td class="scheduledJobs">
+                   {bl.ajs.Job_Name__c}
+                </td>
+                <td>
+                   {bl.ajs.Hours__c}
+                </td>
+                <td>
+                   {bl.ajs.Minutes__c}
+                </td>
+                <td>
+                   <lightning-input type="checkbox" value={bl.Scheduled__c}  checked={bl.Scheduled__c} disabled></lightning-input>
+                </td>
+                <td>
+                   
+                </td>
+             </tr>
+             </template>
+         </template>
+        </table>
+       <template if:true={error}>
+          <div class="m-error">{error}</div>
+       </template>
+       <div if:true={spinnerActive}>
+          <div class="backgroundInverse">
+             <lightning-spinner alternative-text="Loading" variant="inverse"></lightning-spinner>
+          </div>
+       </div>
+        </lightning-card>
+     </template>
+    </template>

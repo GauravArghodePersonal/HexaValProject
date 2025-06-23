@@ -1,0 +1,91 @@
+<apex:page standardController="Pricing__c"
+                           id="thePage" 
+                   extensions="PricingController"
+                        title="Pricing: {!Pricing__c.Name}" lightningStylesheets="true">
+    <apex:form >
+    <apex:pageBlock >
+        <apex:pageBlockSection >
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Pricing #"/>
+                <apex:outputField value="{!pricing.Name}"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$ObjectType.Pricing__c.fields.Contract_Name__c.label}"/>
+                <apex:outputField value="{!pricing.Contract_Name__c}"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$ObjectType.Pricing__c.fields.Status__c.label}"/>
+                <apex:outputField value="{!pricing.Status__c}"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value=""/>
+                <apex:outputText value=""/>
+            </apex:pageBlockSectionItem>            
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$ObjectType.Pricing__c.fields.SAP_Contract_Number__c.label}"/>
+                <apex:inputField value="{!pricing.SAP_Contract_Number__c}"/>
+            </apex:pageBlockSectionItem>            
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$ObjectType.Pricing__c.fields.Change_Type__c.label}"/>
+                <apex:inputField value="{!pricing.Change_Type__c}"/>
+            </apex:pageBlockSectionItem> 
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$ObjectType.Pricing__c.fields.Customer_PO__c.label}"/>
+                <apex:inputField value="{!pricing.Customer_PO__c}"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$ObjectType.Pricing__c.fields.Customer_PO_End_Date__c.label}"/>
+                <apex:inputField value="{!pricing.Customer_PO_End_Date__c}"/>
+            </apex:pageBlockSectionItem>                                     
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$ObjectType.Pricing__c.fields.Valid_From_Date__c.label}"/>
+                <apex:inputField value="{!pricing.Valid_From_Date__c}"/>
+            </apex:pageBlockSectionItem>  
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$ObjectType.Pricing__c.fields.Valid_To_Date__c.label}"/>
+                <apex:inputField value="{!pricing.Valid_To_Date__c}"/>
+            </apex:pageBlockSectionItem>                                             
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$ObjectType.Pricing__c.fields.Billing_Frequency__c.label}"/>
+                <apex:inputField value="{!pricing.Billing_Frequency__c}"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$ObjectType.Pricing__c.fields.Billing_Timing__c.label}"/>
+                <apex:inputField value="{!pricing.Billing_Timing__c}"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$ObjectType.Pricing__c.fields.Price_Opener__c.label}"/>
+                <apex:inputField value="{!pricing.Price_Opener__c}"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$ObjectType.Pricing__c.fields.Payment_Terms__c.label}"/>
+                <apex:inputField value="{!pricing.Payment_Terms__c}"/>
+            </apex:pageBlockSectionItem>  
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value=""/>
+                <apex:outputText value=""/>
+            </apex:pageBlockSectionItem>     
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$ObjectType.Pricing__c.fields.In_Advance__c.label}"/>
+                <apex:inputField value="{!pricing.In_Advance__c}"/>
+            </apex:pageBlockSectionItem>                       
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$ObjectType.Pricing__c.fields.Old_Price_Revenue__c.label}"/>
+                <apex:inputField value="{!pricing.Old_Price_Revenue__c}"/>
+            </apex:pageBlockSectionItem>     
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$ObjectType.Pricing__c.fields.New_Price_Revenue__c.label}"/>
+                <apex:inputField value="{!pricing.New_Price_Revenue__c}"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$ObjectType.Pricing__c.fields.Rejection_Comments__c.label}"/>
+                <apex:inputField value="{!pricing.Rejection_Comments__c}"/>
+            </apex:pageBlockSectionItem>                     
+        </apex:pageBlockSection>
+        <apex:pageBlockButtons location="bottom">
+            <apex:commandButton action="{!updatePricing}" value="Save Changes"/>
+            <apex:commandButton action="{!gotoPricingPage}" value="Cancel"/>
+        </apex:pageBlockButtons>
+    </apex:pageBlock>
+    </apex:form>
+</apex:page>

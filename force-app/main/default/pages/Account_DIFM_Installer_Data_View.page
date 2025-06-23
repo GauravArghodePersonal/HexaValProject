@@ -1,0 +1,172 @@
+<apex:page standardController="Account" extensions="Account_DIFM_Installer_Data_Extension">
+<style> body { background: #f2f2f2; } </style>
+ 
+<script language="javascript">
+    function resizeIframe() {
+        var thisWindow = window.name;
+        if(thisWindow)
+            {        
+            var iframes = parent.document.getElementsByName(thisWindow);
+/*          if (iframes && iframes.length == 1)  */
+            if (iframes) 
+                {            
+                var height = document.body.scrollHeight;
+                height += 50;
+                iframes[0].style.height = height + "px";
+                }   
+            }
+        }
+        
+        
+</script>
+
+
+    <apex:stylesheet value="{!$Resource.tableFormatting}"/>
+
+    <apex:outputText value="{!Account.id}" rendered="false"/>
+
+        <apex:form >
+            <apex:inputHidden value="{!EditURL}" id="EditURL">                          
+                <script language="javascript">
+                function openEditWindow() {
+                    window.parent.location.href = document.getElementById('{!$Component.EditURL}').value;
+                }
+                </script>
+            </apex:inputHidden>
+
+        <apex:outputPanel id="NoDIFMExists_Panel" rendered="{!DIFM_Installer_Data_Does_Not_Exist}">
+                <apex:panelGrid columns="1" width="100%" styleClass="TableStyleClass" captionClass="TableCaptionClass" headerClass="TableHeaderClass" rowClasses="TableRowClasses_odd,TableRowClasses_even" columnClasses="GeneralInfo_Label_DataFormat">
+                    <apex:outputText value="There is currently no DIFM Installer Data associated with this Account.  Click the button below to start creating Installer Data."/>
+                    <apex:commandButton action="{!createDIFM_Installer_Data}" 
+                                        value="Create DIFM Installer Data" 
+                                        styleClass="btn" 
+                                        reRender="NoDIFMExists_Panel,DIFMInformation_Panel"
+                                        oncomplete="window.parent.location.reload();"
+                                        />
+                </apex:panelGrid>
+        </apex:outputPanel>
+
+        <apex:outputPanel id="DIFMInformation_Panel" rendered="{!DIFM_Installer_Data_Exists}">
+                    <apex:panelGrid columns="4" id="GeneralInformationGrid" width="100%" styleClass="TableStyleClass" captionClass="TableCaptionClass" headerClass="TableHeaderClass" rowClasses="TableRowClasses_odd,TableRowClasses_even" columnClasses="GeneralInfo_Label_ColumnFormat,GeneralInfo_Label_DataFormat">
+                        <apex:facet name="caption">Installer Data</apex:facet>
+                    
+                        <apex:outputText value="Store Name:"/>
+                        <apex:outputField value="{!DIFM_Installer_Data.Account__c}"/>
+                        <apex:outputText value=""/>
+                        <apex:outputText value=""/>
+
+                        <apex:outputText value="Current Contact:"/>
+                        <apex:outputField value="{!DIFM_Installer_Data.Contact__c}"/>
+                        <apex:outputText value=""/>
+                        <apex:outputText value=""/>
+                    </apex:panelGrid>
+
+                <apex:tabPanel switchType="client" selectedTab="name2" id="theTabPanel">
+                    <apex:tab label="Service Provider Profiles" name="serviceProviderProfiles" id="serviceProviderProfiles">
+                          <apex:dataTable value="{!DIFM_Installer_Data.Service_Provider_Profile__r}" var="lines" id="serviceProviderProfilesGrid" border="1" width="100%" styleClass="TableStyleClass" captionClass="TableCaptionClass" headerClass="TableHeaderClass" rowClasses="TableRowClasses_odd,TableRowClasses_even" columnClasses="Quart_Cost_Label_Value_ColumnFormat">
+                            <!--  <apex:facet name="caption">Quart Costs</apex:facet> -->
+                            <apex:column style="width: 100px;">
+                                <apex:facet name="header">&nbsp;</apex:facet>
+                                <apex:outputLink value="/{!lines.Id}" target="_top" id="ViewLink"><b>View</b></apex:outputLink>&nbsp;
+                                <apex:outputLink value="/{!lines.Id}/e" target="_top" id="EditLink"><b>Edit</b></apex:outputLink>&nbsp;
+                                <apex:commandLink action="{!deleteSPP}" value="Del" style="font-weight:bold;" 
+                                                  rerender="NoDIFMExists_Panel,DIFMInformation_Panel,theTabPanel" 
+                                                  onclick="if (!confirm('Are you sure?')) { return false; }" 
+                                                  oncomplete="window.parent.location.reload();"> 
+                                    <apex:param name="idToDelete" value="{!lines.Id}"/>
+                                </apex:commandLink>
+                            </apex:column>
+                            <apex:column >
+                                <apex:facet name="header">Effective<BR>Date</apex:facet>
+                                <apex:outputField value="{!lines.Effective_Date__c}"/>  
+                            </apex:column>
+                            <apex:column >
+                                <apex:facet name="header">Expiry<BR>Date</apex:facet>
+                                <apex:outputField value="{!lines.Expiry_Date__c}"/>  
+                            </apex:column>
+                            <apex:column >
+                                <apex:facet name="header">Contact</apex:facet>
+                                <apex:outputField value="{!lines.Contact__c}"/>  
+                            </apex:column>
+                            <apex:column >
+                                <apex:facet name="header">Created<BR>Date</apex:facet>
+                                <apex:outputField value="{!lines.CreatedDate}"/>  
+                            </apex:column>
+                            <apex:column >
+                                <apex:facet name="header">Created<BR>By</apex:facet>
+                                <apex:outputField value="{!lines.CreatedById}"/>  
+                            </apex:column>
+                            <apex:column >
+                                <apex:facet name="header">Last<BR>Modified<BR>Date</apex:facet>
+                                <apex:outputField value="{!lines.LastModifiedDate}"/>  
+                            </apex:column>
+                            <apex:column >
+                                <apex:facet name="header">Last<BR>Modified<BR>By</apex:facet>
+                                <apex:outputField value="{!lines.LastModifiedById}"/>  
+                            </apex:column>
+                        </apex:dataTable>
+
+                        <p/>
+
+                        
+                        <apex:panelGrid columns="3" id="CreateaNewServiceProviderProfile" width="100%"  rendered="{!ShowServiceProviderProfile_Create_Section}" styleClass="TableStyleClass" captionClass="TableCaptionClass" headerClass="TableHeaderClass" footerClass="TableFooterClass_Gold" rowClasses="TableRowClasses_odd" columnClasses="CreateNewGrid_ColumnFormat">
+                            <apex:facet name="caption">Create a New Service Provider Profile</apex:facet>
+
+                            <apex:outputText value="Choose the time period the new Service Provider Profile is for."/>
+                            <apex:outputText value="Create the new Profile using Default Values, or choose a previous time period to carry over the values to the new Service Provider Profile."/>
+                            <apex:outputText value="Use the Default contact, which is selected, or choose a new contact.  The Current Contact on the DIFM Installer Data will also be changed."/>
+
+                             <apex:selectList value="{!Qtr_to_Add}" size="1" multiselect="false">
+                                 <apex:selectOptions value="{!QuarterList}"/>
+                                 <!-- 
+                                 <apex:selectOptions value="{!CurrentandNextQuarters}"/>
+                                  -->
+                             </apex:selectList>
+                             <apex:selectList value="{!SPP_How_to_Create}" size="1" multiselect="false">
+                                 <apex:selectOptions value="{!CreateNewServiceProviderProfile_HowtoCreateList}"/>
+                             </apex:selectList>
+                             <apex:selectList value="{!SelectedContactId_for_New_SPP}" size="1" multiselect="false">
+                                 <apex:selectOptions value="{!ContactSelectOptions}"/>
+                             </apex:selectList>
+
+                            <apex:outputText escape="false" value="&nbsp"/>
+                            <apex:outputText escape="false" value="&nbsp"/>
+                            <apex:outputText escape="false" value="&nbsp"/>
+
+
+                            <apex:facet name="footer">
+                            <apex:commandButton action="{!createServiceProviderProfile}" 
+                                    value="Create New Service Provider Profile" 
+                                    styleClass="btn" 
+                                    reRender="EditURL"
+                                    oncomplete="openEditWindow()"/>
+                            </apex:facet>
+                            
+                        </apex:panelGrid>
+                                
+
+                        <apex:panelGrid columns="1" id="UnabletoCreateaNewProfile" width="100%"  rendered="{!if(ShowServiceProviderProfile_Create_Section=='True','False','True')}" styleClass="TableStyleClass" captionClass="TableCaptionClass" headerClass="TableHeaderClass" rowClasses="TableRowClasses_odd" columnClasses="CreateNewGrid_ColumnFormat">
+                            <apex:facet name="caption">Create a New Service Provider Profile</apex:facet>
+                                <apex:outputText value="Service Provider Profiles already exist for all available Quarters.  When the next quarter begins, a new Service Provider Profile can be generated for this store."/>
+                                <!-- <apex:outputText value="Service Provider Profiles already exist for the current quarter and next quarter.  When the next quarter begins, a new Service Provider Profile can be generated for this store."/>  -->
+                        </apex:panelGrid>                                   
+
+                    </apex:tab>
+                    <!-- 
+                    <apex:tab label="Trend Analysis" name="TrendAnalysis" id="TrendAnalysis"></apex:tab>
+                    <apex:tab label="Compare Quarters" name="compareQuarters" id="compareQuarters"></apex:tab>
+                     -->
+                    
+                </apex:tabPanel>
+        </apex:outputPanel>
+
+
+
+        </apex:form>
+
+<script language="javascript">
+    resizeIframe();
+</script>
+
+        
+ </apex:page>

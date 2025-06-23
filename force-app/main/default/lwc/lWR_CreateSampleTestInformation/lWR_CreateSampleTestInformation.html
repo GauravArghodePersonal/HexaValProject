@@ -1,0 +1,785 @@
+<template>
+    <lightning-quick-action-panel header="Create Sample Test Information" class="sit-quickaction-create">
+        <template if:true={displayLightningSpinner}>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </template>
+            <template if:true={displayRecordTypeSelection}>
+                <template if:true={recordTypes.length}> <!--added--> 
+                <lightning-radio-group name="radioGroup" label="Select Sample Test Information (Online Form)" options={recordTypes} onchange={handleRecordTypeChange} type="radio">
+                </lightning-radio-group>
+            </template>
+            <template if:false={recordTypes.length}> <!--added--> 
+                <lightning-radio-group name="radioGroup" label=" " options={recordTypes} onchange={handleRecordTypeChange} type="radio">
+                </lightning-radio-group>
+            </template>
+     <!--added--> <lightning-radio-group name="downloadLink" label="Select Sample Test Information excel to download" options={radioUrlOptions} value={selectedUrl} onchange={handleOptionChangeUrl}>
+         </lightning-radio-group>
+            </template>
+
+        <!-- EMEA PAL Request Form -->
+        <template if:true={displayEMEAPalRequestForm}>
+            <c-lwr-emea-pal-request-form lwr-id={recordId} record-type-id={recordTypeId}></c-lwr-emea-pal-request-form>
+        </template>
+        <!-- EMEA Water Application Lab (WAL) request form -->
+        <template if:true={displayEMEAWalRequestForm}>
+            <lightning-flow flow-api-name="LWR_WAL_Request_Form" flow-input-variables={inputVariables}
+                onstatuschange={handleStatusChange}>
+            </lightning-flow>
+        </template>
+        <!-- NA Paper Application Bench Size Press -->
+        <template if:true={displayAppBenchSizePressForm}>
+            <lightning-card class="slds-scrollable">
+                <h3 slot="title"></h3>
+                <lightning-layout horizontal-align="spread" vertical-align="start" class="slds-border_bottom">
+                    <lightning-layout-item size="6" large-device-size="2" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">Sample Id</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="2" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">List of Product</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="1" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">Dosage</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="2" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">Type of Paper</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="2" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">List of Test Requested</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="2" padding="around-small">
+                        <span class="slds-text-heading_small">Notes</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="1" padding="around-small"> </lightning-layout-item>
+                </lightning-layout>
+                <template for:each={itemList} for:item="item" for:index="index">
+                    <lightning-record-edit-form key={item.id} object-api-name="Sample_Test_Information__c">
+                        <lightning-messages> </lightning-messages><!-- removed line gap-->
+                        <lightning-layout horizontal-align="spread" vertical-align="start" class="slds-border_bottom">
+                            <lightning-layout-item size="4" large-device-size="2" padding="around-small">
+                                <lightning-input-field field-name="Sample_Id__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="2" padding="around-small">
+                                <lightning-input-field field-name="List_of_Product__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="1" padding="around-small">
+                                <lightning-input-field field-name="Dosage__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="2" padding="around-small">
+                                <lightning-input-field field-name="Type_of_Paper__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="2" padding="around-small">
+                                <lightning-input-field field-name="List_of_Test_Requested__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="2" padding="around-small">
+                                <lightning-input-field field-name="Notes__c" variant="label-hidden"></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="1" padding="around-small">
+                                <lightning-layout multiple-rows horizontal-align="spread" vertical-align="start">
+                                    <lightning-layout-item size="6" large-device-size="5">
+                                        <lightning-button-icon icon-name="utility:add" variant="bare" alternative-text="Add" data-id={item.id} onclick={addRow}></lightning-button-icon>
+                                        <span if:true={item.deleteOption}>
+                                            <lightning-button-icon icon-name="utility:delete" variant="bare" alternative-text="Delete" data-id={item.id} onclick={removeRow}></lightning-button-icon>
+                                        </span>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="3" large-device-size="3" class="customHeight-2vh">
+                                        <lightning-input-field field-name="LWR__c" value={recordId} class="slds-hidden"></lightning-input-field>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="3" large-device-size="4" class="customHeight-2vh">
+                                        <lightning-input-field field-name="RecordTypeId" value={recordTypeId} class="slds-hidden"></lightning-input-field>
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                    </lightning-record-edit-form>
+                </template>
+                </br>
+                <lightning-layout>
+                    <div class="slds-align_absolute-center">
+                        <lightning-button variant="neutral" label="Cancel" name="cancel" onclick={closeAction} class="slds-p-around_x-small"></lightning-button>
+                        <lightning-button variant="neutral" label="Back to Form Selection" name="back" onclick={handleBack} class="slds-p-around_x-small"></lightning-button>
+                        <lightning-button variant="brand" onclick={handleCreate} name="save" label="Save" class="slds-p-around_x-small"></lightning-button>
+                    </div>
+                </lightning-layout>
+            </lightning-card>
+        </template>
+        <!-- NA Paper Application Handsheet -->
+        <template if:true={displayAppHandsetForm}>
+            <lightning-card class="slds-scrollable">
+                <h3 slot="title"></h3>
+                <lightning-layout horizontal-align="spread" vertical-align="start" class="slds-border_bottom">
+                    <lightning-layout-item size="6" large-device-size="1" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">Sample Id</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="1" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">Basis Weight</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="1" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">Fiber Type</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="1" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">Freeness</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="1" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">List of Product</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="1" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">Dosage</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="1" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">Type of Paper</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="2" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">List of Test Rquested</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="2" padding="around-small">
+                        <span class="slds-text-heading_small">Notes</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="1" padding="around-small">
+                    </lightning-layout-item>
+                </lightning-layout>
+                <template for:each={itemList} for:item="item" for:index="index">
+                    <lightning-record-edit-form key={item.id} object-api-name="Sample_Test_Information__c">
+                        <lightning-messages> </lightning-messages><!-- removed line gap-->
+                        <lightning-layout horizontal-align="spread" vertical-align="start" class="slds-border_bottom">
+                            <lightning-layout-item size="4" large-device-size="1" padding="around-small">
+                                <lightning-input-field field-name="Sample_Id__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="1" padding="around-small">
+                                <lightning-input-field field-name="Basis_Weight__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="1" padding="around-small">
+                                <lightning-input-field field-name="Fiber_Type__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="1" padding="around-small">
+                                <lightning-input-field field-name="Freeness__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="1" padding="around-small">
+                                <lightning-input-field field-name="List_of_Product__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="1" padding="around-small">
+                                <lightning-input-field field-name="Dosage__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="1" padding="around-small">
+                                <lightning-input-field field-name="Type_of_Paper__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="2" padding="around-small">
+                                <lightning-input-field field-name="List_of_Test_Requested__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="2" padding="around-small">
+                                <lightning-input-field field-name="Notes__c" variant="label-hidden"></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="1" padding="around-small">
+                                <lightning-layout multiple-rows horizontal-align="spread" vertical-align="start">
+                                    <lightning-layout-item size="6" large-device-size="5">
+                                        <lightning-button-icon icon-name="utility:add" variant="bare"
+                                            alternative-text="Add" data-id={item.id}
+                                            onclick={addRow}></lightning-button-icon>
+                                        <span if:true={item.deleteOption}>
+                                            <lightning-button-icon icon-name="utility:delete" variant="bare"
+                                                alternative-text="Delete" data-id={item.id}
+                                                onclick={removeRow}></lightning-button-icon>
+                                        </span>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="3" large-device-size="3" class="customHeight-2vh">
+                                        <lightning-input-field field-name="LWR__c" value={recordId}
+                                            class="slds-hidden"></lightning-input-field>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="3" large-device-size="4" class="customHeight-2vh">
+                                        <lightning-input-field field-name="RecordTypeId" value={recordTypeId}
+                                            class="slds-hidden"></lightning-input-field>
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                    </lightning-record-edit-form>
+                </template> </br>
+                <div class="slds-var-m-around_medium"><b>Note:</b> Please contact the lab for scheduling after LWR submission.</div> </br>
+                <lightning-layout>
+                    <div class="slds-align_absolute-center">
+                        <lightning-button variant="neutral" label="Cancel" name="cancel" onclick={closeAction}
+                            class="slds-p-around_x-small"></lightning-button>
+                        <lightning-button variant="neutral" label="Back to Form Selection" name="back"
+                            onclick={handleBack} class="slds-p-around_x-small"></lightning-button>
+                        <lightning-button variant="brand" onclick={handleCreate} name="save" label="Save"
+                            class="slds-p-around_x-small"></lightning-button>
+                    </div>
+                </lightning-layout>
+            </lightning-card>
+        </template>
+        <!-- NA Paper Application Pilot Paper Machine -->
+        <template if:true={displayAppPilotPaperMachineForm}>
+            <lightning-card class="slds-scrollable">
+                <h3 slot="title"></h3>
+                <lightning-layout horizontal-align="spread" vertical-align="start" class="slds-border_bottom">
+                    <lightning-layout-item size="6" large-device-size="1" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">Product Line</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="2" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">Application Location</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="1" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">Basis Weight</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="1" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">Fiber Type</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="1" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">Freeness</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="1" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">Type of Paper</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="1" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">List of Product</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="1" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">Dosage</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="1" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">List of Test Rquested</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="1" padding="around-small">
+                        <span class="slds-text-heading_small">Notes</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="1" padding="around-small">
+                    </lightning-layout-item>
+                </lightning-layout>
+                <template for:each={itemList} for:item="item" for:index="index">
+                    <lightning-record-edit-form key={item.id} object-api-name="Sample_Test_Information__c">
+                        <lightning-messages> </lightning-messages><!-- removed line gap-->
+                        <lightning-layout horizontal-align="spread" vertical-align="start" class="slds-border_bottom">
+                            <lightning-layout-item size="4" large-device-size="1" padding="around-small">
+                                <lightning-input-field field-name="Product_Line__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="2" padding="around-small">
+                                <lightning-input-field class="multi-select" field-name="Application_Location__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="1" padding="around-small">
+                                <lightning-input-field field-name="Basis_Weight__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="1" padding="around-small">
+                                <lightning-input-field field-name="Fiber_Type__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="1" padding="around-small">
+                                <lightning-input-field field-name="Freeness__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="1" padding="around-small">
+                                <lightning-input-field field-name="Type_of_Paper__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="1" padding="around-small">
+                                <lightning-input-field field-name="List_of_Product__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="1" padding="around-small">
+                                <lightning-input-field field-name="Dosage__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="1" padding="around-small">
+                                <lightning-input-field field-name="List_of_Test_Requested__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="1" padding="around-small">
+                                <lightning-input-field field-name="Notes__c" variant="label-hidden"></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="1" padding="around-small">
+                                <lightning-layout multiple-rows horizontal-align="spread" vertical-align="start">
+                                    <lightning-layout-item size="6" large-device-size="5">
+                                        <lightning-button-icon icon-name="utility:add" variant="bare" alternative-text="Add" data-id={item.id} onclick={addRow}></lightning-button-icon>
+                                        <span if:true={item.deleteOption}>
+                                            <lightning-button-icon icon-name="utility:delete" variant="bare" alternative-text="Delete" data-id={item.id} onclick={removeRow}></lightning-button-icon>
+                                        </span>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="3" large-device-size="3" class="customHeight-2vh">
+                                        <lightning-input-field field-name="LWR__c" value={recordId} class="slds-hidden"></lightning-input-field>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="3" large-device-size="4" class="customHeight-2vh">
+                                        <lightning-input-field field-name="RecordTypeId" value={recordTypeId} class="slds-hidden"></lightning-input-field>
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                    </lightning-record-edit-form>
+                </template>
+                </br>
+                <div class="slds-var-m-around_medium"><b>Note:</b> Please contact the lab for scheduling after LWR submission.</div> </br>
+                <lightning-layout>
+                    <div class="slds-align_absolute-center">
+                        <lightning-button variant="neutral" label="Cancel" name="cancel" onclick={closeAction} class="slds-p-around_x-small"></lightning-button>
+                        <lightning-button variant="neutral" label="Back to Form Selection" name="back" onclick={handleBack} class="slds-p-around_x-small"></lightning-button>
+                        <lightning-button variant="brand" onclick={handleCreate} name="save" label="Save" class="slds-p-around_x-small"></lightning-button>
+                    </div>
+                </lightning-layout>
+            </lightning-card>
+        </template>
+        <!-- NA Paper Applications Dixon Coater -->
+        <template if:true={displayAppDixonCoaterForm}>
+            <lightning-card class="slds-scrollable">
+                <h3 slot="title"></h3>
+                <lightning-layout horizontal-align="spread" vertical-align="start" class="slds-border_bottom">
+                    <lightning-layout-item size="6" large-device-size="1" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">Sample Id</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="1" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">Type of Paper</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="1" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">List of Product</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="1" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">Dosage</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="2" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">List of Test Requested</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="1" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">Speed</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="1" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">Temperature</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="1" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">Sample (Length/Run)</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="2" padding="around-small">
+                        <span class="slds-text-heading_small">Notes</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="1" padding="around-small">
+                    </lightning-layout-item>
+                </lightning-layout>
+                <template for:each={itemList} for:item="item" for:index="index">
+                    <lightning-record-edit-form key={item.id} object-api-name="Sample_Test_Information__c">
+                        <lightning-messages> </lightning-messages><!-- removed line gap-->
+                        <lightning-layout horizontal-align="spread" vertical-align="start" class="slds-border_bottom">
+                            <lightning-layout-item size="4" large-device-size="1" padding="around-small">
+                                <lightning-input-field field-name="Sample_Id__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="1" padding="around-small">
+                                <lightning-input-field field-name="Type_of_Paper__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="1" padding="around-small">
+                                <lightning-input-field field-name="List_of_Product__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="1" padding="around-small">
+                                <lightning-input-field field-name="Dosage__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="2" padding="around-small">
+                                <lightning-input-field field-name="List_of_Test_Requested__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="1" padding="around-small">
+                                <lightning-input-field field-name="Speed__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="1" padding="around-small">
+                                <lightning-input-field field-name="Temperature_NA__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="1" padding="around-small">
+                                <lightning-input-field field-name="Sample_Length_Run__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="2" padding="around-small">
+                                <lightning-input-field field-name="Notes__c" variant="label-hidden"></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="1" padding="around-small">
+                                <lightning-layout multiple-rows horizontal-align="spread" vertical-align="start">
+                                    <lightning-layout-item size="6" large-device-size="5">
+                                        <lightning-button-icon icon-name="utility:add" variant="bare" alternative-text="Add" data-id={item.id} onclick={addRow}></lightning-button-icon>
+                                        <span if:true={item.deleteOption}>
+                                            <lightning-button-icon icon-name="utility:delete" variant="bare" alternative-text="Delete" data-id={item.id} onclick={removeRow}></lightning-button-icon>
+                                        </span>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="3" large-device-size="3" class="customHeight-2vh">
+                                        <lightning-input-field field-name="LWR__c" value={recordId} class="slds-hidden"></lightning-input-field>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="3" large-device-size="4" class="customHeight-2vh">
+                                        <lightning-input-field field-name="RecordTypeId" value={recordTypeId} class="slds-hidden"></lightning-input-field>
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                    </lightning-record-edit-form>
+                </template>
+                </br>
+                <div class="slds-var-m-around_medium"><b>Note:</b> Please contact the lab for scheduling after LWR submission.</div> </br>
+                <lightning-layout>
+                    <div class="slds-align_absolute-center">
+                        <lightning-button variant="neutral" label="Cancel" name="cancel" onclick={closeAction} class="slds-p-around_x-small"></lightning-button>
+                        <lightning-button variant="neutral" label="Back to Form Selection" name="back" onclick={handleBack} class="slds-p-around_x-small"></lightning-button>
+                        <lightning-button variant="brand" onclick={handleCreate} name="save" label="Save" class="slds-p-around_x-small"></lightning-button>
+                    </div>
+                </lightning-layout>
+            </lightning-card>
+        </template>
+        <!-- NA Paper Applications Nature Former -->
+        <template if:true={displayAppNatureFormer}>
+            <lightning-card class="slds-scrollable">
+                <h3 slot="title"></h3>
+                <lightning-layout horizontal-align="spread" vertical-align="start" class="slds-border_bottom">
+                    <lightning-layout-item size="6" large-device-size="2" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">Sample Id</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="2" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">Fiber Type</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="2" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">List of Product</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="1" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">Dosage</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="2" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">List of Test Requested</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="2" padding="around-small">
+                        <span class="slds-text-heading_small">Notes</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="1" padding="around-small">
+                    </lightning-layout-item>
+                </lightning-layout>
+                <template for:each={itemList} for:item="item" for:index="index">
+                    <lightning-record-edit-form key={item.id} object-api-name="Sample_Test_Information__c">
+                        <lightning-messages> </lightning-messages><!-- removed line gap-->
+                        <lightning-layout horizontal-align="spread" vertical-align="start" class="slds-border_bottom">
+                            <lightning-layout-item size="4" large-device-size="2" padding="around-small">
+                                <lightning-input-field field-name="Sample_Id__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="2" padding="around-small">
+                                <lightning-input-field field-name="Fiber_Type__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="2" padding="around-small">
+                                <lightning-input-field field-name="List_of_Product__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="1" padding="around-small">
+                                <lightning-input-field field-name="Dosage__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="2" padding="around-small">
+                                <lightning-input-field field-name="List_of_Test_Requested__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="2" padding="around-small">
+                                <lightning-input-field field-name="Notes__c" variant="label-hidden"></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="1" padding="around-small">
+                                <lightning-layout multiple-rows horizontal-align="spread" vertical-align="start">
+                                    <lightning-layout-item size="6" large-device-size="5">
+                                        <lightning-button-icon icon-name="utility:add" variant="bare" alternative-text="Add" data-id={item.id} onclick={addRow}></lightning-button-icon>
+                                        <span if:true={item.deleteOption}>
+                                            <lightning-button-icon icon-name="utility:delete" variant="bare" alternative-text="Delete" data-id={item.id} onclick={removeRow}></lightning-button-icon>
+                                        </span>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="3" large-device-size="3" class="customHeight-2vh">
+                                        <lightning-input-field field-name="LWR__c" value={recordId} class="slds-hidden"></lightning-input-field>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="3" large-device-size="4" class="customHeight-2vh">
+                                        <lightning-input-field field-name="RecordTypeId" value={recordTypeId} class="slds-hidden"></lightning-input-field>
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                    </lightning-record-edit-form>
+                </template>
+                </br>
+                <div class="slds-var-m-around_medium"><b>Note:</b> Please contact the lab for scheduling after LWR submission.</div> </br>
+                <lightning-layout>
+                    <div class="slds-align_absolute-center">
+                        <lightning-button variant="neutral" label="Cancel" name="cancel" onclick={closeAction} class="slds-p-around_x-small"></lightning-button>
+                        <lightning-button variant="neutral" label="Back to Form Selection" name="back" onclick={handleBack} class="slds-p-around_x-small"></lightning-button>
+                        <lightning-button variant="brand" onclick={handleCreate} name="save" label="Save" class="slds-p-around_x-small"></lightning-button>
+                    </div>
+                </lightning-layout>
+            </lightning-card>
+        </template>
+        <!-- NA Paper Applications Pulp Request -->
+        <template if:true={displayAppPulpRequestForm}>
+            <lightning-card class="slds-scrollable">
+                <h3 slot="title"></h3>
+                <lightning-layout horizontal-align="spread" vertical-align="start" class="slds-border_bottom">
+                    <lightning-layout-item size="6" large-device-size="2" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">Sample Id</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="2" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">Fiber Type</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="2" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">Freeness</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="2" padding="around-small">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        <span class="slds-text-heading_small">Consistency</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="2" padding="around-small">
+                        <span class="slds-text-heading_small">Notes</span>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" large-device-size="2" padding="around-small">
+                    </lightning-layout-item>
+                </lightning-layout>
+                <template for:each={itemList} for:item="item" for:index="index">
+                    <lightning-record-edit-form key={item.id} object-api-name="Sample_Test_Information__c">
+                        <lightning-messages> </lightning-messages>
+                        <lightning-layout horizontal-align="spread" vertical-align="start" class="slds-border_bottom">
+                            <lightning-layout-item size="4" large-device-size="2" padding="around-small">
+                                <lightning-input-field field-name="Sample_Id__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="2" padding="around-small">
+                                <lightning-input-field field-name="Fiber_Type__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="2" padding="around-small">
+                                <lightning-input-field field-name="Freeness__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="2" padding="around-small">
+                                <lightning-input-field field-name="Consistency__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="2" padding="around-small">
+                                <lightning-input-field field-name="Notes__c" variant="label-hidden"></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="2" padding="around-small">
+                                <lightning-layout multiple-rows horizontal-align="spread" vertical-align="start">
+                                    <lightning-layout-item size="6" large-device-size="5">
+                                        <lightning-button-icon icon-name="utility:add" variant="bare" alternative-text="Add" data-id={item.id} onclick={addRow}></lightning-button-icon>
+                                        <span if:true={item.deleteOption}>
+                                            <lightning-button-icon icon-name="utility:delete" variant="bare" alternative-text="Delete" data-id={item.id} onclick={removeRow}></lightning-button-icon>
+                                        </span>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="3" large-device-size="3" class="customHeight-2vh">
+                                        <lightning-input-field field-name="LWR__c" value={recordId} class="slds-hidden"></lightning-input-field>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="3" large-device-size="4" class="customHeight-2vh">
+                                        <lightning-input-field field-name="RecordTypeId" value={recordTypeId} class="slds-hidden"></lightning-input-field>
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                    </lightning-record-edit-form>
+                </template>
+                </br>
+                <div class="slds-var-m-around_medium"><b>Note:</b> Please include <b> ‘date needed by’ </b> in the notes.</div> </br>
+                <lightning-layout>
+                    <div class="slds-align_absolute-center">
+                        <lightning-button variant="neutral" label="Cancel" name="cancel" onclick={closeAction} class="slds-p-around_x-small"></lightning-button>
+                        <lightning-button variant="neutral" label="Back to Form Selection" name="back" onclick={handleBack} class="slds-p-around_x-small"></lightning-button>
+                        <lightning-button variant="brand" onclick={handleCreate} name="save" label="Save" class="slds-p-around_x-small"></lightning-button>
+                    </div>
+                </lightning-layout>
+            </lightning-card>
+        </template>
+       <!-- NA Paper Application Processes -->
+       <template if:true={displayPaperOrWaterAppProcessForm}>
+        <lightning-card class="slds-scrollable">
+            <h3 slot="title"></h3>
+            <lightning-layout horizontal-align="spread" vertical-align="start" class="slds-border_bottom">
+               <template if:true={ApplicationProcesess}>
+                <lightning-layout-item size="6" large-device-size="2" padding="around-small">
+                    <abbr title="required" class="slds-required">*</abbr>
+                    <span class="slds-text-heading_small">Sample Id</span>
+                </lightning-layout-item>
+                <lightning-layout-item size="6" large-device-size="2" padding="around-small">
+                    <abbr title="required" class="slds-required">*</abbr>
+                    <span class="slds-text-heading_small">Sample Type</span>
+                </lightning-layout-item>
+            </template>
+            <template if:false={ApplicationProcesess}>
+                <lightning-layout-item size="6" large-device-size="2" padding="around-small"></lightning-layout-item>
+                <lightning-layout-item size="6" large-device-size="2" padding="around-small">
+                    <abbr title="required" class="slds-required">*</abbr>
+                    <span class="slds-text-heading_small">Sample Name</span>
+                </lightning-layout-item>
+            </template>
+                <lightning-layout-item size="6" large-device-size="2" padding="around-small">
+                    <abbr title="required" class="slds-required">*</abbr>
+                    <span class="slds-text-heading_small">List of Test Requested</span>
+                </lightning-layout-item>
+                <lightning-layout-item size="6" large-device-size="2" padding="around-small">
+                    <span class="slds-text-heading_small">Notes</span>
+                </lightning-layout-item>
+                <lightning-layout-item size="6" large-device-size="2" padding="around-small">
+                </lightning-layout-item>
+            </lightning-layout>
+            <template for:each={itemList} for:item="item" for:index="index">
+                <lightning-record-edit-form key={item.id} object-api-name="Sample_Test_Information__c" onload={handleLoad}>
+                    <template if:true={editLoadFormLoadingComplete}>
+                        <lightning-messages> </lightning-messages>
+                        <lightning-layout horizontal-align="spread" vertical-align="start" class="slds-border_bottom">
+                        <template if:true={ApplicationProcesess}>
+                            <lightning-layout-item size="4" large-device-size="2" padding="around-small">
+                                <lightning-input-field field-name="Sample_Id__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="2" padding="around-small">
+                                <lightning-input-field field-name="Sample_Type__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                        </template>
+                        <template if:false={ApplicationProcesess}>
+                            <lightning-layout-item size="4" large-device-size="2" padding="around-small"></lightning-layout-item>
+                        <lightning-layout-item size="4" large-device-size="2" padding="around-small">
+                            <lightning-input-field field-name="Sample_Name__c" variant="label-hidden" required></lightning-input-field>
+                        </lightning-layout-item>
+                        </template>
+                            <lightning-layout-item size="4" large-device-size="2" padding="around-small">
+                                <lightning-input-field field-name="List_of_Test_Requested__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="2" padding="around-small">
+                                <lightning-input-field field-name="Notes__c" variant="label-hidden"></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="2" padding="around-small">
+                                <lightning-layout multiple-rows horizontal-align="spread" vertical-align="start">
+                                    <lightning-layout-item size="6" large-device-size="5">
+                                        <lightning-button-icon icon-name="utility:add" variant="bare" alternative-text="Add" data-id={item.id} onclick={addRow}></lightning-button-icon>
+                                        <span if:true={item.deleteOption}>
+                                            <lightning-button-icon icon-name="utility:delete" variant="bare" alternative-text="Delete" data-id={item.id} onclick={removeRow}></lightning-button-icon>
+                                        </span>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="3" large-device-size="3" class="customHeight-2vh">
+                                        <lightning-input-field field-name="LWR__c" value={recordId} class="slds-hidden"></lightning-input-field>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="3" large-device-size="4" class="customHeight-2vh">
+                                        <lightning-input-field field-name="RecordTypeId" value={recordTypeId} class="slds-hidden"></lightning-input-field>
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                    </template>
+                </lightning-record-edit-form>
+            </template>
+            </br>
+            <lightning-layout>
+                <div class="slds-align_absolute-center">
+                    <lightning-button variant="neutral" label="Cancel" name="cancel" onclick={closeAction} class="slds-p-around_x-small"></lightning-button>
+                    <lightning-button variant="neutral" label="Back to Form Selection" name="back" onclick={handleBack} class="slds-p-around_x-small"></lightning-button>
+                    <lightning-button variant="brand" onclick={handleCreate} name="save" label="Save" class="slds-p-around_x-small"></lightning-button>
+                </div>
+            </lightning-layout>
+        </lightning-card>
+    </template>
+     <!-- NA Water Application Processes -->
+     <template if:true={displayWaterApplicationForm}>
+        <lightning-card class="slds-scrollable">
+            <h3 slot="title"></h3>
+            <lightning-layout horizontal-align="spread" vertical-align="start" class="slds-border_bottom">
+                <lightning-layout-item size="6" large-device-size="1" padding="around-small">
+                </lightning-layout-item>
+                <lightning-layout-item size="6" large-device-size="2" padding="around-small">
+                    <abbr title="required" class="slds-required">*</abbr>
+                    <span class="slds-text-heading_small">Sample Name</span>
+                </lightning-layout-item>
+                <lightning-layout-item size="6" large-device-size="2" padding="around-small">
+                    <abbr title="required" class="slds-required">*</abbr>
+                    <span class="slds-text-heading_small">Testing Requested</span>
+                </lightning-layout-item>
+                <lightning-layout-item size="6" large-device-size="2" padding="around-small">
+                    <span class="slds-text-heading_small">Additional Comments</span>
+                </lightning-layout-item>
+                <lightning-layout-item size="6" large-device-size="2" padding="around-small">
+                </lightning-layout-item>
+            </lightning-layout>
+            <template for:each={itemList} for:item="item" for:index="index">
+                <lightning-record-edit-form key={item.id} object-api-name="Sample_Test_Information__c" onload={handleLoad}>
+                    <template if:true={editLoadFormLoadingComplete}>
+                        <lightning-messages> </lightning-messages>
+                        <lightning-layout horizontal-align="spread" vertical-align="start" class="slds-border_bottom">
+                            <lightning-layout-item size="4" large-device-size="1" padding="around-small">
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="2" padding="around-small">
+                                <lightning-input-field field-name="Sample_Name__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="2" padding="around-small">
+                                <lightning-input-field field-name="Testing_Requested__c" variant="label-hidden" required></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="2" padding="around-small">
+                                <lightning-input-field field-name="Additional_Comments__c" variant="label-hidden"></lightning-input-field>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" large-device-size="2" padding="around-small">
+                                <lightning-layout multiple-rows horizontal-align="spread" vertical-align="start">
+                                    <lightning-layout-item size="6" large-device-size="5">
+                                        <lightning-button-icon icon-name="utility:add" variant="bare" alternative-text="Add" data-id={item.id} onclick={addRow}></lightning-button-icon>
+                                        <span if:true={item.deleteOption}>
+                                            <lightning-button-icon icon-name="utility:delete" variant="bare" alternative-text="Delete" data-id={item.id} onclick={removeRow}></lightning-button-icon>
+                                        </span>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="3" large-device-size="3" class="customHeight-2vh">
+                                        <lightning-input-field field-name="LWR__c" value={recordId} class="slds-hidden"></lightning-input-field>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="3" large-device-size="4" class="customHeight-2vh">
+                                        <lightning-input-field field-name="RecordTypeId" value={recordTypeId} class="slds-hidden"></lightning-input-field>
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                    </template>
+                </lightning-record-edit-form>
+            </template>
+            </br>
+            <div class="slds-var-m-around_medium"><b>Note:</b> Please provide as much information as possible to your request (issues, current product, current dosage, process, etc.). Contact the <b> Water Applications Laboratory </b> with any questions.</div> </br>
+            <lightning-layout>
+                <div class="slds-align_absolute-center">
+                    <lightning-button variant="neutral" label="Cancel" name="cancel" onclick={closeAction} class="slds-p-around_x-small"></lightning-button>
+                    <lightning-button variant="neutral" label="Back to Form Selection" name="back" onclick={handleBack} class="slds-p-around_x-small"></lightning-button>
+                    <lightning-button variant="brand" onclick={handleCreate} name="save" label="Save" class="slds-p-around_x-small"></lightning-button>
+                </div>
+            </lightning-layout>
+        </lightning-card>
+    </template>
+        <!-- LA Forms -->
+        <template if:true={displayLAForms}>
+            <c-l-w-r-create-l-a-sample-test-information 
+                lwr-record-id={recordId} 
+                record-type-id={recordTypeId}
+                record-type-label={recordTypeLabel}
+                oncreate={redirectToListView}
+                oncancel={closeAction}
+                onback={handleBack}>
+            </c-l-w-r-create-l-a-sample-test-information>
+        </template>
+        <!-- APAC Forms -->
+        <template if:true={displayAPACForms}>
+            <c-l-w-r-create-a-p-a-c-sample-test-information 
+                lwr-record-id={recordId} 
+                record-type-id={recordTypeId}
+                record-type-label={recordTypeLabel}
+                oncreate={redirectToListView}
+                oncancel={closeAction}
+                onback={handleBack}>
+            </c-l-w-r-create-a-p-a-c-sample-test-information>
+        </template>
+        <!--NA Colorant Forms-->
+        <template if:true={displayNAColorantForms}>
+            <c-l-w-r-create-n-a-colorant-form 
+                lwr-record-id={recordId}
+                record-type-id={recordTypeId}
+                record-type-label={recordTypeLabel}
+                oncreate={redirectToListView}
+                oncancel={closeAction}
+                onback={handleBack}>
+            </c-l-w-r-create-n-a-colorant-form>
+        </template>
+    </lightning-quick-action-panel>
+</template>

@@ -1,0 +1,87 @@
+<apex:page standardController="Price_Book__c" 
+           extensions="PriceBookActivationController"
+           recordSetVar="priceBooks">
+    <apex:form id="theForm">
+        <apex:variable var="apbs" value="{!approvedPriceBooks}"/>
+        <apex:pageBlock rendered="{!NOT(renderApprovedList)}">
+            <apex:pageBlockSection columns="1">
+                <apex:pageBlockSectionItem dataStyle="text-align: center;font-weight: bolder;">
+                    <apex:outputText value="No Price Books found to be Activated"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+	    <apex:pageBlock title="Price Books to be Activated" rendered="{!renderApprovedList}">
+	        <apex:pageBlockTable id="list" value="{!apbs}" var="pb">
+                <apex:column width="20%">
+                    <apex:facet name="header">PriceBook<br/>ID</apex:facet>
+                    <apex:outputLink value="/{!pb.Id}"> 
+                        <apex:outputField value="{!pb.Name}"/>
+                    </apex:outputLink>
+                </apex:column>
+                <apex:column width="20%">
+                    <apex:facet name="header">Description</apex:facet>
+                    <apex:outputText value="{!pb.Description__c}"/>
+                </apex:column>
+                <apex:column width="20%">
+                    <apex:facet name="header">Effective<br/>Date</apex:facet>
+                    <apex:outputField value="{!pb.Effective_Date__c}"/>
+                </apex:column>
+                <apex:column width="20%">
+                    <apex:facet name="header">Record<br/>Status</apex:facet>
+                    <apex:outputField value="{!pb.Record_Status__c}"/>
+                </apex:column>
+                <apex:column width="20%">
+                    <apex:facet name="header">Active</apex:facet>
+                    <apex:outputField value="{!pb.Active__c}"/>
+                </apex:column>
+	        </apex:pageBlockTable>        
+            <apex:pageBlockButtons location="top">
+                <apex:panelGrid bgcolor="#eeecd1" columns="3" width="100%">
+                    <apex:panelGroup styleClass="nowrap">
+                        <apex:commandButton value="Process this Page"
+                                            action="{!activatePriceBooks}" disabled="{!disableActivateButton}" 
+                                            immediate="true"/>
+	                    <apex:commandButton value="Process All Pages as Batch Job"
+	                                        action="{!submitActivationBatchJob}" 
+	                                        disabled="{!disableActivateButton}" 
+	                                        immediate="true" status="activateStatus" rerender="theForm"/>
+	                    <apex:actionStatus startText="Submitting Batch Job..." stopText="" id="activateStatus"/>
+                    </apex:panelGroup>
+                    <apex:outputText value="Records: {!recordFrom}-{!recordTo} of {!resultSize}" styleClass="nowrap"/>
+                    <apex:outputText value="Page: {!pageNumber} of {!lastPageNumber}" styleClass="nowrap"/>
+                </apex:panelGrid>
+            </apex:pageBlockButtons>
+            <apex:facet name="footer">
+                <apex:panelGrid bgcolor="#eeecd1" columns="4" width="100%">
+                    <apex:panelGroup styleClass="nowrap">
+                        <apex:outputText value="Records per Page:"/>
+                        <apex:selectList id="pageSize" value="{!pageSize}" size="1" title="Records per Page">
+                            <apex:actionSupport event="onchange" rerender="theForm"/>
+                            <apex:selectOption itemLabel="10" itemValue="10"/>
+                            <apex:selectOption itemLabel="25" itemValue="25"/>
+                            <apex:selectOption itemLabel="50" itemValue="50"/>
+                            <apex:selectOption itemLabel="100" itemValue="100"/>
+                            <apex:selectOption itemLabel="200" itemValue="200"/>
+                        </apex:selectList>
+                    </apex:panelGroup>
+                    <apex:outputText value="Records: {!recordFrom}-{!recordTo} of {!resultSize}" styleClass="nowrap"/>
+                    <apex:panelGroup styleClass="nowrap">
+                        <apex:commandButton action="{!first}" title="First Page" value="<<"/>
+                        &nbsp;&nbsp;
+                        <apex:commandButton action="{!previous}" title="Prev Page" value="<"/>
+                        Previous&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Next&nbsp;
+                        <apex:commandButton action="{!next}" title="Next Page" value=">"/>
+                        &nbsp;&nbsp;
+                        <apex:commandButton action="{!last}" title="Last Page" value=">>"/>
+                    </apex:panelGroup>
+                    <apex:panelGroup styleClass="nowrap">
+                        <apex:outputText value="Page: {!pageNumber} of {!lastPageNumber}"/>
+                    </apex:panelGroup>
+                </apex:panelGrid>
+            </apex:facet>
+	    </apex:pageBlock>
+    </apex:form>
+    <style>
+        .nowrap {white-space: nowrap;}
+    </style>
+</apex:page>

@@ -1,0 +1,112 @@
+<template>
+    <template if:true={isUserHasAccess}>
+        <lightning-quick-action-panel header="New Case: Water - Application Support">
+            <lightning-record-edit-form object-api-name="Case" 
+                                        onsubmit={handleSubmit}
+                                        onsuccess={handleSuccess}
+                                        onerror={handleError}>
+                <h3 class="slds-section__title slds-theme--shade primaryPaletteBorder slds-m-vertical_x-small">
+                    <span class="section-header-title slds-p-horizontal--small slds-truncate">General Request Information</span>
+                </h3>                        
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                        <lightning-input-field field-name="RecordTypeId" value="01250000000HmOeAAK"> </lightning-input-field>
+                        <lightning-input-field field-name="AccountId" value={opportunityData.AccountId}> </lightning-input-field>
+                        <lightning-input-field field-name="Related_Opportunity__c" value={opportunityData.Id}> </lightning-input-field>
+                        <lightning-input-field field-name="Type" required="true"> </lightning-input-field>
+                        <lightning-input-field field-name="Origin" required="true" value="	Sales Support"> </lightning-input-field>
+                        <lightning-input-field field-name="Is_This_A_New_Product_Validation_Report__c" required="true"></lightning-input-field>
+                        <lightning-input-field field-name="Application_Support_Manager__c" ></lightning-input-field>
+                        <lightning-input-field field-name="Travel_Required__c"></lightning-input-field>
+                    </div>                     
+                    <div class="slds-col">
+                        <lightning-input-field field-name="Subject" required="true"> </lightning-input-field>
+                        <lightning-input-field field-name="Date_of_Call__c"> </lightning-input-field>
+                        <lightning-input-field field-name="Date_of_Report__c"> </lightning-input-field>
+                        <lightning-input-field field-name="Status" required="true"> </lightning-input-field>
+                        <lightning-input-field field-name="Priority"> </lightning-input-field>
+                        <lightning-input-field field-name="ContactId"> </lightning-input-field>
+                        <lightning-input-field field-name="Canadian_SR_ED_Eligible__c"> </lightning-input-field>
+                        <lightning-input-field field-name="Keywords__c"> </lightning-input-field>
+                        <lightning-input-field field-name="Keywords__c"> </lightning-input-field>
+                        <lightning-input-field field-name="Case_Owner_Name__c"> </lightning-input-field>
+                    </div>
+                </div>    
+                
+                <h3 class="slds-section__title slds-theme--shade primaryPaletteBorder slds-m-vertical_x-small">
+                    <span class="section-header-title slds-p-horizontal--small slds-truncate">Personnel Involved</span>
+                </h3>
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                        <lightning-input-field field-name="AHWT_Personnel_Involved__c"> </lightning-input-field>
+                        <lightning-input-field field-name="AHWT_Personnel_Involved_2__c" > </lightning-input-field>
+                    </div>                     
+                    <div class="slds-col">
+                        <lightning-input-field field-name="Customer_Contact_Involved__c"> </lightning-input-field>
+                    </div>
+                </div>
+    
+                <h3 class="slds-section__title slds-theme--shade primaryPaletteBorder slds-m-vertical_x-small">
+                    <span class="section-header-title slds-p-horizontal--small slds-truncate">Market Information</span>
+                </h3>
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                        <lightning-input-field field-name="Market_Segment__c"> </lightning-input-field>
+                        <lightning-input-field field-name="Market_Subsegment__c" > </lightning-input-field>
+                        <lightning-input-field field-name="SBU__c" > </lightning-input-field>
+                    </div>                     
+                </div>
+    
+                <h3 class="slds-section__title slds-theme--shade primaryPaletteBorder slds-m-vertical_x-small">
+                    <span class="section-header-title slds-p-horizontal--small slds-truncate">Product Information</span>
+                </h3>
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                        <lightning-input-field field-name="Material_Recommendation_1__c"> </lightning-input-field>
+                        <lightning-input-field field-name="Material_Recommendation_3__c" > </lightning-input-field>
+                    </div>                     
+                    <div class="slds-col">
+                        <lightning-input-field field-name="Material_Recommendation_2__c"> </lightning-input-field>
+                        <lightning-input-field field-name="Material_Recommendation_4__c"> </lightning-input-field>
+                    </div>
+                </div>
+    
+                <h3 class="slds-section__title slds-theme--shade primaryPaletteBorder slds-m-vertical_x-small">
+                    <span class="section-header-title slds-p-horizontal--small slds-truncate">Description / Details</span>
+                </h3>
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                        <lightning-input-field field-name="Safety_Concerns__c"> </lightning-input-field>
+                        <lightning-input-field field-name="W_Purpose__c" > </lightning-input-field>
+                        <lightning-input-field field-name="Description" > </lightning-input-field>
+                        <lightning-input-field field-name="Training_and_Coaching_Conducted__c" > </lightning-input-field>
+                        <lightning-input-field field-name="General_Sales_Situation__c" > </lightning-input-field>
+                        <lightning-input-field field-name="Recommendations__c" > </lightning-input-field>
+                        <lightning-input-field field-name="SuppliedEmail" > </lightning-input-field>
+                    </div>                     
+                </div>
+
+                <h3 class="slds-section__title slds-theme--shade primaryPaletteBorder slds-m-vertical_x-small">
+                    <span class="section-header-title slds-p-horizontal--small slds-truncate">System Information</span>
+                </h3>
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                        <lightning-input-field field-name="SuppliedEmail" > </lightning-input-field>
+                    </div>
+                    <div class="slds-col"></div>                     
+                </div>
+    
+                <div class="slds-m-around_medium slds-align_absolute-center">
+                    <lightning-button class="slds-m-around_xxx-small" label="Cancel" onclick={handleCancel}></lightning-button>
+                    <lightning-button class="slds-m-around_xxx-small" variant="brand" label="Save" type="submit"></lightning-button>
+                </div>
+    
+            </lightning-record-edit-form>
+        </lightning-quick-action-panel>
+    </template>
+    <template if:true={isLoaded}>
+        <lightning-spinner
+            alternative-text="Loading..." variant="brand">
+        </lightning-spinner>
+    </template>
+</template>

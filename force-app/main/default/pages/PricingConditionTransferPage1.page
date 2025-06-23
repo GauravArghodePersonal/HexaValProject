@@ -1,0 +1,56 @@
+<apex:page controller="PricingConditionTransferController" action="{!initPcTrnsfr}"
+           sidebar="false">
+    <apex:includeScript value="{!URLFOR($Resource.VIResources, 'js/jquery-1.4.2.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.VIResources, 'js/utils.js')}" />
+    <script>
+        jQuery.noConflict();
+        
+        jQuery(function() {
+            disableButtonsOnSubmit("{!$Component.theForm}");
+        });
+    
+        function getConfirm(q) {
+            answer = confirm(q);
+            return (answer != 0);
+        }
+    </script>
+    <apex:form id="theForm">
+        <apex:pageBlock title="Pricing Condition Transfers" mode="edit">
+            <apex:pageMessages />
+            <apex:outputPanel rendered="{!currentStep = 1}" layout="block" styleClass="panlsc">
+                <apex:inputFile value="{!pctrsBlob}" filename="{!pctrsFileName}"
+                                rendered="{!renderUploadAccsBtn}"/><br/><br/> 
+                <apex:commandButton value=" Upload Accounts File " action="{!createPCTRequests}"
+                                    rendered="{!renderUploadAccsBtn}"/>
+                <apex:commandButton value=" Create Materials " action="{!createMaterials}"
+                                    rendered="{!renderCreateMatsBtn}"/>
+                <apex:commandButton value=" Skip and Go to Accounts Merge Step " 
+                                    action="{!gotoMergeAccounts}"
+                                    rendered="{!renderCreateMatsBtn}"/>
+                <apex:commandButton value=" Update Materials " action="{!updateMaterials}"
+                                    rendered="{!renderUpdateMatsBtn}"/>
+                <apex:commandButton value=" Merge Uploaded Accounts " action="{!mergeAccounts}"
+                                    onclick="return getConfirm('Merge Uploaded Accounts?');" 
+                                    rendered="{!renderMergeAccsBtn}"/><br/><br/>
+                <apex:outputPanel rendered="{!renderMessageTables}">
+                    <table>
+                        <apex:repeat value="{!smsgs}" var="s">
+                            <tr class="msg"><td>{!s}</td></tr>
+                        </apex:repeat>
+                    </table><br/>
+                    <table>
+                        <apex:repeat value="{!emsgs}" var="e">
+                            <tr class="msg"><td>{!e}</td></tr>
+                        </apex:repeat>
+                    </table>
+                </apex:outputPanel>
+            </apex:outputPanel>
+        </apex:pageBlock>
+    </apex:form>
+    <style>
+        .nowrap {white-space: nowrap;}
+        .bold {font-weight: bold;}
+        .panlsc {font-weight: bold; text-align: left;}
+        .msg {font-family: monospace; font-weight: normal; text-align: right;}
+    </style>
+</apex:page>

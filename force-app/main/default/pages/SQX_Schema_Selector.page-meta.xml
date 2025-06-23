@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexPage xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>57.0</apiVersion>
+    <availableInTouch>true</availableInTouch>
+    <confirmationTokenRequired>false</confirmationTokenRequired>
+    <description>This page is used to dynamically select the applicable schema for current user. It should be noted that the page is also deployed in an managed package for discovering standard OOB CQ resource.</description>
+    <label>SQX_Schema_Selector</label>
+    <packageVersions>
+        <majorNumber>13</majorNumber>
+        <minorNumber>0</minorNumber>
+        <namespace>compliancequest</namespace>
+    </packageVersions>
+</ApexPage>

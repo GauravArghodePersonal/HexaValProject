@@ -1,0 +1,169 @@
+<apex:page controller="Sample_Request_Controller" sidebar="false"
+           tabStyle="Sample_Request__c" action="{!init6A}" lightningStylesheets="true">
+           <apex:slds />
+    <apex:stylesheet value="{!$Resource.SampleRequestStyles}"></apex:stylesheet>
+
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-1.6.2.min.js')}" />
+
+    <apex:sectionHeader title="{!$Label.New_Sample_Request}" subtitle="{!$Label.Step_5}"/>
+
+    <apex:form id="p6a-form1">
+
+        <script type="text/javascript">
+            var $j = jQuery.noConflict();
+
+            $j(function() {
+                var f = $j('form[id$=p6a-form1]');
+                $j(f).keypress(function(e) {
+                    var k = e.charCode || e.keyCode || e.which;
+                    if (k == 13 && e.target.tagName != 'TEXTAREA') {
+                        e.preventDefault(); return false;
+                    }
+                });
+            });
+        </script>
+
+        <center>
+            <apex:commandButton action="{!gotoPage5A}" value="{!$Label.Previous}" immediate="true"/>&nbsp;
+            <apex:commandButton action="{!saveAndSubmitForApproval}" value="{!$Label.Save_and_Submit}"/>&nbsp;
+            <apex:commandButton action="{!cancel}" value="Cancel" immediate="true" />
+        </center><br/>
+
+        <apex:pageBlock title="{!$Label.Sample_Information}" mode="edit">
+            <apex:include pageName="Sample_Request_Page_1H"/>
+        </apex:pageBlock>
+
+        <apex:pageBlock title="{!$Label.Sample_Confirmation}" mode="edit">
+
+            <apex:pageBlockSection title="{!$Label.Enter_Additional_Comments}"
+                                   columns="1" collapsible="false"
+                                   rendered="{!!isCMCSampCenter}">
+                <apex:inputTextArea value="{!NoteToSampleCoordinator}"
+                    style="height: 60px; width: 100%; resize: none; overflow: auto;"/>
+            </apex:pageBlockSection>
+
+           <!--  <apex:pageBlockSection title="{!$Label.Approval_Process_Sample}" columns="1"
+                                   rendered="{!renderApprovalProcPB}" collapsible="false">
+                <apex:panelGrid columns="2">
+                    <apex:outputText styleClass="HeaderLabel" escape="false" value="{!$Label.Approval_Process}:"/>
+                    <apex:outputText escape="false" value="{!sampleRequest.Approval_Process__c}"/>
+                    <apex:outputText styleClass="HeaderLabel" escape="false" value="{!$Label.Approver_List}:" rendered="{!IF(ApproverQueue != null,'true','false')}" />
+                    <apex:outputText escape="false" value="{!ApproverQueue}" rendered="{!IF(ApproverQueue != null,'true','false')}" />
+                    <apex:outputText styleClass="HeaderLabel" escape="false" value="{!$Label.Backup} {!$Label.Approver_List}:" rendered="{!IF(BackupApproverQueue != null,'true','false')}" />
+                    <apex:outputText escape="false" value="{!BackupApproverQueue}" rendered="{!IF(BackupApproverQueue != null,'true','false')}" />
+                    <apex:outputText styleClass="HeaderLabel" escape="false" value="{!$Label.Approver_List} (Level 2):" rendered="{!IF(ApproverQueue2 != null,'true','false')}" />
+                    <apex:outputText escape="false" value="{!ApproverQueue2}" rendered="{!IF(ApproverQueue2 != null,'true','false')}" />
+                    <apex:outputText styleClass="HeaderLabel" escape="false" value="{!$Label.Approver_List} (Level 3):" rendered="{!IF(ApproverQueue3 != null,'true','false')}" />
+                    <apex:outputText escape="false" value="{!ApproverQueue3}" rendered="{!IF(ApproverQueue3 != null,'true','false')}" />
+                    <apex:outputText styleClass="HeaderLabel" escape="false" value="{!$Label.Approver_Queue_Name}:" rendered="{!IF(ApproverQueueName!= null,'true','false')}" />
+                    <apex:outputText escape="false" value="{!ApproverQueueName}" rendered="{!IF(ApproverQueueName!= null,'true','false')}" />
+                    <apex:outputText styleClass="HeaderLabel" escape="false" value="{!$Label.Approval_Requirements}:" rendered="{!IF(ApprovalRequirements != null,'true','false')}" />
+                    <apex:outputText escape="false" value="{!ApprovalRequirements}" rendered="{!IF(ApprovalRequirements != null,'true','false')}" />
+                </apex:panelGrid>
+            </apex:pageBlockSection> -->
+
+            <apex:pageBlockSection title="{!$Label.Validation_Error}" columns="1" collapsible="false" rendered="{!IF(ValidationErrorMessage!='','True','False')}">
+                <apex:outputText escape="False" styleClass="Warning" value="{!ValidationErrorMessage}" rendered="{!IF(ValidationErrorMessage!='','True','False')}"/>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection title="{!$Label.Materials_in_Sample}:" columns="1" collapsible="false">
+
+            <apex:pageBlockTable id="MaterialGrid" value="{!materials}" var="m" >
+                <apex:column headerClass="right" styleClass="right" style="word-wrap: break-word;width: 20px" >
+                    <apex:facet name="header">#</apex:facet>
+                    <apex:outputText value="{!m.recNum}"/>
+                </apex:column>
+
+                <apex:column width="300px" style="word-wrap: break-word;">
+                    <apex:facet name="header">Material Name</apex:facet>
+                    <apex:outputField value="{!m.sm.name}"/>
+                </apex:column>
+
+                <apex:column width="140px" rendered="{!isAHWT}">
+                    <apex:facet name="header">Product Class</apex:facet>
+                    <apex:outputText value="{!m.matStat}"/>
+                </apex:column>
+
+                
+
+                <apex:column width="250px" style="word-wrap: break-word;">
+                    <apex:facet name="header">Sample UOM</apex:facet>
+                   <!-- <apex:outputPanel styleClass="matUom">-->
+                        <apex:outputPanel rendered="{!m.sm.Special_Size__c}" style="word-wrap: break-word;">
+                            <apex:outputField value="{!m.sm.Sample_Size__c}" style="word-wrap: break-word;"/>&nbsp;
+                        </apex:outputPanel>
+                        <apex:outputText value="{!m.sm.Sample_UOM__c}" style="word-wrap: break-word;"/>
+                   <!-- </apex:outputPanel>-->
+                </apex:column>
+
+                <apex:column width="60px">
+                    <apex:facet name="header">Sample<br/>Quantity</apex:facet>
+                    <!-- apex:outputField value="{!m.sm.Sample_Quantity__c}" style="width: 50px" / -->
+                    <c:Number p_value="{!m.sm.Sample_Quantity__c}" p_decimals="{!qtyDecimals}"
+                              p_locale="{!userLocale}" p_style="width: 50px" />
+                </apex:column>
+
+                <apex:column width="50px">
+                    <apex:facet name="header">Date<br/>Required</apex:facet>
+                    <apex:outputField value="{!m.sm.Date_Required_By__c}"/>
+                </apex:column>
+
+                <apex:column rendered="{!renderSmallPackSale}" width="50px">
+                    <apex:facet name="header">Small Pack Cost</apex:facet>
+                    <apex:outputField value="{!m.sm.Small_Pack_Cost__c}" style="width: 50px"/>
+                </apex:column>
+
+                <apex:column rendered="{!RenderPMCastingsProductLine}" width="50px">
+                    <apex:facet name="header">Product Line</apex:facet>
+                    <apex:outputField value="{!m.sm.PM_Castings_Product_Line__c}" style="width: 50px"/>
+                </apex:column>
+
+                <apex:column rendered="{!OR(isVALV,RenderPMCastingsProductLine)}" width="50px">
+                    <apex:facet name="header">Sample<br/>Value</apex:facet>
+                    <apex:outputField value="{!m.sm.Estimated_Sample_Value__c}" style="width: 50px"/>
+                </apex:column>
+
+                <apex:column >
+                    <apex:facet name="header">Lot<br/>Number</apex:facet>
+                    <apex:outputField value="{!m.sm.Lot_Numbers__c}" style="width: 65px"/>
+                </apex:column>
+
+                <apex:column rendered="{!OR(renderShipFromLocation, renderLabContactInput)}">
+                    <apex:facet name="header"><apex:outputPanel >
+                        <apex:outputPanel rendered="{!renderShipFromLocation}">Ship From<br/>Location</apex:outputPanel>
+                        <apex:outputPanel rendered="{!renderLabContactInput}">Sourced<br/>From</apex:outputPanel>
+                        </apex:outputPanel></apex:facet>
+                    <apex:outputField value="{!m.sm.Ship_From_Location__c}" style="width: 75px"/>
+                </apex:column>
+
+                <apex:column style="word-wrap: break-word;">
+                    <apex:facet name="header">Notes</apex:facet>
+                    <apex:outputField value="{!m.sm.Notes__c}" styleClass="notes2"/>
+                </apex:column>
+                
+                <apex:column >
+                    <apex:facet name="header">Special<br/>Size?</apex:facet>
+                    <apex:outputField value="{!m.sm.Special_Size__c}"/>
+                </apex:column>
+
+            </apex:pageBlockTable>
+
+            </apex:pageBlockSection>
+
+            &nbsp;&nbsp;&nbsp;
+        </apex:pageBlock>
+
+        <center>
+            <apex:commandButton action="{!gotoPage5A}" value="{!$Label.Previous}" immediate="true"/>&nbsp;
+            <apex:commandButton action="{!saveAndSubmitForApproval}" value="{!$Label.Save_and_Submit}"/>&nbsp;
+            <apex:commandButton action="{!cancel}" value="Cancel" immediate="true" />
+        </center><br/>
+
+    </apex:form>
+    <span class="pageid">6A</span>
+    <style>
+        .right {text-align: right;}
+        .matUom {white-space: nowrap; width: 300px;}
+        .pageid {font-size: 70%; float: right;}
+    </style>
+</apex:page>

@@ -1,0 +1,46 @@
+<apex:page controller="DistributorEndUseCustomerController"
+           action="{!initAction}" sidebar="false"
+           tabStyle="DistributorEndUseCustomer__c">
+    <apex:form >
+        <apex:pageBlock title="Load Distributor EndUse Customers Data">
+            <apex:pageMessages />
+        
+            <apex:panelGrid columns="2" columnClasses="clsA,clsB">
+                <apex:outputText rendered="{!fromDistPage}" value="SoldTo Account :"/>
+                <apex:outputLink rendered="{!fromDistPage}" value="/{!distId}">
+                    <apex:outputText value="{!distName}"/>
+                </apex:outputLink>
+
+                <apex:outputLabel rendered="{!fromListPage}">
+                    Public Group Name for EndUseCust Access : 
+                </apex:outputLabel>
+                <apex:selectList rendered="{!fromListPage}" 
+                                 value="{!publicGroupName}" size="1">
+                    <apex:selectOption itemLabel="AQ Dist Mgt Group" 
+                                       itemValue="AQ Dist Mgt Group"/>
+                </apex:selectList>
+
+                <apex:outputLabel rendered="{!fromListPage}">
+                    EndUseCust,SoldTo,SalesOrg,DistChan,Divsn : <br/>
+                    ...<br/>
+                </apex:outputLabel>
+                
+                <apex:outputLabel rendered="{!fromDistPage}">
+                    EndUse Customer Number 1 : <br/>
+                                           2 : <br/>
+                                           3 : <br/>
+                                           ... <br/>
+                </apex:outputLabel>
+                <apex:inputTextArea value="{!endUseCustomers}" cols="35" rows="10"/>
+
+                <apex:outputLabel value=" " />
+                <apex:commandButton action="{!insertEndUseCustomers}"
+                                    value="Load EndUse Customers"/>
+            </apex:panelGrid>
+        </apex:pageBlock>
+    </apex:form>
+    <style>
+        .clsA {font-weight: bold; text-align: right; vertical-align: top;}
+        .clsB {font-weight: normal; text-align: left;}
+    </style>
+</apex:page>

@@ -1,0 +1,5 @@
+<aura:component implements="lightning:isUrlAddressable,lightning:actionOverride,force:hasRecordId,force:hasSObjectName" >
+    <aura:if isTrue="{!v.recordId}">
+    	<c:idea_Detail ideaId="{!v.recordId}"/>
+    </aura:if>
+</aura:component>

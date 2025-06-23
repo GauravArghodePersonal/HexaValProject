@@ -1,0 +1,35 @@
+<template>
+    <lightning-card title="Ship To Addresses">
+        <div class="maincontainer slds-m-around_medium">
+            <lightning-accordion active-section-name={soldToAdd} allow-multiple-sections-open={multiple}>
+                <template if:true={dataList}>
+                    <template for:each={dataList} for:item="soldTokey">
+                        <div class="slds-card slds-var-p-around_x-small box" key={soldTokey.key}>
+                            <lightning-accordion-section name={soldTokey.key} label={soldTokey.key}>
+                                <template for:each={soldTokey.value} for:item="shipTokey">
+                                    <lightning-layout key={soldTokey.key}>
+                                        <div class="tr_item slds-card slds-var-p-around_x-small box">
+                                            <div class="td_item item_img">
+                                                <lightning-layout-item>
+                                                    <lightning-icon icon-name="utility:company" alternative-text="Connected" title="Connected" class="my-icon">
+                                                    </lightning-icon>
+                                                </lightning-layout-item>
+                                            </div>
+                                            <template for:each={shipTokey} for:item="mapkey">
+                                                <div data-id={mapkey} class="td_item" key={mapkey}>
+                                                    <lightning-layout-item style="padding-left: 10px;">
+                                                        <h1>{mapkey}</h1>
+                                                    </lightning-layout-item>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </lightning-layout>
+                                </template>
+                            </lightning-accordion-section>
+                        </div>
+                    </template>
+                </template>
+            </lightning-accordion>
+        </div>
+    </lightning-card>
+</template>

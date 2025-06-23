@@ -1,0 +1,19 @@
+<apex:page >
+    <html>
+        <body onload="myFunction()">
+            <script>
+                function myFunction() {                                   
+                      var rid = "{!$CurrentPage.parameters.id}";
+                      var type = "{!$CurrentPage.parameters.type}";                      
+                          if(type=='pdf'){  
+                          javascript:openPopupFocus('/apex/VdpMultiPdfDownload?id='+rid); 
+                          window.close();   
+                          }
+                          else if(type=='xls'){
+                          javascript:openPopupFocus('/apex/VDPMultiXLS?id='+rid); 
+                          }
+                        }
+            </script>
+        </body>
+    </html>  
+</apex:page>

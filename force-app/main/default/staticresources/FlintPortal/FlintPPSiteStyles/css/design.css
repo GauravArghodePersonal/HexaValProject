@@ -1,0 +1,617 @@
+/*
+
+////////////////////////////////////////////////////////////////
+
+//
+
+// Allgemeine Styles
+
+//
+
+// Weblication GRID CMS Strukturdesign Version 5.0.9.1
+
+// erstellt durch Scholl Communications AG, 77694 Kehl, www.scholl.de
+
+// erstellt mit Weblication Content Management Server, www.weblication.de
+
+//
+
+////////////////////////////////////////////////////////////////
+
+*/
+
+/* Formatierung von HTML-Elementen */
+
+*                                           {margin:0;padding:0;}
+html                                        {}
+#body                                       {background-image:url(/en-global/wGlobal/layout/images/backgrounds/bg_body.gif); background-repeat:no-repeat;background-color:#FFFFFF}
+#bodyPopup                                  {background-color:#FFFFFF}
+body                                        {font-family: Arial,Helvetica,sans-serif; font-size:12px; color:#000000; font-weight:normal; line-height:140%}
+
+/* Grundgerüst */
+#blockMain                                  {width:100%}
+#blockMainInner                             {}
+#blockMainPopup                             {}
+#blockMainInnerPopup                        {padding:10px 10px 10px 10px}
+#blockTop                                   {width:100%;height:180px;margin:0px;}
+#blockTopStart                              {width:100%;height:395px;margin:0px;}
+#logo                                       {position:absolute; margin:109px 0px 0px 0px; padding:0px; text-align:center; width:180px; height:27px;}
+#logoPrint                                  {position:absolute; margin:109px 0px 0px 0px; padding:0px; text-align:center; width:180px; height:27px; display:none;}
+#imgProductSelector                                                    {position:absolute; height:28px; margin-top:151px;}
+#logo img                                   {border:medium none;float:right;padding:0;margin-right:14px;}
+#topbanner                                     {position:absolute; margin-top:30px; margin-left:181px;}
+#bannerStart                                {position:absolute; margin-top:30px; margin-left:0px;}
+#claim                                                                            {position:absolute;text-align:right;margin:2px 0 0 771px;font-size:11px;color:#FFFFFF;line-height:12px;}
+#languageSelector                           {float:right;position:relative}
+#languageSelector a.lang                    {line-height:20px;float:right;padding:4px}
+#languageSelector a.langCurrent             {line-height:20px;float:right;padding:4px}
+#navigationMeta                                 {position:absolute;padding:0px 0 0 185px; color:#666666; font-size:11px; line-height:16px;}
+#navigationMeta *                               {margin:0;padding:0;}
+#navigationMeta  .navLevel1                     {float:left; height:27px; list-style-type:none; margin:0; padding:0; font-weight:normal; margin-left:0px; font-size:11px;}
+#navigationMeta  .navLevel1 span                {margin:0 5px 0 5px;font-size:11px;}
+#navigationMeta a.navLevel1                     {line-height:29px;color:#666666;padding:0;text-decoration:none;margin:0 3px 0 3px; font-size:11px;}
+#navigationMeta a.navLevel1:hover               {line-height:29px;color:#E52D30;padding:0;text-decoration:none;margin:0 3px 0 3px; font-size:11px;}
+#navigationMeta  .navLevel1Selected             {float:left; height:27px; list-style-type:none; margin:0; padding:0; font-weight:normal; margin-left:0px; font-size:11px;}
+#navigationMeta  .navLevel1Selected span        {margin:0 5px 0 5px;font-size:11px;}
+#navigationMeta a.navLevel1Selected             {line-height:29px;color:#E52D30;padding:0;text-decoration:none;margin:0 3px 0 3px; font-size:11px;}
+#navigationMeta a.navLevel1Selected:hover       {line-height:29px;color:#E52D30;padding:0;text-decoration:none;margin:0 3px 0 3px; font-size:11px;}
+#navigationMeta  .navLevel1Divider              {float:left; height:27px; line-height:29px; list-style-type:none; margin:0; padding:0; font-weight:normal; margin-left:0px; font-size:11px;}
+#searchBox                      {position:absolute; top:6px; margin:0px 0 20px 510px;overflow:hidden;z-index:20;width:240px;}
+#searchBox #searchTerm          {float:left;font-size:11px;height:14px;line-height:14px;margin:1px 2px 0 10px;width:135px;color:#666666;padding:0 4px 0;}
+#searchBox button                {cursor:pointer;width:18px;border:0px;padding:0px;height:17px;margin:0px;vertical-align:top;background-color:#FFFFFF;}
+#searchBox button img            {padding:0px;margin:0px;border:0px;}
+#searchBox label                {display:none}
+#searchBox dd                    {margin:0px;padding:0px;}
+#languageSwitch                 {position:absolute; top:6px; margin:0px 0 20px 809px;overflow:hidden;z-index:20;width:240px;}
+#languageSwitch #selectLanguage {width:150px;padding:0; height:17px; font-size:11px}
+#navigationTopContent           {}
+#navigationTop                  {}
+#blockLeftContentRight          {margin:0px 0 0 0px; padding:0px; width:975px; background-image:url(/en-global/wGlobal/layout/images/backgrounds/bg_content.gif); background-repeat:repeat-y;}
+#blockLeft                      {float:left;width:180px;overflow:hidden;}
+#blockLeftInner                 {}
+#blockLeft .elementLandingpageBannerLeft  {margin-top:68px;}
+#blockLeftRight                  {width:705px;}
+#navigationLeftFull             {padding: 0 0 34px 0}
+#navigationBreadcrumb             {margin:0 0 8px;}
+#blockLeftContentRight          {background-image:url(/en-global/wGlobal/layout/images/backgrounds/bg_content.gif);background-repeat:repeat-y;margin:0 0 0 0;padding:0;width:975px;}
+#blockContentStart                {float:left;width:705px;margin:0 0 0 0;}
+#blockContentStartInner                                            {padding:10px 0 0pt 45px;}
+#blockContent                                 {float:left;width:525px;margin:0 0 0 0;}
+#blockContentInner                            {padding:10px 25px 0pt 45px;}
+#blockContentBreit                             {float:left;width:705px;margin:0 0 0 0;}
+#blockContentBreitInner                            {padding:10px 25px 0pt 45px;}
+#blockEmbed #blockContentStart    {width:auto;margin:0}
+#blockEmbed #blockContent         {width:auto;margin:0}
+#blockRight                                  {float:left; width:180px; vertical-align:top; margin-left:0px; color:#666666; overflow-x:hidden;}
+#blockRightInner                             {padding:68px 0 0 0}
+#blockBottom           {display:none;width:100%;background-color:#A4D135;border-bottom:15px solid #767676;color:#FFFFFF;font-size:10px;line-height:30px;height:28px;margin:0px;position:relative;text-align:left;}
+#blockBottomInner      {padding:0px;padding-right:5px;margin:0px;font-size:10px;line-height:20px;text-align:right;}
+#blockBottom a                  {color:#606060;text-decoration:none}
+#blockBottom a:hover            {background-color:#f0f0f0}
+#blockContent ul                            {margin:10px 0 15px 16px;}
+#blockContent li                            {line-height:150%;}
+.elementBoxStart                          {background-color:#EAEAEA; float:left;}
+.elementBoxStart .elementBoxRow           {padding:0 0 0 0px; border-bottom:1px solid #FFFFFF;}
+.elementBoxStart .elementBoxRow .wglList   {margin:0px;}
+.elementBoxHeadline                        {background-color:#CCCCCC;border-bottom:1px solid #FFFFFF;padding:3px 13px;}
+.elementBoxStart .wglListEntryDetails h2.wglListTitle  {font-weight:normal;line-height:140%;}
+.elementBoxHeadline h2                     {color:#000000;margin:0px;font-size:12px;font-weight:bold;line-height:14px;}
+/* Pflegeschaltflächen */
+#beButtonsSystem                {position:fixed;z-index:10000;overflow:hidden;padding:4px 0 4px 0;top:30px;left:0px;width:100%;background-image:url(/weblication/grid5/gui/images/style/wMainMenuTopbar.png);border-bottom:solid 1px #888888}
+#beButtonsPage                   {margin:10px 0 0 430px;padding:0;position:absolute;width:762px;z-index:100;}
+#beButtonEditMetaNavigation     {position:absolute;margin:5px 0 0 30px;}
+#beButtonEditNavigation         {position:absolute;margin:-18px 0 0 0}
+#navigationMain #beButtonInsertNavpoint         {position:absolute;margin:-20px 0 0 169px;}
+#beButtonEditContent2Include    {position:absolute;margin:2px 0 0 0}
+#beButtonEditFooter             {position:absolute;margin:2px 0 0 0}
+
+/* Container, um z.B. mehrspaltige Bereiche zu ermöglichen */
+#blockContentStart .col1_100  {float:left;width:455px;}
+#blockContentStart .col1_50   {float:left;width:220px;margin:0 15px 0 0}
+#blockContentStart .col2_50   {float:right;width:220px;}
+#blockContentStart .col1_30   {float:left;width:135px;margin:0 15px 0 0}
+#blockContentStart .col2_70   {float:right;width:305px}
+#blockContentStart .col1_70   {float:left;width:305px;margin:0 15px 0 0}
+#blockContentStart .col2_30   {float:right;width:135px}
+#blockContent .col1_100       {float:left;width:455px}
+#blockContent .col1_50        {float:left;width:220px;margin:0 15px 0 0}
+#blockContent .col2_50        {float:right;width:220px}
+#blockContent .col1_30        {float:left;width:135px;margin:0 15px 0 0}
+#blockContent .col2_70        {float:right;width:305px}
+#blockContent .col1_70        {float:left;width:305px;margin:0 15px 0 0}
+#blockContent .col2_30        {float:right;width:135px}
+
+/* Überschriften */
+h1, .h1Editor         {font-size:1.4em;font-weight:bold;line-height:20px;color:#000000;margin:0 0 14px 0}
+h2, .h2Editor         {font-size:16px;font-weight:bold;line-height:19px;color:#000000;margin:0 0 14px 0}
+h3, .h3Editor         {font-size:14px;font-weight:bold;line-height:18px;color:#000000;margin:0 0 14px 0}
+h4, .h4Editor         {font-size:11px;font-weight:bold;line-height:13px;color:#000000;margin:0 0 14px 0}
+h5, .h5Editor         {font-size:11px;font-weight:bold;line-height:13px;color:#000000;margin:0 0 14px 0}
+h6, .h6Editor         {font-size:11px;font-weight:bold;line-height:13px;color:#000000;margin:0 0 14px 0}
+
+.subline              {font-size:13px;color:#a0a0a0}
+.description          {font-weight:bold}
+sup                              {vertical-align:top; font-size:0.8em; line-height:100%;}
+
+/* Textblöcke */
+p                     {margin:0 0 14px 0}
+
+/* Listen */
+ul                    {margin:10px 0 15px 16px;padding:0px;list-style-type:disc;}
+ol                    {margin:10px 0 15px 16px;list-style-type:decimal}
+
+/* Definitionslisten */
+dl                    {}
+dt                    {}
+dd                    {margin:0 0 14px 0;padding:0 0 0 16px;}
+
+/* Horizontale Linien */
+hr                    {background-color:#AEA794;color:#AEA794;height:1px;border-style:none}
+
+/* Formularelemente */
+form                   {background:none;}
+fieldset               {border:0;padding:0;margin:0 0 10px 0}
+input                  {font:inherit;font-size:12px;padding:1px 2px 1px 2px;background-color:#FFFFFF;border:1px solid #878785;height:16px;margin:0 0 5px 0px;}
+select                 {font:inherit;border:1px solid #666666;font-size:12px;padding:1px 2px 1px 2px;}
+select#header           {width:260px;}
+select#subject         {width:260px;margin-left:135px;}
+select#region           {width:260px;}
+textarea               {font:inherit;border:1px solid #878785;font-size:12px;padding:1px 2px 1px 2px;}
+input[type="radio"]    {border:none}
+input[type="checkbox"] {border:none}
+input[type="file"]     {height:22px;}
+a.moreUpload           {display:block;margin-top:-3px; margin-bottom:10px;}
+button                 {background-color:#EAEAEA;background-image:none;border:1px none #000000;color:#5E5E5E;cursor:pointer;height:20px;margin:3px 0 5px 8px;padding:1px 10px 2px; font-size:11px;}
+button:hover           {background-color:#DDDDDD;background-image:none;border:1px none #000000;color:#E52D30;cursor:pointer;height:20px;margin:3px 0 5px 8px;padding:1px 10px 2px; font-size:11px;}
+button span            {display:block; padding-bottom:3px;}
+
+.wglButton           {}
+
+select                                      {font-family: Arial,Helvetica,sans-serif; border:1px solid #666666; font-size:12px; padding:0px 2px 0px 2px; margin-bottom:5px;}
+textarea                                    {font-family: Arial,Helvetica,sans-serif; border:1px solid #878785; font-size:12px; padding:0px 2px 0px 2px;}
+
+.wglInput   {width:250px;}
+.wglInputXS  {width:77px;}
+.wglInputS  {width:165px;}
+.wglInputM  {width:200px;}
+.wglInputL  {width:250px;}
+
+/* Links */
+a                                           {color:#E52D30; text-decoration:underline;}
+a:hover                                     {color:#E52D30; text-decoration:none;}
+a.intern             {padding:0 0 0 14px;background-image:url(/en-global/wGlobal/layout/images/links/intern.gif); background-repeat:no-repeat; background-position:0px 2px;}
+a.extern             {padding:0 0 0 14px;background-image:url(/en-global/wGlobal/layout/images/links/extern.gif); background-repeat:no-repeat; background-position:0px 2px;}
+a.download           {padding:0 0 0 14px;background-image:url(/en-global/wGlobal/layout/images/links/download.gif); background-repeat:no-repeat; background-position:0px 2px;}
+a.pdf                {padding:0 0 0 20px;background-image:url(/en-global/wGlobal/layout/images/links/file_pdf.gif); background-repeat:no-repeat; background-position:0px -2px;}
+*html  a.pdf            {background-position:0px 4px;}
+*+html a.pdf         {background-position:0px 4px;}
+a.audio              {padding:0 0 0 20px;background-image:url(/en-global/wGlobal/layout/images/links/file_sound.gif); background-repeat:no-repeat; background-position:0px 0px;}
+a.video              {padding:0 0 0 20px;background-image:url(/en-global/wGlobal/layout/images/links/file_movie.gif); background-repeat:no-repeat; background-position:0px 0px;}
+a.next               {padding:0 0 0 14px;background-image:url(/en-global/wGlobal/layout/images/links/next.gif); background-repeat:no-repeat; background-position:0px 2px;}
+a.back               {padding:0 0 0 14px;background-image:url(/en-global/wGlobal/layout/images/links/back.gif); background-repeat:no-repeat; background-position:0px 2px;}
+a.mail               {padding:0 0 0 14px;background-image:url(/en-global/wGlobal/layout/images/links/mail.gif); background-repeat:no-repeat; background-position:0px 2px;}
+*html  a.mail         {background-position:0px 8px;}
+*+html a.mail         {background-position:0px 8px;}
+
+.elementLinkBox      {width:224px; float:left; background-color:#EAEAEA; border-bottom:1px solid #FFFFFF; border-right:1px solid #FFFFFF;}
+.elementLinkBox a    {display:block; padding:5px 10px 5px 10px; font-weight:bold;}
+
+/* Bilder */
+a img                {border:none}
+img.picture                                 {margin:0 0 11px 0; padding:0;}
+img.pictureLeft                             {float:left;margin:4px 11px 11px 0; padding:0;}
+img.pictureRight                            {float:right;margin:4px 0 11px 11px; padding:0;}
+#blockRight img.picture          {margin:0 0 15px 0;padding:0;}
+#blockRight img.pictureLeft      {float:left;margin:4px 11px 11px 0;padding:0;}
+#blockRight img.pictureRight     {float:right;margin:4px 0 11px 11px;padding:0;}
+
+/* Tabellen */
+table                {font:inherit;color:inherit;border:none}
+tr, thead, tbody     {}
+th, td               {vertical-align:top}
+
+table.product                                 {width:100%;border-collapse: collapse; border-left:1px solid #EAEAEA; margin-bottom:15px; margin-top:3px;}
+table.product td.tableHead                   {background-color:#eaeaea;height:30px;text-align:left;vertical-align:bottom}
+table.product td.tableHeadSpr                 {background-color:#eaeaea;height:30px;width:20px;text-align:left;vertical-align:bottom}
+table.product td                             {border-bottom:1px solid #EAEAEA; border-right:1px solid #EAEAEA; text-align:left; padding:6px 4px 5px 6px;}
+
+table.light          {background-color:#ffffff;border:none;margin-bottom:12px;border-collapse:collapse;}
+table.light th       {border:none;text-align:left;background-color:#b0b0b0;color:#ffffff}
+table.light td       {border:none;padding:4px}
+table.default        {background-color:#ffffff;border-style:solid none none solid;border-width:1px;border-color:#a0a0a0;margin-bottom:12px;border-collapse:collapse;}
+table.default th     {border-style:none solid solid none;border-width:1px;border-color:#a0a0a0;padding:4px;text-align:left;background-color:#b0b0b0;color:#ffffff}
+table.default td     {border-style:none solid solid none;border-width:1px;border-color:#a0a0a0;padding:4px}
+
+tr.highlighted, th.highlighted, td.highlighted       {background-color:#f0f0f0}
+td.bgColor1, th.bgColor1 {background-color:#f0f0f0}
+
+.elementDataTableOuter                      {overflow:hidden;margin-bottom:10px;}
+.elementDataTable                           {border-top:1px solid #97C131;border-left:1px solid #97C131;}
+.elementDataTable td                        {border-right:1px solid #97C131;border-bottom:1px solid #97C131;padding:1px;padding-bottom:0px;padding-left:4px;padding-right:4px;}
+.elementDataTable .tableHead                {background:#F2FBD3;}
+.elementDataTable .tableContent             {background:#ffffff;}
+
+table.elementProductTable                     {width:450px; border-collapse: collapse; border-left:1px solid #EAEAEA; margin-bottom:15px; margin-top:3px;}
+table.elementProductTable td                 {border-bottom:1px solid #EAEAEA;}
+tr.elementProductTableHeader                {}
+th.elementProductTableIcon                  {background-color:#eaeaea;height:30px;width:30px;text-align:left;}
+th.elementProductTableIcon  img               {position:absolute;margin-left:-1px;}
+th.elementProductTableIcon .productTableIconInEditor img  {position:relative;}
+th.elementProductTableBrandName              {background-color:#eaeaea;font-weight:normal; border-right:1px solid #EAEAEA; text-align:left; padding:6px 12px 5px 12px;}
+th.elementProductTableDownloadType          {background-color:#eaeaea;font-weight:normal; border-right:1px solid #EAEAEA; width:40px; padding:6px 0px 5px 0px;}
+tr.elementProductTableRow                     {}
+td.elementProductTableText                  {border-right:1px solid #EAEAEA; padding:5px 12px 5px 12px;}
+td.elementProductTableDownload              {border-right:1px solid #EAEAEA;text-align:center; padding:5px 5px 2px 5px;}
+table.elementProductTable.noIcon .firstColumn             {display:none;}
+table.elementProductTable.noIcon .elementProductTableIcon {display:none;}
+
+table.elementTableSignificantDate            {width:99%;border-collapse: collapse; border-left:1px solid #EAEAEA; margin-bottom:15px; margin-left:1px; margin-top:3px;}
+table.elementTableSignificantDate td        {border-bottom:1px solid #EAEAEA;}
+tr.elementTableSignificantDateHeader        {}
+th.elementTableSignificantDateDate          {background-color:#eaeaea; font-weight:normal; border-right:1px solid #EAEAEA; text-align:left; width:50px; padding:6px 6px 5px 6px;}
+th.elementTableSignificantDateRegion        {background-color:#eaeaea; font-weight:normal; border-right:1px solid #EAEAEA; text-align:left; width:50px; padding:6px 6px 5px 6px;}
+th.elementTableSignificantDateCompany        {background-color:#eaeaea; font-weight:normal; border-right:1px solid #EAEAEA; text-align:left; width:100px; padding:6px 6px 5px 6px;}
+th.elementTableSignificantDateEvent          {background-color:#eaeaea; font-weight:normal; border-right:1px solid #EAEAEA; text-align:left; padding:6px 6px 5px 6px;}
+th.elementTableSignificantDateSubject        {background-color:#eaeaea; font-weight:normal; border-right:1px solid #EAEAEA; text-align:left; width:150px; padding:6px 6px 5px 6px;}
+tr.elementTableSignificantDateRow            {}
+td.elementTableSignificantDateDate          {font-weight:normal; border-right:1px solid #EAEAEA; text-align:left; width:50px; padding:6px 6px 5px 6px;}
+td.elementTableSignificantDateRegion        {font-weight:normal; border-right:1px solid #EAEAEA; text-align:left; width:50px; padding:6px 6px 5px 6px;}
+td.elementTableSignificantDateCompany        {font-weight:normal; border-right:1px solid #EAEAEA; text-align:left; width:100px; padding:6px 6px 5px 6px;}
+td.elementTableSignificantDateEvent          {font-weight:normal; border-right:1px solid #EAEAEA; text-align:left; padding:6px 6px 5px 6px;}
+td.elementTableSignificantDateSubject        {font-weight:normal; border-right:1px solid #EAEAEA; text-align:left; width:150px; padding:6px 6px 5px 6px;}
+table.elementTableSignificantDateDetail      {width:100%; border-collapse: collapse; margin-bottom:15px; margin-top:0px;}
+table.elementTableSignificantDateDetail th  {width:100px; background-color:#FFFFFF; text-align:right;}
+table.elementTableSignificantDateDetail td  {padding-left:15px; background-color:#FFFFFF; text-align:left;}
+
+/* Globale Elemente */
+.clearBoth   {height:0px;line-height:0px;font-size:0px;clear:both;padding:0px;margin:0;overflow:hidden;}
+.clickable   {cursor:pointer}
+.clickable * {cursor:pointer}
+.invisible   {display:none}
+.highlighted {background-color:yellow}
+div.jobArea  {display:none}
+#tooltip {position: absolute;  z-index: 3000;  border: 1px solid #111;  background-color: #eaeaea;  padding: 5px;}
+#tooltip h3, #tooltip div { margin: 0; }
+#tooltipText {display:none}
+h4.tooltip {margin-bottom:5px;cursor:pointer;}
+
+/* Allgemeine Elemente */
+.elementFooter                              {border-top:1px solid #CCCCCC;height:1%;margin:30px 0 45px 45px;}
+.elementFooter .elementCopyright            {color:#878785;float:left;padding:1px 0 0;}
+.elementFooter .elementPrintTop              {background-color:#EAEAEA;float:right;width:180px;}
+.elementFooter .elementPrintTop.usa          {width:379px;}
+.elementFooter .elementTop                  {background-image:url(/en-global/wGlobal/layout/images/buttons/btn_top_n.gif);background-position:18px 3px;background-repeat:no-repeat;color:#5E5E5E;display:block;float:right;padding:1px 20px 2px 34px;text-decoration:none;}
+.elementFooter .elementTop:hover            {background-image:url(/en-global/wGlobal/layout/images/buttons/btn_top_r.gif);}
+.elementFooter .elementPrint                {background-image:url(/en-global/wGlobal/layout/images/buttons/btn_print_n.gif);background-position:27px 3px;background-repeat:no-repeat;border-right:1px solid #FFFFFF;color:#5E5E5E;display:block;float:right;padding:1px 30px 2px 48px;text-decoration:none;}
+.elementFooter .elementPrint:hover          {background-image:url(/en-global/wGlobal/layout/images/buttons/btn_print_r.gif);}
+.elementFooter .elementTerms                {background-image:url(/en-global/wGlobal/layout/images/buttons/btn_right_n.gif);background-position:27px 3px;background-repeat:no-repeat;border-right:1px solid #FFFFFF;color:#5E5E5E;display:block;float:right;padding:1px 30px 2px 48px;text-decoration:none;}
+.elementFooter .elementTerms:hover          {background-image:url(/en-global/wGlobal/layout/images/buttons/btn_right_r.gif);}
+a.footerLink {margin-left: 80px; color:#878785}
+.elementStandard                {margin:0 0 10px 0}
+.elementHeadline                {margin:20px 0 10px 0}
+.elementImageHeadline                        {}
+.elementImageHeadline .elementImage          {float:left;margin:0 10px 15px 0;}
+.elementImageHeadline .elementHeadline      {margin:0 0 0 0;}
+.elementText                    {margin:0 0 10px 0}
+.elementText .textImportant     {color:#E52D30;}
+.elementText .textSmall         {font-size:10px;}
+.elementText ul                 {}
+.elementText li                 {}
+.elementPicture                 {margin:0 0 0px 0}
+.elementPictureText             {margin:0 0 10px 0;overflow:hidden}
+.elementPictureText .fragmentPicture {float:left}
+.elementPictureText .fragmentText    {float:right}
+.elementLink                    {margin:0 0 10px 0}
+.elementVideo                   {margin:0 0 10px 0}
+.elementVideo a.videoContainer        {text-align:center;vertical-align:middle;display:block;}
+.elementVideo img.splashScreen        {}
+.elementVideo img.splashScreenOverlay {position:absolute;margin:0 auto}
+.elementAudio                   {margin:0 0 10px 0}
+.elementList                    {margin:0 0 10px 0;overflow:hidden}
+.elementSitemap                 {margin:0 0 10px 0;overflow:hidden}
+.elementDelimiter               {margin:0 0 10px 0}
+.elementClearer                 {margin:0 0 0 0;height:0px;clear:both}
+.elementContainer               {margin:0 0 10px 0;overflow:hidden}
+.elementForm                    {margin:0 0 10px 0}
+
+.elementGallery                 {margin:0 0 10px 0;overflow:hidden}
+.elementGallery .imageFrame     {float:left;padding:11px;margin:0 8px 8px 0;background-color:#f0f0f0;border:solid 1px #f0f0f0}
+.elementGallery .imageFrameInner     {width:100px}
+.elementGallery .lastImageFrameOfRow {margin-right:0}
+.elementGallery .imageTitle     {margin:10px 0 0 0;text-align:center;font-size:11px}
+
+.elementButton                  {margin:0}
+.elementButton .wglButton       {margin-bottom:4px;}
+
+.elementBoxSheet                {margin:0 0 10px 0;overflow:hidden;background-color:#f0f0f0;padding:15px;padding-bottom:5px}
+.elementBoxBlank                {margin:0 0 10px 0;overflow:hidden;padding:10px 10px 0 10px;}
+
+.elementProductTeaser           {margin:-11px 0 10px 0; cursor:pointer; padding:10px 0 11px 0; border-top:1px solid #CCCCCC; border-bottom:1px solid #CCCCCC;}
+.elementProductTeaserOver       {background-color:#EEEEEE; margin:-11px 0 10px 0; cursor:pointer; padding:10px 0 11px 0; border-top:1px solid #CCCCCC; border-bottom:1px solid #CCCCCC;}
+.elementProductTeaser .elementIcon, .elementProductTeaserOver .elementIcon {float:left; margin-right:12px; width:55px; height:55px; overflow:hidden;}
+.elementProductTeaser .elementNeu, .elementProductTeaserOver .elementNeu   {float:right; margin-top:5px;}
+.elementProductTeaser .elementInfo, .elementProductTeaserOver .elementInfo {display:block; width:335px; float:left!important; float:none;}
+.textProductDivision             {display:block; font-size:11px; color:#878785; margin-bottom:5px;}
+.textProductName                 {font-size:12px;}
+.textProductDecription          {font-size:11px; color:#878785;}
+
+div.tagcloud                    {}
+div.tagcloud a                  {padding:0 4px 0 0;line-height:100%;display:inline-block;}
+div.tagcloud .highlighted       {color:#cb0a1c}
+
+.errorMessages                  {margin:0 0 10px 0;padding:8px;background-color:#ffcccc}
+.errorMessages *                {}
+.wglErrorMessage                {color:red;display:block;line-height:16px}
+.errorMessages .wglErrorMessage {}
+.textInfo                       {color:#666666;line-height:16px}
+
+.elementForm table              {width:400px}
+.elementForm td                 {padding:4px 0 0 0}
+.elementForm .rowText           {}
+.elementForm .formButtons       {text-align:right;width:395px;margin-top:2px;}
+.elementForm label              {white-space:nowrap;padding:0 4px 0 0}
+
+dl.form                         {display:table;margin:0;padding:0}
+dl.form dt                      {float:left;display:block;clear:left;margin:0 0 2px 0; width:135px;}
+dl.form dt label                {}
+dl.form dd span                 {}
+dl.form dd span.wglRadiobutton  {float:left;margin-right:8px;}
+dl.form dd span.wglRadiobutton input  {margin-right:4px;}
+dl.form dd span label           {white-space: normal;}
+dl.form dd span input           {float:left;}
+dl.form dd.subject span         {margin:5px 0 5px 0;}
+dl.form dd.subject span input   {float:left;margin:2px 5px 15px 0;border:none;padding:0px;}
+dl.form dd.subject span label   {display:block; padding-left:20px!important; padding-left:0px; width:240px;}
+dl.form dd                      {display:block;margin:0 0 0 0;float:left;width:300px;}
+
+#blockContent .searchButton       {background-color:#EAEAEA;background-image:none;border:1px none #000000;color:#5E5E5E;cursor:pointer;height:20px;margin:3px 0 5px 8px;padding:1px 10px 2px;}
+#blockContent .searchButton:hover {background-color:#DDDDDD;background-image:none;border:1px none #000000;color:#E52D30;cursor:pointer;height:20px;margin:3px 0 5px 8px;padding:1px 10px 2px;}
+
+#blockContent .elementBoxMap                  {width:449px; background-color: #CCCCCC; float:left;}
+#blockContent .elementBoxMap .elementBoxRow    {border-bottom:1px solid #FFFFFF;}
+#blockContent .elementBoxMapContent           {width:449px; background-color: #CCCCCC; margin-bottom:30px;}
+
+.elementBoxText                                {padding:6px 13px 7px;}
+
+#elementMapNorthAmerica               {visibility: hidden;position:absolute;width:200px;height:115px;  padding:12px 0 0 10px;}
+#elementMapSouthAmerica               {visibility: hidden;position:absolute;width:200px;height:115px;  padding:132px 0 0 70px;}
+#elementMapEuropeAfrica               {visibility: hidden;position:absolute;width:200px;height:115px;  padding:44px 0 0 193px;}
+#elementMapAsiaPacific                {visibility: hidden;position:absolute;width:200px;height:115px;  padding:94px 0 0 292px;}
+#elementNavNorthAmerica                {visibility: hidden; position:absolute; line-height:100%; z-index:1000;}
+#elementNavSouthAmerica                {visibility: hidden; position:absolute; line-height:100%; z-index:1000;}
+#elementNavEuropeAfrica                {visibility: hidden; position:absolute; line-height:100%; z-index:1000;}
+#elementNavAsia                       {visibility: hidden; position:absolute; line-height:100%; z-index:1000;}
+#elementNavPacific                    {visibility: hidden; position:absolute; line-height:100%; z-index:1000;}
+.elementProductNavi                                    {margin:0 0 15px 0;}
+.elementProductNavi .elementProductNaviBlockLeft      {float:left; width:224px; border-right:1px solid #FFFFFF;}
+.elementProductNavi .elementProductNaviBlockRight      {float:left; width:224px;}
+.elementProductNavi .elementProductNaviImage          {float:left;}
+.elementProductNavi .elementProductNaviText            {float:left; width:169px; height:55px; background-color:#eaeaea; overflow:hidden;}
+.elementProductNavi .elementProductNaviText .text      {display:block; width:150px; height:55px; padding:8px 0 0 10px;}
+.elementProductNavi .elementProductNaviText a         {display:block; width:150px; height:55px; padding:8px 0 0 10px; font-weight:bold;}
+.elementProductNavi .elementClearFloat                {clear:both; width:224px; height:1px; background-color:#FFFFFF; font-size:1px; line-height:1px;}
+.wglRadioFloat                  {display:inline-block;padding-bottom:3px;}
+.wglRadioFloat input            {margin:0;float:left;border:none;margin-top:2px;}
+.wglRadioFloat label            {float:left;padding:0 4px 0 4px}
+.wglRadio                       {display:block;clear:left;padding:4px 0 4px 0}
+.wglRadio input                 {margin:0;float:left}
+.wglRadio label                 {float:left;padding:0 4px 0 4px;color:black}
+.wglCheckbox                    {display:block;clear:left;padding:4px 0 4px 0}
+.wglCheckbox input              {margin:0;float:left}
+.wglCheckbox label              {float:left;padding:0 4px 0 4px}
+.wglCheckboxFloat               {margin:0 2px 0 0}
+.wglInput, .wglInputXS, .wglInputS, .wglInputM, .wglInputL {border:1px solid #878785;font-size:12px;height:17px;margin:0 0 6px 0;padding:0 0 0 3px;}
+.searchLabel                    {margin-right:5px;}
+.searchInput                    {}
+input#captchaInput 				{width:131px;}
+
+/* Groessen der Eingebafelder */
+input.XS        {width:44px;margin-right:4px}
+input.S         {width:90px;margin-right:4px}
+input.M         {width:144px;margin-right:4px}
+input.L         {width:154px;margin-right:4px}
+input.XL        {width:244px;margin-right:4px}
+input.XXL       {width:254px;margin-right:4px}
+textarea 		{margin-bottom: 6px;}
+textarea.XS     {width:44px;margin-right:4px}
+textarea.S      {width:90px;margin-right:4px}
+textarea.M      {width:144px;margin-right:4px}
+textarea.L      {width:154px;margin-right:4px}
+textarea.XL     {width:244px;margin-right:4px}
+textarea.XXL    {width:254px;margin-right:4px}
+select.XS       {width:46px;margin-right:4px}
+select.S        {width:90px;margin-right:4px}
+select.M        {width:146px;margin-right:4px}
+select.L        {width:154px;margin-right:4px}
+select.XL       {width:246px;margin-right:4px}
+select.XXL      {width:254px;margin-right:4px}
+
+/* Elemente des oberen Bereich */
+
+/* Elemente des linken Bereiches */
+
+/* Elemente des Inhaltsbereiches */
+
+/* Elemente des rechten Bereiches */
+#blockRight a                               {}
+#blockRight ul                              {margin:10px 13px 15px 13px;}
+#blockRight .elementList                    {margin:0px;}
+#blockRight .elementText li                 {margin-left:0px;}
+#blockRight .elementHeadline                {margin:0 0 10px 0;}
+#blockRight .elementHeadline h1             {margin:0;padding:0;color:#666666;}
+#blockRight .elementText                    {margin:0 0 10px 0;}
+#blockRight .elementRubrik                   {background-color:#EAEAEA;margin-bottom:15px;overflow:hidden;width:100%;}
+#blockRight .elementRubrik .elementHeadline  {background-color:#CCCCCC;border-bottom:1px solid #FFFFFF;font-weight:bold;line-height:100%;padding:4px 13px;margin:0;}
+#blockRight .elementRubrik .elementHeadline h1 {font-size:12px;color:#000000;margin:0px;padding:0px;line-height:12px;line-height:14px;}
+#blockRight .elementRubrik .elementHeadline h2 {font-size:12px;color:#000000;margin:0px;padding:0px;line-height:12px;line-height:14px;}
+#blockRight .elementRubrik .elementHeadline h3 {font-size:12px;color:#000000;margin:0px;padding:0px;line-height:12px;line-height:14px;}
+#blockRight .elementRubrik .elementHeadline h4 {font-size:12px;color:#000000;margin:0px;padding:0px;line-height:12px;line-height:14px;}
+#blockRight .elementRubrik .elementText     {color:#5E5E5E;padding:6px 13px 7px;margin:0px;}
+#blockRight .elementRubrik .elementLink      {background-color:#EAEAEA; border-bottom:1px solid #FFFFFF;color:#5E5E5E;display:block;padding:6px 13px 7px;text-decoration:none;margin:0px;}
+#blockRight .elementLinkLastSpace            {display:none;}
+#blockRight .colContent                     {background-color:#82A30C; color:#FFFFFF; padding: 10px 6px 0 6px; overflow:hidden;}
+#blockRight .colContent .elementHeadline h1 {color:#FFFFFF;}
+#blockRight .colContent .elementHeadline h2 {color:#FFFFFF;}
+#blockRight .colContent .elementHeadline h3 {color:#FFFFFF;}
+#blockRight .colContent .elementHeadline h4 {color:#FFFFFF;}
+#blockRight .colContent .elementHeadline h5 {color:#FFFFFF;}
+#blockRight .colContent .elementHeadline h6 {color:#FFFFFF;}
+#blockRight .wglListEntryDetails            {background-color:transparent;}
+#areaSelect {border:0 solid #FF0000;height:auto;margin:0 0 15px;padding:0;}
+#areaSelect select {margin:0;padding:0;vertical-align:top;width:180px;}
+
+/* Elemente des unteren Bereiches */
+
+/* Listen */
+#blockContent ul.listDefault                 {list-style:none;margin:0;padding:0}
+#blockContent ul.listCompact                 {list-style:none;margin:0;padding:0}
+#blockContent ul.listSearchResult            {list-style:none;margin:0;padding:0}
+.listDefault li                {padding:0;margin:0 0 12px 0;}
+.listCompact li                {padding:0;margin:0 0 10px 0;list-style-image:none;list-style-type:none;color:#000000;}
+.listSearchResult li           {padding:0;margin:0 0 12px 0;border-bottom:solid 1px #CCCCCC}
+li.twoCols                     {float:left;width:49%;margin-right:1%;height:120px;overflow:hidden}
+.listDefault .listEntryTitle               {margin:0 0 0 0;font-size:12px}
+.listDefault .listEntryTitle a             {text-decoration:none}
+.listDefault .listEntryDate                {float:left;padding:0 6px 0 0;color:gray;font-weight:bold;text-decoration:none}
+.listDefault .listEntrySubline             {clear:both;margin:0 0 4px 0;color:#444444}
+.listDefault .listEntryThumbnail           {float:left;margin:0 8px 8px 0;}
+.listDefault .listEntryDescription         {clear:both;margin:0 0 8px 0}
+.listDefault .listEntryMoreOnly            {text-decoration:none}
+.listDefault .listEntryIconCalendar        {float:left;width:36px;height:36px;margin:10px 10px 20px 0;text-align:center;background-image:url(/en-global/wGlobal/layout/images/calendar.png)}
+.listDefault .listEntryIconCalendar .month {font-size:9px;font-weight:bold;margin:2px 0 0 0;color:#ffffff}
+.listDefault .listEntryIconCalendar .day   {margin:5px 0 0 0}
+.listCompact .listEntryTitle          {margin:0 0 8px 0;font-size:12px}
+.listCompact .listEntryTitle a        {text-decoration:none}
+.listCompact .listEntryDate           {line-height:16px;padding:0 6px 0 0;color:gray;font-weight:bold;text-decoration:none}
+.listCompact .listEntrySubline        {clear:both;margin:0 0 4px 0;color:#888888}
+.listCompact .listEntryThumbnail      {float:left;margin:0 8px 8px 0;}
+.listCompact .listEntryDescription    {margin:0 0 8px 0}
+.listCompact .listEntryMoreOnly       {text-decoration:underline}
+.listCompact .listEntryMoreOnly:hover {text-decoration:none}
+.listSearchResult .listEntryTitle       {margin:0 0 4px 0;font-size:12px}
+.listSearchResult .listEntryTitle a     {text-decoration:underline;}
+.listSearchResult .listEntryTitle a:hover     {text-decoration:none;}
+.listSearchResult .listEntryDescription {margin:0 0 4px 0}
+.listSearchResult .listEntryUrl         {margin:0 0 8px 0;float:right;}
+.listSearchResult .listEntryUrl a       {}
+.wglList {list-style-image:none;list-style-position:outside;list-style-type:none;margin:16px 0 2px 0;}
+#blockContent ul.wglList                 {margin:0px;}
+.wglListOnly                             {}
+.wglListEntry                            {background-color:#ffffff;margin-bottom:10px;border-bottom:1px solid #EEE5CF;padding-left:10px;list-style-image:none;overflow:hidden}
+.wglListEntry .wglListTitle              {}
+.wglListEntry .wglListTitle a            {color:#666666;}
+.wglListEntry a.wglListTitle             {color:#666666;}
+.wglListEntry .wglListThumbnail          {float:left; margin:5px;}
+.wglListEntry .wglListDescription        {}
+.wglListEntry .wglListDate               {}
+.wglListEntry .wglListContent            {}
+.wglListEntry .wglListInfo               {font-size:10px;color:#a0a0a0;}
+.wglListEntry .wglListMore               {float:right; padding:0 9px 0 9px; margin-bottom:5px; margin-right:5px; height:17px; line-height:16px; display:block; text-align:right;text-decoration:none; color:#666666;}
+.wglListEntry .wglListMore:hover         {color:#82A30C;}
+.wglListEntryDetails                     {list-style-image:none; background-color:#FFFFFF; margin-bottom:10px;border-bottom:0;}
+.wglListEntryDetails .wglListTitle       {margin:0px; font-size:12px;}
+.wglListEntryDetails .wglListTitle a     {text-decoration:none;}
+.wglListEntryDetails a.wglListTitle      {}
+.wglListEntryDetails .wglListThumbnail   {float:left; margin:5px;}
+.wglListEntryDetails .wglListDescription {margin:0px; }
+.wglListEntryDetails .wglListContent     {}
+.wglListEntryDetails .wglListInfo        {font-size:10px;color:#a0a0a0}
+.wglListEntryDetails .wglListMore        {margin-bottom:5px; height:17px; line-height:16px;}
+
+/* Seiten-Blättern-Navigation */
+.pageNaviList                   {text-align:center;line-height:24px;margin:0 0 10px 0}
+.pageNaviList a                 {text-decoration:underline}
+.pageNaviList a:hover           {text-decoration:none}
+.pageNaviListPages              {display:inline; margin:0 auto;}
+a.pageNaviBackLink               {margin:0; float:left;}
+a.pageNaviLink                   {background-color:#EAEAEA;background-image:url(/en-global/wGlobal/layout/images/buttons/but_neutral_n.gif);background-repeat:repeat-x;border:medium none;color:#000000;cursor:pointer;height:22px;line-height:20px;margin:0 1px 0 0;padding:2px 7px 4px;text-decoration:none;width:21px;}
+a.pageNaviLink:hover             {background-color:#EAEAEA;background-image:url(/en-global/wGlobal/layout/images/buttons/but_neutral_r.gif);background-repeat:repeat-x;border:medium none;color:#000000;cursor:pointer;height:22px;line-height:20px;margin:0 1px 0 0;padding:2px 7px 4px;text-decoration:none;width:21px;color:#FFFFFF;}
+.pageNaviCurrent                {background-color:#E52D30;background-image:url(/en-global/wGlobal/layout/images/buttons/but_neutral_r.gif);background-repeat:repeat-x;border:medium none;color:#FFFFFF;height:22px;
+line-height:20px;margin:0 1px 0 0;padding:2px 7px 4px;text-decoration:none;width:21px;font-weight:bold;}
+a.pageNaviNextLink               {margin:0; float:right;}
+
+/**************** Accordion ********************/
+.accordionArea                     {margin-bottom:0;}
+.accordionArea h2                  {margin:0 0 8px 0;padding:0}
+.accordionArea h2:hover            {}
+.accordionHover                     {background-color:#EEEEEE}
+.accordionContent                   {padding:10px 0 0 0;}
+.accordionContent h2               {background:none;padding:0;}
+.accordionArea .accordion          {min-height:25px;border-top:1px solid #CCCCCC;margin:0; padding:0;}
+.accordionArea .accordion.noBorder {border-top:none;border-bottom:none;}
+.accordionArea .last               {border-top:1px solid #bfcad7; border-bottom:1px solid #CCCCCC;}
+.accordionArea .accordionContent   {display:none;}
+.accordionMore                     {padding:0 18px 0 0; background-image:url(/en-global/wGlobal/layout/images/icons/icon-arrow-accordion.gif); background-repeat: no-repeat; background-position:right 5px}
+.spaceKlapperTop                   {padding:5px 0 0 0; font-size:1px; line-height:1px;}
+.spaceKlapperBottom                 {padding:8px 0 0 0; font-size:1px; line-height:1px;}
+.spaceKlapperMore                   {padding:5px 0 0 0; font-size:1px; line-height:1px;}
+
+/* Gestaltung der Sitemap */
+#navigationSitemap                                    {margin-left:-24px}
+#navigationSitemap *                                  {margin:0;padding:0}
+#navigationSitemap ul                                 {list-style-type:none;margin-left:24px}
+#navigationSitemap ul                                 {list-style-type:none;margin-left:24px}
+#navigationSitemap li                                 {overflow:hidden;margin:0 0 0 0;padding:0 0 0 0;}
+#navigationSitemap h2                                 {font-weight:normal;font-family:Arial, Sans-serif, Helvetica;font-size:12px}
+#navigationSitemap h3                                 {font-weight:normal;font-family:Arial, Sans-serif, Helvetica;font-size:12px}
+#navigationSitemap h4                                 {font-weight:normal;font-family:Arial, Sans-serif, Helvetica;font-size:12px}
+#navigationSitemap h5                                 {font-weight:normal;font-family:Arial, Sans-serif, Helvetica;font-size:12px}
+#navigationSitemap a                                  {display:block;width:100%;text-decoration:underline;line-height:150%;}
+#navigationSitemap a:hover                            {text-decoration:none;}
+#navigationSitemap p                                  {margin:4px 0 8px 0}
+#navigationSitemap .navText                           {color:#b0b0b0}
+#navigationSitemap .title                             {margin:4px 0 8px 0}
+#navigationSitemap .description                       {margin:4px 0 8px 0}
+#navigationSitemap .keywords                          {margin:4px 0 8px 0;color:#152362}
+
+/* Gestaltung der Submap */
+#navigationSubmap                                     {margin-left:-24px}
+#navigationSubmap *                                   {margin:0;padding:0}
+#navigationSubmap ul                                  {list-style-type:none;margin-left:24px}
+#navigationSubmap li                                  {overflow:hidden;margin:4px;padding:4px}
+#navigationSubmap a                                   {display:block;width:100%;text-decoration:none;}
+#navigationSubmap a:hover                             {}
+
+/* Gestaltung der Haupt-Navigation */
+/* ############################################################################## */
+/* Die Hauptnavigation ist in einer seperaten CSS definiert (navigation-TYPE.css) */
+/* ############################################################################## */
+
+@media print  {
+#body                      {background-image:none;}
+#blockLeftContentRight    {background-image:none;}
+#blockLeft                {display:none;}
+#blockContent              {float:none;}
+#navigationMain            {display:none;}
+#imgProductSelector        {display:none;}
+#blockContentInner        {padding:0px;}
+a.intern                  {padding-left:0px;}
+a.extern                  {padding-left:0px;}
+a.download                {padding-left:0px;}
+a.audio                   {padding-left:0px;}
+a.video                   {padding-left:0px;}
+.navigationDivisions      {display:none;}
+#logo img                  {float:none;}
+#logo                      {position:relative;text-align:left;margin:0;}
+#logoPrint                {display:block;position:relative;text-align:left;margin:0;}
+#navigationMeta            {display:none;}
+#blockTop                  {height:auto;}
+#blockTopStart            {height:50px;}
+#banner                    {display:none}
+#bannerStart              {display:none}
+#topbanner                {display:none}
+#searchBox                {display:none}
+#navigationBreadcrumb      {display:none}
+.elementFooter            {margin-left:0px;}
+.elementPrintTop          {display:none;}
+#blockRight .elementRubrik .elementHeadline {padding:4px 0px;}
+#blockRight .elementRubrik .elementLink      {padding:4px 0px;}
+#blockRight .elementRubrik .elementText      {padding:4px 0px;}
+#blockContentStart              {width:60%;}
+#blockContentStartInner          {padding:0px;}
+.elementBoxHeadline              {padding:4px 0px;}
+.elementBoxStart .elementBoxRow  {padding:0;}
+.elementBoxStart                {width:100%;}
+dl.formFirstBlock          {float:left}
+dl.formLastBlock           {float:right}
+}

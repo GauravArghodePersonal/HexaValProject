@@ -1,0 +1,192 @@
+<apex:page id="thePage" standardController="Asset_Work_Order__c" 
+           title="Asset Work Order" extensions="AssetWorkOrderController" 
+           sidebar="false" action="{!initAction2}">
+
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-1.6.2.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-ui-1.8.16.custom.min.js')}" />
+    <style type="text/css">
+        @import "{!URLFOR($Resource.jQuery, 'css/redmond/jquery-ui-1.8.16.custom.css')}";
+    </style>
+
+    <apex:form id="theForm">
+
+    <apex:pageMessages />
+
+    <apex:pageBlock id="pblock1">
+    
+        <apex:facet name="header"><apex:outputPanel layout="block"><table class="bold">
+            
+                <tr class="pbtr1">
+                    <td class="pbtd11">&nbsp;Asset Work Orders</td>
+                    <td class="left">
+                    <apex:actionStatus id="pb1Btns">
+                        <apex:facet name="start">
+                            <apex:outputText styleClass="bold" value=" Please wait ...">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop">
+                            <apex:outputPanel styleClass="nowrap">
+                            <apex:outputLabel for="salesGroupId" value="Sales Group : "/>
+                            <apex:selectList id="salesGroupId" value="{!salesGroupCode}" size="1">
+                                <apex:selectOptions value="{!salesGroups}" />
+                            </apex:selectList>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <apex:outputLabel for="statusId" value="Status : "/>
+                            <apex:selectList id="statusId" value="{!workOrderStatus}" size="1">
+                                <apex:selectOptions value="{!statusList}" />
+                                <apex:actionSupport event="onchange" action="{!searchWorkOrders}"
+                                                    rerender="theForm" status="pb1Btns"/>
+                            </apex:selectList>&nbsp;&nbsp;
+                            <apex:commandButton action="{!searchWorkOrders}"
+                                                rerender="theForm" status="pb1Btns" 
+                                                value="Get WorkOrders"/>&nbsp;&nbsp;
+                            <apex:commandButton action="{!saveWorkOrders}"
+                                                rendered="{!isEditabl3}" 
+                                                rerender="theForm" status="pb1Btns" 
+                                                value="Save Changes"/>&nbsp;&nbsp;
+                            </apex:outputPanel>
+                        </apex:facet>
+                    </apex:actionStatus>    
+                    </td><td>&nbsp;</td>
+                </tr>
+                
+                <tr><td>&nbsp;</td></tr>
+                
+                <tr><td class="center" width="20%">
+                    <apex:outputText value="Records: {!pc2.recordFrom} - {!pc2.recordTo} of {!pc2.resultSize}" 
+                                     styleClass="nowrap"/></td>
+
+                <td class="center" width="60%">
+                        <apex:actionStatus id="pageControls">
+                            <apex:facet name="start">
+                                <apex:outputText styleClass="bold" value=" Please wait ...">
+                                    <apex:image value="{!$Resource.spinner}"/>
+                                </apex:outputText>
+                            </apex:facet>
+                            <apex:facet name="stop">
+                            <apex:outputPanel >
+                            <apex:outputText value="Rows Per Page:"/>&nbsp;
+                            <apex:selectList id="pageSize" value="{!pageSize}" size="1" title="Rows Per Page:">
+                                <apex:actionSupport event="onchange" action="{!pc2Size}" 
+                                                rerender="theForm" status="pageControls"/>
+                                <apex:selectOption itemLabel="25" itemValue="25"/>
+                                <apex:selectOption itemLabel="50" itemValue="50"/>
+                                <apex:selectOption itemLabel="100" itemValue="100"/>
+                                <apex:selectOption itemLabel="200" itemValue="200"/>
+                            </apex:selectList>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <apex:commandButton action="{!pc2Frst}" disabled="{!NOT(pc2.hasPrevious)}" 
+                                                rerender="theForm" status="pageControls"
+                                                title="First Page" value="<<"/>&nbsp;&nbsp;
+                            <apex:commandButton action="{!pc2Prev}" disabled="{!NOT(pc2.hasPrevious)}" 
+                                                rerender="theForm" status="pageControls"
+                                                title="Prev Page" value="<"/>
+                                                
+                            Previous&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Next&nbsp;
+                            
+                            <apex:commandButton action="{!pc2Next}" disabled="{!NOT(pc2.hasNext)}" 
+                                                rerender="theForm" status="pageControls"
+                                                title="Next Page" value=">"/>&nbsp;&nbsp;
+                            <apex:commandButton action="{!pc2Last}" disabled="{!NOT(pc2.hasNext)}" 
+                                                rerender="theForm" status="pageControls"
+                                                title="Last Page" value=">>"/>
+                            </apex:outputPanel>
+                        </apex:facet>
+                    </apex:actionStatus>
+                </td>
+
+                <td class="center" width="20%">
+                    <apex:outputText value="Page: {!pc2.pageNumber} of {!pc2.lastPageNumber}"/>
+                </td>
+                </tr>
+
+        </table></apex:outputPanel></apex:facet>
+
+        <apex:pageBlockTable value="{!workOrders}" var="woc">
+            <apex:column headerClass="right" styleClass="right" width="20px">
+                <apex:facet name="header">#</apex:facet>
+                <apex:outputText value="{!woc.recNum}"/>
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">Work Order</apex:facet>
+                <apex:outputLink value="/{!woc.wo.Id}" target="_blank">
+                <apex:outputField value="{!woc.wo.Name}"/>
+                </apex:outputLink>
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">Account</apex:facet>
+                <apex:outputPanel >
+                <apex:outputField value="{!woc.wo.Account__r.Name}"/>&nbsp;-&nbsp;
+                <apex:outputText value="{!woc.AccountNumber}"/>
+                </apex:outputPanel>
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">Contact</apex:facet>
+                <apex:outputPanel >
+                <apex:outputField value="{!woc.wo.Contact_Name__c}"/>&nbsp;(
+                <apex:outputField value="{!woc.wo.Contact_Phone__c}"/>)
+                </apex:outputPanel>
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">Type of Service</apex:facet>
+                <apex:outputField value="{!woc.wo.Type_of_Service__c}"/>
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">Work Order<br/>Created Date</apex:facet>
+                <apex:outputField value="{!woc.wo.CreatedDate}"/>
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">Actual<br/>Completion Date</apex:facet>
+                <apex:outputPanel >
+                <apex:inputField value="{!woc.wo.Actual_Completion_Date__c}" rendered="{!isEditabl3}"/>
+                <apex:outputField value="{!woc.wo.Actual_Completion_Date__c}" rendered="{!!isEditabl3}"/>
+                </apex:outputPanel>
+            </apex:column>
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+
+    
+    </apex:form>
+
+    <script type="text/javascript">
+        var $j = jQuery.noConflict();
+        
+        $j(function setfocus() {
+            var fld = $j('[id$=tosfld]'); fld.focus();
+        });
+        
+        function onClick_AllChkbox(rowCbClass, allChkbox) {
+            $j("."+rowCbClass).each(function() {
+                if (this.disabled == false) {
+                    this.checked = allChkbox.checked;
+                }
+            });
+        }
+
+        function onClick_RowChkbox(rowCbClass, allCbClass) {
+            var allChkbox = $j("."+allCbClass).get(0);
+            allChkbox.checked = true;
+            $j("."+rowCbClass).each(function() {
+                if (!this.checked) {
+                    allChkbox.checked = false;
+                    return false;
+                }
+            });
+        }
+
+    </script>
+    
+    <style>
+        .tbl {border-spacing: 0; border-collapse: collapse; width: 100%;}
+        .tbl td {padding: 4px; vertical-align: top; width: 16%; white-space: nowrap;}
+        .tbl td.lbl, .lbl {color: blue; font-weight: bold; text-align: right;}
+        .tbl td.msg {color: blue; font-weight: bold; text-align: center;}
+        .txta {height: 50px; width: 100%;}
+        .w100 {width: 100%;}
+        .chkbx {text-align: center; width: 28px;}
+        .bold {font-weight: bold;}
+        .center {text-align: center;}
+        .left {text-align: left;}
+        .right {text-align: right;}
+        .nowrap {white-space: nowrap;}
+    </style>
+</apex:page>

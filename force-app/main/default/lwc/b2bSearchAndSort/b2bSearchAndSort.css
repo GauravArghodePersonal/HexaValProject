@@ -1,0 +1,13 @@
+.searchicon {
+    position: relative;
+    float: right;
+    margin-top: -31px;
+    cursor: pointer;
+    margin-right: 1px;
+    background: #e8eefc;
+    width: 40px;
+    text-align: center;
+    height: 30px;
+    padding: 7px;
+    border-radius: 0 3px 3px 0;
+}

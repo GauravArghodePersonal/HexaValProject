@@ -1,0 +1,81 @@
+<template>
+	<template if:false={showContacts}>
+		<!-- <lightning-card title="Contacts" icon-name="standard:contact">
+			<div class="demo-only demo--inverse" style="position:relative">
+				<div role="status" class="slds-spinner slds-spinner_medium">
+					<span class="slds-assistive-text">Loading</span>
+					<div class="slds-spinner__dot-a"></div>
+					<div class="slds-spinner__dot-b"></div>
+				</div>
+			</div>
+		</lightning-card> -->
+		<article class="slds-card slds-card_boundary">
+			<div class="slds-card__header slds-grid">
+				<header class="slds-media slds-media_center slds-has-flexi-truncate">
+					<div class="slds-media__figure">
+						<span class="slds-icon_container slds-icon-standard-contact" title="contact">
+							<svg class="slds-icon slds-icon_small" aria-hidden="true">
+								<use xlink:href="/_slds/icons/standard-sprite/svg/symbols.svg#contact"></use>
+							</svg>
+							<span class="slds-assistive-text">contact</span>
+						</span>
+					</div>
+					<div class="slds-media__body">
+						<h1 class="slds-card__header-title">
+							<span>Contacts</span>
+						</h1>
+					</div>
+				</header>
+			</div>
+			<div class="slds-card__body slds-card__body_inner" style="height:5rem">
+				<div class="demo-only demo--inverse">
+					<div role="status" class="slds-spinner slds-spinner_medium">
+						<span class="slds-assistive-text">Loading</span>
+						<div class="slds-spinner__dot-a"></div>
+						<div class="slds-spinner__dot-b"></div>
+					</div>
+				</div>
+				<div class="slds-text-align_center holdOnAlignment">Hang on. We are loading Contacts.</div>
+			</div>
+		</article>
+	</template>
+	<template if:true={showContacts}>
+		<lightning-card title="Contacts" icon-name="standard:contact">
+			<div class="slds-m-around_medium">
+				<template if:false={showNoData}>
+					<lightning-layout multiple-rows class="alligncls">
+						<lightning-layout-item size="6" padding="around-small">
+							<lightning-input type="search" placeholder="Search by Contact Name" onchange={handleSearch}  value={searchKey}>
+							</lightning-input>
+						</lightning-layout-item>
+						<lightning-layout-item size="6" padding="around-small">
+							<lightning-button class="button slds-float_right" label="Send Survey" variant="brand"
+								type="submit" onclick={handleSendSurvey}>
+							</lightning-button>
+						</lightning-layout-item>
+					</lightning-layout>
+					<template if:true={data}>
+						<div class="container">
+							<div class="blur-bg" if:true={casesSpinner}></div>
+							<lightning-datatable data-id="datatable" key-field="Id" data={data} columns={columns}
+								show-row-number-column="true" selected-rows={selectedRows}
+								onrowselection={handleRowSelection}>
+							</lightning-datatable>
+							<div if:true={casesSpinner} class="spinner-container">
+								<lightning-spinner variant="brand" alternative-text="Loading Contacts" size="medium">
+								</lightning-spinner>
+							</div>
+						</div>
+
+					</template>
+				</template>
+				<template if:true={showNoData}>
+					<div class="slds-text-align_center holdOnAlignment">No Contacts found.</div>
+				</template>
+				<template if:true={error}>
+					{error}
+				</template>
+			</div>
+		</lightning-card>
+	</template>
+</template>

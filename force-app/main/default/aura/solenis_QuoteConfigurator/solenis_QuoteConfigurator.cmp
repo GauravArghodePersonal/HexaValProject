@@ -1,0 +1,8 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickActionWithoutHeader" access="global" >
+	<lightning:workspaceAPI aura:id="Workspace" />
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}" />
+    <div style="position: absolute;margin: 10% 42%;">
+    	<img src="/auraFW/resources/aura/images/spinner.gif" width="40" height="40"/>
+        Loading...
+    </div>    
+</aura:component>

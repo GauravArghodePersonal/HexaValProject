@@ -1,0 +1,178 @@
+<template>
+    <article class="slds-card">
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate slds-p-around_medium slds-theme_shade">
+                <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">
+                        <a href="#" class="slds-card__header-link slds-truncate" title="Account Rating Summary">
+                            <span>Account Rating Summary</span>
+                        </a>
+                    </h2>
+                </div>
+                <div class="slds-media__body slds-text-align_center" title="Target Percent">
+                    <b> Target Percent(%) :  </b>
+                    <b><lightning-formatted-number title="Target (%)" value={TargetPercent} format-style="percent-fixed"></lightning-formatted-number></b>
+                </div>
+                <!--<div class="slds-media__body slds-text-align_right slds-p-right_medium" title="Actual Percent(%)">-->
+                <div class="slds-media__body slds-text-align_right slds-p-right_medium" title="Actual Percent(%)">
+                    <b> Actual Percent(%) :  </b>
+                    <b><lightning-formatted-number title="Actual Percent" value={totalRatings} format-style="percent-fixed" style={totalRatingsStyle} ></lightning-formatted-number></b>
+                </div>
+                <lightning-button class="slds-m-left_small" label="Refresh" onclick={handleRefreshClick} variant="brand"></lightning-button>
+            </header>
+        </div>
+    </article>      
+        <lightning-card>
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+            </template>
+            <template if:false={isLoading}>
+            <div>
+                <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                    <thead>
+                        <tr>
+                            <th scope="col">Section</th>
+                            <th scope="col">Earned Points</th>
+                            <th scope="col">Maximum Points</th>
+                            <th scope="col">Variance</th> <!-- New column for Variance -->
+                            <th scope="col">Rating</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="slds-card__header-link slds-truncate">
+                            <th scope="row"><a onclick={handleRowClick} data-id="lst_dynamicRelatedList">I. SITUATIONAL ASSESSMENT</a></th>  
+                            <td>
+                                <b><lightning-formatted-number value={totalEarnedPointTotalSA} format-style="decimal"></lightning-formatted-number></b>
+                            </td>
+                            <td>
+                                <b><lightning-formatted-number value={totalMaxPointsSA} format-style="decimal"></lightning-formatted-number></b>
+                            </td>
+                            <td>
+                                <b><lightning-formatted-number value={totalVariancePointsSA} format-style="decimal"></lightning-formatted-number></b> <!-- New column for Variance -->
+                            </td>
+                            <td style={totalSituationalAssessmentRatingStyle}>
+                                <b><lightning-formatted-number value={totalSituationalAssessmentRating} format-style="percent-fixed"></lightning-formatted-number></b>
+                            </td>
+                        </tr>
+                        <tr class="slds-card__header-link slds-truncate">
+                            <th scope="row"><a onclick={handleRowClick} data-id="lst_dynamicRelatedList2">II. MARKET SHARE BY SITE</a></th>
+                            <td>
+                                <b><lightning-formatted-number value={totalMarketShareEarnedPoints} format-style="decimal"></lightning-formatted-number></b>
+                            </td>
+                            <td>
+                                <b><lightning-formatted-number value={totalMaxPointsMarketShare} format-style="decimal"></lightning-formatted-number></b>
+                            </td>
+                            <td>
+                                <b><lightning-formatted-number value={totalVariancePointsMarketShare} format-style="decimal"></lightning-formatted-number></b> <!-- New column for Variance -->
+                            </td>
+                           <!-- <td> -->
+                            <td style={totalMarketShareRatingStyle}>
+                                <b><lightning-formatted-number value={totalMarketShareRating} format-style="percent-fixed"></lightning-formatted-number></b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><a onclick={handleRowClick} data-id="lst_dynamicRelatedList4">III. COMPETITIVE OVERVIEW</a></th>
+                            <td>
+                                <b><lightning-formatted-number value={totalPerceptionPointsEarned} format-style="decimal"></lightning-formatted-number></b>
+                            </td>
+                            <td>
+                                <b><lightning-formatted-number value={totalMaxPointsOverview} format-style="decimal"></lightning-formatted-number></b>
+                            </td>
+                            <td>
+                                <b><lightning-formatted-number value={totalVariancePointsOverview} format-style="decimal"></lightning-formatted-number></b> <!-- New column for Variance -->
+                            </td>
+                            <!--<td>-->
+                            <td style={totalOverviewRatingStyle}>
+                                <b><lightning-formatted-number value={totalOverviewRating} format-style="percent-fixed"></lightning-formatted-number></b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><a onclick={handleRowClick} data-id="lst_dynamicRelatedList5">IV. ACTIVITY PERFORMANCE</a></th>
+                            <td>
+                                <b><lightning-formatted-number value={totalEarnedPointTotalAP} format-style="decimal"></lightning-formatted-number></b>
+                            </td>
+                            <td>
+                                <b><lightning-formatted-number value={totalMaxPointsAP} format-style="decimal"></lightning-formatted-number></b>
+                            </td>
+                            <td>
+                                <b><lightning-formatted-number value={totalVariancePointsAP} format-style="decimal"></lightning-formatted-number></b> <!-- New column for Variance -->
+                            </td>
+                            <!--<td>-->
+                            <td style={totalActivityPerformanceRatingStyle}>
+                                <b><lightning-formatted-number value={totalActivityPerformanceRating} format-style="percent-fixed"></lightning-formatted-number></b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><a onclick={handleRowClick} data-id="lst_dynamicRelatedList3">V. KEY INDICATORS</a></th>
+                            <td>
+                                <b><lightning-formatted-number value={totalEarnedPointTotalKI} format-style="decimal"></lightning-formatted-number></b>
+                            </td>
+                            <td>
+                                <b><lightning-formatted-number value={totalMaxPointsKI} format-style="decimal"></lightning-formatted-number></b>
+                            </td>
+                            <td>
+                                <b><lightning-formatted-number value={totalVariancePointsKI} format-style="decimal"></lightning-formatted-number></b> <!-- New column for Variance -->
+                            </td>
+                            <!--<td>-->
+                            <td style={totalKeyIndicatorRatingStyle}>
+                                <b><lightning-formatted-number value={totalKeyIndicatorRating} format-style="percent-fixed"></lightning-formatted-number></b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><a onclick={handleNavigate}>VI. RELATIONSHIPS AND RPI%</a></th>
+                            <td>
+                                <b><lightning-formatted-number value={totalRelationshipEarnedPoints} format-style="decimal"></lightning-formatted-number></b>
+                            </td>
+                            <td>
+                                <b><lightning-formatted-number value={totalRelationshipMaxPoints} format-style="decimal"></lightning-formatted-number></b>
+                            </td>
+                            <td>
+                                <b><lightning-formatted-number value={toatlRelationshipVariancepoints} format-style="decimal"></lightning-formatted-number></b> <!-- New column for Variance -->
+                            </td>
+                            <!--<td>-->
+                            <td style={relationshipPenetrationIndexStyle}>
+                                <b><lightning-formatted-number value={relationshipPenetrationIndex} format-style="percent-fixed"></lightning-formatted-number></b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><a onclick={handleRowClick1} data-id={reportUrl}>VII. STRENGHT AND WEAKNESS</a></th>
+                            <td>
+                                <b><lightning-formatted-number value={totalStrengthWeaknessValue} format-style="decimal"></lightning-formatted-number></b>
+                            </td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <th scope="row" > <a onclick={handleRefreshClick}>VIII. BONUS/ EXTRAORDINARY EVENTS</a></th>
+                            <td>
+                                <b><lightning-formatted-number value={BonusEarnedPoints} format-style="decimal"></lightning-formatted-number></b>
+                            </td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                        <!-- New row for Total -->
+                        <tr class="slds-theme_shade">
+                            <th scope="row"><b>Total</b></th>
+                            <td>
+                                <b><lightning-formatted-number value={totalEarnedPoints} format-style="decimal"></lightning-formatted-number></b>
+                            </td>
+                            <td>
+                                <b><lightning-formatted-number value={totalMaxPoints} format-style="decimal"></lightning-formatted-number></b>
+                            </td>
+                            <td>
+                                <b><lightning-formatted-number value={totalVariancePoints} format-style="decimal"></lightning-formatted-number></b>
+                            </td>
+                            <!--<td>-->
+                            <td style={totalRatingsStyle}>
+                                <b><lightning-formatted-number value={totalRatings} format-style="percent-fixed"></lightning-formatted-number></b>
+                            </td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            </template>
+        </lightning-card>
+</template>

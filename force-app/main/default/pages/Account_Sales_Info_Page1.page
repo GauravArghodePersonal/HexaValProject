@@ -1,0 +1,3 @@
+<apex:page standardController="Account" tabStyle="Account" sidebar="false">
+    <c:Account_Sales_Info_Comp1 p_accId="{!id}"/>
+</apex:page>

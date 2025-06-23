@@ -1,0 +1,127 @@
+<apex:page standardController="Pricing__c" 
+           extensions="PricingController"
+           action="{!setPricingPendingApproval}"
+           sidebar="false">
+    <apex:form id="theForm">
+        <apex:pageBlock rendered="{!pageBlockNumber = 1}">
+            <apex:pageBlockSection columns="1">
+                <apex:pageBlockSectionItem dataStyle="text-align: center;font-weight: bolder;">
+                    <apex:outputText value="No Pricing found to be Approved"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        <apex:pageBlock title="Pricing to be Approved" 
+                        rendered="{!pageBlockNumber = 2}">
+            <apex:panelGrid columns="1" width="100%">
+                <apex:panelGroup rendered="{!renderSendEmailButton}"
+                                 style="float: right;">
+                    <apex:commandButton value=" Send Emails to Approvers "
+                                        action="{!gotoPageBlock3}"/>
+                </apex:panelGroup>
+            </apex:panelGrid>
+            <apex:pageBlockSection columns="1">
+                <apex:pageBlockSectionItem >
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockTable id="list" value="{!pricingPendingApproval}" var="p">
+                <apex:column >
+                    <apex:facet name="header">Pricing#</apex:facet>
+                    <apex:outputLink value="/{!p.pc.Id}"> 
+                        <apex:outputField value="{!p.pc.Name}"/>
+                    </apex:outputLink>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Sales Office</apex:facet>
+                    <apex:outputText value="{!p.pc.Account_SAP_Sales_Office_Desc__c}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Account Name<br/>and Number</apex:facet>
+                    <apex:outputLink value="/{!p.pc.Account__c}"> 
+                        <apex:outputText value="{!p.pc.Account__r.Name}"/>
+                    </apex:outputLink>
+                    <br/><apex:outputText value="{!p.accountNumber}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Account<br/>Owner</apex:facet>
+                    <apex:outputText value="{!p.pc.Account__r.Owner.Name}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Pricing Type</apex:facet>
+                    <apex:outputText value="{!p.pc.Pricing_Type__c}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Submitted<br/>Date and Time</apex:facet>
+                    <apex:outputText value="{!p.submittedTime}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Comments</apex:facet>
+                    <apex:outputText value="{!p.pc.Comments__c}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Approver<br/>Name</apex:facet>
+                    <apex:outputText escape="false" value="{!p.approvers}"/>
+                </apex:column>
+            </apex:pageBlockTable>        
+        </apex:pageBlock>
+        <apex:pageBlock rendered="{!pageBlockNumber = 3}" 
+                        title="Send Emails to Approvers">
+            <apex:pageBlockSection columns="1">
+                <!-- ------------------------------------------------------- 
+                    Render the following item to set the test mode.
+                    In test mode, the emails are sent just to the cc Ids 
+                    only and not to the approvers of the Pricing Conditions  
+                ------------------------------------------------------------ -->
+                <apex:pageBlockSectionItem rendered="true">
+                    <apex:outputLabel for="emailCcOnlyId" value="Email Cc: only?"/>
+                    <apex:outputPanel style="font-weight: bold; vertical-align: middle;">
+                        <apex:inputCheckbox id="emailCcOnlyId" value="{!emailCcOnly}"/>&nbsp;
+                        <apex:outputText value="Check this to send the emails just to the cc Ids only and not to the approvers"/>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <!-- ------------------------------------------------------------ -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel for="emailCc" escape="false">
+                        Email Cc: (optional)<br/><br/>Enter Email Ids separated by a Comma
+                    </apex:outputLabel>
+                    <apex:inputTextArea id="emailCc" rows="3" cols="90" value="{!emailCc}"
+                                        title="Enter Email Ids separated by a Comma"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem dataStyle="vertical-align: middle;">
+                    <apex:outputLabel value=""/>
+                    <apex:actionStatus id="sendEmailStatus">
+                        <apex:facet name="start">
+                            <apex:outputText escape="false" style="font-weight: bold;" 
+                                             value="&nbsp;Please wait...">
+                                <apex:image value="{!$Resource.spinner}"/>
+                            </apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop">
+                            <apex:outputPanel styleClass="btn">
+                                <apex:outputText value=" Send Emails " />
+                                <apex:actionSupport event="onclick" 
+                                                    action="{!sendEmails}"
+                                                    rerender="theForm" 
+                                                    status="sendEmailStatus"/>
+                            </apex:outputPanel>
+                        </apex:facet>
+                    </apex:actionStatus>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        <apex:pageBlock rendered="{!pageBlockNumber = 4}">
+            <apex:pageBlockSection columns="1">
+                <apex:pageBlockSectionItem dataStyle="text-align: center;font-weight: bolder;">
+                    <apex:outputText value="Emailed the details of Pricing Pending Approval"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+    <style>
+        table.approvers {border-collapse: collapse; empty-cells: show; width: 100%}
+        table.approvers td {border-style: none; padding:0px; white-space: nowrap;}
+        table {border-collapse: collapse;}
+        .textAlignCenter {text-align: center;}
+        .textAlignRight {text-align: right;}
+        .nowrap {white-space: nowrap;}
+    </style>
+</apex:page>

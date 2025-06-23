@@ -1,0 +1,213 @@
+<apex:page controller="FlintSiteHomeController" 
+    showHeader="false" sidebar="false"
+    tabStyle="VI_Enrollment__c" title="Facility Locations">
+    <!--
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <title>Valvoline Installer</title>
+    <apex:stylesheet value="{!URLFOR($Resource.VIResources2, 'css/VIStyles.css')}" />
+</head>
+
+<body >
+<div id="VI-Body">
+
+    <c:VI_Portal_Page_Header p_accountId="{!facilityId}"/>
+
+    <div style="position: relative; height: 100%;">
+
+    <apex:outputPanel layout="none" rendered="{!ISBLANK(facilityId)}">
+        <apex:pageMessage severity="Error" strength="2" summary="Facility could not be found." />
+    </apex:outputPanel>
+
+    <apex:outputPanel layout="none" rendered="{!NOT(ISBLANK(facilityId))}">
+        <apex:includeScript value="{!URLFOR($Resource.VIResources, 'js/jquery-1.4.2.min.js')}" />
+        <apex:includeScript value="{!URLFOR($Resource.VIResources, 'js/utils.js')}" />
+        <script type="text/javascript">
+
+        jQuery.noConflict();
+
+        jQuery(function() {
+            disableButtonsOnSubmit("{!$Component.theForm}");
+        });
+
+        </script>
+
+        <apex:sectionHeader title="{!facilityName}" subtitle="Facility Locations" />
+
+        <apex:form id="theForm">
+            <apex:panelGrid columns="2" columnClasses="col1,col2">
+                <apex:outputText value="Facility:"/>
+                <apex:outputText >
+                    {!viFacility.acc.Name} (Account Number: {!viFacility.accountNumber})
+                    &nbsp;&nbsp;
+                    <apex:outputLink value="{!$Page.VIFacilityEdit2}" styleClass="actionLink">
+                        <apex:param name="id" value="{!viFacility.acc.Id}" />
+                        <apex:param name="retURL" value="{!URLENCODE(thisURL)}" />
+                        <apex:outputText value="Edit Facility" style="font-weight: bold;"/>
+                    </apex:outputLink>
+                    &nbsp;&nbsp;
+                </apex:outputText>
+                <apex:outputText value=""/>
+                <apex:outputPanel ><table class="tbl1"><tr>
+                    <td class="td1">To Enter Valvoline Reward Codes for Reimbursement -&nbsp;
+                    <apex:outputLink value="{!$Page.VIPfcPage}" styleClass="actionLink" target="_blank">
+                        <apex:param name="accNum" value="{!viFacility.acc.AccountNumber}" />Click Here
+                    </apex:outputLink></td><td>
+                    <apex:outputLink value="{!$Page.VIPfcPage}" styleClass="actionLink" target="_blank">
+                        <apex:param name="accNum" value="{!viFacility.acc.AccountNumber}" />
+                        <!-- apex:outputText value="Valvoline Money" style="font-weight: bold;"/
+                        <apex:image value="{!URLFOR($Resource.VIResources, 'img/ValvolineMoney.png')}" height="30"/>
+                    </apex:outputLink></td>
+                    </tr><apex:outputPanel rendered="{!isVperksUser}"><tr>
+                        <td class="td1">To Visit VPerk Rewards Website -&nbsp;
+                        <apex:commandLink action="{!gotoBiwPage}" target="_blank">
+                            <apex:param name="accNum" assignTo="{!accNum}"
+                                        value="{!viFacility.acc.AccountNumber}" />Click Here
+                        </apex:commandLink></td><td>
+                        <apex:commandLink action="{!gotoBiwPage}" target="_blank">
+                            <apex:param name="accNum" assignTo="{!accNum}"
+                                        value="{!viFacility.acc.AccountNumber}" />
+                            <apex:image value="{!URLFOR($Resource.VIResources, 'img/ValvolineBIW.png')}" height="20"/>
+                        </apex:commandLink></td>
+                    </tr></apex:outputPanel><apex:outputPanel rendered="{!isExpresCare}"><tr>
+                        <td class="td1">To Visit BrandMuscle Website -&nbsp;
+                        <apex:commandLink action="{!gotoBrandMusclePage}" target="_blank">
+                            <apex:param name="accNum" assignTo="{!accNum}"
+                                        value="{!viFacility.acc.AccountNumber}" />Click Here
+                        </apex:commandLink></td><td>
+                        <apex:commandLink action="{!gotoBrandMusclePage}" target="_blank">
+                            <apex:param name="accNum" assignTo="{!accNum}"
+                                        value="{!viFacility.acc.AccountNumber}" />
+                            <apex:image value="{!URLFOR($Resource.VIResources, 'img/logo-brandmuscle.png')}" height="20"/>
+                        </apex:commandLink></td>
+                    </tr></apex:outputPanel></table>
+                </apex:outputPanel>
+                <apex:outputText value="Sales Rep Name:"/>
+                <apex:outputText value="{!viFacility.acc.Owner.Name}"/>
+                <apex:outputText value="Email:"/>
+                <apex:outputText value="{!viFacility.acc.Owner.Email}"/>
+                <apex:outputText value="Phone:"/>
+                <apex:outputText value="{!viFacility.acc.Owner.Phone}"/>
+            </apex:panelGrid><br/>
+
+            <apex:pageMessages />
+
+            <apex:pageBlock title="Find a Location" mode="edit">
+                <apex:pageBlockButtons location="bottom">
+                    <apex:commandButton value="Search" action="{!searchLocations}" />
+                    <apex:commandButton value="Cancel" action="{!cancel}" immediate="true" />
+                </apex:pageBlockButtons>
+
+                <apex:pageBlockSection columns="1">
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel for="locationName">Location Name</apex:outputLabel>
+                        <apex:inputText id="locationName" value="{!locationName.value}" />
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel for="city">City</apex:outputLabel>
+                        <apex:inputText id="city" value="{!city.value}" />
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel for="state">State</apex:outputLabel>
+                        <apex:inputText id="state" value="{!state.value}" />
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel for="postalCode">Zip Code</apex:outputLabel>
+                        <apex:inputText id="postalCode" value="{!postalCode.value}" />
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel for="status">Status</apex:outputLabel>
+                        <apex:selectList id="status" value="{!status.value}" size="1">
+                            <apex:selectOption itemValue="No" itemLabel="Active" />
+                            <apex:selectOption itemValue="Yes" itemLabel="Inactive" />
+                            <apex:selectOption itemValue="All" itemLabel="All" />
+                        </apex:selectList>
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+            </apex:pageBlock>
+        </apex:form>
+
+        <apex:pageBlock title="Locations" mode="detail">
+            <apex:pageMessage severity="Warning" strength="3"
+                rendered="{!locations.size > maxSearchResults}"
+                summary="The search returned more than the maximum number of rows ({!maxSearchResults}). Please refine your search criteria." />
+
+            <apex:pageBlockTable value="{!viAccounts}" var="loc" rows="{!maxSearchResults}" rendered="{!locations.size > 0}">
+                <apex:column headerValue="Action" headerClass="actionColumn" styleClass="actionColumn">
+                    <apex:outputLink value="{!$Page.VILocationEdit2}" styleClass="actionLink">
+                        <apex:param name="id" value="{!loc.acc.Id}" />
+                        <apex:param name="facilityId" value="{!facilityId}" />
+                        <apex:param name="retURL" value="{!URLENCODE(thisURL)}" />
+                        <apex:outputText value="Edit" />
+                        <!--apex:outputText value="View" rendered="{!NOT(loc.isEditable)}" 
+                    </apex:outputLink>
+                </apex:column>
+                <apex:column headerValue="Account#">
+                    <apex:outputText value="{!loc.accountNumber}"/>
+                    <apex:outputPanel rendered="{!isVperksUser}"><br/><apex:form >
+                    <apex:commandLink action="{!gotoBiwPage}" target="_blank">
+                        <apex:param name="accNum" assignTo="{!accNum}"
+                                    value="{!loc.acc.AccountNumber}" />
+                        <apex:image value="{!URLFOR($Resource.VIResources, 'img/ValvolineBIW.png')}" height="20"/>
+                    </apex:commandLink></apex:form></apex:outputPanel>
+                </apex:column>
+                <apex:column headerValue="Location Name">
+                    <apex:outputField value="{!loc.acc.Name}" /><br/>
+                    <apex:outputLink value="{!$Page.VIPfcPage}" styleClass="actionLink" target="_blank">
+                        <apex:param name="accNum" value="{!loc.acc.AccountNumber}" />
+                        <apex:image value="{!URLFOR($Resource.VIResources, 'img/ValvolineMoney.png')}" height="20"/>
+                    </apex:outputLink>
+                </apex:column>
+                <apex:column headerValue="AVI Locator Name">
+                    <apex:outputText value="{!loc.aviLocatorName}" />
+                    <apex:outputPanel rendered="{!isExpresCare}"><br /><apex:form >
+                    <apex:commandLink action="{!gotoBrandMusclePage}" target="_blank">
+                        <apex:param name="accNum" assignTo="{!accNum}"
+                                    value="{!loc.acc.AccountNumber}" />
+                        <apex:image value="{!URLFOR($Resource.VIResources, 'img/logo-brandmuscle.png')}" height="20"/>
+                    </apex:commandLink></apex:form></apex:outputPanel>
+                </apex:column>
+                <apex:column headerValue="Address">
+                    <span style="white-space: pre;">
+                        <apex:outputText value="{!loc.acc.BillingStreet}" /><br />
+                        <apex:outputText value="{0}, {1} {2}">
+                            <apex:param value="{!loc.acc.BillingCity}" />
+                            <apex:param value="{!loc.acc.BillingState}" />
+                            <apex:param value="{!loc.acc.BillingPostalCode}" />
+                        </apex:outputText>
+                    </span>
+                </apex:column>
+                <apex:column headerValue="Inactive" headerClass="booleanColumn" styleClass="booleanColumn">
+                    <apex:outputField value="{!loc.acc.Inactive_Account__c}" />
+                </apex:column>
+            </apex:pageBlockTable>
+
+            <apex:outputPanel layout="none" rendered="{!locations.size = 0}">
+                <p>There are no locations to display.</p>
+            </apex:outputPanel>
+
+        </apex:pageBlock>
+
+        <apex:form ><apex:outputPanel layout="block" style="text-align: center;">
+            <apex:commandButton value="Add Location" action="{!newLocation}" immediate="true"/>
+        </apex:outputPanel></apex:form>
+    </apex:outputPanel>
+    <style>
+        .bold             {font-weight: bold;}
+        .col1             {font-weight: bold; text-align: right;}
+        .col2             {text-align: left;}
+        table.tbl1 td     {font-size: 110%; font-weight: bold; vertical-align: middle;}
+        table.tbl1 td.td1 {text-align: right;}
+    </style>
+
+    </div>
+
+    <apex:include pageName="VIPortalPageFooter"/>
+</div>
+</body>
+
+</html>
+-->
+</apex:page>

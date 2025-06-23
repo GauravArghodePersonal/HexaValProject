@@ -1,0 +1,5 @@
+<apex:page controller="scrollingtipcontroller" showheader="false" sidebar="false" action="{!AQtip}" standardStylesheets="false">
+
+{!returntip.tip_description__c}&nbsp;  <apex:outputlink value="{!returntip.Link__c}" rendered="{!IF(returntip.Link__c != '', true, false)}" target="_blank">{!returntip.Link_Text__c}</apex:outputlink>
+
+</apex:page>

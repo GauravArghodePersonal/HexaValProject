@@ -1,0 +1,136 @@
+<template>
+    <div class="m-white-space"></div>
+    <lightning-card title="SAP Account Credit Information" icon-name="custom:custom41">
+        <template if:true={sapAccCreditInfoId}> 
+            <div class="slds-m-around_medium m-width">
+                <lightning-record-view-form
+                record-id={sapAccCreditInfoId}
+                object-api-name="SAP_Payer_Credit_Information__c" 
+                density="compact">
+                    <div>
+                        <table>
+                            <tr>
+                                <td>
+                                    <lightning-output-field field-name="SAP_Payer_Balance__c">
+                                    </lightning-output-field>
+                                </td>
+                                <td>
+                                    <lightning-output-field field-name="SAP_Payer_Past_Due_1_15_Days__c">
+                                    </lightning-output-field>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <lightning-output-field field-name="SAP_Payer_Credit_Limit__c">
+                                    </lightning-output-field>
+                                </td>
+                                <td>
+                                    <lightning-output-field field-name="SAP_Payer_Past_Due_16_30_Days__c">
+                                    </lightning-output-field>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>                                
+                                    <lightning-output-field field-name="SAP_Payer_Current__c">
+                                    </lightning-output-field>
+                                </td>
+                                <td>
+                                    <lightning-output-field field-name="SAP_Payer_Past_Due_31_60_Days__c">
+                                    </lightning-output-field>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <lightning-output-field field-name="SAP_Payer_Credit_Control__c">
+                                    </lightning-output-field>
+                                </td>
+                                <td>
+                                    <lightning-output-field field-name="SAP_Payer_Past_Due_61_90_Days__c">
+                                    </lightning-output-field>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <lightning-output-field field-name="LastModifiedDate">
+                                    </lightning-output-field>
+                                </td>
+                                <td>
+                                    <lightning-output-field field-name="SAP_Payer_Past_Due_over_90Days__c">
+                                    </lightning-output-field>                                
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    &nbsp;
+                                </td>
+                                <td>
+                                    <lightning-output-field field-name="SAP_Payer_Total_Past_Due__c" >
+                                    </lightning-output-field>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>               
+                </lightning-record-view-form>
+            </div>
+        </template>
+        <template if:false={sapAccCreditInfoId}>
+            <div class="slds-m-around_medium m-width"> 
+                <div>
+                    <table>
+                        <tr>
+                            <td>
+                                Balance
+                            </td>
+                            <td>
+                                SAP Payer Past Due 1 -15 Days
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                SAP Payer Credit Limit
+                            </td>
+                            <td>
+                                SAP Payer Past Due 16-30 Days
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>                                
+                                SAP Payer Current
+                            </td>
+                            <td>
+                                SAP Payer Past Due 31-60 Days 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                SAP Payer Credit Control 
+                            </td>
+                            <td>
+                                SAP Payer Past Due 61-90 Days 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Last Modified Date 
+                            </td>
+                            <td>
+                                SAP Payer Past Due over 90Days                                
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                &nbsp;
+                            </td>
+                            <td>
+                                SAP Payer Total Past Due
+                            </td>
+                        </tr>
+                    </table>
+                </div>  
+            </div>
+        </template>
+        <template if:true={error}>
+            <div class="m-error">{error.body}</div>
+        </template>
+    </lightning-card>        
+</template>

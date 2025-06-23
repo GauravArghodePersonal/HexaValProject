@@ -1,0 +1,113 @@
+<apex:page controller="PricingConditionTransferController" action="{!initCopyPcns}"
+           sidebar="false">
+    <apex:includeScript value="{!URLFOR($Resource.VIResources, 'js/jquery-1.4.2.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.VIResources, 'js/utils.js')}" />
+    <apex:form id="theForm">
+	    <script>
+	         var $j = jQuery.noConflict();
+	        
+	        $j(function() {
+	            //disableButtonsOnSubmit("{!$Component.theForm}");
+	            $j('.searchByAcc').attr('disabled','disabled');
+	        });
+	    
+	        function getConfirm(q) {
+	            return confirm(q);
+	        }
+ 
+            function onCopyBtnClick() {
+                ok = confirm('Copy Pricing Conditions?');
+                if (ok) {copyPCNs();}
+            }
+
+            function onResetBtnClick() {
+                ok = confirm('Clear Input fields?');
+                if (ok) {resetAction();}
+            }
+	    </script>
+
+        <apex:actionFunction action="{!reset}" name="resetAction"
+                             rerender="theForm" status="btnStat"/>
+        <apex:actionFunction action="{!copyPCNs}" name="copyPCNs"
+                             rerender="theForm" status="btnStat"/>
+
+        <apex:pageBlock title="Copy Pricing Conditions from one Account to another Account" mode="edit">
+            <apex:pageMessages /><br/><br/>
+            <table class="tbl1">
+            <tr><td class="left">&nbsp;</td>
+                <td class="lbl center">From Account</td>
+                <td class="lbl center">To Account</td></tr>
+
+            <tr><td class="lbl left">Account Name</td>
+                <td><apex:inputField value="{!pctr.Account_From__c}" rendered="{!!disableInput1}"
+                        styleClass="searchByAcc"/>
+                    <apex:inputText value="{!pctr.Account_From__r.Name}" 
+                        disabled="{!disableInput1}" rendered="{!disableInput1}"/></td>
+                <td><apex:inputField value="{!pctr.Account_To__c}" rendered="{!!disableInput2}"
+                        styleClass="searchByAcc"/>
+                    <apex:inputText value="{!pctr.Account_To__r.Name}" 
+                        disabled="{!disableInput2}" rendered="{!disableInput2}"/></td></tr>
+
+            <tr><td class="lbl left">Account Id</td>
+                <td><apex:inputText value="{!accountId1}" disabled="{!disableInput1}"/></td>
+                <td><apex:inputText value="{!accountId2}" disabled="{!disableInput2}"/></td></tr>
+
+            <tr><td class="lbl left">Account Key</td>
+                <td><apex:inputText value="{!accountKey1}" disabled="{!disableInput1}"/></td>
+                <td><apex:inputText value="{!accountKey2}" disabled="{!disableInput2}"/></td></tr>
+
+            <tr><td><br/>&nbsp;</td><td colspan="2" class="center"><br/>
+                    <apex:actionStatus id="btnStat"> 
+                        <apex:facet name="start">
+                            <apex:outputText styleClass="bold" value=" Please wait ...">
+                            <apex:image value="{!$Resource.spinner}"/></apex:outputText>
+                        </apex:facet>
+                        <apex:facet name="stop">
+                            <apex:outputPanel styleClass="nowrap">
+                            <apex:commandButton value=" Reset " rendered="{!renderNextBtn}"
+                                onclick="onResetBtnClick(); return false;"/>
+                            <apex:commandButton value=" Previous " action="{!prev}" rendered="{!renderPrevBtn}"
+                                rerender="theForm" status="btnStat"/>
+                            <apex:commandButton value=" Cancel " action="{!cancel}"
+                                rerender="theForm" status="btnStat"/>
+			                <apex:commandButton value=" Next " action="{!next}" rendered="{!renderNextBtn}"
+                                rerender="theForm" status="btnStat"/>
+			                <apex:commandButton value=" Copy Pricing Conditions " rendered="{!renderCopyBtn}"
+			                    onclick="onCopyBtnClick(); return false;"/>
+                            </apex:outputPanel>
+                        </apex:facet>
+                    </apex:actionStatus>
+                </td></tr>
+            </table><br/><br/>             
+
+            <apex:outputPanel rendered="{!renderMessageTables}">
+                <table>
+                    <apex:repeat value="{!smsgs}" var="s">
+                        <tr><td class="align-right">{!s}</td></tr>
+                    </apex:repeat>
+                </table><br/>
+                <table>
+                    <apex:repeat value="{!emsgs}" var="e">
+                        <tr><td class="align-left">{!e}</td></tr>
+                    </apex:repeat>
+                </table>
+            </apex:outputPanel>
+        </apex:pageBlock>
+    </apex:form>
+    
+    <style>
+        .bPageBlock .pbTitle {width: 100%;}
+        .nowrap {white-space: nowrap;}
+        .bold   {font-weight: bold;}
+        .clsA   {font-weight: bold; text-align: right; vertical-align: top;}
+        .clsB   {font-weight: normal; text-align: left;}
+        .tbl1 td {padding: 4px; font-family: monospace; font-size: 1.3em;}
+        .tbl1 input[type="text"] {width: 400px; height: 1.2em; padding: 2px;
+                    border: 1px solid #ddd; font-family: monospace; font-size: 1.3em;}
+        .txta1  {resize: none; overflow: auto;}
+        .tbl1 .lbl {color: #333333; font-size: 1.4em; font-weight: bold;}
+        .center {text-align: center;}
+        .right  {text-align: right;}
+        .left   {text-align: left;}
+    </style>
+</apex:page>

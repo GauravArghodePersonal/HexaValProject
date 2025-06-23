@@ -1,0 +1,36 @@
+<template>
+    <button class="slds-button slds-button_brand" onclick={toggleModal} style="width: 100%;">{labels.SaveCart}</button>
+    <template if:true={showModal}>
+        <section role="dialog" tabindex="-1" aria-modal="true" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <h2 class="slds-modal__title">{labels.SaveCartToWishlistTitle}</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <template if:true={isNewWishlistMode}>
+                            <lightning-input type="text" label={labels.CreateWishListLabel} placeholder={labels.WishlistName} value={newWishlistName} onchange={listNameChange} required></lightning-input>
+                            <lightning-button label={labels.WishListName} onclick={toggleNewWishlistMode} class="slds-m-top_medium"></lightning-button>
+                        </template>
+                        <template if:false={isNewWishlistMode}>
+                            <lightning-combobox
+                                name="wish-list"
+                                label={labels.WishListName}
+                                value={selectedWishListId}
+                                placeholder={labels.SelectLabel}
+                                options={wishListOptions}
+                                onchange={handleWishList}>
+                            </lightning-combobox>
+                            <lightning-button label={labels.CreateWishListLabel} onclick={toggleNewWishlistMode} class="slds-m-top_medium"></lightning-button>
+                        </template>
+                    </div>                    
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button variant="neutral" label={labels.Cancel} onclick={toggleModal}></lightning-button>
+                    <lightning-button variant="brand" label={labels.Save} onclick={handleSave}></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>      
+    </template>
+</template>

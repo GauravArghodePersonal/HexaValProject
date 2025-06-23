@@ -1,0 +1,74 @@
+<apex:page controller="PricingConditionTransferController" action="{!initCopyPcns}"
+           sidebar="false">
+    <apex:includeScript value="{!URLFOR($Resource.VIResources, 'js/jquery-1.4.2.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.VIResources, 'js/utils.js')}" />
+    <script>
+        jQuery.noConflict();
+        
+        jQuery(function() {
+            disableButtonsOnSubmit("{!$Component.theForm}");
+        });
+    
+        function getConfirm(q) {
+            answer = confirm(q);
+            return (answer != 0);
+        }
+    </script>
+
+    <apex:form id="theForm">
+        <apex:pageBlock title="Copy Pricing Conditions from one Account to another Account" mode="edit">
+            <apex:pageMessages />
+            <apex:outputPanel layout="block" styleClass="panlsc">
+                <table><tr><td class="align-left" colspan="2"> 
+                <apex:outputLabel >
+                    Account Number From,Account Number To<br/><br/>
+                    Examples :<br/>
+                    000012345610215050,000012345604105050<br/>
+                    000045678910215050,000098765404105050<br/>
+                    ...<br/>
+                </apex:outputLabel></td></tr><tr><td>
+                <apex:inputTextArea value="{!pctrsText}" cols="40" rows="9" styleClass="txta1"/>
+                </td><td><!--
+                <apex:inputFile value="{!pctrsBlob}" filename="{!pctrsFileName}"
+                                rendered="{!renderUploadAccsBtn}"/><br/><br/>
+                                -->
+                <apex:commandButton value=" Upload Account Numbers " 
+                                    action="{!createPCTRequests}"/><br/><br/>
+                                    
+                <apex:commandButton value=" Prepare to Copy PCNs " 
+                                    action="{!createPCTMs}"/><br/><br/>
+                                    
+                <apex:commandButton value=" Copy PCNs to Accounts " 
+                                    action="{!createPCNs}"
+                                    onclick="return getConfirm('Create PCNs?');"/><br/><br/>
+
+                </td></tr></table><br/><br/>
+                             
+                <apex:outputPanel rendered="{!renderMessageTables}">
+                    <table>
+                        <apex:repeat value="{!smsgs}" var="s">
+                            <tr><td class="align-right">{!s}</td></tr>
+                        </apex:repeat>
+                    </table><br/>
+                    <table>
+                        <apex:repeat value="{!emsgs}" var="e">
+                            <tr><td class="align-left">{!e}</td></tr>
+                        </apex:repeat>
+                    </table>
+                </apex:outputPanel>
+            </apex:outputPanel>
+        </apex:pageBlock>
+    </apex:form>
+    
+    <style>
+        .bPageBlock .pbTitle {width: 100%;}
+        .nowrap      {white-space: nowrap;}
+        .bold        {font-weight: bold;}
+        .clsA        {font-weight: bold; text-align: right; vertical-align: top;}
+        .clsB        {font-weight: normal; text-align: left;}
+        .panlsc      {font-family: monospace; font-size: 115%; padding: 10px; text-align: left;}
+        .txta1       {font-family: monospace; font-size: 115%; resize: none; overflow: auto; text-align: left;}
+        .align-right {font-family: monospace; font-size: 115%; font-weight: normal; text-align: right;}
+        .align-left  {font-family: monospace; font-size: 115%; font-weight: normal; text-align: left;}
+    </style>
+</apex:page>

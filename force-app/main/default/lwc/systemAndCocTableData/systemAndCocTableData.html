@@ -1,0 +1,82 @@
+<template>
+	<lightning-card title="Select Systems" icon-name="standard:contact">
+		<template if:true={fullData}>
+			<template if:false={sellercustomPer}>
+				<template if:false={labcustomPer}>
+					<div if:true={showSpinner}>
+						<lightning-spinner alternative-text="Loading..." variant="brand">
+						</lightning-spinner>
+					</div>
+					<lightning-button label="Add System to test" slot="actions" icon-name="utility:add"
+						onclick={handleNewRow}></lightning-button>
+					<lightning-button class="slds-m-left_x-small" label="Add all Systems to test" slot="actions" icon-name="utility:add"
+						onclick={handleAddAllSystems}></lightning-button>
+					<div if:false={showSpinner}>
+						<div if:false={noData}>
+							<c-system-and-coc-data-table key-field="Id" class="wrapped-header-datatable"
+								min-column-width="100" data={fullData} columns={columns} onvalueselect={handleSelection}
+								draft-values={saveDraftValues} oncellchange={handleCellChange} onsave={handleSave}
+								oncancel={handleCancel} onrowaction={callRowAction} hide-checkbox-column>
+							</c-system-and-coc-data-table>
+						</div>
+						<div if:true={noData}>
+							<div class="slds-align_absolute-center slds-text-heading_small slds-p-around_medium">😔 No
+								data found.💡 Please click<strong>&nbsp; +Add System to test &nbsp;</strong>to add data.
+							</div>
+						</div>
+					</div>
+				</template>
+			</template>
+		</template>
+		<!-- Seller Table start-->
+		<template if:true={fullData}>
+			<template if:true={sellercustomPer}>
+				<div if:true={showSpinner}>
+					<lightning-spinner alternative-text="Loading..." variant="brand">
+					</lightning-spinner>
+				</div>
+				<lightning-button label="Add System to test" slot="actions" icon-name="utility:add"
+					onclick={handleNewRow}></lightning-button>
+				<lightning-button class="slds-m-left_x-small" label="Add all Systems to test" slot="actions" icon-name="utility:add"
+					onclick={handleAddAllSystems}></lightning-button>
+				<div if:false={showSpinner}>
+					<div if:false={noData}>
+						<c-system-and-coc-data-table key-field="Id" data={fullData} columns={sellerColoumn}
+							onvalueselect={handleSelection} draft-values={saveDraftValues}
+							oncellchange={handleCellChange} onsave={handleSave} oncancel={handleCancel}
+							onrowaction={callRowAction} hide-checkbox-column>
+						</c-system-and-coc-data-table>
+					</div>
+					<div if:true={noData}>
+						<div class="slds-align_absolute-center slds-text-heading_small slds-p-around_medium">😔 No data
+							found.💡Please click<strong>&nbsp; +Add System to test &nbsp;</strong>to add data.</div>
+					</div>
+				</div>
+			</template>
+		</template>
+		<!-- Seller Table end -->
+		<!-- EMSL Table start-->
+		<template if:true={fullData}>
+			<template if:true={labcustomPer}>
+				<div if:true={showSpinner}>
+					<lightning-spinner alternative-text="Loading..." variant="brand">
+					</lightning-spinner>
+				</div>
+				<div if:false={showSpinner}>
+					<div if:false={noData}>
+						<c-system-and-coc-data-table key-field="Id" data={fullData} columns={labColoumn}
+							onvalueselect={handleSelection} draft-values={saveDraftValues}
+							oncellchange={handleCellChange} onsave={handleSave} oncancel={handleCancel}
+							onrowaction={callRowAction} hide-checkbox-column>
+						</c-system-and-coc-data-table>
+					</div>
+					<div if:true={noData}>
+						<div class="slds-align_absolute-center slds-text-heading_small slds-p-around_medium">😔 No data
+							found.💡Please click<strong>&nbsp; +Add System to test &nbsp;</strong>to add data.</div>
+					</div>
+				</div>
+			</template>
+		</template>
+		<!-- EMSL Table end -->
+	</lightning-card>
+</template>

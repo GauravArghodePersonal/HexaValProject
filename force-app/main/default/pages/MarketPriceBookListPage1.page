@@ -1,0 +1,931 @@
+<apex:page standardController="Market_Price_Book__c" extensions="MarketPriceBookListController"
+           action="{!initAction}" recordSetVar="mpbs" sidebar="false">
+
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-1.6.2.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-ui-1.8.16.custom.min.js')}" />
+    <style type="text/css">
+        @import "{!URLFOR($Resource.jQuery, 'css/redmond/jquery-ui-1.8.16.custom.css')}";
+    </style>
+    <div class="div1">
+    <apex:form id="theForm">
+        <apex:pageMessages />
+
+        <span id="focusPoint1" tabindex="-1"></span>
+
+<!-- ================================================================================================================================== -->
+
+        <apex:pageBlock id="mpbListPB" rendered="{!pageBlockNumber = 1}">
+
+            <apex:facet name="header">
+                <apex:outputPanel layout="block">
+                <table class="tbl1">
+
+                    <tr class="tr1">
+                        <td class="td1">Market Price Books :&nbsp;</td>
+                        <td class="td2">
+                            <apex:outputPanel styleClass="nowrap">
+                            MPB #&nbsp;:&nbsp;
+                            <apex:inputText value="{!mpbNumb}" style="width: 4em;"/>
+
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            Status&nbsp;:&nbsp;
+                            <apex:selectList size="1" value="{!mpbStat}"
+                                             style="font-size: 110%;">
+                                <apex:actionSupport event="onchange" action="{!searchMpbs}"
+                                                    onsubmit="openWaitMsg();"/>
+                                <apex:selectOptions value="{!mpbStatOpts}"/>
+                            </apex:selectList>
+
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            Description&nbsp;:&nbsp;
+                            <apex:inputText value="{!mpbDesc}" style="width: 10em;"/>
+
+                            &nbsp;&nbsp;&nbsp;
+                            <apex:commandLink action="{!searchMpbs}" value="Get MPBs"
+                                              onclick="openWaitMsg();"/>
+
+                            <apex:outputPanel rendered="{!renderActvteBtn}">
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <apex:commandLink action="{!activateMpbs}" value="Activate MPBs"
+                                              onclick="return getConfirm('Activate MPBs?');"/>
+                            </apex:outputPanel>
+
+                            <apex:outputPanel rendered="{!renderExpireBtn}">
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <apex:commandLink action="{!expireMpbs}" value="Expire MPBs"
+                                              onclick="return getConfirm('Expire MPBs?');"/>
+                            </apex:outputPanel>
+
+                            <apex:outputPanel rendered="{!OR(renderActvteBtn,renderExpireBtn)}">
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            Submit Batch Job<apex:inputCheckbox value="{!batchJob}" styleClass="chkbx"/>
+                            </apex:outputPanel>
+
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <apex:commandLink action="{!submitAllJobs}" value="Run All Jobs"
+                                              onclick="return getConfirm('Run All Batch Jobs?');"/>
+
+                            </apex:outputPanel></td>
+                        <td class="td3"><apex:outputPanel rendered="{!renderDebugMode}">
+                            Debug Mode<apex:inputCheckbox value="{!debugMode}" styleClass="chkbx"/>
+                            </apex:outputPanel></td>
+                    </tr>
+
+                    <!-- tr><td colspan="3">&nbsp;</td></tr -->
+
+                    <tr><td class="td1">
+                        <apex:outputText value="Records: {!pc1.recordFrom} - {!pc1.recordTo} of {!pc1.resultSize}"
+                                         styleClass="nowrap"/>
+                    </td>
+
+                    <td class="td2">
+                            <apex:actionStatus id="mpbListPC">
+                                <apex:facet name="start">
+                                    <apex:outputText styleClass="bold" value=" Please wait ...">
+                                        <apex:image styleClass="spinner" value="{!$Resource.spinner}"/>
+                                    </apex:outputText>
+                                </apex:facet>
+                                <apex:facet name="stop">
+                                <apex:outputPanel >
+                                <apex:outputText value="Rows Per Page:"/>&nbsp;
+                                <apex:selectList value="{!pc1.pageSize}" size="1" title="Rows Per Page:">
+                                    <apex:actionSupport event="onchange" action="{!pc1Size}"
+                                                    rerender="mpbListPB" status="mpbListPC"/>
+                                    <apex:selectOptions value="{!pageSizeOpts}"/>
+                                </apex:selectList>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <apex:commandButton action="{!pc1Frst}" disabled="{!NOT(pc1.hasPrevious)}"
+                                                    rerender="mpbListPB" status="mpbListPC"
+                                                    title="First Page" value="<<"/>&nbsp;&nbsp;
+                                <apex:commandButton action="{!pc1Prev}" disabled="{!NOT(pc1.hasPrevious)}"
+                                                    rerender="mpbListPB" status="mpbListPC"
+                                                    title="Prev Page" value="<"/>
+
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                                <apex:commandButton action="{!pc1Next}" disabled="{!NOT(pc1.hasNext)}"
+                                                    rerender="mpbListPB" status="mpbListPC"
+                                                    title="Next Page" value=">"/>&nbsp;&nbsp;
+                                <apex:commandButton action="{!pc1Last}" disabled="{!NOT(pc1.hasNext)}"
+                                                    rerender="mpbListPB" status="mpbListPC"
+                                                    title="Last Page" value=">>"/>
+                                </apex:outputPanel>
+                            </apex:facet>
+                        </apex:actionStatus>
+                    </td>
+
+                    <td class="td3">
+                        <apex:outputText value="Page: {!pc1.pageNumber} of {!pc1.lastPageNumber}"/>
+                    </td>
+                    </tr>
+                    </table>
+                </apex:outputPanel>
+            </apex:facet>
+
+            <apex:pageBlockTable value="{!mpbList}" var="r" styleClass="tbl2" rendered="{!renderMpbs}">
+                <apex:column style="width: 20px" headerClass="right" styleClass="right">
+                    <apex:facet name="header">&nbsp;&nbsp;&nbsp;&nbsp;#</apex:facet>
+                    <apex:outputText value="{!r.recNum}" styleClass="{!r.styleClass}" style="width: 40px;"/>
+                </apex:column>
+                <apex:column style="width: 20px" headerClass="chkbx" styleClass="chkbx">
+                    <apex:facet name="header">
+                        <apex:inputCheckbox styleClass="allcb1" value="{!allMpbs}"
+                            onclick="onClick_AllChkbox('rowcb1', this);"/>
+                    </apex:facet>
+                    <apex:inputCheckbox styleClass="rowcb1" value="{!r.selected}"
+                        onclick="onClick_RowChkbox('rowcb1', 'allcb1');"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="nowrap" styleClass="nowrap">
+                    <apex:facet name="header">MPB</apex:facet>
+                    <apex:outputLink target="_blank" value="/{!r.mpb.Id}">
+                        {!r.mpb.Name}</apex:outputLink>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="right nowrap" styleClass="right nowrap">
+                    <apex:facet name="header">Status</apex:facet>
+                    <apex:outputField value="{!r.mpb.Record_Status__c}"/>
+                </apex:column>
+<!--
+                <apex:column style="width: 50px" headerClass="nowrap" styleClass="nowrap"
+                             rendered="{!renderExpiredBy}">
+                    <apex:facet name="header">Expired By</apex:facet>
+                    <apex:outputLink target="_blank" value="/{!r.mpb.Expired_By__c}">
+                        {!r.mpb.Expired_By__r.Name}</apex:outputLink>
+                </apex:column>
+-->
+                <apex:column style="width: 50px" headerClass="right nowrap" styleClass="right nowrap">
+                    <apex:facet name="header">Valid From</apex:facet>
+                    <apex:outputField value="{!r.mpb.Valid_From_Date__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="right nowrap" styleClass="right nowrap">
+                    <apex:facet name="header">Valid To</apex:facet>
+                    <apex:outputField value="{!r.mpb.Valid_To_Date__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center nowrap" styleClass="center nowrap">
+                    <apex:facet name="header">
+                        <apex:commandLink action="{!searchMpbes}" value="MPBEs"
+                                          onclick="openWaitMsg();"/>
+                    </apex:facet>
+                    <apex:outputPanel >
+                        <apex:commandLink action="{!searchMpbes1}" onclick="openWaitMsg();">
+                            {!r.mpbeCount}
+                            <apex:param name="p1" assignTo="{!mpbId}" value="{!r.mpb.Id}"/>
+                        </apex:commandLink>
+                    </apex:outputPanel>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center nowrap" styleClass="center nowrap">
+                    <apex:facet name="header">
+                        <apex:commandLink action="{!searchWrks}" value="WRKs"
+                                          onclick="openWaitMsg();"/>
+                    </apex:facet>
+                    <apex:outputPanel >
+                        <apex:commandLink action="{!searchWrks1}" onclick="openWaitMsg();">
+                            {!r.mpbwCount}
+                            <apex:param name="p1" assignTo="{!mpbId}" value="{!r.mpb.Id}"/>
+                        </apex:commandLink>
+                    </apex:outputPanel>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center nowrap" styleClass="center nowrap">
+                    <apex:facet name="header">
+                        <apex:commandLink action="{!searchPcns}" value="PCNs"
+                                          onclick="openWaitMsg();"/>
+                    </apex:facet>
+                    <apex:outputPanel >
+                        <apex:commandLink action="{!searchPcns1}" onclick="openWaitMsg();">
+                            {!r.pcnCount}
+                            <apex:param name="p1" assignTo="{!mpbId}" value="{!r.mpb.Id}"/>
+                        </apex:commandLink>
+                    </apex:outputPanel>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="center nowrap" styleClass="center nowrap">
+                    <apex:facet name="header">
+                        <apex:commandLink action="{!searchAmpbes}" value="AMPBEs"
+                                          onclick="openWaitMsg();"/>
+                    </apex:facet>
+                    <apex:outputPanel >
+                        <apex:commandLink action="{!searchAmpbes1}" onclick="openWaitMsg();">
+                            {!r.ampbeCount}
+                            <apex:param name="p1" assignTo="{!mpbId}" value="{!r.mpb.Id}"/>
+                        </apex:commandLink>
+                    </apex:outputPanel>
+                </apex:column>
+
+                <apex:column style="width: 100%;">
+                    <apex:facet name="header">Description</apex:facet>
+                    <div class="mpbDesc"><apex:outputField value="{!r.mpb.Description__c}"/></div>
+                </apex:column>
+
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+
+<!-- ================================================================================================================================== -->
+
+        <apex:pageBlock id="mpbeListPB" rendered="{!pageBlockNumber = 2}">
+
+            <apex:facet name="header">
+                <apex:outputPanel layout="block">
+                <table class="tbl1">
+
+                    <tr class="tr1">
+                        <td class="td1">MPB Entries</td>
+                        <td class="td2"><apex:outputPanel styleClass="nowrap">
+                            <apex:commandLink action="{!searchMpbs}" value="Back to MPB List"
+                                              onclick="openWaitMsg();"/>
+                            </apex:outputPanel></td>
+                        <td class="td3"><apex:outputPanel rendered="{!renderDebugMode}">
+                            Debug Mode<apex:inputCheckbox value="{!debugMode}" styleClass="chkbx"/>
+                            </apex:outputPanel></td>
+                    </tr>
+
+                    <!-- tr><td colspan="3">&nbsp;</td></tr -->
+
+                    <tr><td class="td1">
+                        <apex:outputText value="Records: {!pc2.recordFrom} - {!pc2.recordTo} of {!pc2.resultSize}"
+                                         styleClass="nowrap"/>
+                    </td>
+
+                    <td class="td2">
+                            <apex:actionStatus id="mpbeListPC">
+                                <apex:facet name="start">
+                                    <apex:outputText styleClass="bold" value=" Please wait ...">
+                                        <apex:image styleClass="spinner" value="{!$Resource.spinner}"/>
+                                    </apex:outputText>
+                                </apex:facet>
+                                <apex:facet name="stop">
+                                <apex:outputPanel >
+                                <apex:outputText value="Rows Per Page:"/>&nbsp;
+                                <apex:selectList value="{!pc2.pageSize}" size="1" title="Rows Per Page:">
+                                    <apex:actionSupport event="onchange" action="{!pc2Size}"
+                                                    rerender="mpbeListPB" status="mpbeListPC"/>
+                                    <apex:selectOptions value="{!pageSizeOpts}"/>
+                                </apex:selectList>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <apex:commandButton action="{!pc2Frst}" disabled="{!NOT(pc2.hasPrevious)}"
+                                                    rerender="mpbeListPB" status="mpbeListPC"
+                                                    title="First Page" value="<<"/>&nbsp;&nbsp;
+                                <apex:commandButton action="{!pc2Prev}" disabled="{!NOT(pc2.hasPrevious)}"
+                                                    rerender="mpbeListPB" status="mpbeListPC"
+                                                    title="Prev Page" value="<"/>
+
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                                <apex:commandButton action="{!pc2Next}" disabled="{!NOT(pc2.hasNext)}"
+                                                    rerender="mpbeListPB" status="mpbeListPC"
+                                                    title="Next Page" value=">"/>&nbsp;&nbsp;
+                                <apex:commandButton action="{!pc2Last}" disabled="{!NOT(pc2.hasNext)}"
+                                                    rerender="mpbeListPB" status="mpbeListPC"
+                                                    title="Last Page" value=">>"/>
+                                </apex:outputPanel>
+                            </apex:facet>
+                        </apex:actionStatus>
+                    </td>
+
+                    <td class="td3">
+                        <apex:outputText value="Page: {!pc2.pageNumber} of {!pc2.lastPageNumber}"/>
+                    </td>
+                    </tr>
+                    </table>
+                </apex:outputPanel>
+            </apex:facet>
+
+            <apex:pageBlockTable value="{!mpbeList}" var="r" styleClass="tbl2" rendered="{!renderMpbes}">
+                <apex:column style="width: 20px" headerClass="right" styleClass="right">
+                    <apex:facet name="header">&nbsp;&nbsp;&nbsp;&nbsp;#</apex:facet>
+                    <apex:outputText value="{!r.recNum}" styleClass="{!r.styleClass}" style="width: 40px;"/>
+                </apex:column>
+                <apex:column style="width: 20px" headerClass="chkbx" styleClass="chkbx">
+                    <apex:facet name="header">
+                        <apex:inputCheckbox styleClass="allcb2" value="{!allMpbes}"
+                            onclick="onClick_AllChkbox('rowcb2', this);"/>
+                    </apex:facet>
+                    <apex:inputCheckbox styleClass="rowcb2" value="{!r.selected}"
+                        onclick="onClick_RowChkbox('rowcb2', 'allcb2');"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="nowrap" styleClass="nowrap">
+                    <apex:facet name="header">MPB</apex:facet>
+                    <apex:outputLink target="_blank" value="/{!r.mpb.Id}">
+                        {!r.mpb.Name}</apex:outputLink>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="nowrap" styleClass="nowrap">
+                    <apex:facet name="header">MPBE</apex:facet>
+                    <apex:outputLink target="_blank"
+                        value="/{!r.mpbe.Id}">
+                        {!r.mpbe.Name}</apex:outputLink>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="right nowrap" styleClass="right nowrap">
+                    <apex:facet name="header">Status</apex:facet>
+                    <apex:outputField value="{!r.mpbe.Record_Status__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="right nowrap" styleClass="right nowrap">
+                    <apex:facet name="header">SOrg</apex:facet>
+                    <apex:outputField value="{!r.mpbe.Material_Sales_Data2__r.Sales_Org_Code__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="right nowrap" styleClass="right nowrap">
+                    <apex:facet name="header">Material</apex:facet>
+                    <apex:outputLink target="_blank"
+                        value="/{!r.mpbe.Material_Sales_Data2__r.Id}">
+                        {!r.matNum}</apex:outputLink>
+                </apex:column>
+
+                <apex:column style="width: 100%" headerClass="nowrap" styleClass="nowrap">
+                    <apex:facet name="header">Material Name</apex:facet>
+                    <apex:outputLink target="_blank"
+                        value="/{!r.mpbe.Material_Sales_Data2__r.Id}">
+                        {!r.mpbe.Material_Sales_Data2__r.Material_Desc__c}</apex:outputLink>
+                </apex:column>
+
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+
+<!-- ================================================================================================================================== -->
+
+        <apex:pageBlock id="ampbeListPB" rendered="{!pageBlockNumber = 3}">
+
+            <apex:facet name="header">
+                <apex:outputPanel layout="block">
+                <table class="tbl1">
+
+                    <tr class="tr1">
+                        <td class="td1">Account MPB Entries</td>
+                        <td class="td2"><apex:outputPanel styleClass="nowrap">
+                            <apex:commandLink action="{!searchMpbs}" value="Back to MPB List"
+                                              onclick="openWaitMsg();"/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <apex:commandLink action="{!processAmpbes}" value="Update AMPBEs"
+                                              onclick="return getConfirm('Update AMPBEs?');"/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            Submit Batch Job<apex:inputCheckbox value="{!batchJob}" styleClass="chkbx"/>
+                            </apex:outputPanel></td>
+                        <td class="td3"><apex:outputPanel rendered="{!renderDebugMode}">
+                            Debug Mode<apex:inputCheckbox value="{!debugMode}" styleClass="chkbx"/>
+                            </apex:outputPanel></td>
+                    </tr>
+
+                    <!-- tr><td colspan="3">&nbsp;</td></tr -->
+
+                    <tr><td class="td1">
+                        <apex:outputText value="Records: {!pc3.recordFrom} - {!pc3.recordTo} of {!pc3.resultSize}"
+                                         styleClass="nowrap"/>
+                    </td>
+
+                    <td class="td2">
+                            <apex:actionStatus id="ampbeListPC">
+                                <apex:facet name="start">
+                                    <apex:outputText styleClass="bold" value=" Please wait ...">
+                                        <apex:image styleClass="spinner" value="{!$Resource.spinner}"/>
+                                    </apex:outputText>
+                                </apex:facet>
+                                <apex:facet name="stop">
+                                <apex:outputPanel >
+                                <apex:outputText value="Rows Per Page:"/>&nbsp;
+                                <apex:selectList value="{!pc3.pageSize}" size="1" title="Rows Per Page:">
+                                    <apex:actionSupport event="onchange" action="{!pc3Size}"
+                                                    rerender="ampbeListPB" status="ampbeListPC"/>
+                                    <apex:selectOptions value="{!pageSizeOpts}"/>
+                                </apex:selectList>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <apex:commandButton action="{!pc3Frst}" disabled="{!NOT(pc3.hasPrevious)}"
+                                                    rerender="ampbeListPB" status="ampbeListPC"
+                                                    title="First Page" value="<<"/>&nbsp;&nbsp;
+                                <apex:commandButton action="{!pc3Prev}" disabled="{!NOT(pc3.hasPrevious)}"
+                                                    rerender="ampbeListPB" status="ampbeListPC"
+                                                    title="Prev Page" value="<"/>
+
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                                <apex:commandButton action="{!pc3Next}" disabled="{!NOT(pc3.hasNext)}"
+                                                    rerender="ampbeListPB" status="ampbeListPC"
+                                                    title="Next Page" value=">"/>&nbsp;&nbsp;
+                                <apex:commandButton action="{!pc3Last}" disabled="{!NOT(pc3.hasNext)}"
+                                                    rerender="ampbeListPB" status="ampbeListPC"
+                                                    title="Last Page" value=">>"/>
+                                </apex:outputPanel>
+                            </apex:facet>
+                        </apex:actionStatus>
+                    </td>
+
+                    <td class="td3">
+                        <apex:outputText value="Page: {!pc3.pageNumber} of {!pc3.lastPageNumber}"/>
+                    </td>
+                    </tr>
+                    </table>
+                </apex:outputPanel>
+            </apex:facet>
+
+            <apex:pageBlockTable value="{!ampbeList}" var="r" styleClass="tbl2" rendered="{!renderAmpbes}">
+                <apex:column style="width: 20px" headerClass="right" styleClass="right">
+                    <apex:facet name="header">&nbsp;&nbsp;&nbsp;&nbsp;#</apex:facet>
+                    <apex:outputText value="{!r.recNum}" styleClass="{!r.styleClass}" style="width: 40px;"/>
+                </apex:column>
+                <apex:column style="width: 20px" headerClass="chkbx" styleClass="chkbx">
+                    <apex:facet name="header">
+                        <apex:inputCheckbox styleClass="allcb3" value="{!allAmpbes}"
+                            onclick="onClick_AllChkbox('rowcb3', this);"/>
+                    </apex:facet>
+                    <apex:inputCheckbox styleClass="rowcb3" value="{!r.selected}"
+                        onclick="onClick_RowChkbox('rowcb3', 'allcb3');"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="nowrap" styleClass="nowrap">
+                    <apex:facet name="header">AMPBE</apex:facet>
+                    <apex:outputLink target="_blank" value="/{!r.ampbe.Id}">
+                        {!r.ampbe.Name}</apex:outputLink>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="nowrap" styleClass="nowrap">
+                    <apex:facet name="header">MPB</apex:facet>
+                    <apex:outputLink target="_blank" value="/{!r.mpb.Id}">
+                        {!r.mpb.Name}</apex:outputLink>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="nowrap" styleClass="nowrap">
+                    <apex:facet name="header">MPBE</apex:facet>
+                    <apex:outputLink target="_blank"
+                        value="/{!r.ampbe.Market_Price_Book_Entry__r.Id}">
+                        {!r.ampbe.Market_Price_Book_Entry__r.Name}</apex:outputLink>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="right nowrap" styleClass="right nowrap">
+                    <apex:facet name="header">Status</apex:facet>
+                    <apex:outputField value="{!r.mpbe.Record_Status__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="right nowrap" styleClass="right nowrap">
+                    <apex:facet name="header">SOrg</apex:facet>
+                    <apex:outputField value="{!r.mpbe.Material_Sales_Data2__r.Sales_Org_Code__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="right nowrap" styleClass="right nowrap">
+                    <apex:facet name="header">Account</apex:facet>
+                    <apex:outputLink target="_blank"
+                        value="/{!r.ampbe.Account__r.Id}">
+                        {!r.accNum}</apex:outputLink>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="nowrap" styleClass="nowrap">
+                    <apex:facet name="header">Account Name</apex:facet>
+                    <apex:outputLink target="_blank"
+                        value="/{!r.ampbe.Account__r.Id}">
+                        {!r.ampbe.Account__r.Name}</apex:outputLink>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="right nowrap" styleClass="right nowrap">
+                    <apex:facet name="header">Material</apex:facet>
+                    <apex:outputLink target="_blank"
+                        value="/{!r.mpbe.Material_Sales_Data2__r.Id}">
+                        {!r.matNum}</apex:outputLink>
+                </apex:column>
+
+                <apex:column style="width: 100%" headerClass="nowrap" styleClass="nowrap">
+                    <apex:facet name="header">Material Name</apex:facet>
+                    <apex:outputLink target="_blank"
+                        value="/{!r.mpbe.Material_Sales_Data2__r.Id}">
+                        {!r.mpbe.Material_Sales_Data2__r.Material_Desc__c}</apex:outputLink>
+                </apex:column>
+
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+
+<!-- ================================================================================================================================== -->
+
+        <apex:pageBlock id="pcnListPB" rendered="{!pageBlockNumber = 5}">
+
+            <apex:facet name="header">
+                <apex:outputPanel layout="block">
+                <table class="tbl1">
+
+                    <tr class="tr1">
+                        <td class="td1">Pricing Conditions</td>
+                        <td class="td2"><apex:outputPanel styleClass="nowrap">
+                            <apex:commandLink action="{!searchMpbs}" value="Back to MPB List"
+                                              onclick="openWaitMsg();"/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <apex:commandLink action="{!processPcns}" value="Update PCNs"
+                                              onclick="return getConfirm('Update PCNs?');"/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            Submit Batch Job<apex:inputCheckbox value="{!batchJob}" styleClass="chkbx"/>
+                            </apex:outputPanel></td>
+                        <td class="td3"><apex:outputPanel rendered="{!renderDebugMode}">
+                            Debug Mode<apex:inputCheckbox value="{!debugMode}" styleClass="chkbx"/>
+                            </apex:outputPanel></td>
+                    </tr>
+
+                    <!-- tr><td colspan="3">&nbsp;</td></tr -->
+
+                    <tr><td class="td1">
+                        <apex:outputText value="Records: {!pc5.recordFrom} - {!pc5.recordTo} of {!pc5.resultSize}"
+                                         styleClass="nowrap"/>
+                    </td>
+
+                    <td class="td2">
+                            <apex:actionStatus id="pcnListPC">
+                                <apex:facet name="start">
+                                    <apex:outputText styleClass="bold" value=" Please wait ...">
+                                        <apex:image styleClass="spinner" value="{!$Resource.spinner}"/>
+                                    </apex:outputText>
+                                </apex:facet>
+                                <apex:facet name="stop">
+                                <apex:outputPanel >
+                                <apex:outputText value="Rows Per Page:"/>&nbsp;
+                                <apex:selectList value="{!pc5.pageSize}" size="1" title="Rows Per Page:">
+                                    <apex:actionSupport event="onchange" action="{!pc5Size}"
+                                                    rerender="pcnListPB" status="pcnListPC"/>
+                                    <apex:selectOptions value="{!pageSizeOpts}"/>
+                                </apex:selectList>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <apex:commandButton action="{!pc5Frst}" disabled="{!NOT(pc5.hasPrevious)}"
+                                                    rerender="pcnListPB" status="pcnListPC"
+                                                    title="First Page" value="<<"/>&nbsp;&nbsp;
+                                <apex:commandButton action="{!pc5Prev}" disabled="{!NOT(pc5.hasPrevious)}"
+                                                    rerender="pcnListPB" status="pcnListPC"
+                                                    title="Prev Page" value="<"/>
+
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                                <apex:commandButton action="{!pc5Next}" disabled="{!NOT(pc5.hasNext)}"
+                                                    rerender="pcnListPB" status="pcnListPC"
+                                                    title="Next Page" value=">"/>&nbsp;&nbsp;
+                                <apex:commandButton action="{!pc5Last}" disabled="{!NOT(pc5.hasNext)}"
+                                                    rerender="pcnListPB" status="pcnListPC"
+                                                    title="Last Page" value=">>"/>
+                                </apex:outputPanel>
+                            </apex:facet>
+                        </apex:actionStatus>
+                    </td>
+
+                    <td class="td3">
+                        <apex:outputText value="Page: {!pc5.pageNumber} of {!pc5.lastPageNumber}"/>
+                    </td>
+                    </tr>
+                    </table>
+                </apex:outputPanel>
+            </apex:facet>
+
+            <apex:pageBlockTable value="{!pcnList}" var="r" styleClass="tbl2" rendered="{!renderPcns}">
+                <apex:column style="width: 20px" headerClass="right" styleClass="right">
+                    <apex:facet name="header">&nbsp;&nbsp;&nbsp;&nbsp;#</apex:facet>
+                    <apex:outputText value="{!r.recNum}" styleClass="{!r.styleClass}" style="width: 40px;"/>
+                </apex:column>
+                <apex:column style="width: 20px" headerClass="chkbx" styleClass="chkbx">
+                    <apex:facet name="header">
+                        <apex:inputCheckbox styleClass="allcb5" value="{!allPcns}"
+                            onclick="onClick_AllChkbox('rowcb5', this);"/>
+                    </apex:facet>
+                    <apex:inputCheckbox styleClass="rowcb5" value="{!r.selected}"
+                        onclick="onClick_RowChkbox('rowcb5', 'allcb5');"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="nowrap" styleClass="nowrap">
+                    <apex:facet name="header">PCN</apex:facet>
+                    <apex:outputLink target="_blank" value="/{!r.pcn.Id}">
+                        {!r.pcn.Name}</apex:outputLink>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="right nowrap" styleClass="right nowrap">
+                    <apex:facet name="header">Status</apex:facet>
+                    <apex:outputField value="{!r.pcn.Record_Status__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="right nowrap" styleClass="right nowrap">
+                    <apex:facet name="header">MP Type</apex:facet>
+                    <apex:outputField value="{!r.pcn.Market_Pricing_Type__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="nowrap" styleClass="nowrap">
+                    <apex:facet name="header">MPB</apex:facet>
+                    <apex:outputLink target="_blank" value="/{!r.mpb.Id}">
+                        {!r.mpb.Name}</apex:outputLink>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="nowrap" styleClass="nowrap">
+                    <apex:facet name="header">MPBE</apex:facet>
+                    <apex:outputLink target="_blank"
+                        value="/{!r.mpbe.Id}">
+                        {!r.mpbe.Name}</apex:outputLink>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="right nowrap" styleClass="right nowrap">
+                    <apex:facet name="header">Status</apex:facet>
+                    <apex:outputField value="{!r.mpbe.Record_Status__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="right nowrap" styleClass="right nowrap">
+                    <apex:facet name="header">SOrg</apex:facet>
+                    <apex:outputField value="{!r.pcn.Material2__r.Sales_Org_Code__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="right nowrap" styleClass="right nowrap">
+                    <apex:facet name="header">Account</apex:facet>
+                    <apex:outputLink target="_blank"
+                        value="/{!r.pcn.Account__r.Id}">
+                        {!r.accNum}</apex:outputLink>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="nowrap" styleClass="nowrap">
+                    <apex:facet name="header">Account Name</apex:facet>
+                    <apex:outputLink target="_blank"
+                        value="/{!r.pcn.Account__r.Id}">
+                        {!r.pcn.Account__r.Name}</apex:outputLink>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="right nowrap" styleClass="right nowrap">
+                    <apex:facet name="header">Material</apex:facet>
+                    <apex:outputLink target="_blank"
+                        value="/{!r.pcn.Material2__r.Id}">
+                        {!r.matNum}</apex:outputLink>
+                </apex:column>
+
+                <apex:column style="width: 100%" headerClass="nowrap" styleClass="nowrap">
+                    <apex:facet name="header">Material Name</apex:facet>
+                    <apex:outputLink target="_blank"
+                        value="/{!r.pcn.Material2__r.Id}">
+                        {!r.pcn.Material2__r.Material_Desc__c}</apex:outputLink>
+                </apex:column>
+
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+
+<!-- ================================================================================================================================== -->
+
+        <apex:pageBlock id="wrkListPB" rendered="{!pageBlockNumber = 7}">
+
+            <apex:facet name="header">
+                <apex:outputPanel layout="block">
+                <table class="tbl1">
+
+                    <tr class="tr1">
+                        <td class="td1">MPB - Work When Approved</td>
+                        <td class="td2"><apex:outputPanel styleClass="nowrap">
+                            <apex:commandLink action="{!searchMpbs}" value="Back to MPB List"
+                                              onclick="openWaitMsg();"/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <apex:commandLink action="{!processWrks}" value="Update PCNs"
+                                              onclick="return getConfirm('Update PCNs?');"/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            Submit Batch Job<apex:inputCheckbox value="{!batchJob}" styleClass="chkbx"/>
+                            </apex:outputPanel></td>
+                        <td class="td3"><apex:outputPanel rendered="{!renderDebugMode}">
+                            Debug Mode<apex:inputCheckbox value="{!debugMode}" styleClass="chkbx"/>
+                            </apex:outputPanel></td>
+                    </tr>
+
+                    <!-- tr><td colspan="3">&nbsp;</td></tr -->
+
+                    <tr><td class="td1">
+                        <apex:outputText value="Records: {!pc7.recordFrom} - {!pc7.recordTo} of {!pc7.resultSize}"
+                                         styleClass="nowrap"/>
+                    </td>
+
+                    <td class="td2">
+                            <apex:actionStatus id="wrkListPC">
+                                <apex:facet name="start">
+                                    <apex:outputText styleClass="bold" value=" Please wait ...">
+                                        <apex:image styleClass="spinner" value="{!$Resource.spinner}"/>
+                                    </apex:outputText>
+                                </apex:facet>
+                                <apex:facet name="stop">
+                                <apex:outputPanel >
+                                <apex:outputText value="Rows Per Page:"/>&nbsp;
+                                <apex:selectList value="{!pc7.pageSize}" size="1" title="Rows Per Page:">
+                                    <apex:actionSupport event="onchange" action="{!pc7Size}"
+                                                    rerender="wrkListPB" status="wrkListPC"/>
+                                    <apex:selectOptions value="{!pageSizeOpts}"/>
+                                </apex:selectList>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <apex:commandButton action="{!pc7Frst}" disabled="{!NOT(pc7.hasPrevious)}"
+                                                    rerender="wrkListPB" status="wrkListPC"
+                                                    title="First Page" value="<<"/>&nbsp;&nbsp;
+                                <apex:commandButton action="{!pc7Prev}" disabled="{!NOT(pc7.hasPrevious)}"
+                                                    rerender="wrkListPB" status="wrkListPC"
+                                                    title="Prev Page" value="<"/>
+
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                                <apex:commandButton action="{!pc7Next}" disabled="{!NOT(pc7.hasNext)}"
+                                                    rerender="wrkListPB" status="wrkListPC"
+                                                    title="Next Page" value=">"/>&nbsp;&nbsp;
+                                <apex:commandButton action="{!pc7Last}" disabled="{!NOT(pc7.hasNext)}"
+                                                    rerender="wrkListPB" status="wrkListPC"
+                                                    title="Last Page" value=">>"/>
+                                </apex:outputPanel>
+                            </apex:facet>
+                        </apex:actionStatus>
+                    </td>
+
+                    <td class="td3">
+                        <apex:outputText value="Page: {!pc7.pageNumber} of {!pc7.lastPageNumber}"/>
+                    </td>
+                    </tr>
+                    </table>
+                </apex:outputPanel>
+            </apex:facet>
+
+            <apex:pageBlockTable value="{!wrkList}" var="r" styleClass="tbl2" rendered="{!renderWrks}">
+                <apex:column style="width: 20px" headerClass="right" styleClass="right">
+                    <apex:facet name="header">&nbsp;&nbsp;&nbsp;&nbsp;#</apex:facet>
+                    <apex:outputText value="{!r.recNum}" styleClass="{!r.styleClass}" style="width: 40px;"/>
+                </apex:column>
+                <apex:column style="width: 20px" headerClass="chkbx" styleClass="chkbx">
+                    <apex:facet name="header">
+                        <apex:inputCheckbox styleClass="allcb7" value="{!allWrks}"
+                            onclick="onClick_AllChkbox('rowcb7', this);"/>
+                    </apex:facet>
+                    <apex:inputCheckbox styleClass="rowcb7" value="{!r.selected}"
+                        onclick="onClick_RowChkbox('rowcb7', 'allcb7');"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="nowrap" styleClass="nowrap">
+                    <apex:facet name="header">PCN</apex:facet>
+                    <apex:outputLink target="_blank" value="/{!r.pcn.Id}">
+                        {!r.pcn.Name}</apex:outputLink>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="right nowrap" styleClass="right nowrap">
+                    <apex:facet name="header">Status</apex:facet>
+                    <apex:outputField value="{!r.pcn.Record_Status__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="right nowrap" styleClass="right nowrap">
+                    <apex:facet name="header">MP Type</apex:facet>
+                    <apex:outputField value="{!r.pcn.Market_Pricing_Type__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="nowrap" styleClass="nowrap">
+                    <apex:facet name="header">MPB From</apex:facet>
+                    <apex:outputLink target="_blank" value="/{!r.mpbe.Market_Price_Book__r.Id}">
+                        {!r.mpbe.Market_Price_Book__r.Name}</apex:outputLink>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="nowrap" styleClass="nowrap">
+                    <apex:facet name="header">MPBE</apex:facet>
+                    <apex:outputLink target="_blank"
+                        value="/{!r.mpbe.Id}">
+                        {!r.mpbe.Name}</apex:outputLink>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="right nowrap" styleClass="right nowrap">
+                    <apex:facet name="header">Status</apex:facet>
+                    <apex:outputField value="{!r.mpbe.Record_Status__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="nowrap" styleClass="nowrap">
+                    <apex:facet name="header">MPB To</apex:facet>
+                    <apex:outputLink target="_blank" value="/{!r.mpb.Id}">
+                        {!r.mpb.Name}</apex:outputLink>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="right nowrap" styleClass="right nowrap">
+                    <apex:facet name="header">SOrg</apex:facet>
+                    <apex:outputField value="{!r.pcn.Material2__r.Sales_Org_Code__c}"/>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="right nowrap" styleClass="right nowrap">
+                    <apex:facet name="header">Account</apex:facet>
+                    <apex:outputLink target="_blank"
+                        value="/{!r.pcn.Account__r.Id}">
+                        {!r.accNum}</apex:outputLink>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="nowrap" styleClass="nowrap">
+                    <apex:facet name="header">Account Name</apex:facet>
+                    <apex:outputLink target="_blank"
+                        value="/{!r.pcn.Account__r.Id}">
+                        {!r.pcn.Account__r.Name}</apex:outputLink>
+                </apex:column>
+
+                <apex:column style="width: 50px" headerClass="right nowrap" styleClass="right nowrap">
+                    <apex:facet name="header">Material</apex:facet>
+                    <apex:outputLink target="_blank"
+                        value="/{!r.pcn.Material2__r.Id}">
+                        {!r.matNum}</apex:outputLink>
+                </apex:column>
+
+                <apex:column style="width: 100%" headerClass="nowrap" styleClass="nowrap">
+                    <apex:facet name="header">Material Name</apex:facet>
+                    <apex:outputLink target="_blank"
+                        value="/{!r.pcn.Material2__r.Id}">
+                        {!r.pcn.Material2__r.Material_Desc__c}</apex:outputLink>
+                </apex:column>
+
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+
+<!-- ================================================================================================================================== -->
+
+        <div id="waitMsgDiv">
+            <apex:image styleClass="spinner" value="{!$Resource.spinner}"/> Please wait ...
+        </div>
+
+<!-- ================================================================================================================================== -->
+
+    </apex:form>
+
+    </div>
+    <script type="text/javascript">
+        var $j = jQuery.noConflict();
+
+        function log(msg) {if(window.console){console.log(msg);}}
+
+        function setfocus(fid) {
+            //log('setfocus : fid = ' + fid);
+            var fld = document.getElementById(fid);
+            //log('setfocus : fld = ' + fld);
+            if (fld != null) {fld.focus();}
+        }
+
+        function onClick_AllChkbox(rowCbClass, allChkbox) {
+            $j("."+rowCbClass).each(function() {
+                if (this.disabled == false) {
+                    this.checked = allChkbox.checked;
+                }
+            });
+        }
+
+        function onClick_RowChkbox(rowCbClass, allCbClass) {
+            var allChkbox = $j("."+allCbClass).get(0);
+            allChkbox.checked = true;
+            $j("."+rowCbClass).each(function() {
+                if (!this.checked) {
+                    allChkbox.checked = false;
+                    return false;
+                }
+            });
+        }
+
+        $j("#waitMsgDiv").dialog({
+            modal: true, autoOpen: false, dialogClass: "no-title",
+            height: 30, width: 40, resizable: false
+        });
+
+        function openWaitMsg() {$j("#waitMsgDiv").dialog("open");}
+
+        function closeWaitMsg() {$j("#waitMsgDiv").dialog("close");}
+
+        function getConfirm(q) {
+            openWaitMsg(); answer = confirm(q);
+            if (answer == 0) {closeWaitMsg(); return false;}
+            return true;
+        }
+
+    </script>
+
+    <style>
+        #waitMsgDiv {display: none; font-weight: bold; height: 20px;
+                     text-align: center; vertical-align: middle;}
+        .spinner    {margin-bottom: -3px;}
+
+        .pbBody {margin: 0 !important;}
+        .pbBody table input,
+        .pbBody table textarea {border: 1px solid #e0e3e5;}
+
+        .pbBody table.list .dateFormat {display: none !important;}
+        .pbBody table.list tr.headerRow th.chkbx {padding-left: 3px;}
+        .pbBody table.list tr.headerRow th.reqd  {color: red;}
+        .no-title .ui-dialog-titlebar {display: none;}
+
+        .div1         {background-color: #f8f8f8; width: 100%;}
+
+        .tbl1 tr.tr1  {background-color: #f3f3f3;}
+
+        .tbl1 td,
+        .bold         {font-size: 91%; font-weight: bold;}
+
+        .boldblue     {color: blue; font-weight: bold;}
+
+        .tbl1 td,
+        .center       {text-align: center; vertical-align: middle;}
+
+        .tbl1 td.td1,
+        .left         {text-align: left;}
+
+        .tbl1 td.td3,
+        .right        {text-align: right;}
+
+        .tbl1 td,
+        .nowrap       {white-space: nowrap;}
+
+        .tbl1 td.td1,
+        .tbl1 td.td3  {width: 10%;}
+        .tbl1 td.td2  {width: 80%;}
+        .tbl1 .chkbx  {height: 14px; vertical-align: middle;}
+
+        .reqd         {color: red;}
+        .hili         {background-color: #ccffcc !important; border: 1px solid #e0e3e5;}
+
+        .tbl2         {width: 100%;}
+        .tbl2 th a    {text-decoration: underline !important;}
+
+        .tbl2 td      {font-size: 91%;}
+
+        .tbl1 td,
+        .tbl2 td      {width: 50px; height: 20px; padding: 4px; vertical-align: middle;}
+        .mpbDesc      {width: 60em; overflow: hidden; text-overflow: ellipsis;}
+
+    </style>
+</apex:page>

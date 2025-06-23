@@ -1,0 +1,51 @@
+<template>
+    <lightning-card>
+   
+        <lightning-record-edit-form record-id={recordId}  object-api-name= "Asset">
+
+                <lightning-layout multiple-rows>
+                    <lightning-layout-item size="12" small-device-size="6" medium-device-size="6" large-device-size="3"  padding="around-small">
+                        <lightning-input-field name="Equipment_Number__c" class="Equipment_Number__c" field-name="Equipment_Number__c">
+                        </lightning-input-field>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="12" small-device-size="6" medium-device-size="6" large-device-size="3"  padding="around-small">
+                        <lightning-input-field name="Name" class="Name" field-name="Name" disabled="true">
+                        </lightning-input-field>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="12" small-device-size="6" medium-device-size="6" large-device-size="3"  padding="around-small">
+                        <lightning-input-field name="Equipment_Engineer__c" class="Equipment_Engineer__c" field-name="Equipment_Engineer__c" disabled="true">
+                        </lightning-input-field>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="12" small-device-size="6" medium-device-size="6" large-device-size="3"  padding="around-small">
+                        <lightning-input-field name="Equipment_Status__c" class="Equipment_Status__c" field-name="Equipment_Status__c" disabled="true">
+                        </lightning-input-field>
+                    </lightning-layout-item>
+                </lightning-layout>
+         
+        </lightning-record-edit-form>
+    <div style="height: 30%;">
+       
+            <lightning-spinner if:true={isLoaded}
+                alternative-text="Loading..." variant="brand">
+            </lightning-spinner>
+       
+        <lightning-datatable wrap-text-max-lines="5"
+        data-id="goliSelection"
+                key-field="id"
+                data={data}
+                columns={columns}
+                >
+        </lightning-datatable>
+    </div> 
+        <lightning-layout>
+            <lightning-layout-item>
+       
+        <lightning-button variant="Brand" label="Create EOLI" title="Primary action" onclick={createEQOL} class="slds-m-left_x-small"></lightning-button>
+    </lightning-layout-item>
+    <lightning-layout-item>
+        <lightning-button variant="destructive" label="Cancel" title="Primary action"  class="slds-m-left_x-small"></lightning-button>
+        </lightning-layout-item>
+    </lightning-layout>
+
+</lightning-card>
+</template>

@@ -1,0 +1,80 @@
+<template>
+	<article>
+		<div class="slds-card__header slds-grid">
+			<header class="slds-media slds-media_center slds-has-flexi-truncate">
+				<div class="slds-media__figure">
+					<span class="slds-icon_container" title="Resources">
+         				<svg width="19" height="25" viewBox="0 0 19 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path d="M3.69694 10.2412C3.29847 10.2412 2.9726 10.5671 2.9726 10.9656C2.9726 11.364 3.29847 11.6891 3.69694 11.6891H14.8493C15.2478 11.6891 15.5736 11.364 15.5736 10.9656C15.5736 10.5671 15.2478 10.2412 14.8493 10.2412H3.69694Z" fill="#3F3B3B"/>
+							<path d="M0.764084 24.875C0.425009 24.875 0.137909 24.5929 0.137909 24.2596V0.75035C0.137909 0.4055 0.418409 0.125 0.764084 0.125H12.8949C13.0599 0.125 13.2208 0.1943 13.3462 0.3197L18.6666 5.65002C18.7903 5.75727 18.8613 5.91733 18.8613 6.09057V24.2587C18.8613 24.592 18.5734 24.8742 18.2351 24.8742L0.764084 24.875ZM1.39026 23.6342H17.6197V6.71593H12.8949C12.5509 6.71593 12.2695 6.43543 12.2695 6.0914V1.3658H1.39026V23.6342ZM13.5219 5.47512H16.7394L13.5219 2.24525V5.47512Z" fill="#3F3B3B"/>
+							<path d="M3.69694 13.4602C3.29847 13.4602 2.9726 13.7861 2.9726 14.1846C2.9726 14.583 3.29847 14.9089 3.69694 14.9089H14.8493C15.2478 14.9089 15.5736 14.583 15.5736 14.1846C15.5736 13.7861 15.2478 13.4602 14.8493 13.4602H3.69694Z" fill="#3F3B3B"/>
+							<path d="M3.69694 16.6787C3.29847 16.6787 2.9726 17.0046 2.9726 17.4031C2.9726 17.8024 3.29847 18.1266 3.69694 18.1266H14.8493C15.2478 18.1266 15.5736 17.8024 15.5736 17.4031C15.5736 17.0046 15.2478 16.6787 14.8493 16.6787H3.69694Z" fill="#3F3B3B"/>
+						</svg>
+
+          <span class="slds-assistive-text">Resources</span>
+					</span>
+				</div>
+				<div class="slds-media__body">
+					<h2 class="slds-card__header-title exp_heading">
+						Resources
+					</h2>
+				</div>
+			</header>
+		</div>
+		<div class="slds-card__body slds-card__body_inner">
+			<div class="exp_border"> </div>
+			<template if:true={resources}>
+				<template iterator:resource={resources}>
+					<div key={resource.value.id}>
+						<template if:false={resource.first}>
+							<div class="exp_border"> </div>
+						</template>
+						<br/>
+						<div>
+							<div class="slds-grid slds-wrap">
+								<div class="slds-col slds-size_1-of-12">
+									<span><lightning-icon icon-name="utility:chevronright" size="x-small"></lightning-icon></span>
+								</div>
+								<div class="slds-col slds-size_11-of-12">
+									<span><div class="exp_mytext"><a href={resource.value.urlValue} target="_blank">{resource.value.label}</a></div></span>
+								</div>
+							</div>
+						</div>
+						<br/>
+					</div>
+				</template>
+				<br/><br/>
+				<!--<lightning-button variant="netural" label="View More" title="View More" onclick={handleClick}
+					class="slds-m-left_x-small button"></lightning-button>-->
+			</template>
+		</div>
+	</article>
+
+	<!--<lightning-card variant="Narrow" icon-name="utility:note">
+		<div slot="title" class="exp_heading">
+			Recent Articles
+		</div>
+
+		<template for:each={articles} for:item="article">
+			<div key={article.id}>
+				<div class="exp_border"> </div>
+				<br/>
+				<div>
+					<div class="slds-grid slds-wrap">
+						<div class="slds-col slds-size_1-of-12">
+							<span><lightning-icon icon-name="utility:chevronright" size="x-small"></lightning-icon></span>
+						</div>
+						<div class="slds-col slds-size_11-of-12">
+							<span><div class="exp_mytext">{article.title}</div></span>
+						</div>
+					</div>
+				</div>
+				<br/>
+            </div>
+		</template>
+
+		<br/><br/>
+		<lightning-button variant="netural" label="View More" title="View More" onclick={handleClick}
+			class="slds-m-left_x-small button"></lightning-button>
+	</lightning-card>-->
+</template>

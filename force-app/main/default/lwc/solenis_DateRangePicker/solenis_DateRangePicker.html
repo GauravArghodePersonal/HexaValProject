@@ -1,0 +1,17 @@
+<template>
+	<div class="app">
+		<lightning-input type="date" name="startDate" label={startDateLabel} value={startDate}
+			onchange={handleStartDateChange}>
+		</lightning-input>
+
+		<lightning-input type="date" name="endDate" label={endDateLabel} value={endDate} onchange={handleEndDateChange}>
+		</lightning-input>
+
+	</div>
+	<div class="slds-align_absolute-center slds-p-top_x-small">
+		<button class="button" title="Apply" onclick={handleApplyClick}>Apply</button>
+		<div class="slds-p-left_x-small">
+			<button class="button" title="Clear" onclick={handleClearClick}>Clear</button>
+		</div>
+	</div>
+</template>

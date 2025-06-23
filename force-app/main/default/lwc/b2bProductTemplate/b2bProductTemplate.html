@@ -1,0 +1,19 @@
+<template>
+    <br/>
+    <div class="slds-grid slds-wrap">
+        <!-- <div class="slds-col slds-size_3-of-12" >
+            Product Filter Component here
+            <c-b2b-filter></c-b2b-filter>
+        </div>-->
+        <div class="slds-col slds-size_12-of-12" >
+            <!-- Product Search Component here-->
+            <c-b2b-search-and-sort onapplysort={applySort} onapplysearch={applySearch}></c-b2b-search-and-sort>
+
+            <!-- Product List Component here-->
+            <div if:true={showProducts}>
+                <c-b2b-products effective-account-id={resolvedEffectiveAccountId} search-key={searchValue}  sort-key={sortValue}  ongetsearchresultproducts={handlesearchresultproduct} ></c-b2b-products>
+                <!-- ongetallresultproducts={handleallresultproducts} -->
+            </div>
+        </div>
+    </div>
+</template>

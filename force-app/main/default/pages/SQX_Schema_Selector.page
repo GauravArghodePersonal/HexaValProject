@@ -1,0 +1,2 @@
+<apex:page controller="compliancequest.SQX_Schema_Selector" standardStylesheets="false" showHeader="false" showChat="false" sidebar="false"
+applyBodyTag="false" applyHtmlTag="false" contentType="text/javascript" cache="false">{!$Resource[SchemaName]}</apex:page>

@@ -1,0 +1,8 @@
+<apex:page id="MainPage"
+           showHeader="false" 
+           cache="true"
+           Controller="vdpCustomerFacingPDfController"
+           contentType="application/x-pdf#{!multipdfList[0].Name}.pdf">
+   <apex:include pageName="vdpCustomerFacingPDf"/>
+   
+</apex:page>

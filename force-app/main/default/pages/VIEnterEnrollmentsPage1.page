@@ -1,0 +1,743 @@
+<apex:page controller="FlintSiteHomeController"
+     sidebar="false"
+    tabStyle="VI_Enrollment__c" title="Selected Promotions">
+    <!--
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <title>Available Promotions</title>
+    <apex:stylesheet value="{!URLFOR($Resource.VIResources2, 'css/VIStyles.css')}" />
+
+    <style type="text/css">
+
+        .op1 {}
+
+        .center {text-align: center;}
+
+        .rdio {}
+
+        .tbl {border-collapse: collapse;}
+
+        .right, .lbl,
+        .tbl td.lbl {text-align: right;}
+
+        .bold, .lbl,
+        .tbl td.lbl,
+        .tbl th {font-weight: bold; font-size: 91%;}
+
+        .tbl td.lbl,
+        .tbl th {background-color: #f5f5f5;}
+
+        .tbl td,
+        .tbl th {border: 1px solid #d3d3d3; padding: 4px; white-space: nowrap;}
+
+        .tbl2 {border-spacing: 10px 4px;}
+
+        .address {border: 1px solid #d3d3d3; font-weight: bold; font-size: 91%; padding: 5px; width: 330px;}
+        .inpfld1 {width: 300px;}
+        .errmsg1 {color: red; font-weight: bold; font-size: 91%; padding-left: 5px; white-space: nowrap;}
+
+    </style>
+
+    <apex:includeScript value="{!URLFOR($Resource.VIResources, 'js/jquery-1.4.2.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.VIResources, 'js/utils.js')}" />
+    <script type="text/javascript">
+
+        jQuery.noConflict();
+
+        function checkAll(elements, checked) {
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].checked = checked;
+            }
+        }
+
+        function isAllChecked(elements) {
+            var checked = elements.length > 0;
+            for (var i = 0; i < elements.length; i++) {
+                if (!elements[i].checked) {
+                    checked = false;
+                    break;
+                }
+            }
+            return checked;
+        }
+
+        // +ve Integer with max n digits
+        function numInp1(e, tb, n) {
+            var re1 = "^[0-9]$";
+            var re2 = "^[0-9]{0," + n + "}$";
+            return numInp(e, tb, re1, re2);
+        }
+
+        function numInp(e, tb, re1, re2) {
+            var re; var k; var s; var val;
+            if (window.event) {k = e.keyCode;}
+            else if (e.which) {k = e.which;} else {return;}
+            if (k == 8) {return true;}
+
+            s = String.fromCharCode(k); //log(k); log(s);
+            re = new RegExp(re1);
+            if (!re.test(s)) {return false;}
+
+            val = tb.value + s; //log(val);
+            re = new RegExp(re2);
+            if (re.test(val)) {return true;}
+            return false;
+        }
+
+    </script>
+
+</head>
+
+<body >
+
+<div id="{!IF(portalUser, 'VI-Body', 'body')}">
+
+    <c:VI_Portal_Page_Header p_accountId="{!accountId}" rendered="{!portalUser}"/>
+
+    <div style="position: relative; height: 100%;">
+
+    <apex:outputPanel layout="none" rendered="{!ISBLANK(accountId)}">
+        <apex:pageMessage severity="Error" strength="2" summary="Account not found." />
+    </apex:outputPanel>
+
+    <apex:outputPanel layout="none" rendered="{!currentStep = 1}">
+        <script type="text/javascript">
+        jQuery(function() {
+            disableButtonsOnSubmit("{!$Component.step1}");
+        });
+
+        </script>
+
+    <apex:form id="step1" rendered="{!NOT(ISBLANK(accountId))}">
+        <apex:sectionHeader title="{!facilityName}" subtitle="Promotions Enrollment" />
+
+        <apex:pageBlock title="Enrollment - Step 1 of 4">
+            <apex:pageBlockButtons >
+                <apex:commandButton value=" « Back " action="{!gotoAvailablePromotionsPage}" immediate="true" />
+                <apex:commandButton value=" Next » " action="{!step2}" />
+                <apex:commandButton value=" Cancel " action="{!cancel}" immediate="true" />
+            </apex:pageBlockButtons>
+
+            <apex:pageMessages />
+
+            <apex:pageBlockSection title="Selected Promotions" showHeader="true" collapsible="false"
+                                   rendered="{!selectedPromotions.size > 0}">
+                <apex:facet name="body">
+                    <apex:outputPanel layout="none">
+                        <table class="list" border="0" cellspacing="0" cellpadding="0">
+                            <thead class="dr-table-head">
+                                <tr class="headerRow">
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Program Code</th>
+                                    <th scope="col">Start Date</th>
+                                    <th scope="col">End Date</th>
+                                    <th scope="col">AVI</th>
+                                    <apex:outputPanel layout="none" rendered="{!NOT(isCustomerPortalUser)}">
+                                        <th scope="col" class="booleanColumn">Enrolled?</th>
+                                    </apex:outputPanel>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <apex:repeat value="{!selectedPromotions}" var="sp">
+                                    <tr class="dataRow{!IF(sp.isLast, ' last', '')}{!IF(sp.isEven, ' even', ' odd')}"
+                                        onmouseover="if (window.hiOn){hiOn(this);}"
+                                        onmouseout="if (window.hiOff){hiOff(this);}">
+                                        <td class="dataCell" width="55%">
+                                            <apex:outputText value="{!sp.promoName}"/>
+                                        </td>
+                                        <td class="dataCell" width="15%">
+                                            <apex:outputField value="{!sp.promo.Program_Code__c}" />
+                                        </td>
+                                        <td class="dataCell" width="7%">
+                                            <apex:outputField value="{!sp.promo.Start_Date__c}" />
+                                        </td>
+                                        <td class="dataCell" width="7%">
+                                            <apex:outputField value="{!sp.promo.End_Date__c}" />
+                                        </td>
+                                        <td class="dataCell" width="10%">
+                                            <apex:outputField value="{!sp.promo.AVI__c}" />
+                                        </td>
+                                        <apex:outputPanel layout="none" rendered="{!NOT(isCustomerPortalUser)}">
+                                            <td class="dataCell booleanColumn" width="6%">
+                                                <apex:image value="/img/checkbox_checked.gif" width="21" height="16"
+                                                            alt="Yes" title="Yes" rendered="{!sp.reorder}" />
+                                                <apex:image value="/img/checkbox_unchecked.gif" width="21" height="16"
+                                                            alt="No" title="No" rendered="{!NOT(sp.reorder)}" />
+                                            </td>
+                                        </apex:outputPanel>
+                                    </tr>
+                                </apex:repeat>
+                            </tbody>
+                        </table>
+                    </apex:outputPanel>
+                </apex:facet>
+            </apex:pageBlockSection>
+
+        </apex:pageBlock>
+    </apex:form>
+
+    <apex:outputPanel layout="none" rendered="{!(thisYearPromotions.size + nextYearPromotions.size) = 0}">
+        <p>There are no promotions to display.</p>
+    </apex:outputPanel>
+
+    <apex:outputPanel layout="none" rendered="{!AND(NOT(isCustomerPortalUser), (thisYearPromotions.size + nextYearPromotions.size) > 0)}">
+        <!-- <p>* At least one location at this facility has enrolled in this promotion.</p> 
+    </apex:outputPanel>
+    </apex:outputPanel>
+
+    <apex:outputPanel layout="none" rendered="{!currentStep = 2}">
+        <script type="text/javascript">
+        jQuery(function() {
+            disableButtonsOnSubmit("{!$Component.step2}");
+
+            var el = document.getElementById("shipTo_{!shipTo.value}");
+            if (el) {
+                el.checked = true;
+            }
+        });
+        </script>
+
+        <apex:form id="step2">
+            <apex:sectionHeader title="{!facilityName}" subtitle="Promotions Enrollment" />
+            <apex:pageBlock title="Enrollment - Step 2 of 4" mode="edit">
+                <apex:pageBlockButtons >
+                    <apex:commandButton value=" « Back " action="{!step1}" immediate="true" />
+                    <apex:commandButton value=" Next » " action="{!step3}" />
+                    <apex:commandButton value="Cancel" action="{!cancel}" immediate="true" />
+                </apex:pageBlockButtons>
+
+                <apex:pageMessages />
+
+                <apex:pageBlockSection title="Material Quantities">
+                    <apex:facet name="body">
+                        <apex:outputPanel layout="block" style="overflow: auto;">
+
+                            <script type="text/javascript">
+
+                            function confirmApplyDefaultQuantities() {
+                                var count = jQuery(".elmQuantity[value!='']").length;
+                                if (count > 0) {
+                                    if (confirm("This will overwrite any previously entered quantities. Are you sure you wish to continue?")) {
+                                        applyDefaultQuantities();
+                                    }
+                                }
+                                else {
+                                    applyDefaultQuantities();
+                                }
+                            }
+
+                            function applyDefaultQuantities() {
+                                var materials = document.getElementsByName("materials");
+                                for (var i = 0; i < materials.length; i++) {
+                                    var material = materials[i].value;
+
+                                    var totalId = document.getElementsByName("Total: " + material)[0].value;
+                                    var total = document.getElementById(totalId).value;
+
+                                    var ids = document.getElementsByName(material);
+                                    for (var j = 0; j < ids.length; j++) {
+                                        var id = ids[j].value;
+                                        var elm = document.getElementById(id);
+                                        if (elm != null) {elm.value = total;}
+                                    }
+                                }
+                            }
+
+                            </script>
+
+                            <table class="list" border="0" cellspacing="0" cellpadding="0" width="100%">
+                                <thead class="dr-table-head">
+                                    <tr><th colspan="99" style="text-align: center;">
+                                            Recommend Ordering 1.6 Tear Pads per 1,000 total gallons of oil<br/>
+                                            (see Salesforce Trade Across folder for Account specific recommendations)
+                                        </th></tr>
+                                    <tr class="headerRow" style="vertical-align: bottom;">
+                                        <th scope="col" width="10%">&nbsp;</th>
+                                        <apex:repeat value="{!defaultQuantities}" var="defaultQuantity">
+                                            <th scope="col" style="white-space: normal;">
+                                                <apex:outputText value="{!defaultQuantity.Material__c}" /><br/>
+                                                <apex:outputText value="{!defaultQuantity.Promotion_Material__r.Warehouse_SKU__c}" /><br/>
+                                            </th>
+                                        </apex:repeat>
+                                        <apex:outputPanel layout="none" rendered="{!showCost}">
+                                            <th scope="col" class="CurrencyElement" width="2%">&nbsp;</th>
+                                        </apex:outputPanel>
+                                            <th scope="col">&nbsp;</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr class="dataRow odd even first last">
+                                        <td class="dataCell" width="10%" style="font-weight: bold;">Default Suggested Quantities</td>
+                                        <apex:repeat value="{!defaultQuantities}" var="defaultQuantity">
+                                            <td class="dataCell">
+                                                <apex:inputField id="defaultQuantity" value="{!defaultQuantity.Quantity__c}" style="width: 2em;"
+                                                                 onkeypress="return numInp1(event, this, 2);"/>
+                                                <input type="hidden" name="materials" value="{!defaultQuantity.Promotion_Material__c}" />
+                                                <input type="hidden" name="Total: {!defaultQuantity.Promotion_Material__c}" value="{!$Component.defaultQuantity}" />
+                                            </td>
+                                        </apex:repeat>
+                                        <apex:outputPanel layout="none" rendered="{!showCost}">
+                                            <td class="dataCell CurrencyElement" width="2%">&nbsp;</td>
+                                        </apex:outputPanel>
+                                        <td class="dataCell" width="2%" style="text-align: right;">
+                                            <input type="button" class="btn" value="Apply" onclick="confirmApplyDefaultQuantities();" />
+                                        </td>
+                                    </tr>
+                                    <tr><td colspan="99">&nbsp;</td></tr>
+                                    <apex:repeat value="{!enrollmentLocations}" var="el">
+                                        <apex:outputPanel layout="none" rendered="{!el.recordNumber = 1}">
+                                            <tr >
+                                                <td class="dataCell" width="100%" colspan="99"
+                                                    style="font-weight: bold;" nowrap="nowrap">
+                                                    <apex:outputText value="Promotion : {!el.vipromo.promo.Program_Code__c} : {!el.vipromo.promoName}"/>&nbsp;-&nbsp;
+                                                    <apex:outputField value="{!el.vipromo.promo.Start_Date__c}" />&nbsp;-&nbsp;
+                                                    <apex:outputField value="{!el.vipromo.promo.End_Date__c}" />&nbsp;-&nbsp;
+                                                    <apex:outputField value="{!el.vipromo.promo.AVI__c}" />
+                                                </td>
+                                            </tr>
+                                            <tr class="headerRow" style="vertical-align: bottom;">
+                                                <th scope="col" width="10%">Location</th>
+                                                <apex:repeat value="{!defaultQuantities}" var="dq">
+                                                    <th scope="col" style="white-space: normal;">
+                                                        <apex:outputText value="{!dq.Material__c}" /><br/>
+                                                        <apex:outputText value="{!dq.Promotion_Material__r.Warehouse_SKU__c}" />
+                                                    </th>
+                                                </apex:repeat>
+                                                <apex:outputPanel layout="none" rendered="{!showCost}">
+                                                    <th scope="col" class="CurrencyElement" width="2%">Cost</th>
+                                                </apex:outputPanel>
+                                                <th scope="col" width="2%">Enrolled?</th>
+                                            </tr>
+                                        </apex:outputPanel>
+                                        <tr class="dataRow" onmouseover="if (window.hiOn){hiOn(this);}"
+                                                            onmouseout="if (window.hiOff){hiOff(this);}">
+                                            <td class="dataCell" width="10%">
+                                                <apex:outputText value="{0} ({1}, {2}, {3})">
+                                                    <apex:param value="{!el.viacc.acc.Name}" />
+                                                    <apex:param value="{!el.viacc.acc.BillingStreet}" />
+                                                    <apex:param value="{!el.viacc.acc.BillingCity}" />
+                                                    <apex:param value="{!el.viacc.acc.BillingState}" />
+                                                </apex:outputText>
+                                            </td>
+                                            <apex:repeat value="{!el.vielms}" var="m">
+                                                <td class="dataCell">
+                                                    <apex:inputField id="elmQuantity" value="{!m.elm.Quantity__c}"
+                                                          styleClass="elmQuantity" style="width: 2em;" rendered="{!m.selected}"
+                                                          onkeypress="return numInp1(event, this, 2);"/>
+                                                    <apex:inputText style="width: 2em;" rendered="{!NOT(m.selected)}" disabled="true"/>
+                                                    <input type="hidden" name="{!m.elm.Promotion_Material__c}" value="{!$Component.elmQuantity}" />
+                                                </td>
+                                            </apex:repeat>
+                                            <apex:outputPanel layout="none" rendered="{!showCost}">
+                                                <td class="dataCell CurrencyElement" width="2%">
+                                                    <apex:outputText value="{0,number,currency}">
+                                                        <apex:param value="{!el.totalCost}" />
+                                                    </apex:outputText>
+                                                </td>
+                                            </apex:outputPanel>
+
+                                            <td class="dataCell booleanColumn" width="2%">
+                                                <apex:outputPanel layout="none" rendered="{!el.isEnrolled}">
+                                                    <img class="checkImg" src="/img/checkbox_checked.gif" alt="Yes"
+                                                         title="Yes" border="0" width="21" height="16" />
+                                                </apex:outputPanel>
+                                                <apex:outputPanel layout="none" rendered="{!NOT(el.isEnrolled)}">
+                                                    <img class="checkImg" src="/img/checkbox_unchecked.gif" alt="No"
+                                                         title="No" border="0" width="21" height="16" />
+                                                </apex:outputPanel>
+                                            </td>
+
+                                        </tr>
+                                    </apex:repeat>
+                                </tbody>
+
+                                <apex:outputPanel layout="none" rendered="{!showCost}">
+                                    <tfoot>
+                                        <tr class="totalRow">
+                                            <th scope="col" width="10%">&nbsp;</th>
+                                            <apex:repeat value="{!defaultQuantities}" var="dq">
+                                                <th scope="col">&nbsp;</th>
+                                            </apex:repeat>
+                                            <th scope="col" class="CurrencyElement" width="2%">
+                                                <apex:outputText value="{0,number,currency}">
+                                                    <apex:param value="{!totalCost}" />
+                                                </apex:outputText>
+                                            </th>
+                                                <th scope="col">&nbsp;</th>
+                                        </tr>
+                                    </tfoot>
+                                </apex:outputPanel>
+
+                            </table>
+
+                            <apex:outputPanel layout="block" style="width: 100%; text-align: right; margin: 0; padding: 4px 0 0 0;" rendered="{!showCost}">
+                                <apex:commandButton action="{!calculateTotalCost}" value="Calculate Total Cost" rendered="{!showCost}" />
+                            </apex:outputPanel>
+                        </apex:outputPanel>
+                    </apex:facet>
+                </apex:pageBlockSection>
+
+            </apex:pageBlock>
+        </apex:form>
+    </apex:outputPanel>
+
+    <apex:outputPanel layout="none" rendered="{!currentStep = 3}">
+        <script type="text/javascript">
+        jQuery(function() {
+            disableButtonsOnSubmit("{!$Component.step3}");
+
+            var el = document.getElementById("shipTo_{!shipTo.value}");
+            if (el) {
+                el.checked = true;
+            }
+        });
+        </script>
+
+        <apex:form id="step3">
+            <apex:sectionHeader title="{!facilityName}" subtitle="Promotions Enrollment" />
+            <apex:pageBlock title="Enrollment - Step 3 of 4" mode="edit">
+                <apex:pageBlockButtons >
+                    <apex:commandButton value=" « Back " action="{!step2}" immediate="true" />
+                    <apex:commandButton value=" Next » " action="{!step4}" />
+                    <apex:commandButton value="Cancel" action="{!cancel}" immediate="true" />
+                </apex:pageBlockButtons>
+
+                <apex:pageMessages />
+
+            <apex:pageBlockSection title="Selected Promotions" showHeader="true" collapsible="false"
+                                   rendered="{!selectedPromotions.size > 0}">
+                <apex:facet name="body">
+                    <apex:outputPanel layout="none">
+                        <table class="list" border="0" cellspacing="0" cellpadding="0">
+                            <thead class="dr-table-head">
+                                <tr class="headerRow">
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Program Code</th>
+                                    <th scope="col">Start Date</th>
+                                    <th scope="col">End Date</th>
+                                    <th scope="col">AVI</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <apex:repeat value="{!selectedPromotions}" var="sp">
+                                    <tr class="dataRow{!IF(sp.isLast, ' last', '')}{!IF(sp.isEven, ' even', ' odd')}"
+                                        onmouseover="if (window.hiOn){hiOn(this);}"
+                                        onmouseout="if (window.hiOff){hiOff(this);}">
+                                        <td class="dataCell" width="55%">
+                                            <apex:outputText value="{!sp.promoName}"/>
+                                        </td>
+                                        <td class="dataCell" width="15%">
+                                            <apex:outputField value="{!sp.promo.Program_Code__c}" />
+                                        </td>
+                                        <td class="dataCell" width="7%">
+                                            <apex:outputField value="{!sp.promo.Start_Date__c}" />
+                                        </td>
+                                        <td class="dataCell" width="7%">
+                                            <apex:outputField value="{!sp.promo.End_Date__c}" />
+                                        </td>
+                                        <td class="dataCell" width="10%">
+                                            <apex:outputField value="{!sp.promo.AVI__c}" />
+                                        </td>
+                                    </tr>
+                                </apex:repeat>
+                            </tbody>
+                        </table>
+                    </apex:outputPanel>
+                </apex:facet>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection title="Shipping Address">
+                <apex:facet name="body">
+                    <apex:outputPanel layout="none">
+                        <apex:inputHidden id="shipTo" value="{!shipTo.value}" />
+
+                        <table class="tbl">
+                            <thead>
+                                <tr>
+                                    <th>&nbsp;</th>
+                                    <td class="lbl">Address of</td>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Street</th>
+                                    <th>City</th>
+                                    <th>State</th>
+                                    <th>Zip</th>
+                                    <th>Phone</th>
+                                    <th>Email</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!--
+                                <apex:outputPanel layout="none" rendered="{!NOT(ISBLANK(distributor))}">
+                                    <tr>
+                                    <td>
+                                            <input type="radio" id="shipTo_distributor" name="shipTo" value="distributor"
+                                                   onclick="document.getElementById('{!$Component.shipTo}').value = this.value;jQuery(document.getElementById('{!$Component.shippingAddress}')).hide();" />
+                                    </td>
+                                    <td colspan="9">
+                                            <label for="shipTo_distributor">Ship to the distributor</label>
+                                    </td>
+                                    </tr>
+                                </apex:outputPanel>
+                                
+                                <tr>
+                                    <td>
+                                        <input type="radio" id="shipTo_location" name="shipTo" value="location" class="rdio"
+                                               onclick="document.getElementById('{!$Component.shipTo}').value = this.value;jQuery(document.getElementById('{!$Component.shippingAddress}')).hide();" />
+                                    </td>
+                                    <td class="lbl">Location</td>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                    <td>{!acc.BillingStreet}</td>
+                                    <td>{!acc.BillingCity}</td>
+                                    <td>{!acc.BillingState}</td>
+                                    <td>{!acc.BillingPostalCode}</td>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <apex:repeat rendered="{!renderContacts}" value="{!contacts}" var="c">
+                                <tr>
+                                    <td>
+                                        <input type="radio" id="shipTo_{!c.Id}" name="shipTo" value="{!c.Id}" class="rdio"
+                                               onclick="document.getElementById('{!$Component.shipTo}').value = this.value;jQuery(document.getElementById('{!$Component.shippingAddress}')).hide();" />
+                                    </td>
+                                    <td class="lbl">Contact</td>
+                                    <td>{!c.Firstname}</td>
+                                    <td>{!c.Lastname}</td>
+                                    <td>{!c.MailingStreet}</td>
+                                    <td>{!c.MailingCity}</td>
+                                    <td>{!c.MailingState}</td>
+                                    <td>{!c.MailingPostalCode}</td>
+                                    <td>{!c.Phone}</td>
+                                    <td>{!c.Email}</td>
+                                </tr>
+                                </apex:repeat>
+                                <tr>
+                                    <td>
+                                        <input type="radio" id="shipTo_custom" name="shipTo" value="custom" class="rdio"
+                                               onclick="document.getElementById('{!$Component.shipTo}').value = this.value;jQuery(document.getElementById('{!$Component.shippingAddress}')).show();" />
+                                    </td>
+                                    <td class="lbl">New Contact</td>
+                                    <td colspan="9">&nbsp;</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </apex:outputPanel>
+                </apex:facet>
+            </apex:pageBlockSection>
+
+            <apex:outputPanel id="shippingAddress" layout="block" style="display: {!IF(LOWER(shipTo.value) = 'custom', 'block', 'none')};">
+                <br/><br/>
+                <table class="tbl2">
+                    <tbody>
+
+                    <tr>
+                        <td class="lbl">First Name</td><td>
+                        <apex:outputPanel layout="block" styleClass="requiredInput">
+                            <div class="requiredBlock"></div>
+                            <apex:inputField value="{!cntact.FirstName}" required="false" styleClass="inpfld1"/>
+                            <apex:outputText value="{!msgFirstName}" styleClass="errmsg1"/>
+                        </apex:outputPanel></td>
+                    </tr>
+
+                    <tr>
+                        <td class="lbl">Last Name</td><td>
+                        <apex:outputPanel layout="block" styleClass="requiredInput">
+                            <div class="requiredBlock"></div>
+                            <apex:inputField value="{!cntact.LastName}" required="false" styleClass="inpfld1"/>
+                            <apex:outputText value="{!msgLastName}" styleClass="errmsg1"/>
+                        </apex:outputPanel></td>
+                    </tr>
+
+                    <tr>
+                        <td class="lbl">Street</td><td>
+                        <apex:outputPanel layout="block" styleClass="requiredInput">
+                            <div class="requiredBlock"></div>
+                            <apex:inputText value="{!cntact.MailingStreet}" required="false" styleClass="inpfld1"/>
+                            <apex:outputText value="{!msgStreet}" styleClass="errmsg1"/>
+                        </apex:outputPanel></td>
+                    </tr>
+
+                    <tr>
+                        <td class="lbl">City</td><td>
+                        <apex:outputPanel layout="block" styleClass="requiredInput">
+                            <div class="requiredBlock"></div>
+                            <apex:inputField value="{!cntact.MailingCity}" required="false" styleClass="inpfld1"/>
+                            <apex:outputText value="{!msgCity}" styleClass="errmsg1"/>
+                        </apex:outputPanel></td>
+                    </tr>
+
+                    <tr>
+                        <td class="lbl">State</td><td>
+                        <apex:outputPanel layout="block" styleClass="requiredInput">
+                            <div class="requiredBlock"></div>
+                            <apex:inputField value="{!cntact.MailingState}" required="false" styleClass="inpfld1"/>
+                            <apex:outputText value="{!msgState}" styleClass="errmsg1"/>
+                        </apex:outputPanel></td>
+                    </tr>
+
+                    <tr>
+                        <td class="lbl">Zip Code</td><td>
+                        <apex:outputPanel layout="block" styleClass="requiredInput">
+                            <div class="requiredBlock"></div>
+                            <apex:inputField value="{!cntact.MailingPostalCode}" required="false" styleClass="inpfld1"/>
+                            <apex:outputText value="{!msgZip}" styleClass="errmsg1"/>
+                        </apex:outputPanel></td>
+                    </tr>
+
+                    <tr>
+                        <td class="lbl">Phone</td><td>
+                        <apex:outputPanel layout="block" styleClass="requiredInput">
+                            <div class="requiredBlock"></div>
+                            <apex:inputField value="{!cntact.Phone}" required="false" styleClass="inpfld1"/>
+                            <apex:outputText value="{!msgPhone}" styleClass="errmsg1"/>
+                        </apex:outputPanel></td>
+                    </tr>
+
+                    <tr>
+                        <td class="lbl">Email</td><td>
+                        <apex:outputPanel layout="block" styleClass="requiredInput">
+                            <div class="requiredBlock"></div>
+                            <apex:inputField value="{!cntact.Email}" required="false" styleClass="inpfld1"/>
+                            <apex:outputText value="{!msgEmail}" styleClass="errmsg1"/>
+                        </apex:outputPanel></td>
+                    </tr>
+
+                </tbody></table>
+            </apex:outputPanel>
+
+            </apex:pageBlock>
+        </apex:form>
+    </apex:outputPanel>
+
+    <apex:outputPanel layout="none" rendered="{!currentStep = 4}">
+        <script type="text/javascript">
+        jQuery(function() {
+            disableButtonsOnSubmit("{!$Component.step4}");
+        });
+        </script>
+
+        <apex:form id="step4">
+            <apex:sectionHeader title="{!facilityName}" subtitle="Promotions Enrollment" />
+            <apex:pageBlock title="Enrollment - Step 4 of 4" mode="maindetail">
+                <apex:pageBlockButtons >
+                    <apex:commandButton value=" « Back " action="{!step3}" immediate="true" />
+                    <apex:commandButton value="Submit" action="{!submit}" />
+                    <apex:commandButton value="Cancel" action="{!cancel}" immediate="true" />
+                </apex:pageBlockButtons>
+
+                <apex:pageMessages />
+
+            <apex:pageBlockSection title="Material Quantities">
+                <apex:facet name="body">
+                    <apex:outputPanel layout="none">
+                        <table class="list" border="0" cellspacing="0" cellpadding="0">
+                            <thead class="dr-table-head">
+                            </thead>
+
+                            <tbody>
+                                <apex:repeat value="{!enrollmentLocations}" var="el">
+                                    <apex:outputPanel layout="none" rendered="{!el.recordNumber = 1}">
+                                        <tr >
+                                            <td class="dataCell" width="100%" colspan="99"
+                                                style="font-weight: bold;" nowrap="nowrap">
+                                                <apex:outputText value="Promotion : {!el.vipromo.promo.Program_Code__c} : {!el.vipromo.promoName}"/>&nbsp;-&nbsp;
+                                                <apex:outputField value="{!el.vipromo.promo.Start_Date__c}" />&nbsp;-&nbsp;
+                                                <apex:outputField value="{!el.vipromo.promo.End_Date__c}" />&nbsp;-&nbsp;
+                                                <apex:outputField value="{!el.vipromo.promo.AVI__c}" />
+                                            </td>
+                                        </tr>
+                                        <tr class="headerRow" style="vertical-align: bottom;">
+                                            <th scope="col" width="10%">Location</th>
+                                            <apex:repeat value="{!defaultQuantities}" var="dq">
+                                                <th scope="col" style="white-space: normal;">
+                                                    <apex:outputText value="{!dq.Material__c}" /><br/>
+                                                    <apex:outputText value="{!dq.Promotion_Material__r.Warehouse_SKU__c}" />
+                                                </th>
+                                            </apex:repeat>
+                                            <apex:outputPanel layout="none" rendered="{!showCost}">
+                                                <th scope="col" class="CurrencyElement" width="2%">Cost</th>
+                                            </apex:outputPanel>
+                                        </tr>
+                                    </apex:outputPanel>
+                                    <tr class="dataRow" onmouseover="if (window.hiOn){hiOn(this);}"
+                                                        onmouseout="if (window.hiOff){hiOff(this);}">
+                                        <td class="dataCell" width="10%">
+                                            <apex:outputText value="{0} ({1}, {2}, {3})">
+
+                                                <apex:param value="{!el.viacc.acc.Name}" />
+                                                <apex:param value="{!el.viacc.acc.BillingStreet}" />
+                                                <apex:param value="{!el.viacc.acc.BillingCity}" />
+                                                <apex:param value="{!el.viacc.acc.BillingState}" />
+
+                                            </apex:outputText>
+                                        </td>
+                                        <apex:repeat value="{!el.vielms}" var="m">
+                                            <td class="dataCell">
+                                                <apex:outputField id="elmQuantity" value="{!m.elm.Quantity__c}"
+                                                      styleClass="elmQuantity" style="width: 2em;" rendered="{!m.selected}"/>
+                                            </td>
+                                        </apex:repeat>
+                                        <apex:outputPanel layout="none" rendered="{!showCost}">
+                                            <td class="dataCell CurrencyElement" width="2%">
+                                                <apex:outputText value="{0,number,currency}">
+                                                    <apex:param value="{!el.totalCost}" />
+                                                </apex:outputText>
+                                            </td>
+                                        </apex:outputPanel>
+                                    </tr>
+                                </apex:repeat>
+                            </tbody>
+
+                            <apex:outputPanel layout="none" rendered="{!showCost}">
+                                <tfoot>
+                                    <tr class="totalRow">
+                                        <th scope="col" width="10%">&nbsp;</th>
+                                        <apex:repeat value="{!defaultQuantities}" var="dq">
+                                            <th scope="col">&nbsp;</th>
+                                        </apex:repeat>
+                                        <th scope="col" class="CurrencyElement" width="2%">
+                                            <apex:outputText value="{0,number,currency}">
+                                                <apex:param value="{!totalCost}" />
+                                            </apex:outputText>
+                                        </th>
+                                    </tr>
+                                </tfoot>
+                            </apex:outputPanel>
+
+                        </table>
+                    </apex:outputPanel>
+                </apex:facet>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection title="Shipping Address" collapsible="false">
+                <apex:facet name="body">
+                    <apex:outputPanel layout="block" styleClass="address">
+                        <apex:outputText value="{!cntact.FirstName}"/>&nbsp;
+                        <apex:outputText value="{!cntact.LastName}"/><br/>
+                        <apex:outputText value="{!acc.Name}"/><br/>
+                        <apex:outputText value="{!cntact.MailingStreet}"/><br/>
+                        <apex:outputText value="{!cntact.MailingCity}"/>,&nbsp;
+                        <apex:outputText value="{!cntact.MailingState}"/>&nbsp;
+                        <apex:outputText value="{!cntact.MailingPostalCode}"/>
+                    </apex:outputPanel>
+                </apex:facet>
+            </apex:pageBlockSection>
+            </apex:pageBlock>
+        </apex:form>
+    </apex:outputPanel>
+
+    </div>
+
+    <apex:include pageName="VIPortalPageFooter" rendered="{!portalUser}"/>
+
+</div>
+
+</body>
+
+</html>
+-->
+</apex:page>

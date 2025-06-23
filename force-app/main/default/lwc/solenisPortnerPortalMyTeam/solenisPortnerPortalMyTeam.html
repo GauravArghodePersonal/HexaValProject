@@ -1,0 +1,29 @@
+<template>
+    <div > 
+    <table class="slds-container_center Main">
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Company Name</th>
+            <th>Phone</th>
+        </tr>    
+        <template for:each={myteamList} for:item="team" for:index="index">
+            <tr key={myteamList.Id}>
+                
+                <td>
+                    {team.Name}
+                </td>
+                <td>
+                    {team.Email }
+                </td>
+                <td>
+                    {team.Contact.Account.Name}
+                </td>
+                <td>
+                    {team.Contact.MobilePhone}
+                </td>
+            </tr>
+        </template>
+    </table>
+</div>
+</template>

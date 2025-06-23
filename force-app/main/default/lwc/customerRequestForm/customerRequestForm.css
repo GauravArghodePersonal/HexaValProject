@@ -1,0 +1,46 @@
+.card {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    background: white;
+    min-height: 15rem;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    border: none;
+    padding: 1.25rem;
+    border-radius: 5px;
+    margin-bottom: 1.25rem;
+  }
+  .output{
+      display: none;
+  }
+
+  .title{
+    font-size: 1.5rem;
+     color: black;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  .checkbox{
+    font-size: 1rem;
+     color: black;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  .message {
+    font-size: 1.5rem;
+    /* color: darkgrey; */
+    font-weight: bold;
+    margin-left: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: space-between;
+   
+  }
+  @media screen and (min-width: 768px) {
+    .card {
+      padding: 1.75rem;
+    }
+  }

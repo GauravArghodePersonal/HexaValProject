@@ -1,0 +1,4 @@
+<apex:page id="thePage" standardController="Opportunity_Material__c"
+           title="Opportunity Material" extensions="OpportunityMaterialsExtension"
+           action="{!deleteOppMaterial}">
+</apex:page>

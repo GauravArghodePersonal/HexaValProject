@@ -1,0 +1,17 @@
+<apex:component >
+    <apex:attribute name="labelValue" type="String" description=""/>
+    <apex:attribute name="helpText" type="String" description=""/>
+
+    <apex:outputPanel rendered="{!ISBLANK(helpText)}">
+            <label style="vertical-align: top;">{!labelValue}</label>
+    </apex:outputPanel>
+    
+    <apex:outputPanel rendered="{!NOT(ISBLANK(helpText))}">
+	    <span id="{!id}-_help" class="helpButton">
+	        <label style="vertical-align: top;">{!labelValue}</label>
+	        <img class="helpOrb" title="" alt="" src="/s.gif"/>
+	        <script type="text/javascript">sfdcPage.setHelp('{!id}', '{!helpText}');</script>
+	    </span>
+    </apex:outputPanel>
+
+</apex:component>

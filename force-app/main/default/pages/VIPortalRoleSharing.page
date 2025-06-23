@@ -1,0 +1,287 @@
+<apex:page standardController="Account" extensions="VISharingController">
+
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-1.6.2.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-ui-1.8.16.custom.min.js')}" />
+    <style type="text/css">
+        @import "{!URLFOR($Resource.jQuery, 'css/redmond/jquery-ui-1.8.16.custom.css')}";
+    </style>
+
+<apex:form id="form1">
+
+    <apex:pageMessages escape="false"/>
+
+    <apex:pageBlock id="rolesPB">
+        <apex:facet name="header"><apex:outputPanel ><table class="pbhdr"><tr>
+            <td><apex:outputPanel >
+            <apex:outputLink value="/{!acc.Id}">
+                Account : {!acc.Name} - {!acc.AccountNumber}
+            </apex:outputLink>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <apex:outputText value="Number of Child Accounts :"/>&nbsp;
+            <apex:outputText rendered="{!childAccsCount <= 0}" value="{!childAccsCount}"/>
+            <apex:commandLink rendered="{!childAccsCount > 0}"
+                action="{!getChildAccounts}" value="{!childAccsCount}"
+                onclick="openWaitMsg();" oncomplete="closeWaitMsg();" rerender="form1">
+            </apex:commandLink>
+        </apex:outputPanel>
+        </td></tr></table></apex:outputPanel></apex:facet>
+
+        <apex:pageBlockTable styleClass="tbl1" value="{!userRoles}" var="r"
+            columnsWidth="30px,20px,450px,60px,60px,60px,60px,60px,100%">
+            <apex:column headerClass="right" styleClass="right" headerValue="#">
+                <div class="recNum"><apex:outputText value="{!r.recordNum}"/></div>
+            </apex:column>
+
+            <apex:column headerClass="chkbx" styleClass="chkbx">
+                <div class="chkbx"></div>
+            </apex:column>
+
+            <apex:column headerValue="User Role" >
+                <div class="w450"><apex:outputText value="{!r.urole.Name}"/></div>
+            </apex:column>
+            <apex:column headerValue="Portal Role" value="{!r.urole.PortalRole}" />
+            <apex:column headerValue="Portal Type" value="{!r.urole.PortalType}" />
+
+            <apex:column headerClass="right" styleClass="right">
+                <apex:facet name="header">Account Shares<br/>Added</apex:facet>
+                <apex:outputText rendered="{!r.accsAdded <= 0}" value="{!r.accsAdded}"/>
+                <apex:commandLink rendered="{!r.accsAdded > 0}"
+                    action="{!getSharingsAdded}" value="{!r.accsAdded}"
+                    onclick="openWaitMsg();" oncomplete="closeWaitMsg();" rerender="form1">
+                    <apex:param assignTo="{!userRoleId}" name="p2" value="{!r.urole.Id}"/>
+                </apex:commandLink>
+            </apex:column>
+
+            <apex:column headerClass="right" styleClass="right">
+                <apex:facet name="header">Account Shares<br/>to Add</apex:facet>
+                <apex:outputText rendered="{!r.accsToAdd <= 0}" value="{!r.accsToAdd}"/>
+                <apex:commandLink rendered="{!r.accsToAdd > 0}"
+                    action="{!getSharingsToAdd}" value="{!r.accsToAdd}"
+                    onclick="openWaitMsg();" oncomplete="closeWaitMsg();" rerender="form1">
+                    <apex:param assignTo="{!userRoleId}" name="p2" value="{!r.urole.Id}"/>
+                </apex:commandLink>
+            </apex:column>
+
+            <apex:column headerClass="right" styleClass="right">
+                <apex:facet name="header">Account Shares<br/>to Delete</apex:facet>
+                <apex:outputText rendered="{!r.accsToDel <= 0}" value="{!r.accsToDel}"/>
+                <apex:commandLink rendered="{!r.accsToDel > 0}"
+                    action="{!getSharingsToDel}" value="{!r.accsToDel}"
+                    onclick="openWaitMsg();" oncomplete="closeWaitMsg();" rerender="form1">
+                    <apex:param assignTo="{!userRoleId}" name="p2" value="{!r.urole.Id}"/>
+                </apex:commandLink>
+            </apex:column>
+
+            <apex:column headerValue="" />
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+
+    <apex:pageBlock id="accsPB">
+        <apex:facet name="header"><apex:outputPanel ><table class="pbhdr"><tr>
+        <td class="td1"><apex:outputText escape="false" value="{!accsTitle}"/></td>
+        <td class="td2"></td><td class="td3">
+        <apex:outputPanel rendered="true" layout="block">
+            <apex:actionStatus id="accsPC">
+                <apex:facet name="start">
+                    <apex:outputText styleClass="bold" value=" Please wait ...">
+                        <apex:image value="{!$Resource.spinner}"/>
+                    </apex:outputText>
+                </apex:facet>
+                <apex:facet name="stop"><apex:outputPanel >
+
+                <apex:commandLink rendered="{!renderAddLink}"
+                    action="{!addAccountShares}" value="Add Account Shares"
+                    onclick="openWaitMsg();" oncomplete="closeWaitMsg();" rerender="form1">
+                </apex:commandLink>
+                <apex:commandLink rendered="{!renderDelLink}"
+                    action="{!deleteAccountShares}" value="Delete Account Shares"
+                    onclick="if (confirmToDelete()) {openWaitMsg();} else {return false;};"
+                    oncomplete="closeWaitMsg();" rerender="form1">
+                </apex:commandLink>
+
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                <apex:outputText value="Sort by:"/>&nbsp;
+                <apex:selectList value="{!sortFld}" size="1">
+                    <apex:actionSupport event="onchange" action="{!setAccounts}"
+                                    rerender="accsPB" status="accsPC"/>
+                    <apex:selectOptions value="{!sortFlds}"/>
+                </apex:selectList>
+                <apex:outputText value="Z-A"/>
+                <apex:inputCheckbox value="{!sortDesc}" styleClass="chkbx1">
+                    <apex:actionSupport event="onclick" action="{!setAccounts}"
+                                    rerender="accsPB" status="accsPC"/>
+                </apex:inputCheckbox>
+
+                &nbsp;&nbsp;:&nbsp;&nbsp;
+
+                <apex:outputText value="Records: {!pc.recordFrom} - {!pc.recordTo} of {!pc.resultSize}"
+                                 styleClass="nowrap"/>
+
+                &nbsp;&nbsp;:&nbsp;&nbsp;
+
+                <apex:outputText value="Rows Per Page:"/>&nbsp;
+                <apex:selectList value="{!pc.pageSize}" size="1" title="Rows Per Page:">
+                    <apex:actionSupport event="onchange" action="{!pcSize}"
+                                    rerender="accsPB" status="accsPC"/>
+                    <apex:selectOption itemLabel="25" itemValue="25"/>
+                    <apex:selectOption itemLabel="50" itemValue="50"/>
+                    <apex:selectOption itemLabel="100" itemValue="100"/>
+                    <apex:selectOption itemLabel="200" itemValue="200"/>
+                </apex:selectList>&nbsp;:&nbsp;&nbsp;
+                <apex:commandButton action="{!pcFrst}" disabled="{!NOT(pc.hasPrevious)}"
+                                    rerender="accsPB" status="accsPC"
+                                    title="First Page" value="<<"/>&nbsp;&nbsp;
+                <apex:commandButton action="{!pcPrev}" disabled="{!NOT(pc.hasPrevious)}"
+                                    rerender="accsPB" status="accsPC"
+                                    title="Prev Page" value="<"/>&nbsp;&nbsp;
+
+                <apex:commandButton action="{!pcNext}" disabled="{!NOT(pc.hasNext)}"
+                                    rerender="accsPB" status="accsPC"
+                                    title="Next Page" value=">"/>&nbsp;&nbsp;
+                <apex:commandButton action="{!pcLast}" disabled="{!NOT(pc.hasNext)}"
+                                    rerender="accsPB" status="accsPC"
+                                    title="Last Page" value=">>"/>
+
+                &nbsp;&nbsp;:&nbsp;&nbsp;
+
+                <apex:outputText value="Page: {!pc.pageNumber} of {!pc.lastPageNumber}"/>
+                </apex:outputPanel></apex:facet>
+            </apex:actionStatus>
+        </apex:outputPanel></td></tr></table></apex:outputPanel></apex:facet>
+
+        <apex:pageBlockTable styleClass="tbl2" value="{!accounts}" var="r"
+            columnsWidth="20px,20px,300px,60px,60px,20px,300px,60px,60px,20px,100%">
+            <apex:column headerClass="right" styleClass="right" headerValue="#">
+                <div class="recNum"><apex:outputText value="{!r.recordNum}"/></div>
+            </apex:column>
+
+            <apex:column style="width: 20px" headerClass="chkbx" styleClass="chkbx">
+                <apex:facet name="header"><apex:outputPanel >
+                    <apex:inputCheckbox styleClass="allcb1" value="{!allAccs}"
+                        onclick="onClick_AllChkbox('rowcb1', this);"/>
+                </apex:outputPanel></apex:facet>
+                <apex:inputCheckbox styleClass="rowcb1" value="{!r.selected}"
+                    onclick="onClick_RowChkbox('rowcb1', 'allcb1');"/>
+            </apex:column>
+
+            <apex:column headerValue="Account Name"><div class="w300">
+                <apex:outputLink value="/{!r.acc.Id}" target="_blank">
+                    {!r.acc.Name}</apex:outputLink></div></apex:column>
+            <apex:column headerValue="Account Number" value="{!r.acc.AccountNumber}" />
+            <apex:column headerValue="Account Type" value="{!r.acc.VI_Account_Type__c}" />
+            <apex:column headerValue="Inactive" headerClass="center" styleClass="center">
+                <apex:outputPanel >
+                    <apex:image value="/img/checkbox_checked.gif" rendered="{!r.inactiveA}"/>
+                    <apex:image value="/img/checkbox_unchecked.gif" rendered="{!!r.inactiveA}"/>
+                </apex:outputPanel>
+            </apex:column>
+
+            <apex:column headerValue="Parent Name"><div class="w300">
+                <apex:outputLink value="/{!r.parent.Id}" target="_blank">
+                    {!r.parent.Name}</apex:outputLink></div></apex:column>
+            <apex:column headerValue="Parent Number" value="{!r.parent.AccountNumber}" />
+            <apex:column headerValue="Parent Type" value="{!r.parent.VI_Account_Type__c}" />
+            <apex:column headerValue="Inactive" headerClass="center" styleClass="center">
+                <apex:outputPanel >
+                    <apex:image value="/img/checkbox_checked.gif" rendered="{!r.inactiveP}"/>
+                    <apex:image value="/img/checkbox_unchecked.gif" rendered="{!!r.inactiveP}"/>
+                </apex:outputPanel>
+            </apex:column>
+
+            <apex:column headerValue="" />
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+
+    <!-- rerender attribute is required here
+    <apex:actionFunction action="{!getAccShares}" name="getAccShares" rerender="form1">
+        <apex:param assignTo="{!userRoleId}" name="p1" value=""/>
+    </apex:actionFunction> -->
+
+</apex:form>
+
+<apex:outputPanel style="display: none;">
+    <div id="waitMsgDiv">
+        <apex:outputPanel layout="block">
+            <apex:outputText styleClass="bold" value=" Please wait ... ">
+                <apex:image value="{!$Resource.spinner}"/>
+            </apex:outputText>
+        </apex:outputPanel>
+    </div>
+</apex:outputPanel>
+
+<script type="text/javascript">
+
+    var $j = jQuery.noConflict();
+
+    function log(msg) {if(window.console){console.log(msg);}}
+
+    function onClick_AllChkbox(rowCbClass, allChkbox) {
+        $j("."+rowCbClass).each(function() {
+            if (this.disabled == false) {
+                this.checked = allChkbox.checked;
+            }
+        });
+    }
+
+    function onClick_RowChkbox(rowCbClass, allCbClass) {
+        var allChkbox = $j("."+allCbClass).get(0);
+        allChkbox.checked = true;
+        $j("."+rowCbClass).each(function() {
+            if (!this.checked) {
+                allChkbox.checked = false;
+                return false;
+            }
+        });
+    }
+
+    $j("#waitMsgDiv").dialog({
+        modal: true, autoOpen: false, dialogClass: "no-title",
+        height: 30, width: 30, resizable: false
+    });
+
+    function onGetAccSharesBtnClick(urid) {
+        //log('urid : ' + urid);
+        $j("#waitMsgDiv").dialog("open");
+        getAccShares(urid);
+    }
+
+    function confirmToDelete() {
+        answer = confirm('Confirm to delete selected Account Shares');
+        return (answer != 0);
+    }
+
+    function openWaitMsg() {$j("#waitMsgDiv").dialog("open");}
+
+    function closeWaitMsg() {$j("#waitMsgDiv").dialog("close");}
+
+</script>
+
+<style>
+
+    .pbBody table.list tr.headerRow th.chkbx {padding-left: 4px;}
+    .no-title .ui-dialog-titlebar {display: none;}
+
+    .theForm      {background-color: #f8f8f8; width: 100%;}
+    .bold         {font-size: 91%; font-weight: bold;}
+    .boldblue     {color: blue; font-weight: bold;}
+    .center       {text-align: center;}
+    .left         {text-align: left;}
+    .right        {text-align: right;}
+    .nowrap       {white-space: nowrap;}
+    .chkbx1       {position: relative; vertical-align: middle;}
+    .tbl1 td      {white-space: nowrap;}
+    .pbhdr td     {font-size: 91%; font-weight: bold; padding: 5px 15px 5px 15px;
+                   white-space: nowrap; text-align: center;}
+    .pbhdr .td1   {width: 20%; text-align: left;}
+    .pbhdr .td2   {width: 10%;}
+    .pbhdr .td3   {width: 70%;}
+    .chkbx        {width:  20px; overflow: hidden; text-overflow: ellipsis;}
+    .recNum       {width:  30px; overflow: hidden; text-overflow: ellipsis;}
+    .w300         {width: 300px; overflow: hidden; text-overflow: ellipsis;}
+    .w450         {width: 450px; overflow: hidden; text-overflow: ellipsis;}
+
+</style>
+
+</apex:page>

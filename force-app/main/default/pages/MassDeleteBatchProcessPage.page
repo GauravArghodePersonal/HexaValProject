@@ -1,0 +1,36 @@
+<apex:page controller="MassTouchBatchProcessController">
+
+<script language="javascript">
+    function getConfirm(q) {
+        answer = confirm(q);
+        return (answer != 0);
+    }
+</script>
+
+    <apex:pageBlock >
+        <apex:pageBlockSection title="Batch Deletes" id="block1" collapsible="false" columns="1">
+            <apex:form >
+                <p>
+                <apex:outputLabel value="Select Object to delete all (upto 5,000,000) records" 
+                                  for="objectList"/>
+                <br/>
+                <apex:selectList id="objectList" value="{!objectName}">
+                    <apex:selectOption itemValue="Material_UOM2__c" itemLabel="Material UOM2"/>
+                </apex:selectList>
+                </p>
+
+                <p>             
+                <apex:outputLabel value="Last Modified DateTime (YYYY-MM-DD HH:MM:SS) (All the records modified before this time will be selected to delete)" 
+                                  for="dateTimeString"/>
+                <br/>
+                <apex:inputText id="dateTimeString" size="20" value="{!dateTimeString}"/>
+                </p>
+                
+                <p>             
+                <apex:commandButton value="Submit Delete Batch Job" action="{!submitDeleteBatchJob}"
+                                  onclick="return getConfirm('Submit Delete Batch Job?');"/>
+                </p>
+            </apex:form>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+</apex:page>

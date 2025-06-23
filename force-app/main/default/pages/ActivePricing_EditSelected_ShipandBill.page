@@ -1,0 +1,2 @@
+<apex:page standardController="Active_Pricing__c" recordSetvar="activePricingRecs_page">
+</apex:page>

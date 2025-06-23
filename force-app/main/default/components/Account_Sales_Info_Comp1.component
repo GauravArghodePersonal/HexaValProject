@@ -1,0 +1,694 @@
+<apex:component controller="Account_Sales_Info_Controller">
+    <apex:attribute name="p_accId" assignTo="{!accId}"
+                    type="String" description=""/>
+
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-1.6.2.min.js')}" />
+
+    <apex:stylesheet value="{!$Resource.BWSection_CSS}" />
+
+    <script>
+        if (!window.console) window.console = {};
+        if (!window.console.log) window.console.log = function () { };
+    </script>
+
+    <apex:form id="theForm">
+
+        <apex:inputHidden id="Show_Data" value="{!Show_Data}" />
+        <apex:outputPanel rendered="{!!Show_Data}"
+                          layout="block" styleClass="center">
+            <BR />
+            <apex:panelGrid columns="1" width="100%" id="NoDataGrid">
+                <apex:outputText styleClass="bold TableHeaderClass"
+                    value="Sales Information is not available for this customer" />
+            </apex:panelGrid>
+        </apex:outputPanel>
+
+        <apex:outputPanel rendered="{!Show_Data}" id="Account_Summary_Panel">
+            <apex:variable var="asi" value="{!AccountSalesInfo}" />
+            <BR />
+            <apex:panelGrid columns="{!accountSummaryColumns}"
+                id="AccountSummaryGrid" width="100%" styleClass="TableStyleClass"
+                captionClass="TableCaptionClass" headerClass="TableHeaderClass"
+                rowClasses="TableHeaderClass,TableRowClasses_odd,TableRowClasses_even,TableRowClasses_odd,TableRowClasses_even,TableRowClasses_odd,TableRowClasses_even,TableRowClasses_odd"
+                columnClasses="LineHeading_ColumnFormat,Data_ColumnFormat,Data_ColumnFormat,Data_ColumnFormat,Data_ColumnFormat,Data_ColumnFormat,Data_ColumnFormat,Data_ColumnFormat,Data_ColumnFormat,Data_ColumnFormat,Data_ColumnFormat,Data_ColumnFormat,Data_ColumnFormat,Data_ColumnFormat">
+                <!--<apex:facet name="caption">Account Summary</apex:facet>-->
+                <apex:facet name="caption">Account Summary -- Refreshed on {!lastUpdTime} </apex:facet>
+
+
+<!-- ---------- Row 0 : Header Row --------------------------------------------------------- -->
+
+                <apex:outputText value="" styleClass="PanelGridHeaderClass"
+                    escape="false" />
+                <apex:outputText escape="false" value="Sales Volume<br/>in LBs"
+                    styleClass="PanelGridHeaderClass"/>
+                <apex:outputText escape="false" value="Plan Volume<br/>in LBs"
+                    styleClass="PanelGridHeaderClass" rendered="{!showPVLBs}" />
+                <apex:outputText escape="false" value="Sales vs Plan<br/>Variance"
+                    styleClass="PanelGridHeaderClass" rendered="{!showPVLBs}" />
+                <apex:outputText escape="false" value="Variance<br/>%"
+                    styleClass="PanelGridHeaderClass" rendered="{!showPVLBs}" />
+
+
+                <apex:outputText escape="false" value="Sales Volume<br/>in KGs"
+                    styleClass="PanelGridHeaderClass" rendered="{!showKGs}" />
+                <apex:outputText escape="false" value="Plan Volume<br/>in KGs"
+                    styleClass="PanelGridHeaderClass" rendered="{!showPVKGs}" />
+                <apex:outputText escape="false" value="Sales vs Plan<br/>Variance"
+                    styleClass="PanelGridHeaderClass" rendered="{!showPVKGs}" />
+                <apex:outputText escape="false" value="Variance<br/>%"
+                    styleClass="PanelGridHeaderClass" rendered="{!showPVKGs}" />
+
+                <apex:outputText escape="false" value="Sales Volume<br/>in UNs"
+                    styleClass="PanelGridHeaderClass" rendered="{!showUNs}" />
+                <apex:outputText escape="false" value="Sales Volume<br/>in GLs"
+                    styleClass="PanelGridHeaderClass" rendered="{!showGLs}" />
+                <apex:outputText escape="false" value="Sales Volume<br/>in PTs"
+                    styleClass="PanelGridHeaderClass" rendered="{!showPTs}" />
+
+                <apex:outputText escape="false" value="Sales<br/>Amount"
+                    styleClass="PanelGridHeaderClass" />
+                <apex:outputText escape="false" value="Plan<br/>Amount"
+                    styleClass="PanelGridHeaderClass" rendered="{!showPAMTs}" />
+                <apex:outputText escape="false" value="Sales vs Plan<br/>Variance"
+                    styleClass="PanelGridHeaderClass" rendered="{!showPAMTs}" />
+                <apex:outputText escape="false" value="Variance<br/>%"
+                    styleClass="PanelGridHeaderClass" rendered="{!showPAMTs}" />
+
+                <apex:outputText escape="false" rendered="{!showGMGPs}" value="{!gmgpLabel}"
+                    styleClass="PanelGridHeaderClass" />
+                <apex:outputText escape="false" rendered="{!showGMGPs}" value="{!gmgpLabel} %"
+                    styleClass="PanelGridHeaderClass" />
+
+<!-- ---------- Row 1 : FYTD --------------------------------------------------------------- -->
+
+                <apex:outputText value="{!asi.FYTD_Label}"
+                    style="" />
+
+                <apex:panelGroup >
+                    <apex:image value="{!$Resource.GreenUpArrow}" width="12"
+                        height="12" rendered="{!asi.FYTDvsPFYTD_Volume_in_LB_Up}" />
+                    <apex:image value="{!$Resource.RedDownArrow}" width="12"
+                        height="12" rendered="{!asi.FYTDvsPFYTD_Volume_in_LB_Down}" />
+                    <apex:outputText value="{!asi.FYTD_Volume_in_LB_formatted}"
+                        style="{!asi.FYTD_Volume_in_LB_style}" />
+                </apex:panelGroup>
+
+                <apex:panelGroup rendered="{!showPVLBs}">
+                    <apex:outputText value="{!asi.FYTD_Plan_Volume_in_LB_formatted}"
+                        style="{!asi.FYTD_Plan_Volume_in_LB_style}" />
+                </apex:panelGroup>
+
+                <apex:panelGroup rendered="{!showPVLBs}">
+                    <apex:outputText value="{!asi.S2P_FYTD_VLB_Variance_formatted}"
+                        style="{!asi.S2P_FYTD_VLB_Variance_style}" />
+                </apex:panelGroup>
+
+                <apex:panelGroup rendered="{!showPVLBs}">
+                    <apex:outputText value="{!asi.S2P_FYTD_VLB_VPercent_formatted}"
+                        style="{!asi.S2P_FYTD_VLB_VPercent_style}" />
+                </apex:panelGroup>
+
+                <apex:panelGroup rendered="{!showKGs}">
+                    <apex:image value="{!$Resource.GreenUpArrow}" width="12"
+                        height="12" rendered="{!asi.FYTDvsPFYTD_Volume_in_KG_Up}" />
+                    <apex:image value="{!$Resource.RedDownArrow}" width="12"
+                        height="12" rendered="{!asi.FYTDvsPFYTD_Volume_in_KG_Down}" />
+                    <apex:outputText value="{!asi.FYTD_Volume_in_KG_formatted}"
+                        style="{!asi.FYTD_Volume_in_KG_style}" />
+                </apex:panelGroup>
+
+                <apex:panelGroup rendered="{!showPVKGs}">
+                    <apex:outputText value="{!asi.FYTD_Plan_Volume_in_KG_formatted}"
+                        style="{!asi.FYTD_Plan_Volume_in_KG_style}" />
+                </apex:panelGroup>
+
+                <apex:panelGroup rendered="{!showPVKGs}">
+                    <apex:outputText value="{!asi.S2P_FYTD_VKG_Variance_formatted}"
+                        style="{!asi.S2P_FYTD_VKG_Variance_style}" />
+                </apex:panelGroup>
+
+                <apex:panelGroup rendered="{!showPVKGs}">
+                    <apex:outputText value="{!asi.S2P_FYTD_VKG_VPercent_formatted}"
+                        style="{!asi.S2P_FYTD_VKG_VPercent_style}" />
+                </apex:panelGroup>
+
+                <apex:panelGroup rendered="{!showUNs}">
+                    <apex:image value="{!$Resource.GreenUpArrow}" width="12"
+                        height="12" rendered="{!asi.FYTDvsPFYTD_Volume_in_UN_Up}" />
+                    <apex:image value="{!$Resource.RedDownArrow}" width="12"
+                        height="12" rendered="{!asi.FYTDvsPFYTD_Volume_in_UN_Down}" />
+                    <apex:outputText value="{!asi.FYTD_Volume_in_UN_formatted}"
+                        style="{!asi.FYTD_Volume_in_UN_style}" />
+                </apex:panelGroup>
+
+                <apex:panelGroup rendered="{!showGLs}">
+                    <apex:image value="{!$Resource.GreenUpArrow}" width="12"
+                        height="12" rendered="{!asi.FYTDvsPFYTD_Volume_in_GL_Up}" />
+                    <apex:image value="{!$Resource.RedDownArrow}" width="12"
+                        height="12" rendered="{!asi.FYTDvsPFYTD_Volume_in_GL_Down}" />
+                    <apex:outputText value="{!asi.FYTD_Volume_in_GL_formatted}"
+                        style="{!asi.FYTD_Volume_in_GL_style}" />
+                </apex:panelGroup>
+
+                <apex:panelGroup rendered="{!showPTs}">
+                    <apex:image value="{!$Resource.GreenUpArrow}" width="12"
+                        height="12" rendered="{!asi.FYTDvsPFYTD_Volume_in_PT_Up}" />
+                    <apex:image value="{!$Resource.RedDownArrow}" width="12"
+                        height="12" rendered="{!asi.FYTDvsPFYTD_Volume_in_PT_Down}" />
+                    <apex:outputText value="{!asi.FYTD_Volume_in_PT_formatted}"
+                        style="{!asi.FYTD_Volume_in_PT_style}" />
+                </apex:panelGroup>
+
+                <apex:panelGroup >
+                    <apex:image value="{!$Resource.GreenUpArrow}" width="12"
+                        height="12" rendered="{!asi.FYTDvsPFYTD_Amount_Up}" />
+                    <apex:image value="{!$Resource.RedDownArrow}" width="12"
+                        height="12" rendered="{!asi.FYTDvsPFYTD_Amount_Down}" />
+                    <apex:outputText value="{!asi.FYTD_Amount_formatted}"
+                        style="{!asi.FYTD_Amount_style}" />
+                </apex:panelGroup>
+
+                <apex:panelGroup rendered="{!showPAMTs}">
+                    <apex:outputText value="{!asi.FYTD_Plan_Amount_formatted}"
+                        style="{!asi.FYTD_Plan_Amount_style}" />
+                </apex:panelGroup>
+
+                <apex:panelGroup rendered="{!showPAMTs}">
+                    <apex:outputText value="{!asi.S2P_FYTD_Amount_Variance_formatted}"
+                        style="{!asi.S2P_FYTD_Amount_Variance_style}" />
+                </apex:panelGroup>
+
+                <apex:panelGroup rendered="{!showPAMTs}">
+                    <apex:outputText value="{!asi.S2P_FYTD_Amount_VPercent_formatted}"
+                        style="{!asi.S2P_FYTD_Amount_VPercent_style}" />
+                </apex:panelGroup>
+
+                <apex:panelGroup rendered="{!showGMGPs}">
+                    <apex:image value="{!$Resource.GreenUpArrow}" width="12"
+                        height="12" rendered="{!asi.FYTDvsPFYTD_GM_Up}" />
+                    <apex:image value="{!$Resource.RedDownArrow}" width="12"
+                        height="12" rendered="{!asi.FYTDvsPFYTD_GM_Down}" />
+                    <apex:outputText value="{!asi.FYTD_GM_formatted}"
+                        style="{!asi.FYTD_GM_style}" />
+                </apex:panelGroup>
+
+                <apex:panelGroup rendered="{!showGMGPs}">
+                    <apex:image value="{!$Resource.GreenUpArrow}" width="12"
+                        height="12" rendered="{!asi.FYTDvsPFYTD_GMpct_Up}" />
+                    <apex:image value="{!$Resource.RedDownArrow}" width="12"
+                        height="12" rendered="{!asi.FYTDvsPFYTD_GMpct_Down}" />
+                    <apex:outputText value="{!asi.FYTD_GMpct_formatted}"
+                        style="{!asi.FYTD_GMpct_style}" />
+                </apex:panelGroup>
+
+<!-- ---------- Row 2 : PFYTD -------------------------------------------------------------- -->
+
+                <apex:outputText value="{!asi.PFYTD_Label}" style="" />
+
+                <apex:outputText value="{!asi.PFYTD_Volume_in_LB_formatted}"
+                    style="{!asi.PFYTD_Volume_in_LB_style}" />
+                <apex:outputText rendered="{!showPVLBs}" value=""/>
+                <apex:outputText rendered="{!showPVLBs}" value=""/>
+                <apex:outputText rendered="{!showPVLBs}" value=""/>
+
+                <apex:outputText rendered="{!showKGs}"
+                    value="{!asi.PFYTD_Volume_in_KG_formatted}"
+                    style="{!asi.PFYTD_Volume_in_KG_style}" />
+                <apex:outputText rendered="{!showPVKGs}" value=""/>
+                <apex:outputText rendered="{!showPVKGs}" value=""/>
+                <apex:outputText rendered="{!showPVKGs}" value=""/>
+
+                <apex:outputText rendered="{!showUNs}"
+                    value="{!asi.PFYTD_Volume_in_UN_formatted}"
+                    style="{!asi.PFYTD_Volume_in_UN_style}" />
+
+                <apex:outputText rendered="{!showGLs}"
+                    value="{!asi.PFYTD_Volume_in_GL_formatted}"
+                    style="{!asi.PFYTD_Volume_in_GL_style}" />
+
+                <apex:outputText rendered="{!showPTs}"
+                    value="{!asi.PFYTD_Volume_in_PT_formatted}"
+                    style="{!asi.PFYTD_Volume_in_PT_style}" />
+
+                <apex:outputText value="{!asi.PFYTD_Amount_formatted}"
+                    style="{!asi.PFYTD_Amount_style}" />
+                <apex:outputText rendered="{!showPAMTs}" value=""/>
+                <apex:outputText rendered="{!showPAMTs}" value=""/>
+                <apex:outputText rendered="{!showPAMTs}" value=""/>
+
+                <apex:outputText rendered="{!showGMGPs}"
+                    value="{!asi.PFYTD_GM_formatted}"
+                    style="{!asi.PFYTD_GM_style}" />
+
+                <apex:outputText rendered="{!showGMGPs}"
+                    value="{!asi.PFYTD_GMpct_formatted}"
+                    style="{!asi.PFYTD_GMpct_style}" />
+
+<!-- ---------- Row 3 : FYTD to PFYTD variance --------------------------------------------- -->
+
+                <apex:outputText value="{!asi.FYTDvsPFYTD_Label}" style="" />
+
+                <apex:outputText value="{!asi.FYTDvsPFYTD_Volume_in_LB_Variance_formatted}"
+                    style="{!asi.FYTDvsPFYTD_Volume_in_LB_Variance_style}" />
+                <apex:outputText rendered="{!showPVLBs}" value=""/>
+                <apex:outputText rendered="{!showPVLBs}" value=""/>
+                <apex:outputText rendered="{!showPVLBs}" value=""/>
+
+                <apex:outputText rendered="{!showKGs}"
+                    value="{!asi.FYTDvsPFYTD_Volume_in_KG_Variance_formatted}"
+                    style="{!asi.FYTDvsPFYTD_Volume_in_KG_Variance_style}" />
+                <apex:outputText rendered="{!showPVKGs}" value=""/>
+                <apex:outputText rendered="{!showPVKGs}" value=""/>
+                <apex:outputText rendered="{!showPVKGs}" value=""/>
+
+                <apex:outputText rendered="{!showUNs}"
+                    value="{!asi.FYTDvsPFYTD_Volume_in_UN_Variance_formatted}"
+                    style="{!asi.FYTDvsPFYTD_Volume_in_UN_Variance_style}" />
+
+                <apex:outputText rendered="{!showGLs}"
+                    value="{!asi.FYTDvsPFYTD_Volume_in_GL_Variance_formatted}"
+                    style="{!asi.FYTDvsPFYTD_Volume_in_GL_Variance_style}" />
+
+                <apex:outputText rendered="{!showPTs}"
+                    value="{!asi.FYTDvsPFYTD_Volume_in_PT_Variance_formatted}"
+                    style="{!asi.FYTDvsPFYTD_Volume_in_PT_Variance_style}" />
+
+                <apex:outputText value="{!asi.FYTDvsPFYTD_Amount_Variance_formatted}"
+                    style="{!asi.FYTDvsPFYTD_Amount_Variance_style}" />
+                <apex:outputText rendered="{!showPAMTs}" value=""/>
+                <apex:outputText rendered="{!showPAMTs}" value=""/>
+                <apex:outputText rendered="{!showPAMTs}" value=""/>
+
+                <apex:outputText rendered="{!showGMGPs}"
+                    value="{!asi.FYTDvsPFYTD_GM_Variance_formatted}"
+                    style="{!asi.FYTDvsPFYTD_GM_Variance_style}" />
+
+                <apex:outputText rendered="{!showGMGPs}"
+                    value="{!asi.FYTDvsPFYTD_GMpct_Variance_formatted}"
+                    style="{!asi.FYTDvsPFYTD_GMpct_Variance_style}" />
+
+<!-- ---------- Row 4 : FYTD to PFYTD variance % ------------------------------------------- -->
+
+                <apex:outputText value="{!asi.FYTDvsPFYTD_Percent_Label}" style="" />
+
+                <apex:outputText value="{!asi.FYTDvsPFYTD_Volume_in_LB_VPercent_formatted}"
+                    style="{!asi.FYTDvsPFYTD_Volume_in_LB_VPercent_style}" />
+                <apex:outputText rendered="{!showPVLBs}" value=""/>
+                <apex:outputText rendered="{!showPVLBs}" value=""/>
+                <apex:outputText rendered="{!showPVLBs}" value=""/>
+
+                <apex:outputText rendered="{!showKGs}"
+                    value="{!asi.FYTDvsPFYTD_Volume_in_KG_VPercent_formatted}"
+                    style="{!asi.FYTDvsPFYTD_Volume_in_KG_VPercent_style}" />
+                <apex:outputText rendered="{!showPVKGs}" value=""/>
+                <apex:outputText rendered="{!showPVKGs}" value=""/>
+                <apex:outputText rendered="{!showPVKGs}" value=""/>
+
+                <apex:outputText rendered="{!showUNs}"
+                    value="{!asi.FYTDvsPFYTD_Volume_in_UN_VPercent_formatted}"
+                    style="{!asi.FYTDvsPFYTD_Volume_in_UN_VPercent_style}" />
+
+                <apex:outputText rendered="{!showGLs}"
+                    value="{!asi.FYTDvsPFYTD_Volume_in_GL_VPercent_formatted}"
+                    style="{!asi.FYTDvsPFYTD_Volume_in_GL_VPercent_style}" />
+
+                <apex:outputText rendered="{!showPTs}"
+                    value="{!asi.FYTDvsPFYTD_Volume_in_PT_VPercent_formatted}"
+                    style="{!asi.FYTDvsPFYTD_Volume_in_PT_VPercent_style}" />
+
+                <apex:outputText value="{!asi.FYTDvsPFYTD_Amount_VPercent_formatted}"
+                    style="{!asi.FYTDvsPFYTD_Amount_VPercent_style}" />
+                <apex:outputText rendered="{!showPAMTs}" value=""/>
+                <apex:outputText rendered="{!showPAMTs}" value=""/>
+                <apex:outputText rendered="{!showPAMTs}" value=""/>
+
+                <apex:outputText rendered="{!showGMGPs}"
+                    value="{!asi.FYTDvsPFYTD_GM_VPercent_formatted}"
+                    style="{!asi.FYTDvsPFYTD_GM_VPercent_style}" />
+
+                <apex:outputText rendered="{!showGMGPs}"
+                    value="{!asi.FYTDvsPFYTD_GMpct_VPercent_formatted}"
+                    style="{!asi.FYTDvsPFYTD_GMpct_VPercent_style}" />
+
+<!-- ---------- Row 5 : Fiscal Year Full ------------------------------------------------------ -->
+
+                <apex:outputText rendered="{!showFYF}" value="{!asi.FYF_Label}"/>
+
+                <apex:outputText rendered="{!showFYF}" value="N / A"/>
+                <apex:outputText rendered="{!showFYF}"
+                    value="{!asi.FYF_Plan_Volume_in_LB_formatted}"
+                    style="{!asi.FYF_Plan_Volume_in_LB_style}" />
+                <apex:outputText rendered="{!showFYF}" value=""/>
+                <apex:outputText rendered="{!showFYF}" value=""/>
+
+                <apex:outputText rendered="{!showFYF}" value="N / A"/>
+                <apex:outputText rendered="{!showFYF}"
+                    value="{!asi.FYF_Plan_Volume_in_KG_formatted}"
+                    style="{!asi.FYF_Plan_Volume_in_KG_style}" />
+                <apex:outputText rendered="{!showFYF}" value=""/>
+                <apex:outputText rendered="{!showFYF}" value=""/>
+
+                <apex:outputText rendered="{!showFYF}" value="N / A"/>
+                <apex:outputText rendered="{!showFYF}"
+                    value="{!asi.FYF_Plan_Amount_formatted}"
+                    style="{!asi.FYF_Plan_Amount_style}" />
+                <apex:outputText rendered="{!showFYF}" value=""/>
+                <apex:outputText rendered="{!showFYF}" value=""/>
+
+<!-- ---------- Row 6 : Previous Full Year Sales Data -------------------------------------- -->
+
+                <apex:outputText rendered="{!showPFYF}" value="{!asi.PFYF_Label}"/>
+
+                <apex:outputText rendered="{!showPFYF}"
+                    value="{!asi.PFYF_Volume_in_LB_formatted}"
+                    style="{!asi.PFYF_Volume_in_LB_style}" />
+                <apex:outputText rendered="{!showPFYF}" value="N / A"/>
+                <apex:outputText rendered="{!showPFYF}" value=""/>
+                <apex:outputText rendered="{!showPFYF}" value=""/>
+
+                <apex:outputText rendered="{!showPFYF}"
+                    value="{!asi.PFYF_Volume_in_KG_formatted}"
+                    style="{!asi.PFYF_Volume_in_KG_style}" />
+                <apex:outputText rendered="{!showPFYF}" value="N / A"/>
+                <apex:outputText rendered="{!showPFYF}" value=""/>
+                <apex:outputText rendered="{!showPFYF}" value=""/>
+
+                <apex:outputText rendered="{!showPFYF}"
+                    value="{!asi.PFYF_Amount_formatted}"
+                    style="{!asi.PFYF_Amount_style}" />
+                <apex:outputText rendered="{!showPFYF}" value="N / A"/>
+                <apex:outputText rendered="{!showPFYF}" value=""/>
+                <apex:outputText rendered="{!showPFYF}" value=""/>
+
+            </apex:panelGrid>
+        </apex:outputPanel>
+
+        <BR />
+        <apex:panelGrid rendered="{!Show_Data}" columns="1" id="Title" width="100%"
+            styleClass="TableStyleClass" captionClass="TableCaptionClass"
+            headerClass="TableHeaderClass" columnClasses="TableHeaderClass">
+            <apex:facet name="caption">{!'Materials Information - ' + rpsViewLabel}</apex:facet>
+            <apex:outputPanel styleClass="bold">View :&nbsp;
+            <apex:actionStatus id="rpsView">
+                <apex:facet name="start">
+                    <apex:outputText styleClass="bold" value=" Please wait ...">
+                        <apex:image value="{!$Resource.spinner}"/></apex:outputText>
+                </apex:facet>
+                <apex:facet name="stop">
+                <apex:outputPanel >
+                    <apex:SelectList value="{!rpsView}" size="1" styleClass="rpsViewOpts">
+                        <apex:selectOptions value="{!rpsViewOpts}"/>
+                        <apex:actionSupport event="onchange"
+                            action="{!setRpsView}"
+                            rerender="Rolling_Product_Sales_Info_Panel,theToolbar,Title"
+                            status="rpsView"/>
+                    </apex:SelectList>
+            </apex:outputPanel></apex:facet></apex:actionStatus></apex:outputPanel>
+        </apex:panelGrid>
+
+        <apex:outputPanel rendered="{!Show_Data}" id="Rolling_Product_Sales_Info_Panel">
+
+            <apex:dataTable value="{!rpsiLines}" var="l"
+                id="RollingProductSalesInfoGrid" border="1" width="100%"
+                styleClass="TableStyleClass" captionClass="TableCaptionClass"
+                headerClass="TableHeaderClass" footerClass="TableFooterClass_Gold"
+                rowClasses="TableRowClasses_odd,TableRowClasses_even"
+                columnClasses="recNum,MaterialName_ColumnFormat,Data_ColumnFormat,Data_ColumnFormat,Data_ColumnFormat,Data_ColumnFormat,Data_ColumnFormat,Data_ColumnFormat,Data_ColumnFormat,Data_ColumnFormat,Data_ColumnFormat,Data_ColumnFormat,Data_ColumnFormat,Data_ColumnFormat,Data_ColumnFormat">
+                <apex:column style="text-align: right; width: 30px;">
+                    <apex:facet name="header">#</apex:facet>
+                    {!l.recNum}
+                </apex:column>
+
+                <apex:column >
+                    <apex:facet name="header">Material</apex:facet>
+                    <apex:outputLink value="/{!l.matId}"
+                        styleClass="matName" target="_blank">
+                        {!l.matName}</apex:outputLink>
+                </apex:column>
+
+                <apex:column style="{!l.Style_Month_01}">
+                    <apex:facet name="header">
+                        <apex:outputText escape="false" value="{!labelMonth01}" />
+                    </apex:facet>
+                    <apex:outputText value="{!l.Value_Month_01}" />
+                </apex:column>
+
+                <apex:column style="{!l.Style_Month_02}">
+                    <apex:facet name="header">
+                        <apex:outputText escape="false" value="{!labelMonth02}" />
+                    </apex:facet>
+                    <apex:outputText value="{!l.Value_Month_02}" />
+                </apex:column>
+
+                <apex:column style="{!l.Style_Month_03}">
+                    <apex:facet name="header">
+                        <apex:outputText escape="false" value="{!labelMonth03}" />
+                    </apex:facet>
+                    <apex:outputText value="{!l.Value_Month_03}" />
+                </apex:column>
+
+                <apex:column style="{!l.Style_Month_04}">
+                    <apex:facet name="header">
+                        <apex:outputText escape="false" value="{!labelMonth04}" />
+                    </apex:facet>
+                    <apex:outputText value="{!l.Value_Month_04}" />
+                </apex:column>
+
+                <apex:column style="{!l.Style_Month_05}">
+                    <apex:facet name="header">
+                        <apex:outputText escape="false" value="{!labelMonth05}" />
+                    </apex:facet>
+                    <apex:outputText value="{!l.Value_Month_05}" />
+                </apex:column>
+
+                <apex:column style="{!l.Style_Month_06}">
+                    <apex:facet name="header">
+                        <apex:outputText escape="false" value="{!labelMonth06}" />
+                    </apex:facet>
+                    <apex:outputText value="{!l.Value_Month_06}" />
+                </apex:column>
+
+                <apex:column style="{!l.Style_Month_07}">
+                    <apex:facet name="header">
+                        <apex:outputText escape="false" value="{!labelMonth07}" />
+                    </apex:facet>
+                    <apex:outputText value="{!l.Value_Month_07}" />
+                </apex:column>
+
+                <apex:column style="{!l.Style_Month_08}">
+                    <apex:facet name="header">
+                        <apex:outputText escape="false" value="{!labelMonth08}" />
+                    </apex:facet>
+                    <apex:outputText value="{!l.Value_Month_08}" />
+                </apex:column>
+
+                <apex:column style="{!l.Style_Month_09}">
+                    <apex:facet name="header">
+                        <apex:outputText escape="false" value="{!labelMonth09}" />
+                    </apex:facet>
+                    <apex:outputText value="{!l.Value_Month_09}" />
+                </apex:column>
+
+                <apex:column style="{!l.Style_Month_10}">
+                    <apex:facet name="header">
+                        <apex:outputText escape="false" value="{!labelMonth10}" />
+                    </apex:facet>
+                    <apex:outputText value="{!l.Value_Month_10}" />
+                </apex:column>
+
+                <apex:column style="{!l.Style_Month_11}">
+                    <apex:facet name="header">
+                        <apex:outputText escape="false" value="{!labelMonth11}" />
+                    </apex:facet>
+                    <apex:outputText value="{!l.Value_Month_11}" />
+                </apex:column>
+
+                <apex:column style="{!l.Style_Month_12}">
+                    <apex:facet name="header">
+                        <apex:outputText escape="false" value="{!labelMonth12}" />
+                    </apex:facet>
+                    <apex:outputText value="{!l.Value_Month_12}" />
+                </apex:column>
+
+                <apex:column style="{!l.Style_Month_13}">
+                    <apex:facet name="header">
+                        <apex:outputText escape="false" value="{!labelMonth13}" />
+                    </apex:facet>
+                    <apex:outputText value="{!l.Value_Month_13}" />
+                </apex:column>
+
+                <apex:column style="{!l.Style_FYTD}" rendered="{!showFYF}">
+                    <apex:facet name="header">
+                        <!-- apex:outputText escape="false" value="{!labelFYTD}" / -->
+                        <apex:outputText escape="false" value="FYTD" />
+                    </apex:facet>
+                    <apex:outputText value="{!l.Value_FYTD}" />
+                </apex:column>
+
+                <apex:column style="{!l.Style_PFYTD}" rendered="{!showFYF}">
+                    <apex:facet name="header">
+                        <!-- apex:outputText escape="false" value="{!labelPFYTD}" / -->
+                        <apex:outputText escape="false" value="PFYTD" />
+                    </apex:facet>
+                    <apex:outputText value="{!l.Value_PFYTD}" />
+                </apex:column>
+
+                <apex:column style="{!l.Style_YTD_Var}" rendered="{!showFYF}">
+                    <apex:facet name="header">
+                        <apex:outputText escape="false" value="{!labelYTDVar}" />
+                    </apex:facet>
+                    <apex:outputText value="{!l.Value_YTD_Var}" />
+                </apex:column>
+
+                <apex:column style="{!l.Style_FYF}" rendered="{!showFYF}">
+                    <apex:facet name="header">
+                        <!-- apex:outputText escape="false" value="{!labelFYF}" / -->
+                        <apex:outputText escape="false" value="FY Full" />
+                    </apex:facet>
+                    <apex:outputText value="{!l.Value_FYF}" />
+                </apex:column>
+
+                <apex:column style="{!l.Style_PFYF}" rendered="{!showFYF}">
+                    <apex:facet name="header">
+                        <!-- apex:outputText escape="false" value="{!labelPFYF}" / -->
+                        <apex:outputText escape="false" value="PFY Full" />
+                    </apex:facet>
+                    <apex:outputText value="{!l.Value_PFYF}" />
+                </apex:column>
+
+            </apex:dataTable><br/>
+
+            <apex:outputPanel layout="block" styleClass="center">
+            <apex:actionStatus id="pageControls">
+                <apex:facet name="start">
+                    <apex:outputText styleClass="bold" value=" Please wait ...">
+                        <apex:image value="{!$Resource.spinner}"/></apex:outputText>
+                </apex:facet>
+                <apex:facet name="stop">
+                <apex:outputPanel >
+
+            <table class="tbl">
+                <tr>
+
+                    <td class="hdr center">
+                        Search by Material : &nbsp;
+                    <apex:inputText value="{!materialName}" size="30"/>&nbsp;
+                    <apex:commandButton value="Search" action="{!searchByMaterialName}"
+                        rerender="Rolling_Product_Sales_Info_Panel,theToolbar,Title"
+                        status="pageControls" /></td>
+
+                    <td class="hdr center">
+                    <apex:outputText value="Records: {!pc1.recordFrom} - {!pc1.recordTo} of {!pc1.resultSize}"
+                                     styleClass="nowrap"/></td>
+
+                    <td class="hdr center">
+                        <apex:commandButton action="{!pc1Frst}" disabled="{!NOT(pc1.hasPrevious)}"
+                                            rerender="theForm" status="pageControls"
+                                            title="First Page" value="<<"/>&nbsp;&nbsp;
+                        <apex:commandButton action="{!pc1Prev}" disabled="{!NOT(pc1.hasPrevious)}"
+                                            rerender="theForm" status="pageControls"
+                                            title="Prev Page" value="<"/>
+
+                        Previous&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Next&nbsp;
+
+                        <apex:commandButton action="{!pc1Next}" disabled="{!NOT(pc1.hasNext)}"
+                                            rerender="theForm" status="pageControls"
+                                            title="Next Page" value=">"/>&nbsp;&nbsp;
+                        <apex:commandButton action="{!pc1Last}" disabled="{!NOT(pc1.hasNext)}"
+                                            rerender="theForm" status="pageControls"
+                                            title="Last Page" value=">>"/></td>
+
+                    <td class="hdr center">
+                        <apex:outputLabel value="Page: "/>
+                        <apex:inputText value="{!pc1.pageNumber}" maxlength="4"
+                            styleClass="pageNumber"/>&nbsp;
+                        <apex:outputText value=" of {!pc1.lastPageNumber}"/>&nbsp;
+                        <apex:commandButton action="{!pc1Goto}"
+                            disabled="{!NOT(OR(pc1.hasNext,pc1.hasPrevious))}"
+                            rerender="theForm" status="pageControls"
+                            styleClass="lh1em" value="Go"/></td>
+
+                </tr>
+            </table></apex:outputPanel></apex:facet></apex:actionStatus></apex:outputPanel>
+        </apex:outputPanel>
+
+    <script type="text/javascript">
+        function setFocusOnLoad() {}
+
+        var $j = jQuery.noConflict();
+
+        $j(function(){resizeIframe(); $j(window).resize(function() {resizeIframe();});});
+
+        var currentlyResizing = false;
+        var prevHeight = 0;
+
+        function resizeIframe() {
+            if (!currentlyResizing) {
+                currentlyResizing = true;
+
+                try {
+                    var thisWindow = window.name;
+                    var iframes = parent.document.getElementsByName(thisWindow);
+
+                    var newHeight = document.body.scrollHeight;
+
+                    var f = $j('input[id$=Show_Data]').get(0);
+                    if (f.value == 'false') {
+                        newHeight = 50;
+                    }
+
+                    if (newHeight != prevHeight) {
+                        console.log('resizeIframe: prevHeight (' + prevHeight + ') <> newHeight (' + newHeight + '), updating Height...');
+                        prevHeight = newHeight;
+
+                        iframes[0].style.height = newHeight + "px";
+                    }
+                }
+                catch(err) {
+                    // Do Nothing
+                }
+
+                currentlyResizing = false;
+            }
+        }
+    </script>
+
+    </apex:form>
+
+    <style>
+        body {background: #f2f2f2;}
+        .bold {font-weight: bold;}
+        .center {text-align: center;}
+        .nowrap {white-space: nowrap;}
+        .dr-toolbar-ext {background-color: #1797C0; background-image: none;}
+        .dr-toolbar-int {background-color: #1797C0; background-image: none;}
+
+        .lh1em, .pageNumber {line-height: 1em; vertical-align: middle;}
+        .pageNumber {width: 30px; text-align: right;}
+        .matName, .matName:hover {text-decoration: none;}
+        .TableStyleClass {border-spacing: 0; border-collapse: collapse; width: 100%;
+                          empty-cells: show; border: 1px solid #C0C0C0;}
+        .TableStyleClass td,
+        .TableStyleClass th,
+        .AccountSummaryFooterLine {border: 1px solid #C0C0C0; padding: 1px 2px 1px 2px;}
+        .LineHeading_ColumnFormat {font-size: 100%; white-space: nowrap;}
+        .PanelGridHeaderClass {font-size: 105%;}
+        .TableCaptionClass {font-size: 150%;}
+        .PanelGridHeaderClass,
+        .TableCaptionClass,
+        .TableHeaderClass,
+        .toolbar_styleClass,
+        .toolbar_contentClass,
+        .toolbar_separatorClass {background: #1797C0; border: 1px solid #1797C0; color: white;}
+        .rpsViewOpts {background: #f2f2f2; border: 1px solid #f2f2f2;}
+
+        .tbl {border-spacing: 0; border-collapse: collapse; width: 100%;
+              empty-cells: show; border: 1px solid #C0C0C0;}
+        .tbl td {padding: 4px 6px 4px 2px; vertical-align: middle; text-align: left;
+                 font-family: Arial,Helvetica,sans-serif;}
+        .tbl td.center, .center {text-align: center;}
+        .tbl td.hdr {color: #4a4a56; font-size: 91%; font-weight: bold;
+                     border: 1px solid #C0C0C0; background-color: #F2F3F3;}
+    </style>
+
+</apex:component>

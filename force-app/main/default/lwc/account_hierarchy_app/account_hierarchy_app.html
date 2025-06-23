@@ -1,0 +1,71 @@
+<template>
+    <div class="slds-m-top_small slds-m-bottom_medium">
+        <p>
+            <lightning-button variant="brand" label={filterAccountByStatusTitle} title="Primary action" onclick={filterAccountByStatus} class="slds-m-left_x-small"></lightning-button>
+            <template if:true={isLoading}>
+                <div class="demo-only demo-only demo-only_viewport" style="height:6rem">
+                    <div role="status" class="slds-spinner slds-spinner_medium">
+                        <span class="slds-assistive-text">Loading</span>
+                        <div class="slds-spinner__dot-a"></div>
+                        <div class="slds-spinner__dot-b"></div>
+                    </div>
+                </div>
+            </template>
+            <template if:true={showInactiveAccountMessage}>
+                <span class="slds-text-heading_small">&NonBreakingSpace;&NonBreakingSpace;&NonBreakingSpace;<b>This account is inactive</b></span>
+            </template>
+        </p>
+        <hr style="margin-top: 1em; margin-bottom: 1em; padding: 0px;"></hr>
+    </div>
+    <template if:true={isActiveAccount}>
+        <ul class="myUL slds-scrollable" style="height: 25rem;">
+            <template if:true={hasCorporate}>
+                <template for:each={accountHierarchy} for:item="account">
+                    <li key={account.accountData.Id}>
+                        <span class="box checked-box">
+                            <c-account-hierarchy-app-child card-type="Corp Acct" current-record-id={recordId} account-card={account.accountData} org-url={orgUrl} current-account="outer" class="m-width-cls"></c-account-hierarchy-app-child>
+                        </span>
+                        <ul class="nested active">
+                            <template for:each={account.soldToAccounts} for:item="soldToItem">
+                                <li key={soldToItem.accountData.Id}>
+                                    <span class="box checked-box">
+                                        <c-account-hierarchy-app-child card-type="soldTo" current-record-id={recordId} account-card={soldToItem.accountData} org-url={orgUrl} current-account="outer" class="m-width-cls"></c-account-hierarchy-app-child>
+                                    </span>
+                                    <ul class="nested active">
+                                        <template for:each={soldToItem.shipToAccounts} for:item="shipToItem">
+                                            <li key={shipToItem.accountData.Id}>
+                                                <span class="box shipTo">
+                                                    <c-account-hierarchy-app-child card-type="shipTo" current-record-id={recordId} account-card={shipToItem.accountData} org-url={orgUrl} current-account="outer" class="m-width-cls"></c-account-hierarchy-app-child>
+                                                </span>
+                                                <ul class="nested"></ul>
+                                            </li>
+                                        </template>
+                                    </ul>
+                                </li>
+                            </template>                            
+                        </ul>
+                    </li>
+                </template>
+            </template>
+            <template if:false={hasCorporate}>
+                <template for:each={accountHierarchy.soldToAccounts} for:item="soldToItem">
+                    <li key={soldToItem.accountData.Id}>
+                        <span class="box checked-box">
+                            <c-account-hierarchy-app-child card-type="soldTo" current-record-id={recordId} account-card={soldToItem.accountData} org-url={orgUrl} current-account="outer" class="m-width-cls"></c-account-hierarchy-app-child>
+                        </span>
+                        <ul class="nested active">
+                            <template for:each={soldToItem.shipToAccounts} for:item="shipToItem">
+                                <li key={shipToItem.accountData.Id}>
+                                    <span class="box shipTo">
+                                        <c-account-hierarchy-app-child card-type="shipTo" current-record-id={recordId} account-card={shipToItem.accountData} org-url={orgUrl} current-account="outer" class="m-width-cls"></c-account-hierarchy-app-child>
+                                    </span>
+                                    <ul class="nested"></ul>
+                                </li>
+                            </template>
+                        </ul>
+                    </li>
+                </template>                            
+            </template>
+        </ul>
+    </template>
+</template>

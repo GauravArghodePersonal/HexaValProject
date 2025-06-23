@@ -1,0 +1,110 @@
+<apex:page id="thePage" standardController="Pricing_Rebate__c" 
+           title="Pricing Rebate" extensions="Pricing_Rebate_Controller" 
+           sidebar="false" action="{!initAction1}" lightningStylesheets="true" >
+
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-1.6.2.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-ui-1.8.16.custom.min.js')}" />
+    <style type="text/css">
+        @import "{!URLFOR($Resource.jQuery, 'css/redmond/jquery-ui-1.8.16.custom.css')}";
+    </style>
+
+    <apex:outputPanel id="op">
+                        
+    <apex:form >
+        <apex:actionStatus id="astat1">
+            <apex:facet name="start">
+                <apex:outputText styleClass="bold" value=" Please wait ...">
+                    <apex:image value="{!$Resource.spinner}"/>
+                </apex:outputText>
+            </apex:facet>
+            <apex:facet name="stop"><apex:outputPanel >
+                <apex:actionFunction action="{!onConfirmComplete}" name="onConfirmComplete"
+                                     immediate="true" rerender="op" status="astat1"/>
+                <apex:actionFunction action="{!onLisdComplete}" name="onLisdComplete"
+                                     immediate="true" rerender="op" status="astat1"/>
+            </apex:outputPanel></apex:facet>
+        </apex:actionStatus>
+    </apex:form>
+
+    <c:ConfirmDialog rendered="{!renderConfirmDialogComp}" p1="{!cdp}"/>
+    
+    <apex:outputPanel layout="block" styleClass="center">
+        <apex:form rendered="{!!renderConfirmDialogComp}">
+            <apex:actionStatus id="astat1">
+                <apex:facet name="start">
+                    <apex:outputText styleClass="bold" value=" Please wait ...">
+                        <apex:image value="{!$Resource.spinner}"/>
+                    </apex:outputText>
+                </apex:facet>
+                <apex:facet name="stop"><apex:outputPanel >
+                <apex:commandButton action="{!gotoPage2}" value="Next"
+                                    rendered="{!renderGoto2}" />
+                <apex:commandButton action="{!cancel}" value="Cancel"
+                                    rendered="{!!renderPage2}" immediate="true" />
+                </apex:outputPanel></apex:facet>
+            </apex:actionStatus>
+        </apex:form>
+    </apex:outputPanel>
+    
+    <apex:outputPanel rendered="{!!renderConfirmDialogComp}"><br/>
+        <apex:include pageName="Pricing_Rebate_Page2" rendered="{!renderPage2}"/>
+        <c:SAP_LISD_Comp1 p_sapLisd="{!lisd}" rendered="{!!renderPage2}"/>
+    </apex:outputPanel>
+    
+    <apex:outputPanel layout="block" styleClass="center">
+        <apex:form rendered="{!!renderConfirmDialogComp}">
+            <apex:actionStatus id="astat2">
+                <apex:facet name="start">
+                    <apex:outputText styleClass="bold" value=" Please wait ...">
+                        <apex:image value="{!$Resource.spinner}"/>
+                    </apex:outputText>
+                </apex:facet>
+                <apex:facet name="stop"><apex:outputPanel >
+                <apex:commandButton action="{!gotoPage2}" value="Next"
+                                    rendered="{!renderGoto2}" />
+                <apex:commandButton action="{!cancel}" value="Cancel"
+                                    rendered="{!!renderPage2}" immediate="true" />
+                </apex:outputPanel></apex:facet>
+            </apex:actionStatus>
+        </apex:form>
+    </apex:outputPanel>
+    
+    <apex:outputPanel >
+        <apex:outputLabel value="1" rendered="{!!renderPage2}" styleClass="pageid"/>
+    </apex:outputPanel>
+    
+    </apex:outputPanel>
+
+    <script type="text/javascript">
+        var $j = jQuery.noConflict();
+        
+        function onClick_AllChkbox(rowCbClass, allChkbox) {
+            $j("."+rowCbClass).each(function() {
+                if (this.disabled == false) {
+                    this.checked = allChkbox.checked;
+                }
+            });
+        }
+
+        function onClick_RowChkbox(rowCbClass, allCbClass) {
+            var allChkbox = $j("."+allCbClass).get(0);
+            allChkbox.checked = true;
+            $j("."+rowCbClass).each(function() {
+                if (!this.checked) {
+                    allChkbox.checked = false;
+                    return false;
+                }
+            });
+        }
+
+    </script>
+    
+    <style>
+        .bold {font-weight: bold;}
+        .center {text-align: center;}
+        .left {text-align: left;}
+        .right {text-align: right;}
+        .nowrap {white-space: nowrap;}
+        .pageid {font-size: 70%; float: right;}
+    </style>
+</apex:page>

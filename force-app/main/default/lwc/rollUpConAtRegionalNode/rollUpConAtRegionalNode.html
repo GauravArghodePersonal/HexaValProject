@@ -1,0 +1,41 @@
+<template>
+    <lightning-card title="Client Relationships">
+        <div class="exampleHolder" if:true={showspinner}>
+        <lightning-spinner alternative-text="Loading" size="xx-small"></lightning-spinner>
+        </div>
+         <template if:false={showText}>
+            <div class="slds-m-around_medium">
+            <lightning-input
+                type="search"
+                onchange={handleKeyChange}
+                class="slds-m-bottom_small"
+                label="Search"
+                placeholder="Search by Contact Name"
+                value={searchKey}
+            ></lightning-input>
+
+            <!-- Lightning Datatable -->
+            <c-l-w-c-custom-datatable-type
+                key-field="Id"
+                data={data}
+                columns={columns}
+                onvalueselect={handleSelection}
+                draft-values={draftValues}
+                oncellchange={handleCellChange}
+                onsave={handleSave}
+                oncancel={handleCancel}
+                hide-checkbox-column
+                min-column-width="80"
+                sorted-by={sortBy}
+                sorted-direction={sortDirection}
+                onsort={doSorting}
+            ></c-l-w-c-custom-datatable-type>
+        
+
+            </div>
+        </template>
+        <template if:true={showText}>
+            No data found.
+        </template>
+    </lightning-card>
+</template>

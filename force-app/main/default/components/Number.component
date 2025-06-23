@@ -1,0 +1,15 @@
+<apex:component controller="NumberController">
+    <apex:attribute name="p_value" type="Decimal" description=""
+                    required="true" assignTo="{!value}"/>
+
+    <apex:attribute name="p_decimals" type="Integer" description="" 
+                    required="false" assignTo="{!decimals}"/>
+
+    <apex:attribute name="p_locale" type="String" description="" 
+                    required="false" assignTo="{!locale}"/>
+
+    <apex:attribute name="p_style" type="String" description="" 
+                    required="false" assignTo="{!style}"/>
+
+    <apex:outputtext value="{!numberString}" style="{!style}"/>
+</apex:component>

@@ -1,0 +1,185 @@
+<apex:page cache="false" showHeader="false" applyHtmlTag="false" controller="PortalSiteHomeController">
+ 
+<apex:variable var="serverURL" value="{!$Setup.Portal_Site_Settings__c.Server_URL__c}"/>
+<apex:variable var="portalId" value="{!$Setup.Portal_Site_Settings__c.Portal_Id_AWT_Distributor__c}"/>
+
+<html>
+    <head>
+        <title>Solenis Distributor Portal</title>
+        
+        <meta name="Title" content="Solenis Distributor Portal" />
+        <meta name="Keywords" content="" />
+        <meta name="Description" content="" />
+        <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+
+        <style type="text/css">
+        
+        .errorMsg {
+            color: #c00;
+        }
+        
+        </style>
+ 
+        <apex:includeScript value="/soap/ajax/19.0/connection.js" />
+        <apex:includeScript value="/soap/ajax/19.0/apex.js" />
+        <apex:includeScript value="{!URLFOR($Resource.VIResources, 'js/jquery-1.4.2.min.js')}" />
+        <script type="text/javascript">
+        
+        jQuery.noConflict();
+        
+        function doLogin() {
+            jQuery("#loginError").hide();
+            
+            // Username is required
+            var username = jQuery("#un").val();
+            username = jQuery.trim(username);
+            if (username.length == 0) {
+                jQuery("#loginError").text("Please enter your User Name.").show();
+                return false;
+            }
+            
+            // Password is required
+            var password = jQuery("#pw").val();
+            password = jQuery.trim(password);
+            if (password.length == 0) {
+                jQuery("#loginError").text("Please enter your Password.").show();
+                return false;
+            }
+            
+            ajaxLogin(username);
+        }
+        
+        function forgotPassword() {
+            jQuery("#loginError").hide();
+            
+            // Username is required
+            var username = jQuery("#un").val();
+            username = jQuery.trim(username);
+            if (username.length == 0) {
+                jQuery("#loginError").text("Please enter your User Name.").show();
+                return;
+            }
+            
+            ajaxForgotPassword(username);
+        }
+        
+        </script>
+    </head>
+    
+    <body><br/>
+        <apex:outputLink value="{!$Page.AWT_Distributor_Site_Home}">
+        <apex:image value="{!$Resource.SolenisLogo}"/>   
+        </apex:outputLink><br/><br/>
+        
+   <script type="text/javascript">
+        
+        function ajaxLoginComplete() {
+            var portalId = jQuery(document.getElementById("{!$Component.loginForm.portalId}")).val();
+            var loginResult = jQuery(document.getElementById("{!$Component.loginForm.loginResult}")).val();
+            if (loginResult.toLowerCase() == "success") {
+                // Success
+                jQuery("#portalId").val(portalId);
+                jQuery('#return-user-group').submit();
+            }
+            else {
+                // Failure
+                jQuery("#loginError").text("Your login attempt has failed. The username or password may be incorrect, or your location or login time may be restricted. Please contact the administrator at your company for help.").show();
+            }
+        }
+        
+        function ajaxForgotPasswordComplete() {
+            var username = jQuery(document.getElementById("{!$Component.loginForm.username}")).val();
+            var portalId = jQuery(document.getElementById("{!$Component.loginForm.portalId}")).val();
+            var loginResult = jQuery(document.getElementById("{!$Component.loginForm.loginResult}")).val();
+            if (loginResult.toLowerCase() == "success") {
+                // Get the return URL
+                var retURL = "{!$CurrentPage.URL}";
+                if (retURL.indexOf("?") >= 0) {
+                    // Remove query string params
+                    retURL = retURL.substr(0, retURL.indexOf("?"));
+                }
+                
+                // Redirect to the standard forgot password page
+                window.top.location = "{!serverURL}/secur/forgotpasswordp.jsp"
+                        + "?orgId=" + escape("{!$Organization.Id}")
+                        + "&portalId=" + escape(portalId)
+                        + "&pLu=" + escape(retURL)
+                        + "&Username=" + escape(username);
+            }
+            else {
+                // Failure
+                jQuery("#loginError").text("Your username was not found. Please contact your support organization.").show();
+            }
+        }
+        
+        </script>
+                
+        <apex:form id="loginForm">
+            <apex:actionFunction name="ajaxLogin" action="{!login}" rerender="loginForm" oncomplete="ajaxLoginComplete();">
+                <apex:param name="param0" assignTo="{!username}" value="" />
+            </apex:actionFunction>
+            <apex:actionFunction name="ajaxForgotPassword" action="{!login}" rerender="loginForm" 
+                                 oncomplete="ajaxForgotPasswordComplete();">
+                <apex:param name="param0" assignTo="{!username}" value="" />
+            </apex:actionFunction>
+            
+            <apex:inputHidden id="username" value="{!username}" />
+            <apex:inputHidden id="portalId" value="{!portalId}" />
+            <apex:inputHidden id="loginResult" value="{!loginResult}" />
+        </apex:form>
+        
+        <table cellpadding="0" cellspacing="0" border="0" width="765">
+            <tr>
+                <td width="167" valign="top"><div id="nav"></div></td>
+                <td width="1" valign="top" background="{!URLFOR($Resource.VIResources, '/img/vert-line-bg.gif')}">
+                    <img src="/s.gif" width="1" height="300" alt="" border="0" />
+                </td>
+                <td width="11">
+                    <img src="/s.gif" width="11" height="1" alt="" border="0" />
+                </td>
+                <td valign="top" width="586">
+                    <div id="content-index">
+                    
+                        <p><strong>Welcome to the <i>New</i> Solenis Portal for Agents</strong><br/>
+                           The new site provides you account management, price tools designed to help grow 
+                           your business and drive profitability through incremental revenue opportunities.</p>
+                        <p><strong>New Users</strong><br/>Please contact Kristin Poppiti for access to the site : 
+                        kpoppiti@solenis.com or call 302-502-0829 for assistance. <br/></p>
+                        <p><strong>Returning Users</strong><br/>
+                           Please enter your login id (email address) and password below.</p>
+                        <p><strong>Forgotten Password</strong><br/>Please click on the link below and a new password 
+                           will be forwarded to your email address on file.</p>
+                           
+                            <form id="new-user-group"></form>
+                        <form id="return-user-group" action="{!serverURL}/secur/login_portal.jsp" method="post">
+                            <input id="startURL" name="startURL" type="hidden" value="" />
+                            <input id="loginURL" name="loginURL" type="hidden" value="" />
+                            <input id="useSecure" name="useSecure" type="hidden" value="true" />
+                            <input id="orgId" name="orgId" type="hidden" value="{!$Organization.Id}" />
+                            <input id="portalId" name="portalId" type="hidden" value="" />
+                            <input id="loginType" name="loginType" type="hidden" value="3" />
+                            <input id="action" name="action" type="hidden" value="loginAction" />
+
+                            <div id="loginError" class="errorMsg" style="display: none;"></div>
+                            
+                            <label for="un">User Name:</label><br/>
+                            <input id="un" name="un" type="text" size="25" maxlength="80" style="width:200px;"/><br/><br/>
+                            
+                            <label for="pw">Password:</label><br/>
+                            <input id="pw" name="pw" type="password" size="25" maxlength="80" style="width:200px;"/><br/><br/>
+                            
+                            <a href="#" onclick="forgotPassword(); return false;">Forgot Password?</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="#" onclick="doLogin();return false;">Submit</a>
+                        </form>
+                       
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </body>
+
+</html>
+
+ 
+</apex:page>

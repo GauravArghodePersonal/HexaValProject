@@ -1,0 +1,172 @@
+	.toolbar {
+		background-color: #1797C0;
+		background-image: none;
+		background-position: left top;
+		background-repeat: repeat-x;
+		border: 1px solid #C0C0C0;
+		padding: 0;
+	}
+	
+	.sectionHeader {
+		background-color: #1797C0;
+	}
+	
+	.sectionHeaderAdmin {
+		background-color: #D12B1F;
+	}
+	
+	.toolbarItem {
+		padding: 4px 0;
+	}
+	
+	.toolbarItemTabBar {
+		padding: 4px 0px 0px 0px;
+	}
+	
+	.toolbarGroup {
+		padding: 4px 0;
+		vertical-align:middle;
+	}
+	
+	.mainPanel {
+		padding: 0px 0px 0px 0px;
+	}
+	
+	.toolbarGroup-left-side {
+		width: 25%;
+		float: left;
+		text-align: left;
+		margin: 0px 0px 0px 0px;
+		background-color: inherit;
+	}
+	
+	.toolbarGroup-center-column {
+		width: 50%;
+		float: left;
+		text-align: center;
+		margin: 0px 0px 0px 0px;
+		background-color: inherit;
+	}
+	
+	.toolbarGroup-right-side {
+		width: 25%;
+		float: left;
+		text-align: right;
+		margin: 0px 0px 0px 0px;
+		background-color: inherit;
+	}
+	
+	.fullWidthToolbar-centered {
+		width: 100%;
+		float: left;
+		text-align: center;
+		background-color: inherit;
+	}
+	
+	.filterToolbar {
+		background-color: #1797C0;
+		height: 40px; 
+		vertical-align:middle;
+	}
+	
+	.filterToolbar-left-side {
+		width: 25%;
+		text-align: center;
+		white-space: nowrap;
+		overflow:visible;
+	}
+	
+	.filterToolbar-center {
+		width: 50%;
+		white-space: nowrap;
+		overflow:visible;
+	}
+	
+	.filterToolbar-right-side {
+		width: 25%;
+		white-space: nowrap;
+		overflow:visible;
+	}
+	
+	.pageStatusToolbarText {
+		background-color: #1797C0;
+		font-size: 125%;
+		font-weight:bold;
+		color:white;
+	}
+	
+	.filterToolbarText {
+		background-color: #1797C0;
+		font-size: 125%;
+		font-weight:bold;
+		color:white;
+	}
+	
+	.filterToolbarText-right-side {
+		background-color: #1797C0;
+		font-size: 75%;
+		font-weight:bold;
+		color:white;
+	}
+	
+	.pageNavigationToolbar {
+		background-color: #FFFFFF;
+	}
+	
+	.filterToolbarButtons {
+		font-size: 80%;
+		font-weight:bold;
+	}
+
+	input.filterToolbarButton {
+		border-style: none !important;
+		border: 1px solid #fff !important;
+		vertical-align: bottom !important;
+	}
+
+	input.filterToolbarButton:hover {
+		border-style: solid !important;
+		vertical-align: bottom !important;
+		border: 1px solid #ffffff !important;
+		background:#72E1C8 !important;
+	}
+
+	input.filterToolbarButton-unselected {
+	}
+	
+	input.filterToolbarButton-selected {
+		/*opacity:0.75;*/
+		background:#6CC4E6 !important;
+		color:#FFFFFF !important;
+		font-weight:bold;
+	}
+
+	input.toolbarTabButton {
+		display:block;
+		float:left;
+		padding:5px 5px !important;
+		background:#EFEFEF !important; 
+		border:1px solid #777 !important;
+		border-bottom:none !important;
+		color:#000000 !important;
+		text-decoration:none !important;
+		font-size: 115% !important;
+		border-radius:7px 7px 0 0 !important;
+    box-shadow: 3px 0 5px -3px #999999, -3px 0 5px -3px #999999;
+	}
+
+	input.toolbarTabButton-unselected {
+		background:#EFEFEF !important; 
+		color:#000000 !important;
+	}
+	
+	input.toolbarTabButton-mouseover {
+		background:#AAAAAA !important;
+		color:#FFFFFF !important;
+	}
+	
+	input.toolbarTabButton-selected {
+		background:#6CC4E6 !important;
+		color:#FFFFFF !important;
+		font-weight:bold;
+	}

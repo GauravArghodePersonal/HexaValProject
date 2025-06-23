@@ -1,0 +1,12 @@
+<template>
+    <div class="slds-grid slds-clearfix dataRow slds-gutters">
+       <template if:true={isTrue}>
+        <div class="slds-col slds-float_left">
+                <div class="btnCentre"><lightning-button class="slds-button slds-button_brand btn" label="Customer Facing PDF" onclick={navigateToWebPage}></lightning-button></div>
+        </div>
+    </template> 
+        <div class="slds-col slds-float_left">
+            <div class="btnCentre"><lightning-button class="slds-button slds-button_brand btn" label="Internal Use PDF" onclick={button}></lightning-button></div>
+        </div>
+    </div>
+</template>

@@ -1,0 +1,510 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 06-02-2023
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+    <table class="infor">
+        
+        <tr>
+            <th colspan="16">Products with sales history – Values are in kg – Opportunity Adjustment is impacted by Opportunity Probability</th>
+        </tr>
+        <tr>
+            
+            <th>Material Description</th>
+            <th>Opportunity Name</th>
+            <th>Description</th>
+            <th colspan="12">FORECAST DATA ENTRY</th>
+        </tr>
+     <template if:true={forecastAvailable}>
+        <template for:each={forecast} for:item="currentItem">
+        <tr key={currentItem.Id}>
+           
+            <td rowspan="8">{currentItem.MaterialDescription} {currentItem.MaterialNumber}</td>
+            <td rowspan="8">{currentItem.OpportunityName}</td>
+            <td>History Month</td>
+            <td class="forecasted_month">{currentItem.HM1}</td>
+            <td class="forecasted_month">{currentItem.HM2}</td>
+            <td class="forecasted_month">{currentItem.HM3}</td>
+            <td class="forecasted_month">{currentItem.HM4}</td>
+            <td class="forecasted_month">{currentItem.HM5}</td>
+            <td class="forecasted_month">{currentItem.HM6}</td>
+            <td class="forecasted_month" >{currentItem.HM7}</td>
+            <td class="forecasted_month">{currentItem.HM8}</td>
+            <td class="forecasted_month">{currentItem.HM9}</td>
+            <td class="forecasted_month">{currentItem.HM10}</td>
+            <td class="forecasted_month" >{currentItem.HM11}</td>
+            <td class="forecasted_month">{currentItem.HM12}</td>
+        </tr>
+            
+        <tr key={currentItem.Id}>
+            
+            <td>Sales History</td>
+            <td class="forecasted_month"><lightning-formatted-number value={currentItem.SH1} format-style="decimal"></lightning-formatted-number></td>
+            <td class="forecasted_month"><lightning-formatted-number value={currentItem.SH2} format-style="decimal"></lightning-formatted-number></td>
+            <td class="forecasted_month"><lightning-formatted-number value={currentItem.SH3} format-style="decimal"></lightning-formatted-number></td>
+            <td class="forecasted_month"><lightning-formatted-number value={currentItem.SH4} format-style="decimal"></lightning-formatted-number></td>
+            <td class="forecasted_month"><lightning-formatted-number value={currentItem.SH5} format-style="decimal"></lightning-formatted-number></td>
+            <td class="forecasted_month"><lightning-formatted-number value={currentItem.SH6} format-style="decimal"></lightning-formatted-number></td>
+            <td class="forecasted_month"><lightning-formatted-number value={currentItem.SH7} format-style="decimal"></lightning-formatted-number></td>
+            <td class="forecasted_month"><lightning-formatted-number value={currentItem.SH8} format-style="decimal"></lightning-formatted-number></td>
+            <td class="forecasted_month"><lightning-formatted-number value={currentItem.SH9} format-style="decimal"></lightning-formatted-number></td>
+            <td class="forecasted_month"><lightning-formatted-number value={currentItem.SH10} format-style="decimal"></lightning-formatted-number></td>
+            <td class="forecasted_month"><lightning-formatted-number value={currentItem.SH11} format-style="decimal"></lightning-formatted-number></td>
+            <td class="forecasted_month"><lightning-formatted-number value={currentItem.SH12} format-style="decimal"></lightning-formatted-number></td>
+
+           <!--<td class="forecasted_month">{currentItem.SH1}</td>
+            <td class="forecasted_month">{currentItem.SH2}</td>
+            <td class="forecasted_month">{currentItem.SH3}</td>
+            <td class="forecasted_month">{currentItem.SH4}</td>
+            <td class="forecasted_month">{currentItem.SH5}</td>
+            <td class="forecasted_month">{currentItem.SH6}</td>
+            <td class="forecasted_month">{currentItem.SH7}</td>
+            <td class="forecasted_month">{currentItem.SH8}</td>
+            <td class="forecasted_month">{currentItem.SH9}</td>
+            <td class="forecasted_month">{currentItem.SH10}</td>
+            <td class="forecasted_month">{currentItem.SH11}</td>
+            <td class="forecasted_month">{currentItem.SH12}</td>--> 
+        </tr>
+
+        <tr key={currentItem.Id}>
+            
+            <td>SFDC Forecast</td>
+            <td class="forecasted_month"><lightning-formatted-number value={currentItem.sfdch1} format-style="decimal"></lightning-formatted-number></td>
+            <td class="forecasted_month"><lightning-formatted-number value={currentItem.sfdch2} format-style="decimal"></lightning-formatted-number></td>
+            <td class="forecasted_month"><lightning-formatted-number value={currentItem.sfdch3} format-style="decimal"></lightning-formatted-number></td>
+            <td class="forecasted_month"><lightning-formatted-number value={currentItem.sfdch4} format-style="decimal"></lightning-formatted-number></td>
+            <td class="forecasted_month"><lightning-formatted-number value={currentItem.sfdch5} format-style="decimal"></lightning-formatted-number></td>
+            <td class="forecasted_month"><lightning-formatted-number value={currentItem.sfdch6} format-style="decimal"></lightning-formatted-number></td>
+            <td class="forecasted_month"><lightning-formatted-number value={currentItem.sfdch7} format-style="decimal"></lightning-formatted-number></td>
+            <td class="forecasted_month"><lightning-formatted-number value={currentItem.sfdch8} format-style="decimal"></lightning-formatted-number></td>
+            <td class="forecasted_month"><lightning-formatted-number value={currentItem.sfdch9} format-style="decimal"></lightning-formatted-number></td>
+            <td class="forecasted_month"><lightning-formatted-number value={currentItem.sfdch10} format-style="decimal"></lightning-formatted-number></td>
+            <td class="forecasted_month"><lightning-formatted-number value={currentItem.sfdch11} format-style="decimal"></lightning-formatted-number></td>
+            <td class="forecasted_month"><lightning-formatted-number value={currentItem.sfdch12} format-style="decimal"></lightning-formatted-number></td>
+
+           <!-- <td class="forecasted_month">{currentItem.sfdch1}</td>
+            <td class="forecasted_month">{currentItem.sfdch2}</td>
+            <td class="forecasted_month">{currentItem.sfdch3}</td>
+            <td class="forecasted_month">{currentItem.sfdch4}</td>
+            <td class="forecasted_month">{currentItem.sfdch5}</td>
+            <td class="forecasted_month">{currentItem.sfdch6}</td>
+            <td class="forecasted_month">{currentItem.sfdch7}</td>
+            <td class="forecasted_month">{currentItem.sfdch8}</td>
+            <td class="forecasted_month">{currentItem.sfdch9}</td>
+            <td class="forecasted_month">{currentItem.sfdch10}</td>
+            <td class="forecasted_month">{currentItem.sfdch11}</td>
+            <td class="forecasted_month">{currentItem.sfdch12}</td>-->
+        </tr>
+            
+        <tr key={currentItem.Id}>
+            
+            <td>Future Month</td>
+            <td class="forecasted_month">{currentItem.FM1}</td>
+            <td class="forecasted_month" >{currentItem.FM2}</td>
+            <td class="forecasted_month">{currentItem.FM3}</td>
+            <td class="forecasted_month">{currentItem.FM4}</td>
+            <td class="forecasted_month">{currentItem.FM5}</td>
+            <td class="forecasted_month">{currentItem.FM6}</td>
+            <td class="forecasted_month">{currentItem.FM7}</td>
+            <td class="forecasted_month">{currentItem.FM8}</td>
+            <td class="forecasted_month">{currentItem.FM9}</td>
+            <td class="forecasted_month">{currentItem.FM10}</td>
+            <td class="forecasted_month">{currentItem.FM11}</td>
+            <td class="forecasted_month">{currentItem.FM12}</td>
+        </tr>
+        <tr key={currentItem.Id}>
+            
+            <td>INFOR Forecast</td>
+            <!--<td class="forecasted_month">{currentItem.CM1}</td>-->
+            <td class="forecasted_month"><lightning-formatted-number value={currentItem.CM1} format-style="decimal"></lightning-formatted-number></td><!--testadded-->
+            <td class="forecasted_month"><lightning-formatted-number value={currentItem.CM2} format-style="decimal"></lightning-formatted-number></td><!--testadded-->
+            <td class="forecasted_month"><lightning-formatted-number value={currentItem.CM3} format-style="decimal"></lightning-formatted-number></td><!--testadded-->
+            <td class="forecasted_month"><lightning-formatted-number value={currentItem.CM4} format-style="decimal"></lightning-formatted-number></td><!--testadded-->
+            <td class="forecasted_month"><lightning-formatted-number value={currentItem.CM5} format-style="decimal"></lightning-formatted-number></td><!--testadded-->
+            <td class="forecasted_month"><lightning-formatted-number value={currentItem.CM6} format-style="decimal"></lightning-formatted-number></td><!--testadded-->
+            <td class="forecasted_month"><lightning-formatted-number value={currentItem.CM7} format-style="decimal"></lightning-formatted-number></td><!--testadded-->
+            <td class="forecasted_month"><lightning-formatted-number value={currentItem.CM8} format-style="decimal"></lightning-formatted-number></td><!--testadded-->
+            <td class="forecasted_month"><lightning-formatted-number value={currentItem.CM9} format-style="decimal"></lightning-formatted-number></td><!--testadded-->
+            <td class="forecasted_month"><lightning-formatted-number value={currentItem.CM10} format-style="decimal"></lightning-formatted-number></td><!--testadded-->
+            <td class="forecasted_month"><lightning-formatted-number value={currentItem.CM11} format-style="decimal"></lightning-formatted-number></td><!--testadded-->
+            <td class="forecasted_month"><lightning-formatted-number value={currentItem.CM12} format-style="decimal"></lightning-formatted-number></td><!--testadded-->
+           <!-- <td class="forecasted_month">{currentItem.CM2}</td>
+            <td class="forecasted_month">{currentItem.CM3}</td>
+            <td class="forecasted_month">{currentItem.CM4}</td>
+            <td class="forecasted_month">{currentItem.CM5}</td>
+            <td class="forecasted_month">{currentItem.CM6}</td>
+            <td class="forecasted_month">{currentItem.CM7}</td>
+            <td class="forecasted_month">{currentItem.CM8}</td>
+            <td class="forecasted_month">{currentItem.CM9}</td>
+            <td class="forecasted_month">{currentItem.CM10}</td>
+            <td class="forecasted_month">{currentItem.CM11}</td>
+            <td class="forecasted_month">{currentItem.CM12}</td> -->
+        </tr>
+        <tr class="editableRows" key={currentItem.Id}>
+            <td>Manual Adjustment</td>
+            <td class="forecasted_month">{currentItem.MA1}</td>
+            <td class="forecasted_month">{currentItem.MA2}</td>
+            <td>
+            <input type="hidden" class="inforid" value={currentItem.Id}>
+            <input type="number"  class="textbox month3 monthscolor"  value={currentItem.MA3}> </td>
+            <td><input type="number" class="textbox month4 monthscolor" value={currentItem.MA4}></td>
+            <td><input type="number" class="textbox month5 monthscolor" value={currentItem.MA5}></td>
+            <td><input type="number" class="textbox month6 monthscolor" value={currentItem.MA6}></td><!--added-->
+            <td><input type="number" class="textbox month7 monthscolor" value={currentItem.MA7}></td><!--added-->
+            <td><input type="number" class="textbox month8 monthscolor" value={currentItem.MA8}></td><!--added-->
+            <td><input type="number" class="textbox month9 monthscolor" value={currentItem.MA9}></td><!--added-->
+            <td><input type="number" class="textbox month10 monthscolor" value={currentItem.MA10}></td><!--added-->
+            <td><input type="number" class="textbox month11 monthscolor" value={currentItem.MA11}></td><!--added-->
+            <td><input type="number" class="textbox month12 monthscolor" value={currentItem.MA12}></td><!--added-->
+            <!--<td class="forecasted_month">{currentItem.MA6}</td>
+            <td class="forecasted_month">{currentItem.MA7}</td>
+            <td class="forecasted_month">{currentItem.MA8}</td>
+            <td class="forecasted_month">{currentItem.MA9}</td>
+            <td class="forecasted_month">{currentItem.MA10}</td>
+            <td class="forecasted_month">{currentItem.MA11}</td>
+            <td class="forecasted_month">{currentItem.MA12}</td>-->
+        </tr>
+        <tr key={currentItem.Id}>
+            
+            <td>Opportunity Adjustment</td>
+            <td class="opp"><lightning-formatted-number value={currentItem.OA1} format-style="decimal"></lightning-formatted-number></td>
+            <td class="opp"><lightning-formatted-number value={currentItem.OA2} format-style="decimal"></lightning-formatted-number></td>
+            <td class="opp diffcolor oamonth"><lightning-formatted-number value={currentItem.OA3} format-style="decimal"></lightning-formatted-number></td>
+            <td class="opp diffcolor"><lightning-formatted-number value={currentItem.OA4} format-style="decimal"></lightning-formatted-number></td>
+            <td class="opp diffcolor"><lightning-formatted-number value={currentItem.OA5} format-style="decimal"></lightning-formatted-number></td>
+            <td class="opp diffcolor"><lightning-formatted-number value={currentItem.OA6} format-style="decimal"></lightning-formatted-number></td>
+            <td class="opp diffcolor"><lightning-formatted-number value={currentItem.OA7} format-style="decimal"></lightning-formatted-number></td>
+            <td class="opp diffcolor"><lightning-formatted-number value={currentItem.OA8} format-style="decimal"></lightning-formatted-number></td>
+            <td class="opp diffcolor"><lightning-formatted-number value={currentItem.OA9} format-style="decimal"></lightning-formatted-number></td>
+            <td class="opp diffcolor"><lightning-formatted-number value={currentItem.OA10} format-style="decimal"></lightning-formatted-number></td>
+            <td class="opp diffcolor"><lightning-formatted-number value={currentItem.OA11} format-style="decimal"></lightning-formatted-number></td>
+            <td class="opp diffcolor"><lightning-formatted-number value={currentItem.OA12} format-style="decimal"></lightning-formatted-number></td>
+
+           <!-- <td class="opp">{currentItem.OA1}</td>
+            <td class="opp">{currentItem.OA2}</td>
+            <td class="opp diffcolor oamonth">{currentItem.OA3}</td>
+            <td class="opp diffcolor">{currentItem.OA4}</td>
+            <td class="opp diffcolor">{currentItem.OA5}</td>
+            <td class="opp diffcolor">{currentItem.OA6}</td>
+            <td class="opp diffcolor">{currentItem.OA7}</td>
+            <td class="opp diffcolor">{currentItem.OA8}</td>
+            <td class="opp diffcolor">{currentItem.OA9}</td>
+            <td class="opp diffcolor">{currentItem.OA10}</td>
+            <td class="opp diffcolor">{currentItem.OA11}</td>
+            <td class="opp diffcolor">{currentItem.OA12}</td>-->
+        </tr>
+        
+        <tr key={currentItem.Id}>
+            <td>Total</td>
+            <td><lightning-formatted-number value={currentItem.TT1} format-style="decimal"></lightning-formatted-number></td><!--testadded-->
+            <td><lightning-formatted-number value={currentItem.TT2} format-style="decimal"></lightning-formatted-number></td><!--testadded-->
+            <td><lightning-formatted-number value={currentItem.TT3} format-style="decimal"></lightning-formatted-number></td><!--testadded-->
+            <td><lightning-formatted-number value={currentItem.TT4} format-style="decimal"></lightning-formatted-number></td><!--testadded-->
+            <td><lightning-formatted-number value={currentItem.TT5} format-style="decimal"></lightning-formatted-number></td><!--testadded-->
+            <td><lightning-formatted-number value={currentItem.TT6} format-style="decimal"></lightning-formatted-number></td><!--testadded-->
+            <td><lightning-formatted-number value={currentItem.TT7} format-style="decimal"></lightning-formatted-number></td><!--testadded-->
+            <td><lightning-formatted-number value={currentItem.TT8} format-style="decimal"></lightning-formatted-number></td><!--testadded-->
+            <td><lightning-formatted-number value={currentItem.TT9} format-style="decimal"></lightning-formatted-number></td><!--testadded-->
+            <td><lightning-formatted-number value={currentItem.TT10} format-style="decimal"></lightning-formatted-number></td><!--testadded-->
+            <td><lightning-formatted-number value={currentItem.TT11} format-style="decimal"></lightning-formatted-number></td><!--testadded-->
+            <td><lightning-formatted-number value={currentItem.TT12} format-style="decimal"></lightning-formatted-number></td><!--testadded-->
+            <!-- <td>{currentItem.TT1}</td>
+            <td>{currentItem.TT2}</td>
+            <td>{currentItem.TT3}</td>
+            <td>{currentItem.TT4}</td>
+            <td>{currentItem.TT5}</td>
+            <td>{currentItem.TT6}</td>
+            <td>{currentItem.TT7}</td>
+            <td>{currentItem.TT8}</td>
+            <td>{currentItem.TT9}</td>
+            <td>{currentItem.TT10}</td>
+            <td>{currentItem.TT11}</td>
+            <td>{currentItem.TT12}</td> -->
+
+        </tr>
+        </template>
+    </template> 
+    </table><br><br>
+
+    <!--<div class="slds-float_left disclaimer"> ** Only values which are present in green will be taken into consideration. </div>-->
+
+    <ul class="legend">
+        <li><span class="considered"></span> Values which will be taken into consideration.</li>
+        <li><span class="locked"></span> Locked due to window closure.</li>
+    </ul>
+
+    <br><br>
+
+    <template if:true={showInsertClosed}>
+        
+        <div class="centercls"> Window Closed!!!</div>
+    
+    </template>
+    <template if:true={showInsertSuccess}>
+        
+        <div class="slds-align_absolute-center"> Saved Successfully!!!</div>
+    
+    </template>
+
+    <template if:true={saveButtonShow}>
+        <div class="slds-float_right">
+        
+            <lightning-button class="button" label="Save" variant="brand" type="submit" onclick={handleSave}></lightning-button>
+            
+        </div>
+    </template>
+    <br><br><br>
+
+<table>
+    <tr>
+        <th colspan="14">Products without sales history - Values are in kg – Opportunity Adjustment is impacted by Opportunity Probability</th>
+    </tr>
+    <tr>
+         <th>Material Name</th>
+         <th>Opportunity</th> 
+        <!-- <th>Stage</th> -->
+        <!-- <th>Date</th> --> 
+        
+        <th colspan="12">Opportunity Material</th>
+        
+    </tr>
+  <template if:true={monthsyrAvailable}>
+    <template for:each={monthsyr} for:item="monthsyrItem">
+    <tr key={monthsyrItem.Id}>
+        <td></td>
+        <td></td>
+        <td>{monthsyrItem.FM1}</td>
+        <td>{monthsyrItem.FM2}</td>
+        <td>{monthsyrItem.FM3}</td>
+        <td>{monthsyrItem.FM4}</td>
+        <td>{monthsyrItem.FM5}</td>
+        <td>{monthsyrItem.FM6}</td>
+        <td>{monthsyrItem.FM7}</td>
+        <td>{monthsyrItem.FM8}</td>
+        <td>{monthsyrItem.FM9}</td>
+        <td>{monthsyrItem.FM10}</td>
+        <td>{monthsyrItem.FM11}</td>
+        <td>{monthsyrItem.FM12}</td>
+    </tr>
+    </template>
+    </template>
+    
+    <template if:true={opportunitymaterialAvailable}>
+    <template if:true={opportunityItem.Material__r}
+    for:each={opportunitymaterial} for:item="opportunityItem">
+        <tr key={opportunityItem.Id}>
+            <td>{opportunityItem.Material__r.Name}</td>
+            <td>{opportunityItem.Opportunity__r.Name}</td> 
+            <!-- <td>{opportunityItem.Opportunity_Stage__c}</td> -->
+            <!-- <td>{opportunityItem.CreatedDate}</td> --> 
+            <td><lightning-formatted-number value={opportunityItem.Opp_Mat_Cons_Forecast_M1__c} format-style="decimal"></lightning-formatted-number></td>
+            <td><lightning-formatted-number value={opportunityItem.Opp_Mat_Cons_Forecast_M2__c} format-style="decimal"></lightning-formatted-number></td>
+            <td><lightning-formatted-number value={opportunityItem.Opp_Mat_Cons_Forecast_M3__c} format-style="decimal"></lightning-formatted-number></td>
+            <td><lightning-formatted-number value={opportunityItem.Opp_Mat_Cons_Forecast_M4__c} format-style="decimal"></lightning-formatted-number></td>
+            <td><lightning-formatted-number value={opportunityItem.Opp_Mat_Cons_Forecast_M5__c} format-style="decimal"></lightning-formatted-number></td>
+            <td><lightning-formatted-number value={opportunityItem.Opp_Mat_Cons_Forecast_M6__c} format-style="decimal"></lightning-formatted-number></td>
+            <td><lightning-formatted-number value={opportunityItem.Opp_Mat_Cons_Forecast_M7__c} format-style="decimal"></lightning-formatted-number></td>
+            <td><lightning-formatted-number value={opportunityItem.Opp_Mat_Cons_Forecast_M8__c} format-style="decimal"></lightning-formatted-number></td>
+            <td><lightning-formatted-number value={opportunityItem.Opp_Mat_Cons_Forecast_M9__c} format-style="decimal"></lightning-formatted-number></td>
+            <td><lightning-formatted-number value={opportunityItem.Opp_Mat_Cons_Forecast_M10__c} format-style="decimal"></lightning-formatted-number></td>
+            <td><lightning-formatted-number value={opportunityItem.Opp_Mat_Cons_Forecast_M11__c} format-style="decimal"></lightning-formatted-number></td>
+            <td><lightning-formatted-number value={opportunityItem.Opp_Mat_Cons_Forecast_M12__c} format-style="decimal"></lightning-formatted-number></td>
+           <!-- <td>{opportunityItem.Opp_Mat_Cons_Forecast_M1__c}</td>
+            <td>{opportunityItem.Opp_Mat_Cons_Forecast_M2__c}</td>
+            <td>{opportunityItem.Opp_Mat_Cons_Forecast_M3__c}</td>
+            <td>{opportunityItem.Opp_Mat_Cons_Forecast_M4__c}</td>
+            <td>{opportunityItem.Opp_Mat_Cons_Forecast_M5__c}</td>
+            <td>{opportunityItem.Opp_Mat_Cons_Forecast_M6__c}</td>
+            <td>{opportunityItem.Opp_Mat_Cons_Forecast_M7__c}</td>
+            <td>{opportunityItem.Opp_Mat_Cons_Forecast_M8__c}</td>
+            <td>{opportunityItem.Opp_Mat_Cons_Forecast_M9__c}</td>
+            <td>{opportunityItem.Opp_Mat_Cons_Forecast_M10__c}</td>
+            <td>{opportunityItem.Opp_Mat_Cons_Forecast_M11__c}</td>
+            <td>{opportunityItem.Opp_Mat_Cons_Forecast_M12__c}</td> -->
+            
+        </tr>
+    </template>
+    </template>
+</table>
+ <br><br><br>
+
+<!--  Third Table (Revenue)-->
+<template if:true={isReportVisible}>
+ <table class="infor">
+        
+        <tr>
+            <th colspan="18">Products with Revenue  – Grand Total is impacted by Opportunity Probability And Annual Volume</th>
+        </tr>
+        <tr>
+            
+            <th>Material Description</th>
+             <th>Currency ISO</th>
+            <th>Unit Price from Sales history</th>
+            <th>90% Target Price</th>
+            <th>Description</th>
+           
+            <th colspan="14">FORECAST DATA</th>      
+           
+        </tr>
+        <template if:true={monthsyrAvailable}>
+    <template for:each={monthsyr} for:item="monthsyrItem">
+    <tr key={monthsyrItem.Id}>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>Future Month</td>
+        <td><lightning-formatted-number value={monthsyrItem.FM1} format-style="decimal"></lightning-formatted-number></td>
+        <td><lightning-formatted-number value={monthsyrItem.FM2} format-style="decimal"></lightning-formatted-number></td>
+        <td><lightning-formatted-number value={monthsyrItem.FM3} format-style="decimal"></lightning-formatted-number></td>
+        <td><lightning-formatted-number value={monthsyrItem.FM4} format-style="decimal"></lightning-formatted-number></td>
+        <td><lightning-formatted-number value={monthsyrItem.FM5} format-style="decimal"></lightning-formatted-number></td>
+        <td><lightning-formatted-number value={monthsyrItem.FM6} format-style="decimal"></lightning-formatted-number></td>
+        <td><lightning-formatted-number value={monthsyrItem.FM7} format-style="decimal"></lightning-formatted-number></td>
+        <td><lightning-formatted-number value={monthsyrItem.FM8} format-style="decimal"></lightning-formatted-number></td>
+        <td><lightning-formatted-number value={monthsyrItem.FM9} format-style="decimal"></lightning-formatted-number></td>
+        <td><lightning-formatted-number value={monthsyrItem.FM10} format-style="decimal"></lightning-formatted-number></td>
+        <td><lightning-formatted-number value={monthsyrItem.FM11} format-style="decimal"></lightning-formatted-number></td>
+        <td><lightning-formatted-number value={monthsyrItem.FM12} format-style="decimal"></lightning-formatted-number></td>
+
+     
+
+       <!-- <td>{monthsyrItem.FM1}</td>
+        
+        <td>{monthsyrItem.FM2}</td>
+        <td>{monthsyrItem.FM3}</td>
+        <td>{monthsyrItem.FM4}</td>
+        <td>{monthsyrItem.FM5}</td>
+        <td>{monthsyrItem.FM6}</td>
+        <td>{monthsyrItem.FM7}</td>
+        <td>{monthsyrItem.FM8}</td>
+        <td>{monthsyrItem.FM9}</td>
+        <td>{monthsyrItem.FM10}</td>
+        <td>{monthsyrItem.FM11}</td>
+        <td>{monthsyrItem.FM12}</td> -->
+    </tr>
+    </template>
+    </template>
+     <template if:true={forecastAvailable}>
+        <template for:each={forecast} for:item="currentItem">
+        
+        <tr key={currentItem.Id}>
+            
+             <td >{currentItem.MaterialDescription} {currentItem.MaterialNumber}</td>
+              <td>{currentItem.CurrencyInfo} </td>
+            <td>{currentItem.UnitPriceInfor} </td>
+            <td>{currentItem.InforPrieFx} </td>
+            <td>Total </td>
+            <td class="InforPriceTotal"><lightning-formatted-number value={currentItem.TPI1} format-style="decimal"></lightning-formatted-number></td>
+            <td class="InforPriceTotal"><lightning-formatted-number value={currentItem.TPI2} format-style="decimal"></lightning-formatted-number></td>
+            <td class="InforPriceTotal"><lightning-formatted-number value={currentItem.TPI3} format-style="decimal"></lightning-formatted-number></td>
+            <td class="InforPriceTotal"><lightning-formatted-number value={currentItem.TPI4} format-style="decimal"></lightning-formatted-number></td>
+            <td class="InforPriceTotal"><lightning-formatted-number value={currentItem.TPI5} format-style="decimal"></lightning-formatted-number></td>
+            <td class="InforPriceTotal"><lightning-formatted-number value={currentItem.TPI6} format-style="decimal"></lightning-formatted-number></td>
+            <td class="InforPriceTotal"><lightning-formatted-number value={currentItem.TPI7} format-style="decimal"></lightning-formatted-number></td>
+            <td class="InforPriceTotal"><lightning-formatted-number value={currentItem.TPI8} format-style="decimal"></lightning-formatted-number></td>
+            <td class="InforPriceTotal"><lightning-formatted-number value={currentItem.TPI9} format-style="decimal"></lightning-formatted-number></td>
+            <td class="InforPriceTotal"><lightning-formatted-number value={currentItem.TPI10} format-style="decimal"></lightning-formatted-number></td>
+            <td class="InforPriceTotal"><lightning-formatted-number value={currentItem.TPI11} format-style="decimal"></lightning-formatted-number></td>
+            <td class="InforPriceTotal"><lightning-formatted-number value={currentItem.TPI12} format-style="decimal"></lightning-formatted-number></td>
+          <!--
+            <td class="InforPriceTotal">{currentItem.TPI1}</td>
+            <td class="InforPriceTotal">{currentItem.TPI2}</td>
+            <td class="InforPriceTotal">{currentItem.TPI3}</td>
+            <td class="InforPriceTotal">{currentItem.TPI4}</td>
+            <td class="InforPriceTotal">{currentItem.TPI5}</td>
+            <td class="InforPriceTotal">{currentItem.TPI6}</td>
+            <td class="InforPriceTotal">{currentItem.TPI7}</td>
+            <td class="InforPriceTotal">{currentItem.TPI8}</td>
+            <td class="InforPriceTotal">{currentItem.TPI9}</td>
+            <td class="InforPriceTotal">{currentItem.TPI10}</td>
+            <td class="InforPriceTotal">{currentItem.TPI11}</td>
+            <td class="InforPriceTotal">{currentItem.TPI12}</td> -->
+        </tr>
+       </template>
+    </template> 
+        <!-- total for Received from Price fx  for 2nd table data-->
+  <template if:true={totalOpMatAvailable}>
+    <template for:each={totalopportunitymaterial} for:item="opportunityItem">
+        <tr key={opportunityItem.Id}>
+            
+             <td>{opportunityItem.MaterialName}</td>
+              <td>{opportunityItem.CurrencyFx}</td>
+                <td></td>
+                <td>{opportunityItem.PriceFx}</td>
+             <td>Total</td>
+            
+             <td ><lightning-formatted-number value={opportunityItem.Total} format-style="decimal"></lightning-formatted-number></td>
+             <td ><lightning-formatted-number value={opportunityItem.Total} format-style="decimal"></lightning-formatted-number></td>
+             <td ><lightning-formatted-number value={opportunityItem.Total} format-style="decimal"></lightning-formatted-number></td>
+             <td ><lightning-formatted-number value={opportunityItem.Total} format-style="decimal"></lightning-formatted-number></td>
+             <td ><lightning-formatted-number value={opportunityItem.Total} format-style="decimal"></lightning-formatted-number></td>
+             <td ><lightning-formatted-number value={opportunityItem.Total} format-style="decimal"></lightning-formatted-number></td>
+             <td ><lightning-formatted-number value={opportunityItem.Total} format-style="decimal"></lightning-formatted-number></td>
+             <td ><lightning-formatted-number value={opportunityItem.Total} format-style="decimal"></lightning-formatted-number></td>
+             <td ><lightning-formatted-number value={opportunityItem.Total} format-style="decimal"></lightning-formatted-number></td>
+             <td ><lightning-formatted-number value={opportunityItem.Total} format-style="decimal"></lightning-formatted-number></td>
+             <td ><lightning-formatted-number value={opportunityItem.Total} format-style="decimal"></lightning-formatted-number></td>
+             <td ><lightning-formatted-number value={opportunityItem.Total} format-style="decimal"></lightning-formatted-number></td>
+             
+
+<!--
+            <td>{opportunityItem.Total}</td>
+            <td>{opportunityItem.Total}</td>
+            <td>{opportunityItem.Total}</td>
+            <td>{opportunityItem.Total}</td>
+            <td>{opportunityItem.Total}</td>
+            <td>{opportunityItem.Total}</td>
+            <td>{opportunityItem.Total}</td>
+            <td>{opportunityItem.Total}</td>
+            <td>{opportunityItem.Total}</td>
+            <td>{opportunityItem.Total}</td>
+            <td>{opportunityItem.Total}</td>
+            <td>{opportunityItem.Total}</td>     -->
+        </tr>
+    </template>
+    </template> 
+    <!--  Grand total-->
+     <template if:true={grandTotalAvailable}>
+        <template for:each={grandTotal} for:item="gdt" >
+            <tr key= {gdt.id} class="highlightnew">                   
+                <td></td>
+                 <td></td>
+                <td></td>
+                <td></td>
+                <td class="highlightnew">Grand Total </td>
+                <td ><lightning-formatted-number value={gdt.GT1} format-style="decimal"></lightning-formatted-number></td>
+                <td ><lightning-formatted-number value={gdt.GT2} format-style="decimal"></lightning-formatted-number></td>
+                <td ><lightning-formatted-number value={gdt.GT3} format-style="decimal"></lightning-formatted-number></td>
+                <td ><lightning-formatted-number value={gdt.GT4} format-style="decimal"></lightning-formatted-number></td>
+                <td ><lightning-formatted-number value={gdt.GT5} format-style="decimal"></lightning-formatted-number></td>
+                <td ><lightning-formatted-number value={gdt.GT6} format-style="decimal"></lightning-formatted-number></td>
+                <td ><lightning-formatted-number value={gdt.GT7} format-style="decimal"></lightning-formatted-number></td>
+                <td ><lightning-formatted-number value={gdt.GT8} format-style="decimal"></lightning-formatted-number></td>
+                <td ><lightning-formatted-number value={gdt.GT9} format-style="decimal"></lightning-formatted-number></td>
+                <td ><lightning-formatted-number value={gdt.GT10} format-style="decimal"></lightning-formatted-number></td>
+                <td ><lightning-formatted-number value={gdt.GT11} format-style="decimal"></lightning-formatted-number></td>
+                <td ><lightning-formatted-number value={gdt.GT12} format-style="decimal"></lightning-formatted-number></td>
+                <!--
+                <td>{gdt.GT1}</td>
+                <td>{gdt.GT2}</td>
+                <td>{gdt.GT3}</td>
+                <td>{gdt.GT4}</td>
+                <td>{gdt.GT5}</td>
+                <td>{gdt.GT6}</td>
+                <td>{gdt.GT7}</td>
+                <td>{gdt.GT8}</td>
+                <td>{gdt.GT9}</td>
+                <td>{gdt.GT10}</td>
+                <td>{gdt.GT11}</td>
+                <td>{gdt.GT12}</td>-->
+            </tr>
+        </template>
+    </template>
+    </table>
+    </template>
+    <br><br>
+</template>

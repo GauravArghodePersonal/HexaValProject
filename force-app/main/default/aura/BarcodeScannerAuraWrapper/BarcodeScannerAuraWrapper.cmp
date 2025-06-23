@@ -1,0 +1,8 @@
+<!-- BarcodeScannerWrapper
+    @description Aura Component Wrapper for LWC component barcodeScanner
+    @author      Lavakusa
+    @date        Created: 26-Aug-2022
+-->
+<aura:component description="BarcodeScannerAuraWrapper" implements="force:appHostable" access="global">
+    <c:barCodeScanner />
+</aura:component>

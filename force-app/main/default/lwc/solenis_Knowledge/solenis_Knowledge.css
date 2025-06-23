@@ -1,0 +1,38 @@
+.textCls {
+    /* font-family: DIN; */
+font-size: 16px;
+font-weight: 400;
+line-height: 24px;
+letter-spacing: 0em;
+text-align: left;
+
+}
+
+.main {
+    min-height: 80vh;
+    background-color: white;
+    padding: 20px;
+}
+
+.backgroundImg {
+    height: 25vh; /* Adjust the height to your desired percentage (e.g., 25%) */
+    width: 100%;
+    background-position: center;
+    background-size: cover;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border-radius: 5px;
+}
+
+
+.textoverlay {
+    text-align: left;
+    font-size: 30px;
+    color: white;
+    padding-left: 20px;
+}
+
+.paddLeftCls{
+	padding: 0px 15px 15px 15px;;
+}

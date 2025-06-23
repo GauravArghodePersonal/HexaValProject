@@ -1,0 +1,326 @@
+/*
+////////////////////////////////////////////////////////////////
+//
+// Allgemeine Styles
+//
+// Weblication GRID CMS Strukturdesign Version 5.0.9.1
+// erstellt durch Scholl Communications AG, 77694 Kehl, www.scholl.de
+// erstellt mit Weblication Content Management Server, www.weblication.de
+//
+////////////////////////////////////////////////////////////////
+*/
+/* Gestaltung der oberen Navigation */
+                                                                                                                                                                                                                
+#navDivisionsStart																{margin-top:216px;}
+
+#navigationMain                                   {position:absolute; margin:150px 0 0 180px; border-right:1px solid white; z-index:1000;}
+#navigationMainInner															{width:615px;}
+#navDivisionsStart #navigationMainInner						{width:705px;}
+*+html #navigationMain	              						{margin:150px 0 0 180px;}
+*+html #navMainContent #navigationMain	  				{margin:150px 0 0 180px;}
+#navigationMain *                                 {margin:0; padding:0;}
+#navigationMain ul                                {list-style-image:none; list-style-type:none;}
+* html #navigationMain ul li 											{font-size: 0;} /*behebt margin-Fehler im IE6, font-size muss dann in den spans angegeben werden*/
+*+html #navigationMain ul li 											{font-size: 0;} /*behebt margin-Fehler im IE7, font-size muss dann in den spans angegeben werden*/
+
+#navigationMain  .navLevel1Container              {list-style-type:none;}
+
+#navigationMain  .navLevel1                       					  {float:left;list-style-type:none;padding:0;width:235px;overflow:hidden;}
+#navMainContent #navigationMain .navLevel1										{width:205px;} /*Auf inhaltsseiten schmaler*/
+#navigationMain  .navLevel1 span                 						  {display:block;font-size:12px; padding:7px 11px 0 44px;}
+#navigationMain a.navLevel1                        						{height:31px;display:block;float:left;color:#000000;text-decoration:none;border-left:1px solid white;line-height:15px; background-image:url(/en-global/wGlobal/layout/images/backgrounds/bg_nav_division.gif); background-position:right top; background-repeat:no-repeat;}
+#navigationMain a.navLevel1:hover                  						{color:#E52D30;background-color:#FFFFFF;}
+#navigationMain a.navLevel1Last                    						{width:234px; height:31px;display:block;float:left;color:#000000;text-decoration:none;border-bottom:none; border-left:1px solid white;line-height:15px;background-image:url(/en-global/wGlobal/layout/images/backgrounds/bg_nav_division.gif); background-position:right top; background-repeat:no-repeat;}
+#navMainContent #navigationMain  a.navLevel1Last							{width:205px;} /*Auf inhaltsseiten schmaler*/
+#navigationMain a.navLevel1Last:hover              						{color:#E52D30;background-color:#FFFFFF;}
+
+#navigationMain  .navLevel1Selected                       		{float:left;list-style-type:none;padding:0;width:235px;overflow:hidden;}
+#navMainContent #navigationMain .navLevel1Selected						{width:205px;} /*Auf inhaltsseiten schmaler*/
+#navigationMain  .navLevel1Selected span                  		{display:block;font-size:12px; padding:7px 11px 0 44px;}
+#navigationMain a.navLevel1Selected                       		{height:31px;display:block;float:left;color:#000000;text-decoration:none;border-left:1px solid white;line-height:15px; background-image:url(/en-global/wGlobal/layout/images/backgrounds/bg_nav_division.gif); background-position:right top; background-repeat:no-repeat;}
+#navigationMain a.navLevel1Selected:hover                 		{color:#E52D30;background-color:#FFFFFF;}
+#navigationMain a.navLevel1SelectedLast                   		{width:234px; height:31px;display:block;float:left;color:#000000;text-decoration:none;border-bottom:none; border-left:1px solid white;line-height:15px;background-image:url(/en-global/wGlobal/layout/images/backgrounds/bg_nav_division.gif); background-position:right top; background-repeat:no-repeat;}
+#navMainContent #navigationMain a.navLevel1SelectedLast  			{width:205px;} /*Auf inhaltsseiten schmaler*/
+#navigationMain a.navLevel1SelectedLast:hover             		{color:#E52D30;background-color:#FFFFFF;}
+
+#navigationMain  .navLevel1Open                       				{float:left;list-style-type:none;padding:0;width:235px;overflow:hidden;}
+#navMainContent #navigationMain .navLevel1OpenSelected				{width:205px;} /*Auf inhaltsseiten schmaler*/
+#navigationMain  .navLevel1Open span                  				{display:block;font-size:12px; padding:7px 11px 0 44px;}
+#navigationMain a.navLevel1Open                       				{height:31px;display:block;float:left;color:#000000;text-decoration:none;border-left:1px solid white;line-height:15px; background-image:url(/en-global/wGlobal/layout/images/backgrounds/bg_nav_division.gif); background-position:right top; background-repeat:no-repeat;}
+#navigationMain a.navLevel1Open:hover                 				{color:#E52D30;background-color:#FFFFFF;}
+#navigationMain a.navLevel1OpenLast                  			 		{width:234px; height:31px;display:block;float:left;color:#000000;text-decoration:none;border-bottom:none; border-left:1px solid white;line-height:15px;background-image:url(/en-global/wGlobal/layout/images/backgrounds/bg_nav_division.gif); background-position:right top; background-repeat:no-repeat;}
+#navMainContent #navigationMain a.navLevel1OpenSelectedLast   {width:205px;} /*Auf inhaltsseiten schmaler*/
+#navigationMain a.navLevel1OpenLast:hover             				{color:#E52D30;background-color:#FFFFFF;}
+
+#navigationMain  .navLevel1OpenSelected               				{float:left;list-style-type:none;padding:0;width:235px;overflow:hidden;}
+#navMainContent #navigationMain .navLevel1Open								{width:205px;} /*Auf inhaltsseiten schmaler*/
+#navigationMain  .navLevel1OpenSelected span                  {display:block;font-size:12px; padding:7px 11px 0 44px;}
+#navigationMain a.navLevel1OpenSelected                       {height:31px;display:block;float:left;color:#000000;text-decoration:none;border-left:1px solid white;line-height:15px; background-image:url(/en-global/wGlobal/layout/images/backgrounds/bg_nav_division.gif); background-position:right top; background-repeat:no-repeat;}
+#navigationMain a.navLevel1OpenSelected:hover                 {color:#E52D30;background-color:#FFFFFF;}
+#navigationMain a.navLevel1OpenSelectedLast                   {width:234px; height:31px;display:block;float:left;color:#000000;text-decoration:none;border-bottom:none; border-left:1px solid white;line-height:15px;background-image:url(/en-global/wGlobal/layout/images/backgrounds/bg_nav_division.gif); background-position:right top; background-repeat:no-repeat;}
+#navMainContent #navigationMain a.navLevel1OpenLast  					{width:205px;} /*Auf inhaltsseiten schmaler*/
+#navigationMain a.navLevel1OpenSelectedLast:hover             {color:#E52D30;background-color:#FFFFFF;}
+
+
+
+#navigationMain  .navLevel2ContainerOuter         						{visibility:hidden;clear:left;float:left;z-index:10000;border-left:1px solid #FFFFFF;}
+#navigationMain  .navLevel2Container              						{position:absolute;z-index:99;margin-left:0px;text-transform:none;margin-top:-1px;}
+#navigationMain  .navLevel2ContainerInner         						{z-index:10000;width:234px;-moz-opacity:0.9;opacity:0.9;filter:alpha(opacity=90);margin:0;padding:0;background-color:#eaeaea;list-style-type:none;}
+#navMainContent #navigationMain .navLevel2ContainerInner     	{width:205px;} /*Auf inhaltsseiten schmaler*/
+
+#navigationMain  .navLevel2                       	{display:block;list-style-type:none;padding:0;margin:0;width:234px;}
+#navMainContent	#navigationMain .navLevel2			  	{width:204px;} /*Auf inhaltsseiten schmaler*/
+#navigationMain  .navLevel2 span                  	{display:block;padding:6px 0 7px 44px;border-bottom:1px solid #FFFFFF;}
+#navigationMain a.navLevel2                       	{line-height:17px;color:#000000;padding:0;text-decoration:none;}
+* html #navigationMain a.navLevel2                	{line-height:18px;color:#000000;padding:0;text-decoration:none;}
+#navigationMain a.navLevel2:hover                 	{color:#FFFFFF;background-color:#E52D30;}
+
+#navigationMain  .sub                             	{}
+#navigationMain  .sub span                        	{}
+#navigationMain a.sub                             	{background-image:url(/en-global/wGlobal/layout/images/icons/nav-arrow-layer.gif); background-repeat:no-repeat; background-position:215px 10px;}
+#navigationMain a.sub:hover                       	{background-image:url(/en-global/wGlobal/layout/images/icons/nav-arrow-layer-r.gif); background-repeat:no-repeat; background-position:215px 10px;}
+#navMainContent	#navigationMain a.sub               {background-image:url(/en-global/wGlobal/layout/images/icons/nav-arrow-layer.gif); background-repeat:no-repeat; background-position:185px 10px;}
+#navMainContent #navigationMain a.sub:hover        	{background-image:url(/en-global/wGlobal/layout/images/icons/nav-arrow-layer-r.gif); background-repeat:no-repeat; background-position:185px 10px;}
+
+#navigationMain  .navLevel2Selected               	{display:block;list-style-type:none;margin:0;padding:0;width:234px;}
+#navMainContent	#navigationMain .navLevel2Selected	{width:204px;} /*Auf inhaltsseiten schmaler*/
+#navigationMain  .navLevel2Selected span         	 	{display:block;padding:6px 0 7px 44px;border-bottom:1px solid #FFFFFF;}
+#navigationMain a.navLevel2Selected               	{line-height:18px;color:#000000;padding:0;text-decoration:none;}
+* html #navigationMain a.navLevel2Selected        	{line-height:18px;color:#000000;padding:0;text-decoration:none;}
+#navigationMain a.navLevel2Selected:hover         	{line-height:18px;color:#FFFFFF;background-color:#E52D30;padding:0;text-decoration:none}
+
+#navigationMain  .navLevel2Open                   	{display:block;list-style-type:none;margin:0;padding:0;width:234px;}
+#navMainContent	#navigationMain .navLevel2Open	  	{width:204px;} /*Auf inhaltsseiten schmaler*/
+#navigationMain  .navLevel2Open span              	{display:block;padding:6px 0 7px 44px;border-bottom:1px solid #FFFFFF;}
+#navigationMain a.navLevel2Open                   	{line-height:17px;color:#000000;padding:0;text-decoration:none;}
+* html #navigationMain a.navLevel2Open            	{line-height:18px;color:#000000;padding:0;text-decoration:none;}
+#navigationMain a.navLevel2Open:hover             	{color:#FFFFFF;background-color:#E52D30;}
+
+#navigationMain  .navLevel2OpenSelected           				{display:block;list-style-type:none;margin:0;padding:0;width:234px;}
+#navMainContent	#navigationMain .navLevel2OpenSelected		{width:204px;} /*Auf inhaltsseiten schmaler*/
+#navigationMain  .navLevel2OpenSelected span              {display:block;padding:6px 0 7px 44px;border-bottom:1px solid #FFFFFF;}
+#navigationMain a.navLevel2OpenSelected                   {line-height:17px;color:#000000;padding:0;text-decoration:none;}
+* html #navigationMain a.navLevel2OpenSelected            {line-height:18px;color:#E52D30;padding:0;text-decoration:none;}
+#navigationMain a.navLevel2OpenSelected:hover             {color:#FFFFFF;background-color:#E52D30;}
+
+
+
+#navigationMain  .navLevel3ContainerOuter         								{visibility:hidden;margin:0 0 0 230px;}
+#navMainContent	 #navigationMain .navLevel3ContainerOuter         {visibility:hidden;margin:0 0 0 200px;} /*Auf inhaltsseiten schmaler*/	
+#navigationMain  .navLevel3Container              {position:absolute;margin:-23px 0 0 0;border-left:1px solid #FFFFFF;border-top:1px solid #FFFFFF;}
+* html #navigationMain  .navLevel3Container       {margin:-28px 0 0 0;}
+#navigationMain  .navLevel3ContainerInner         {width:180px;margin:0;padding:0;background-color:#eaeaea;list-style-type:none;}
+
+#navigationMain  .navLevel3                       {display:block;list-style-type:none;padding:0;margin:0;}
+#navigationMain  .navLevel3 span                  {display:block;padding:6px 0 7px 11px;border-bottom:1px solid #FFFFFF;}
+#navigationMain a.navLevel3                       {line-height:18px;color:#000000;padding:0;text-decoration:none;}
+#navigationMain a.navLevel3:hover                 {line-height:18px;color:#FFFFFF;background-color:#e52d30;padding:0;text-decoration:none}
+
+#navigationMain  .navLevel3Selected               {display:block;list-style-type:none;padding:0;margin:0;}
+#navigationMain  .navLevel3Selected span          {display:block;padding:6px 0 7px 11px;border-bottom:1px solid #FFFFFF;}
+#navigationMain a.navLevel3Selected               {line-height:18px;color:#000000;padding:0;text-decoration:none;}
+#navigationMain a.navLevel3Selected:hover         {line-height:18px;color:#FFFFFF;background-color:#e52d30;padding:0;text-decoration:none}
+
+#navigationMain  .navLevel3OpenSelected           {display:block;list-style-type:none;padding:0;margin:0;}
+#navigationMain  .navLevel3OpenSelected span      {display:block;padding:6px 0 7px 11px;border-bottom:1px solid #FFFFFF;}
+#navigationMain a.navLevel3OpenSelected           {line-height:18px;color:#000000;padding:0;text-decoration:none;}
+#navigationMain a.navLevel3OpenSelected:hover     {line-height:18px;color:#FFFFFF;background-color:#e52d30;padding:0;text-decoration:none}
+   
+
+
+/* Navigation Divisions */
+#navDivisionsStart																{margin-top:216px;}
+.navigationDivisions															{position:absolute; margin-top:150px; margin-left:224px;}
+.navigationDivisions a.elementNavLink							{display:block;float:left;color:#000000;text-decoration:none;padding:7px 11px 7px 11px;border-left:1px solid white;line-height:15px; background-image:url(/en/wGlobal/layout/images/backgrounds/bg_nav_division.gif); background-position:right top; background-repeat:no-repeat;}
+.navigationDivisions a.elementNavLink:hover				{color:#E52D30;background-color:#FFFFFF;}
+.navigationDivisions a.elementNavLinkLast					{display:block;float:left;color:#000000;text-decoration:none;padding:7px 11px 7px 11px;border-left:1px solid white;line-height:15px;background-image:url(/en/wGlobal/layout/images/backgrounds/bg_nav_division_last.gif); background-position:right top; background-repeat:no-repeat;}
+.navigationDivisions a.elementNavLinkLast:hover		{color:#E52D30;background-color:#FFFFFF;}
+
+
+/* Unternavigation */
+
+#navigationLeft                                   {margin:0px 0px 0px 0px; width:180px;}
+#navigationLeft .navLevel2 a.closed span                     {background:none;}
+#navigationLeft *                                 {margin:0;padding:0}
+#navigationLeft ul                                {list-style-type:none;}
+#navigationLeft li                                {}
+#navigationLeft a                                 {display:block; text-decoration:none;}
+#navigationLeft a:hover                           {display:block; text-decoration:none;}
+#navigationLeft span                              {display:block; line-height:15px;}
+#navigationLeft .navLevel1Title                   {padding-bottom:10px;}
+#navigationLeft img	{vertical-align:top;}
+
+/* Gestaltung des Navigationslevel 1 */
+
+#navigationLeft  .navLevel1Container              {background-color:#ffffff;}
+
+#navigationLeft  .navLevel1                       {}
+#navigationLeft  .navLevel1 span                  {}
+
+#navigationLeft li.navImage                       {height:30px;border-bottom:1px solid #FFFFFF;border-top:0px solid #cccccc;margin-top:0px;}
+#navigationLeft li.spaceBottom                    {border-bottom:1px solid #cccccc;margin-bottom:3px;}
+#navigationLeft li.last a                         {border-bottom:1px solid #FFFFFF;margin-bottom:0px;}
+#navigationLeft li.spaceBottom a                  {border:none;}
+#navigationLeft li.spaceBottom a:hover            {border:none;}
+#navigationLeft a.navLevel1                       {color:#000000; background-color:#EAEAEA;border-bottom:1px solid #FFFFFF;}
+#navigationLeft a.navLevel1 span                  {padding:7px 4px 8px 10px;}
+* html #navigationLeft a.navLevel1 span           {padding:7px 4px 7px 10px;}
+*+html #navigationLeft a.navLevel1 span           {padding:6px 4px 7px 10px;}
+#navigationLeft a.navLevel1:hover                 {padding:0 0 0 0px; color:#FFFFFF; background-color:#E52D30; border-bottom:1px solid #FFFFFF;}
+#navigationLeft a.navLevel1:hover span            {}
+
+#navigationLeft a.navLevel1Selected               {color:#FFFFFF; background-color:#E52D30;border-bottom:1px solid #FFFFFF;}
+#navigationLeft a.navLevel1Selected span          {padding:7px 4px 8px 10px;background:none;}
+* html #navigationLeft a.navLevel1Selected span   {padding:7px 4px 7px 10px;}
+*+html #navigationLeft a.navLevel1Selected span   {padding:6px 4px 7px 10px;}
+#navigationLeft a.navLevel1Selected:hover         {padding:0 0 0 0px; color:#FFFFFF; background-color:#E52D30; border-bottom:1px solid #FFFFFF;}
+#navigationLeft a.navLevel1Selected:hover span    {}
+
+#navigationLeft a.navLevel1Open               		{color:#FFFFFF; background-color:#E52D30;border-bottom:1px solid #FFFFFF;}
+#navigationLeft a.navLevel1Open span          		{padding:7px 4px 8px 10px;}
+* html #navigationLeft a.navLevel1Open span   		{padding:7px 4px 7px 10px;}
+*+html #navigationLeft a.navLevel1Open span   		{padding:6px 4px 7px 10px;}
+#navigationLeft a.navLevel1Open:hover         		{padding:0 0 0 0px; color:#FFFFFF; background-color:#E52D30; border-bottom:1px solid #FFFFFF;}
+#navigationLeft a.navLevel1Open:hover span    		{}
+
+#navigationLeft a.navLevel1OpenSelected           	{color:#FFFFFF; background-color:#E52D30;border-bottom:1px solid #FFFFFF;}
+#navigationLeft a.navLevel1OpenSelected span      	{padding:7px 4px 8px 10px;}
+* html #navigationLeft a.navLevel1OpenSelected span {padding:7px 4px 7px 10px;}
+*+html #navigationLeft a.navLevel1OpenSelected span {padding:6px 4px 7px 10px;}
+#navigationLeft a.navLevel1OpenSelected:hover     	{padding:0 0 0 0px; color:#FFFFFF; background-color:#E52D30; border-bottom:1px solid #FFFFFF;}
+#navigationLeft a.navLevel1OpenSelected:hover span 	{}
+
+/* Gestaltung des Navigationslevel 2 */
+
+#navigationLeft  .navLevel2Container              {}
+
+#navigationLeft  .navLevel2                       {}
+#navigationLeft  .navLevel2 span                  {}
+
+#navigationLeft a.navLevel2                       {font-size:11px;color:#676767; background-color:#FFFFFF;}
+#navigationLeft a.navLevel2 span                  {padding:3px 10px 4px 28px; line-height:13px;background:transparent url(/en-global/wGlobal/layout/images/icons/nav-arrow-right.gif) no-repeat 163px 0px;}
+#navigationLeft a.navLevel2:hover                 {color:#E52D30; background-color:#FFFFFF;}
+#navigationLeft a.navLevel2:hover span            {}
+
+#navigationLeft a.navLevel2Selected               {font-size:11px;color:#E52D30; background-color:#FFFFFF;}
+#navigationLeft a.navLevel2Selected span          {padding:3px 10px 4px 28px; line-height:13px;}
+#navigationLeft a.navLevel2Selected:hover         {color:#E52D30; background-color:#FFFFFF;}
+#navigationLeft a.navLevel2Selected:hover span    {}
+
+#navigationLeft a.navLevel2Open                   {font-size:11px;color:#ffffff; background-color:#878785;}
+#navigationLeft a.navLevel2Open span              {padding:3px 10px 4px 28px; line-height:13px;background:transparent url(/en-global/wGlobal/layout/images/icons/nav-arrow-down.gif) no-repeat 163px 0px;}
+#navigationLeft a.navLevel2Open:hover             {color:#ffffff;background-color:#878785;}
+#navigationLeft a.navLevel2Open:hover span        {}
+
+#navigationLeft a.navLevel2OpenSelected            {font-size:11px;color:#ffffff; background-color:#878785;}
+#navigationLeft a.navLevel2OpenSelected span       {padding:3px 10px 4px 28px; line-height:13px;background:transparent url(/en-global/wGlobal/layout/images/icons/nav-arrow-down.gif) no-repeat 163px 0px;}
+#navigationLeft a.navLevel2OpenSelected:hover      {color:#ffffff;background-color:#878785;}
+#navigationLeft a.navLevel2OpenSelected:hover span {}
+
+/* Gestaltung des Navigationslevel 3 */
+
+#navigationLeft  .navLevel3Container              {}
+
+#navigationLeft  .navLevel3                       {}
+#navigationLeft  .navLevel3 span                  {}
+
+#navigationLeft a.navLevel3                       {font-size:11px;color:#676767; background-color:#FFFFFF;}
+#navigationLeft a.navLevel3 span                  {padding:3px 10px 4px 38px; line-height:13px;}
+#navigationLeft a.navLevel3:hover                 {color:#000000; background-color:#d1d1d1;}
+#navigationLeft a.navLevel3:hover span            {}
+
+#navigationLeft a.navLevel3Selected               {font-size:11px;color:#000000; background-color:#d1d1d1;}
+#navigationLeft a.navLevel3Selected span          {padding:3px 10px 4px 38px; line-height:13px;}
+#navigationLeft a.navLevel3Selected:hover         {color:#000000; background-color:#d1d1d1;}
+#navigationLeft a.navLevel3Selected:hover span    {}
+
+#navigationLeft a.navLevel3Open                   {font-size:11px;color:#000000; background-color:#d1d1d1;}
+#navigationLeft a.navLevel3Open span              {padding:3px 10px 4px 38px; line-height:13px;}
+#navigationLeft a.navLevel3Open:hover             {color:#000000; background-color:#d1d1d1;}
+#navigationLeft a.navLevel3Open:hover span        {}
+
+#navigationLeft a.navLevel3OpenSelected           {font-size:11px; color:#000000; background-color:#d1d1d1;}
+#navigationLeft a.navLevel3OpenSelected span      {padding:3px 10px 4px 38px; line-height:13px;}
+#navigationLeft a.navLevel3OpenSelected:hover     {color:#000000; background-color:#d1d1d1;}
+#navigationLeft a.navLevel3OpenSelected:hover span {}
+
+/* Gestaltung des Navigationslevel 4 */
+
+#navigationLeft  .navLevel4Container              {}
+
+#navigationLeft  .navLevel4                       {}
+#navigationLeft  .navLevel4 span                  {}
+
+#navigationLeft a.navLevel4                       {font-size:11px; color:#676767; background-color:#FFFFFF;}
+#navigationLeft a.navLevel4 span                  {padding:3px 10px 4px 48px;line-height:13px;}
+#navigationLeft a.navLevel4:hover                 {color:#E52D30; background-color:#FFFFFF;}
+#navigationLeft a.navLevel4:hover span            {}
+
+#navigationLeft a.navLevel4Selected               {font-size:11px;color:#E52D30; background-color:#FFFFFF;}
+#navigationLeft a.navLevel4Selected span          {padding:3px 10px 4px 48px; line-height:13px;}
+#navigationLeft a.navLevel4Selected:hover         {color:#E52D30; background-color:#FFFFFF;}
+#navigationLeft a.navLevel4Selected:hover span    {}
+
+#navigationLeft a.navLevel4Open                   {font-size:11px;color:#E52D30; background-color:#FFFFFF;}
+#navigationLeft a.navLevel4Open span              {padding:3px 10px 4px 48px; line-height:13px;}
+#navigationLeft a.navLevel4Open:hover             {color:#E52D30; background-color:#FFFFFF;}
+#navigationLeft a.navLevel4Open:hover span        {}
+
+#navigationLeft a.navLevel4OpenSelected           {font-size:11px; color:#E52D30; background-color:#FFFFFF;}
+#navigationLeft a.navLevel4OpenSelected span      {padding:3px 10px 4px 48px; line-height:13px;}
+#navigationLeft a.navLevel4OpenSelected:hover     {color:#E52D30; background-color:#FFFFFF;}
+#navigationLeft a.navLevel4OpenSelected:hover span {}
+
+/* Gestaltung des Navigationslevel 5 */
+
+#navigationLeft  .navLevel5Container              {}
+
+#navigationLeft  .navLevel5                       {}
+#navigationLeft  .navLevel5 span                  {}
+
+#navigationLeft a.navLevel5                       {color:#676767; background-color:#FFFFFF;}
+#navigationLeft a.navLevel5 span                  {padding:3px 10px 4px 54px;}
+#navigationLeft a.navLevel5:hover                 {color:#E52D30; background-color:#FFFFFF;}
+#navigationLeft a.navLevel5:hover span            {}
+
+#navigationLeft a.navLevel5Selected               {color:#E52D30; background-color:#FFFFFF;}
+#navigationLeft a.navLevel5Selected span          {padding:3px 10px 4px 54px;}
+#navigationLeft a.navLevel5Selected:hover         {color:#E52D30; background-color:#FFFFFF;}
+#navigationLeft a.navLevel5Selected:hover span    {}
+
+#navigationLeft a.navLevel5Open                   {color:#E52D30; background-color:#FFFFFF;}
+#navigationLeft a.navLevel5Open span              {padding:3px 10px 4px 54px;}
+#navigationLeft a.navLevel5Open:hover             {color:#E52D30; background-color:#FFFFFF;}
+#navigationLeft a.navLevel5Open:hover span        {}
+
+#navigationLeft a.navLevel5OpenSelected           {color:#E52D30; background-color:#FFFFFF;}
+#navigationLeft a.navLevel5OpenSelected span      {padding:3px 10px 4px 54px;}
+#navigationLeft a.navLevel5OpenSelected:hover     {color:#E52D30; background-color:#FFFFFF;}
+#navigationLeft a.navLevel5OpenSelected:hover span {}
+
+
+/* Breadcrum - Navigation */
+
+#navigationBreadcrumb                             {margin:0 0 8px 0}
+#navigationBreadcrumb a                           {text-decoration:none;}
+#navigationBreadcrumb a:hover                     {text-decoration:underline;}
+
+#navigationBreadcrumb .navLevel1Open              {}
+#navigationBreadcrumb .navLevel1OpenSelected      {}
+
+#navigationBreadcrumb .navLevel2Open              {}
+#navigationBreadcrumb .navLevel2OpenSelected      {}
+
+#navigationBreadcrumb .navLevel3Open              {}
+#navigationBreadcrumb .navLevel3OpenSelected      {}
+
+#navigationBreadcrumb .navLevel4Open              {}
+#navigationBreadcrumb .navLevel4OpenSelected      {}
+
+#navigationBreadcrumb .navLevel5Open              {}
+#navigationBreadcrumb .navLevel5OpenSelected      {}
+
+#navigationBreadcrumbDivisions                    {position:absolute; margin-top:-25px; margin-left:39px;}
+#navigationBreadcrumbDivisions a                  {text-decoration:none;}
+#navigationBreadcrumbDivisions a:hover            {text-decoration:underline;}
+                                                                                                                                                                                                                                                                   

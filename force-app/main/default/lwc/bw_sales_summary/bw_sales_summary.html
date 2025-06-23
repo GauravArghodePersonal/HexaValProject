@@ -1,0 +1,608 @@
+<template>    
+    <lightning-card title="Account Sales Information" icon-name="custom:custom41">
+        <template if:true={bwSalesData}>
+            <div class="slds-m-around_medium">
+                <div class="m-tbl-header-css" title="Account Summary -- Refreshed on {bwSalesData.lastUpdTime}">
+                    Account Summary -- Refreshed on {bwSalesData.lastUpdTime}
+                </div>
+                <div style="width:100%;overflow: auto;">
+                    <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered m-tbl-account-summary">
+                        <thead >
+                            <tr class="slds-line-height_reset bgcolor">
+                                <th class="bgcolor" scope="col">
+                                    <div class="slds-truncate"></div>
+                                </th>
+                                <th class="bgcolor" scope="col">
+                                    Sales Volume <br/>in LB
+                                </th>
+                                <th class="bgcolor" scope="col" if:true={bwSalesData.showPVLBs}>
+                                    Plan Volume<br/>in LBs
+                                </th>
+                                <th class="bgcolor" scope="col" if:true={bwSalesData.showPVLBs}>
+                                    Sales vs Plan<br/>Variance
+                                </th>
+                                <th class="bgcolor" scope="col" if:true={bwSalesData.showPVLBs}>
+                                    Variance<br/>%
+                                </th>
+                                <th class="bgcolor" scope="col" if:true={bwSalesData.showKGs}>
+                                    Sales Volume <br/>in KGs
+                                </th>
+                                <th class="bgcolor" scope="col" if:true={bwSalesData.showPVKGs}>
+                                    Plan Volume<br/>in KGs
+                                </th>
+                                <th class="bgcolor" scope="col" if:true={bwSalesData.showPVKGs}>
+                                    Sales vs Plan<br/>Variance
+                                </th>
+                                <th class="bgcolor" scope="col" if:true={bwSalesData.showPVKGs}>
+                                    Variance<br/>%
+                                </th>
+                                <th class="bgcolor" scope="col" if:true={bwSalesData.showUNs}>
+                                    Sales Volume<br/>in UNs
+                                </th>
+                                <th class="bgcolor" scope="col" if:true={bwSalesData.showGLs}>
+                                    Sales Volume<br/>in GLs
+                                </th>
+                                <th class="bgcolor" scope="col" if:true={bwSalesData.showPTs}>
+                                    Sales Volume<br/>in PTs
+                                </th>
+                                <th class="bgcolor" scope="col">
+                                    Sales<br/>Amount
+                                </th>
+                                <th class="bgcolor" scope="col" if:true={bwSalesData.showPAMTs}>
+                                    Plan<br/>Amount
+                                </th>
+                                <th class="bgcolor" scope="col" if:true={bwSalesData.showPAMTs}>
+                                    Sales vs Plan<br/>Variance
+                                </th>
+                                <th class="bgcolor" scope="col" if:true={bwSalesData.showPAMTs}>
+                                    Variance<br/>%
+                                </th>
+                                <th class="bgcolor" scope="col" if:true={bwSalesData.showGMGPs}>
+                                    {bwSalesData.gmgpLabel}
+                                </th>
+                                <th class="bgcolor" scope="col" if:true={bwSalesData.showGMGPs}>
+                                    {bwSalesData.gmgpLabel} %
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="slds-hint-parent">
+                                <td>
+                                    {bwSalesData.accountSalesInfo.FYTD_Label}
+                                </td>
+                                <td style="text-align: right;">  
+                                    <img src={GREEN_UP_ARROW} width="12"
+                                        height="12" if:true={bwSalesData.accountSalesInfo.FYTDvsPFYTD_Volume_in_LB_Up}/>
+                                    <img src={RED_DOWN_ARROW} width="12"
+                                        height="12" if:true={bwSalesData.accountSalesInfo.FYTDvsPFYTD_Volume_in_LB_Down}/>
+                                    <span class="m-FYTD_Volume_in_LB_style" >
+                                        {bwSalesData.accountSalesInfo.FYTD_Volume_in_LB_formatted}
+                                    </span>                                        
+                                </td>
+                                <td if:true={bwSalesData.showPVLBs} class={bwSalesData.accountSalesInfo.FYTD_Plan_Volume_in_LB_style}>                       
+                                    {bwSalesData.accountSalesInfo.FYTD_Plan_Volume_in_LB_formatted}
+                                </td>
+                                <td if:true={bwSalesData.showPVLBs} class={bwSalesData.accountSalesInfo.S2P_FYTD_VLB_Variance_style}>
+                                    {bwSalesData.accountSalesInfo.S2P_FYTD_VLB_Variance_formatted}
+                                </td>
+                                <td if:true={bwSalesData.showPVLBs} class={bwSalesData.accountSalesInfo.S2P_FYTD_VLB_VPercent_style}>
+                                    {bwSalesData.accountSalesInfo.S2P_FYTD_VLB_VPercent_formatted}
+                                </td>
+                                <td if:true={bwSalesData.showKGs} class={bwSalesData.accountSalesInfo.FYTD_Volume_in_KG_style}>  
+                                    <img src={GREEN_UP_ARROW} width="12"
+                                        height="12" if:true={bwSalesData.accountSalesInfo.FYTDvsPFYTD_Volume_in_KG_Up}/>
+                                    <img src={RED_DOWN_ARROW} width="12"
+                                        height="12" if:true={bwSalesData.accountSalesInfo.FYTDvsPFYTD_Volume_in_KG_Down}/>
+                                        {bwSalesData.accountSalesInfo.FYTD_Volume_in_KG_formatted}                                     
+                                </td>
+                                <td if:true={bwSalesData.showPVKGs} class={bwSalesData.accountSalesInfo.FYTD_Plan_Volume_in_KG_style}>
+                                    {bwSalesData.accountSalesInfo.FYTD_Plan_Volume_in_KG_formatted}
+                                </td>
+                                <td if:true={bwSalesData.showPVKGs} class={bwSalesData.accountSalesInfo.S2P_FYTD_VKG_Variance_style}>
+                                    {bwSalesData.accountSalesInfo.S2P_FYTD_VKG_Variance_formatted}
+                                </td>
+                                <td if:true={bwSalesData.showPVKGs} class={bwSalesData.accountSalesInfo.S2P_FYTD_VKG_VPercent_style}>
+                                    {bwSalesData.accountSalesInfo.S2P_FYTD_VKG_VPercent_formatted}
+                                </td>
+                                <td if:true={bwSalesData.showUNs} class={bwSalesData.accountSalesInfo.FYTD_Volume_in_UN_style}>  
+                                    <img src={GREEN_UP_ARROW} width="12"
+                                        height="12" if:true={bwSalesData.accountSalesInfo.FYTDvsPFYTD_Volume_in_UN_Up}/>
+                                    <img src={RED_DOWN_ARROW} width="12"
+                                        height="12" if:true={bwSalesData.accountSalesInfo.FYTDvsPFYTD_Volume_in_UN_Down}/>
+                                    <span class="m-FYTD_Volume_in_KG_style">
+                                        {bwSalesData.accountSalesInfo.FYTD_Volume_in_UN_formatted}
+                                    </span>                                        
+                                </td>
+                                <td if:true={bwSalesData.showGLs} class={bwSalesData.accountSalesInfo.FYTD_Volume_in_GL_style}>  
+                                    <img src={GREEN_UP_ARROW} width="12"
+                                        height="12" if:true={bwSalesData.accountSalesInfo.FYTDvsPFYTD_Volume_in_GL_Up}/>
+                                    <img src={RED_DOWN_ARROW} width="12"
+                                        height="12" if:true={bwSalesData.accountSalesInfo.FYTDvsPFYTD_Volume_in_GL_Down}/>
+                                    <span class="m-FYTD_Volume_in_KG_style">
+                                        {bwSalesData.accountSalesInfo.FYTD_Volume_in_GL_formatted}
+                                    </span>                                        
+                                </td>
+                                <td if:true={bwSalesData.showPTs} class={bwSalesData.accountSalesInfo.FYTD_Volume_in_PT_style}>  
+                                    <img src={GREEN_UP_ARROW} width="12"
+                                        height="12" if:true={bwSalesData.accountSalesInfo.FYTDvsPFYTD_Volume_in_PT_Up}/>
+                                    <img src={RED_DOWN_ARROW} width="12"
+                                        height="12" if:true={bwSalesData.accountSalesInfo.FYTDvsPFYTD_Volume_in_PT_Down}/>
+                                    <span class="m-FYTD_Volume_in_KG_style">
+                                        <div class={bwSalesData.accountSalesInfo.FYTD_Volume_in_PT_style}>
+                                            {bwSalesData.accountSalesInfo.FYTD_Volume_in_PT_formatted}
+                                        </div>
+                                    </span>                                        
+                                </td>
+                                <td class={bwSalesData.accountSalesInfo.FYTD_Amount_style}>  
+                                    <img src={GREEN_UP_ARROW} width="12"
+                                        height="12" if:true={bwSalesData.accountSalesInfo.FYTDvsPFYTD_Amount_Up}/>
+                                    <img src={RED_DOWN_ARROW} width="12"
+                                        height="12" if:true={bwSalesData.accountSalesInfo.FYTDvsPFYTD_Amount_Down}/>
+                                    <span class="m-FYTD_Volume_in_KG_style">
+                                        {bwSalesData.accountSalesInfo.FYTD_Amount_formatted}
+                                    </span>                                        
+                                </td>
+                                <td if:true={bwSalesData.showPAMTs} class={bwSalesData.accountSalesInfo.FYTD_Plan_Amount_style}>
+                                    {bwSalesData.accountSalesInfo.FYTD_Plan_Amount_formatted}
+                                </td>
+                                <td if:true={bwSalesData.showPAMTs} class={bwSalesData.accountSalesInfo.S2P_FYTD_Amount_Variance_style}>
+                                    {bwSalesData.accountSalesInfo.S2P_FYTD_Amount_Variance_formatted}
+                                </td>
+                                <td if:true={bwSalesData.showPAMTs} class={bwSalesData.accountSalesInfo.S2P_FYTD_Amount_VPercent_style}>
+                                    {bwSalesData.accountSalesInfo.S2P_FYTD_Amount_VPercent_formatted}
+                                </td>
+                                <td if:true={bwSalesData.showGMGPs} class={bwSalesData.accountSalesInfo.FYTD_GMpct_style}>  
+                                    <img src={GREEN_UP_ARROW} width="12"
+                                        height="12" if:true={bwSalesData.accountSalesInfo.FYTDvsPFYTD_GM_Up}/>
+                                    <img src={RED_DOWN_ARROW} width="12"
+                                        height="12" if:true={bwSalesData.accountSalesInfo.FYTDvsPFYTD_GM_Down}/>
+                                    <span class="m-FYTD_Volume_in_KG_style">
+                                        {bwSalesData.accountSalesInfo.FYTD_GM_formatted}
+                                    </span>                                        
+                                </td>
+                                <td if:true={bwSalesData.showGMGPs} class={bwSalesData.accountSalesInfo.FYTD_GMpct_style}>  
+                                    <img src={GREEN_UP_ARROW} width="12"
+                                        height="12" if:true={bwSalesData.accountSalesInfo.FYTDvsPFYTD_GMpct_Up}/>
+                                    <img src={RED_DOWN_ARROW} width="12"
+                                        height="12" if:true={bwSalesData.accountSalesInfo.FYTDvsPFYTD_GMpct_Down}/>
+                                    <span class="m-FYTD_Volume_in_KG_style">
+                                        {bwSalesData.accountSalesInfo.FYTD_GMpct_formatted}
+                                    </span>                                        
+                                </td>                               
+                            </tr>
+                            <tr class="slds-hint-parent">
+                                <td >
+                                    {bwSalesData.accountSalesInfo.PFYTD_Label}
+                                </td>
+                                <td class={bwSalesData.accountSalesInfo.PFYTD_Volume_in_LB_style}>
+                                    {bwSalesData.accountSalesInfo.PFYTD_Volume_in_LB_formatted}
+                                </td>
+                                <td if:true={bwSalesData.showPVLBs}>
+                                    &nbsp;
+                                </td>
+                                <td if:true={bwSalesData.showPVLBs}>
+                                    &nbsp;
+                                </td>
+                                <td if:true={bwSalesData.showPVLBs}>
+                                    &nbsp;
+                                </td>
+                                <td if:true={bwSalesData.showKGs} class={bwSalesData.accountSalesInfo.PFYTD_Volume_in_KG_style}>
+                                    {bwSalesData.accountSalesInfo.PFYTD_Volume_in_KG_formatted}
+                                </td>
+                                <td if:true={bwSalesData.showPVKGs}>
+                                    &nbsp;
+                                </td>
+                                <td if:true={bwSalesData.showPVKGs}>
+                                    &nbsp;
+                                </td>
+                                <td if:true={bwSalesData.showPVKGs}>
+                                    &nbsp;
+                                </td>
+                                <td if:true={bwSalesData.showUNs} class={bwSalesData.accountSalesInfo.PFYTD_Volume_in_UN_style}>
+                                    {bwSalesData.accountSalesInfo.PFYTD_Volume_in_UN_formatted}
+                                </td>
+                                <td if:true={bwSalesData.showGLs} class={bwSalesData.accountSalesInfo.PFYTD_Volume_in_GL_style}>
+                                    {bwSalesData.accountSalesInfo.PFYTD_Volume_in_GL_formatted}
+                                </td>
+                                <td if:true={bwSalesData.showPTs} class={bwSalesData.accountSalesInfo.PFYTD_Volume_in_PT_style}>
+                                    {bwSalesData.accountSalesInfo.PFYTD_Volume_in_PT_formatted}
+                                </td>
+                                <td class={bwSalesData.accountSalesInfo.PFYTD_Amount_style}>
+                                    {bwSalesData.accountSalesInfo.PFYTD_Amount_formatted}
+                                </td>
+                                <td if:true={bwSalesData.showPAMTs}>
+                                    &nbsp;
+                                </td>
+                                <td if:true={bwSalesData.showPAMTs}>
+                                    &nbsp;
+                                </td>
+                                <td if:true={bwSalesData.showPAMTs}>
+                                    &nbsp;
+                                </td>
+                                <td if:true={bwSalesData.showGMGPs} class={bwSalesData.accountSalesInfo.PFYTD_GM_style}>
+                                    {bwSalesData.accountSalesInfo.PFYTD_GM_formatted}
+                                </td>
+                                <td if:true={bwSalesData.showGMGPs} class={bwSalesData.accountSalesInfo.PFYTD_GMpct_style}>
+                                    {bwSalesData.accountSalesInfo.PFYTD_GMpct_formatted}
+                                </td>
+                            </tr>
+                            <tr class="slds-hint-parent">
+                                <td >
+                                    {bwSalesData.accountSalesInfo.FYTDvsPFYTD_Label}
+                                </td>
+                                <td class={bwSalesData.accountSalesInfo.FYTDvsPFYTD_Volume_in_LB_Variance_style}>
+                                    {bwSalesData.accountSalesInfo.FYTDvsPFYTD_Volume_in_LB_Variance_formatted}
+                                </td>
+                                <td if:true={bwSalesData.showPVLBs}>
+                                    &nbsp;
+                                </td>
+                                <td if:true={bwSalesData.showPVLBs}>
+                                    &nbsp;
+                                </td>
+                                <td if:true={bwSalesData.showPVLBs}>
+                                    &nbsp;
+                                </td>
+                                <td if:true={bwSalesData.showKGs} class={bwSalesData.accountSalesInfo.FYTDvsPFYTD_Volume_in_KG_Variance_style}>
+                                    {bwSalesData.accountSalesInfo.FYTDvsPFYTD_Volume_in_KG_Variance_formatted}
+                                </td>
+                                <td if:true={bwSalesData.showPVKGs}>
+                                    &nbsp;
+                                </td>
+                                <td if:true={bwSalesData.showPVKGs}>
+                                    &nbsp;
+                                </td>
+                                <td if:true={bwSalesData.showPVKGs}>
+                                    &nbsp;
+                                </td>
+                                <td if:true={bwSalesData.showUNs} class={bwSalesData.accountSalesInfo.FYTDvsPFYTD_Volume_in_UN_Variance_style}>
+                                    {bwSalesData.accountSalesInfo.FYTDvsPFYTD_Volume_in_UN_Variance_formatted}
+                                </td>
+                                <td if:true={bwSalesData.showGLs} class={bwSalesData.accountSalesInfo.FYTDvsPFYTD_Volume_in_GL_Variance_style}>
+                                    {bwSalesData.accountSalesInfo.FYTDvsPFYTD_Volume_in_GL_Variance_formatted}
+                                </td>
+                                <td if:true={bwSalesData.showPTs} class={bwSalesData.accountSalesInfo.FYTDvsPFYTD_Volume_in_PT_Variance_style}>
+                                    {bwSalesData.accountSalesInfo.FYTDvsPFYTD_Volume_in_PT_Variance_formatted}
+                                </td>
+                                <td  class={bwSalesData.accountSalesInfo.FYTDvsPFYTD_Amount_Variance_style}>
+                                    {bwSalesData.accountSalesInfo.FYTDvsPFYTD_Amount_Variance_formatted}
+                                </td>
+                                <td if:true={bwSalesData.showPAMTs}>
+                                    &nbsp;
+                                </td>
+                                <td if:true={bwSalesData.showPAMTs}>
+                                    &nbsp;
+                                </td>
+                                <td if:true={bwSalesData.showPAMTs}>
+                                    &nbsp;
+                                </td>
+                                <td if:true={bwSalesData.showGMGPs} class={bwSalesData.accountSalesInfo.FYTDvsPFYTD_GM_Variance_style}>
+                                    {bwSalesData.accountSalesInfo.FYTDvsPFYTD_GM_Variance_formatted}
+                                </td>
+                                <td if:true={bwSalesData.showGMGPs} class={bwSalesData.accountSalesInfo.FYTDvsPFYTD_GMpct_Variance_style}>
+                                    {bwSalesData.accountSalesInfo.FYTDvsPFYTD_GMpct_Variance_formatted}
+                                </td>
+                            </tr>
+                            <tr class="slds-hint-parent">
+                                <td >
+                                    {bwSalesData.accountSalesInfo.FYTDvsPFYTD_Percent_Label}
+                                </td>
+                                <td class={bwSalesData.accountSalesInfo.FYTDvsPFYTD_Volume_in_LB_VPercent_style}>
+                                    {bwSalesData.accountSalesInfo.FYTDvsPFYTD_Volume_in_LB_VPercent_formatted}
+                                </td>
+                                <td if:true={bwSalesData.showPVLBs}>
+                                    &nbsp;
+                                </td>
+                                <td if:true={bwSalesData.showPVLBs}>
+                                    &nbsp;
+                                </td>
+                                <td if:true={bwSalesData.showPVLBs}>
+                                    &nbsp;
+                                </td>
+                                <td if:true={bwSalesData.showKGs} class={bwSalesData.accountSalesInfo.FYTDvsPFYTD_Volume_in_KG_VPercent_style}>
+                                    {bwSalesData.accountSalesInfo.FYTDvsPFYTD_Volume_in_KG_VPercent_formatted}
+                                </td>
+                                <td if:true={bwSalesData.showPVKGs}>
+                                    &nbsp;
+                                </td>
+                                <td if:true={bwSalesData.showPVKGs}>
+                                    &nbsp;
+                                </td>
+                                <td if:true={bwSalesData.showPVKGs}>
+                                    &nbsp;
+                                </td>
+                                <td if:true={bwSalesData.showUNs} class={bwSalesData.accountSalesInfo.FYTDvsPFYTD_Volume_in_UN_VPercent_style}>
+                                    {bwSalesData.accountSalesInfo.FYTDvsPFYTD_Volume_in_UN_VPercent_formatted}
+                                </td>
+                                <td if:true={bwSalesData.showGLs} class={bwSalesData.accountSalesInfo.FYTDvsPFYTD_Volume_in_GL_VPercent_style}>
+                                    {bwSalesData.accountSalesInfo.FYTDvsPFYTD_Volume_in_GL_VPercent_formatted}
+                                </td>
+                                <td if:true={bwSalesData.showPTs} class={bwSalesData.accountSalesInfo.FYTDvsPFYTD_Volume_in_PT_VPercent_style}>
+                                    {bwSalesData.accountSalesInfo.FYTDvsPFYTD_Volume_in_PT_VPercent_formatted}
+                                </td>
+                                <td class={bwSalesData.accountSalesInfo.FYTDvsPFYTD_Amount_VPercent_style}>
+                                    {bwSalesData.accountSalesInfo.FYTDvsPFYTD_Amount_VPercent_formatted}
+                                </td>
+                                <td if:true={bwSalesData.showPAMTs}>
+                                    &nbsp;
+                                </td>
+                                <td if:true={bwSalesData.showPAMTs}>
+                                    &nbsp;
+                                </td>
+                                <td if:true={bwSalesData.showPAMTs}>
+                                    &nbsp;
+                                </td>
+                                <td if:true={bwSalesData.showGMGPs} class={bwSalesData.accountSalesInfo.FYTDvsPFYTD_GM_VPercent_style}>
+                                    {bwSalesData.accountSalesInfo.FYTDvsPFYTD_GM_VPercent_formatted}
+                                </td>
+                                <td if:true={bwSalesData.showGMGPs} class={bwSalesData.accountSalesInfo.FYTDvsPFYTD_GMpct_VPercent_style}>
+                                    {bwSalesData.accountSalesInfo.FYTDvsPFYTD_GMpct_VPercent_formatted}
+                                </td>
+                            </tr>
+                            <tr class="slds-hint-parent">
+                                <td if:true={bwSalesData.showFYF}>
+                                    {bwSalesData.accountSalesInfo.FYF_Label}
+                                </td>
+                                <td if:true={bwSalesData.showFYF}>
+                                    N / A
+                                </td>
+                                <td if:true={bwSalesData.showFYF} class={bwSalesData.accountSalesInfo.FYF_Plan_Volume_in_LB_style}>
+                                    {bwSalesData.accountSalesInfo.FYF_Plan_Volume_in_LB_formatted}
+                                </td>
+                                <td if:true={bwSalesData.showFYF}>
+                                    &nbsp;
+                                </td>
+                                <td if:true={bwSalesData.showFYF}>
+                                    &nbsp;
+                                </td>
+                                <td if:true={bwSalesData.showFYF}>
+                                    N / A
+                                </td>
+                                <td if:true={bwSalesData.showFYF} class={bwSalesData.accountSalesInfo.FYF_Plan_Volume_in_KG_style}>
+                                    {bwSalesData.accountSalesInfo.FYF_Plan_Volume_in_KG_formatted}
+                                </td>
+                                <td if:true={bwSalesData.showFYF}>
+                                    &nbsp;
+                                </td>
+                                <td if:true={bwSalesData.showFYF}>
+                                    &nbsp;
+                                </td>
+                                <td if:true={bwSalesData.showFYF}>
+                                    N / A
+                                </td>
+                                <td if:true={bwSalesData.showFYF} class={bwSalesData.accountSalesInfo.FYF_Plan_Amount_style}>
+                                    {bwSalesData.accountSalesInfo.FYF_Plan_Amount_formatted}
+                                </td>
+                                <td if:true={bwSalesData.showFYF}>
+                                    &nbsp;
+                                </td>
+                                <td if:true={bwSalesData.showFYF}>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class="slds-hint-parent">
+                                <td if:true={bwSalesData.showPFYF}>
+                                    {bwSalesData.accountSalesInfo.PFYF_Label}
+                                </td>
+                                <td if:true={bwSalesData.showPFYF} class={bwSalesData.accountSalesInfo.PFYF_Volume_in_LB_style}>
+                                    {bwSalesData.accountSalesInfo.PFYF_Volume_in_LB_formatted}
+                                </td>
+                                <td if:true={bwSalesData.showPFYF}>
+                                    N / A
+                                </td>
+                                <td if:true={bwSalesData.showPFYF}>
+                                    &nbsp;
+                                </td>
+                                <td if:true={bwSalesData.showPFYF}>
+                                    &nbsp;
+                                </td>
+                                <td if:true={bwSalesData.showPFYF} class={bwSalesData.accountSalesInfo.PFYF_Volume_in_KG_style}>
+                                    {bwSalesData.accountSalesInfo.PFYF_Volume_in_KG_formatted}
+                                </td>
+                                <td if:true={bwSalesData.showPFYF}>
+                                    N / A
+                                </td>
+                                <td if:true={bwSalesData.showPFYF}>
+                                    &nbsp;
+                                </td>
+                                <td if:true={bwSalesData.showPFYF}>
+                                    &nbsp;
+                                </td>
+                                <td if:true={bwSalesData.showPFYF} class={bwSalesData.accountSalesInfo.PFYF_Amount_style}>
+                                    {bwSalesData.accountSalesInfo.PFYF_Amount_formatted}
+                                </td>
+                                <td if:true={bwSalesData.showPFYF}>
+                                    N / A
+                                </td>
+                                <td if:true={bwSalesData.showPFYF}>
+                                    &nbsp;
+                                </td>
+                                <td if:true={bwSalesData.showPFYF}>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <lightning-card> 
+                    <div class="m-tbl-header-css" >
+                        Materials Information - {bwSalesData.rpsViewLabel}
+                    </div>
+                    <div class="m-tbl-header-picklist-css" >
+                        <span style="color:#ffffff">View&nbsp;&nbsp;</span>  
+                        <select class="view-select" onchange={onViewChange}>
+                            <template for:each={bwSalesData.rpsViewCustomOpts} for:item="option">
+                                <option key={option.key} class="uiInputSelectOption" value={option.key} selected={option.selected}>{option.value}</option>
+                            </template> 
+                        </select>
+                    </div>
+                    <div style="width:100%;overflow: auto;">        
+                        <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered m-tbl-material-css" style="width:100%">
+                            <thead >
+                                <tr class="slds-line-height_reset">
+                                    <th class="bgcolor" scope="col">
+                                        #
+                                    </th>
+                                    <th class="bgcolor" scope="col">
+                                        Material
+                                    </th>
+                                    <th class="bgcolor" scope="col">
+                                        <lightning-formatted-rich-text value={bwSalesData.labelMonth01}></lightning-formatted-rich-text>
+                                    </th>
+                                    <th class="bgcolor" scope="col">
+                                        <lightning-formatted-rich-text value={bwSalesData.labelMonth02}></lightning-formatted-rich-text>
+                                    </th>
+                                    <th class="bgcolor" scope="col">
+                                        <lightning-formatted-rich-text value={bwSalesData.labelMonth03}></lightning-formatted-rich-text>
+                                    </th>
+                                    <th class="bgcolor" scope="col">
+                                        <lightning-formatted-rich-text value={bwSalesData.labelMonth04}></lightning-formatted-rich-text>
+                                    </th> 
+                                    <th class="bgcolor" scope="col">
+                                        <lightning-formatted-rich-text value={bwSalesData.labelMonth05}></lightning-formatted-rich-text>
+                                    </th> 
+                                    <th class="bgcolor" scope="col">
+                                        <lightning-formatted-rich-text value={bwSalesData.labelMonth06}></lightning-formatted-rich-text>
+                                    </th> 
+                                    <th class="bgcolor" scope="col">
+                                        <lightning-formatted-rich-text value={bwSalesData.labelMonth07}></lightning-formatted-rich-text>
+                                    </th> 
+                                    <th class="bgcolor" scope="col">
+                                        <lightning-formatted-rich-text value={bwSalesData.labelMonth08}></lightning-formatted-rich-text>
+                                    </th> 
+                                    <th class="bgcolor" scope="col">
+                                        <lightning-formatted-rich-text value={bwSalesData.labelMonth09}></lightning-formatted-rich-text>
+                                    </th> 
+                                    <th class="bgcolor" scope="col">
+                                        <lightning-formatted-rich-text value={bwSalesData.labelMonth10}></lightning-formatted-rich-text>
+                                    </th> 
+                                    <th class="bgcolor" scope="col">
+                                        <lightning-formatted-rich-text value={bwSalesData.labelMonth11}></lightning-formatted-rich-text>
+                                    </th> 
+                                    <th class="bgcolor" scope="col">
+                                        <lightning-formatted-rich-text value={bwSalesData.labelMonth12}></lightning-formatted-rich-text>
+                                    </th> 
+                                    <th class="bgcolor" scope="col">
+                                        <lightning-formatted-rich-text value={bwSalesData.labelMonth13}></lightning-formatted-rich-text>
+                                    </th> 
+                                    <th class="bgcolor" scope="col" if:true={bwSalesData.showFYF}>
+                                        FYTD
+                                    </th> 
+                                    <th class="bgcolor" scope="col" if:true={bwSalesData.showFYF}>
+                                        PFYTD
+                                    </th> 
+                                    <th class="bgcolor" scope="col" if:true={bwSalesData.showFYF}>
+                                        <lightning-formatted-rich-text value={labelYTDVar}></lightning-formatted-rich-text>
+                                    </th> 
+                                    <th class="bgcolor" scope="col" if:true={bwSalesData.showFYF}>
+                                        FY Full
+                                    </th>
+                                    <th class="bgcolor" scope="col" if:true={bwSalesData.showFYF}>
+                                        PFY Full
+                                    </th> 
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template for:each={rpsiLines} for:item="row">
+                                    <tr class="slds-hint-parent" key={row.recNum}>
+                                        <td>
+                                            {row.recNum}
+                                        </td>
+                                        <td>
+                                            <c-bw-sales-hyper-link item-link={row.matId} item-value={row.matName}></c-bw-sales-hyper-link>
+                                        </td>
+                                        <td class={row.style_Month_01}>
+                                            {row.value_Month_01}
+                                        </td>
+                                        <td class={row.style_Month_02}>
+                                            {row.value_Month_02}
+                                        </td>
+                                        <td class={row.style_Month_03}>
+                                            {row.value_Month_03}
+                                        </td>
+                                        <td class={row.style_Month_04}>
+                                            {row.value_Month_04}
+                                        </td>
+                                        <td class={row.style_Month_05}>
+                                            {row.value_Month_05}
+                                        </td>
+                                        <td class={row.style_Month_06}>
+                                            {row.value_Month_06}
+                                        </td>
+                                        <td class={row.style_Month_07}>
+                                            {row.value_Month_07}
+                                        </td>
+                                        <td class={row.style_Month_08}>
+                                            {row.value_Month_08}
+                                        </td>
+                                        <td class={row.style_Month_09}>
+                                            {row.value_Month_09}
+                                        </td>
+                                        <td class={row.style_Month_10}>
+                                            {row.value_Month_10}
+                                        </td>
+                                        <td class={row.style_Month_11}>
+                                            {row.value_Month_11}
+                                        </td>
+                                        <td class={row.style_Month_12}>
+                                            {row.value_Month_12}
+                                        </td>
+                                        <td class={row.style_Month_13}>
+                                            {row.value_Month_13}
+                                        </td>
+                                        <td class={row.style_FYTD}  if:true={bwSalesData.showFYF}>
+                                            {row.value_FYTD}
+                                        </td>
+                                        <td class={row.style_PFYTD} if:true={bwSalesData.showFYF}>
+                                            {row.value_PFYTD}
+                                        </td>
+                                        <td class={row.style_YTD_Var} if:true={bwSalesData.showFYF}>
+                                            {row.value_YTD_Var}
+                                        </td>
+                                        <td class={row.style_FYF} if:true={bwSalesData.showFYF}>
+                                            {row.value_FYF}
+                                        </td>
+                                        <td class={row.style_PFYF} if:true={bwSalesData.showFYF}>
+                                            {row.value_PFYF}
+                                        </td>                                         
+                                    </tr> 
+                                </template>
+                            </tbody>
+                        </table>  
+                    </div>
+                </lightning-card> 
+                <table style="width:100%;font-size: 11px;border: 2px solid #C0C0C0; background-color:#d2d2d2" >
+                    <tr>  
+                        <td style="width:44%"><p1>Search by Material :</p1>
+                            <input type="search" id="site-search" class="site-search-css" 
+                                name="q" aria-label="Search through site content">
+                            <input type="button" onclick={handleSearch} value="Search"/>
+                        </td> 
+                        <td style="width:16%">
+                            Record  {recordFrom} - {recordTo} of {resultSize}
+                        </td>
+                        <td style="width:20%">
+                            <input type="button" onclick={pc1Frst} value="<<" disabled={hasPrevious}/>
+                            <input type="button" onclick={pc1Prev} value="<" disabled={hasPrevious}/>
+                            &nbsp;{pageNumber}&nbsp;
+                            <input type="button" onclick={pc1Next} value=">" disabled={hasNext}/>
+                            <input type="button" onclick={pc1Last} value=">>" disabled={hasNext}/>
+                        </td>
+                        <td style="width:20%">
+                            <label for="fname">page</label>
+                            <input type="text" class="go-search-css" value={pageNumber} style="width:20%;text-align: right;"> of {lastPageNumber}&nbsp;&nbsp;
+                            <input type="button" onclick={pc1Goto} value="Go!" disabled={gobtndisable}/>
+                        </td>
+                    </tr> 
+                </table>   
+            </div>
+        </template>
+        <template if:true={error}>
+            <div class="m-error">{error}</div>
+        </template>
+        <div if:true={spinnerActive}>
+            <div class="backgroundInverse">
+                <lightning-spinner alternative-text="Loading" variant="inverse"></lightning-spinner>
+            </div>
+        </div>
+    </lightning-card> 
+</template>

@@ -1,0 +1,4 @@
+<apex:page id="thePage" standardController="IRF_Unit__c" 
+           title="IRF Unit" extensions="IRF_Controller" 
+           sidebar="false" action="{!initActionUnt}">
+</apex:page>

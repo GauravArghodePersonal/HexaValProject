@@ -1,0 +1,19 @@
+<apex:page sidebar="false" showheader="false">
+<style>
+.red
+{
+background-color:#CFEEF8;
+}
+
+</style>
+<form method="get" action="/apex/Find_This" target="_top" class="red">
+<br/><select name="searchtype"> 
+<option selected="selected" value="Material_Sales_Data2__c">{!$label.Material_Search}</option>
+<option value="Case">{!$label.DZ_Search}</option> 
+<option value="Prospect">{!$label.Prospect_Search}</option>
+</select><br/>
+<input size="15" name="searchString"/>
+<input value="{!$label.go}!" type="submit"/><br/>
+<text style="color:#1797C0;">&nbsp;{!$label.supports_wildcards}<br/>&nbsp;<br/>&nbsp;</text></form>
+
+</apex:page>

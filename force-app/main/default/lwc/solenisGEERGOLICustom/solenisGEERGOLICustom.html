@@ -1,0 +1,174 @@
+<template>
+    <div class="slds-clearfix">
+        <div class="slds-float_right"> 
+<lightning-button label="New GOLI" onclick={createDCFROR}></lightning-button>
+    </div>
+    </div>
+   <!--Status Change Alert-->
+ <template if:true={isModalDCFROR}>
+    <!-- Modal/Popup Box LWC starts here -->
+    <lightning-card>
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+            <!-- Modal/Popup Box LWC header here -->
+            <header class="slds-modal__header">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModalPD}>
+                    <lightning-icon icon-name="utility:close"
+                        alternative-text="close"
+                        variant="inverse"
+                        size="small" ></lightning-icon>
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                <h2 id="modal-heading-03" class="slds-text-heading_medium slds-hyphenate">GEER GOLI creation</h2>
+            </header>
+            
+            <!-- Modal/Popup Box LWC body starts here -->
+         <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-3">
+          
+         
+    
+     
+     <lightning-record-edit-form record-id={productId} object-api-name="GOLI__c"  onsuccess={handleSuccess} onerror={handleError}>
+            <lightning-messages>
+            </lightning-messages>
+            <div class={exampleHolder} if:true={isLoading}>
+
+                <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+            </div>
+            <lightning-layout  multiple-rows="true">
+                <lightning-layout-item size="12" large-device-size="12" medium-device-size="12" small-device-size="12">
+              
+      <p style="background: yellow;" class="slds-text-color_default">Equipment lookup selection will populate description, SAP Part Number, Currency and Unit value when save. Populate these fields only if you are not using Equipment lookup.</p>
+            
+                   
+                </lightning-layout-item>
+            </lightning-layout>
+        <lightning-layout multiple-rows="true">
+            <lightning-layout-item size="12" large-device-size="6" medium-device-size="12" small-device-size="12">
+              <lightning-input-field field-name="Name"  class="resetFields">
+                </lightning-input-field> 
+            </lightning-layout-item>
+            <lightning-layout-item size="12" large-device-size="6" medium-device-size="12" small-device-size="12">
+                <lightning-input-field field-name="VendorPriceList__c" class="resetFields">
+                </lightning-input-field>
+            </lightning-layout-item>
+            <lightning-layout-item size="12" large-device-size="6" medium-device-size="12" small-device-size="12">
+                <lightning-input-field field-name="CurrencyIsoCode" class="resetFields">
+                </lightning-input-field>
+            </lightning-layout-item>
+
+            <lightning-layout-item size="12" large-device-size="6" medium-device-size="12" small-device-size="12">
+                <lightning-input-field field-name="Vendor__c" class="resetFields">
+                </lightning-input-field>
+            </lightning-layout-item>
+            <lightning-layout-item size="12" large-device-size="6" medium-device-size="12" small-device-size="12">
+                <lightning-input-field field-name="Part_Number__c" class="resetFields">
+                </lightning-input-field>
+            </lightning-layout-item>
+            <lightning-layout-item size="12" large-device-size="6" medium-device-size="12" small-device-size="12">
+                <lightning-input-field field-name="Vendor_Name__c" class="resetFields">
+                </lightning-input-field>
+            </lightning-layout-item>
+            <lightning-layout-item size="12" large-device-size="6" medium-device-size="12" small-device-size="12">
+                <lightning-input-field field-name="Unit_Value__c" class="resetFields">
+                </lightning-input-field>
+            </lightning-layout-item>
+            <lightning-layout-item size="12" large-device-size="6" medium-device-size="12" small-device-size="12">
+                <lightning-input-field field-name="Description__c" class="resetFields">
+                </lightning-input-field>
+            </lightning-layout-item>
+            <lightning-layout-item size="12" large-device-size="6" medium-device-size="12" small-device-size="12">
+                <lightning-input-field field-name="GEER__c" name="GEER__c" class="GEER__c" disabled value={recordId}>
+                </lightning-input-field>
+               
+            </lightning-layout-item>
+            <lightning-layout-item size="12" large-device-size="6" medium-device-size="12" small-device-size="12">
+                <lightning-input-field field-name="Quantity__c" class="resetFields">
+                </lightning-input-field>
+            </lightning-layout-item>
+            <lightning-layout-item size="12" large-device-size="6" medium-device-size="12" small-device-size="12">
+                <lightning-input-field field-name="Asset__c" class="resetFields">
+                </lightning-input-field>
+            </lightning-layout-item>
+            <lightning-layout-item size="12" large-device-size="6" medium-device-size="12" small-device-size="12">
+                <lightning-input-field field-name="Unit_Value_Subtotal__c" class="resetFields">
+                </lightning-input-field>
+            </lightning-layout-item>
+
+            <lightning-layout-item size="12" large-device-size="6" medium-device-size="12" small-device-size="12">
+                <lightning-input-field field-name="Date_required__c" class="resetFields">
+                </lightning-input-field>
+            </lightning-layout-item>
+            <lightning-layout-item size="12" large-device-size="6" medium-device-size="12" small-device-size="12">
+                <lightning-input-field field-name="Comment__c" class="resetFields">
+                </lightning-input-field>
+            </lightning-layout-item>
+            <lightning-layout-item size="12" large-device-size="6" medium-device-size="12" small-device-size="12">
+                <lightning-input-field field-name="Delivery_address__c" class="resetFields">
+                </lightning-input-field>
+            </lightning-layout-item>
+            <lightning-layout-item size="12" large-device-size="6" medium-device-size="12" small-device-size="12">
+                <lightning-input-field field-name="OwnerId" class="resetFields">
+                </lightning-input-field>
+            </lightning-layout-item>
+            <lightning-layout-item size="12" large-device-size="6" medium-device-size="12" small-device-size="12">
+                <lightning-input-field field-name="CreatedById" class="resetFields">
+                </lightning-input-field>
+            </lightning-layout-item>
+            <lightning-layout-item size="12" large-device-size="6" medium-device-size="12" small-device-size="12">
+                <lightning-input-field field-name="LastModifiedById" class="resetFields">
+                </lightning-input-field>
+            </lightning-layout-item>
+       
+        </lightning-layout>
+        <lightning-layout multiple-rows="true">
+            <lightning-layout-item size="12" large-device-size="2" medium-device-size="12" small-device-size="12">
+                <lightning-button
+                    class="slds-m-top_small"
+
+                    type="submit"
+                    label="Save" onclick={savePD}>
+                </lightning-button> 
+            </lightning-layout-item>
+            <lightning-layout-item size="12" large-device-size="4" medium-device-size="12" small-device-size="12">
+                <lightning-button
+                class="slds-m-top_small"
+                onclick={saveAndNewPD}
+                label="Save & New">
+                </lightning-button>
+            </lightning-layout-item>
+            <lightning-layout-item size="12" large-device-size="2" medium-device-size="12" small-device-size="12">
+                <lightning-button
+                class="slds-m-top_small"
+                onclick={closeModalPD}
+                label="close">
+            </lightning-button>
+            </lightning-layout-item>
+               </lightning-layout>
+             
+              <!--  <lightning-button
+                class="slds-m-top_small"
+                onclick={handleReset}
+                label="New">
+                </lightning-button> -->
+
+                
+            
+               
+      
+            </lightning-record-edit-form> 
+            </div>
+            <!-- Modal/Popup Box LWC footer starts here -->
+            <!--<footer class="slds-modal__footer">
+                <button class="slds-button slds-button_neutral" onclick={closeModalStatus} title="Cancel">Cancel</button>
+                <button class="slds-button slds-button_brand" onclick={submitDetailStatus} title="OK">OK</button>
+            </footer> -->
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+
+</lightning-card>
+</template> 
+      
+   
+</template>

@@ -1,0 +1,118 @@
+.dummy{
+	color : black;
+}
+.vl
+{
+	  border-left: 6px solid grey;
+  height: 500px;
+}
+.box {
+    box-shadow: 0px 2px 10px 2px #ddd;
+    padding: 20px;
+    width: 90%;
+    margin: 0 auto;
+    border-radius: 3px;
+}
+.title{
+	    font-size: 20px;
+    text-transform: none;
+color:#17344c;
+	    padding: 8px 10px;
+		    padding-top: 20px;
+    padding-bottom: 20px;
+	
+}
+.tableHyperlink{
+	    font-size: 16px;
+    text-transform: none;
+    color:black;
+	text-decoration: underline;
+	
+}
+.tableheader{
+	    background-color: #ddeef2; 
+	    font-size: 16px;
+    text-transform: none;
+  
+	    padding: 8px 10px;
+		    padding-top: 20px;
+    padding-bottom: 20px;
+	
+}
+.tableValue{
+	      color: gray;
+	    font-size: 16px;
+    text-transform: none;
+
+	    padding: 8px 10px;
+		    padding-top: 20px;
+    padding-bottom: 20px;
+	
+}
+.itemlabel
+{
+	    color: black;
+ 
+    font-size: 16px;
+    text-transform: none;
+}
+.itemvalue
+{
+	color: gray;
+    font-size: 14px;
+    text-transform: none;
+}
+.widthExpanded {
+    width: 100%;
+}
+.floatleft{
+float:left;
+}
+.floatright
+{
+	float:right;
+}
+.tabletopHeader{
+	font-size: 16px;
+    text-transform: none;
+    padding: 8px 10px;
+    padding-top: 0px;
+    padding-bottom: 5px;
+}
+.topcorner{
+	position:absolute;
+	top:5px;
+	right:5px;
+}
+.tableChild{
+	    font-size: 16px;
+    text-transform: none;
+
+	padding-left: 30px;
+	    padding-top: 20px;
+    padding-bottom: 20px;
+}
+.headline
+{
+	      background-color: #ddeef2;  
+    content: " ";
+    display: table;
+
+}
+.paddingaround
+{
+	 padding: 0px;
+}
+.footerbackground
+{
+	    background-color: #f6f6f6;
+}
+.borderbottom
+{
+	    border-bottom: 2px solid #f2f2f2;
+}
+.detailbox{
+	background: #f9f9f9;
+    border: 1px solid #f3f3f3;
+    border-radius: 3px;
+}

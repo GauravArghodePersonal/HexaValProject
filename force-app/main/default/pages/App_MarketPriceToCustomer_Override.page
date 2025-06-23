@@ -1,0 +1,12 @@
+<apex:page standardController="Account_To_Market_Price_Book_Entry__c" 
+                           id="App_MarketPriceToCustomer_Manage" 
+                      sidebar="false"
+                     tabStyle="Account_To_Market_Price_Book_Entry__c" 
+                        title="Edit Override Account to Market Price Entry Relationships"
+                   extensions="App_MarketPriceToCustomer_OverrideExt">
+
+  <apex:form >
+      <c:App_MarketPriceToCustomer_WebApp accountId="{!Account.Id}" cancelURL="/{!Account.Id}" returnURL="/{!Account.Id}"/>    
+  </apex:form>
+
+</apex:page>

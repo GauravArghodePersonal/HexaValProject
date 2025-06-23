@@ -1,0 +1,29 @@
+<template>
+    <div class="header-container">
+        <span class="contact-text">{contactUsText}</span>
+        <div class="buttons-container">
+            <button class="contact-button standard-button" onclick={navigateToContactUs}>Customer Service</button>
+            <button class="language-button standard-button" onclick={toggleModal}>
+                <svg xmlns="http://www.w3.org/2000/svg">
+                    <use xlink:href={svgURL}></use>
+                </svg>
+                {currentLanguage}
+            </button>
+        </div>
+    </div>
+    <template if:true={isModalOpen}>
+        <div class="modal">
+            <div class="modal-content">
+                <span class="close" onclick={toggleModal}>X</span>
+                <div class="modal-title">Select a Language</div>
+                <div class="language-buttons-container">
+                    <template for:each={supportedLanguages} for:item="language">
+                        <div key={language} class="language-button-row">
+                            <button onclick={selectLanguage} data-language={language}>{language}</button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </template>
+</template>

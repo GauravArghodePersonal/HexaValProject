@@ -1,0 +1,8 @@
+<apex:page controller="scrollingtipcontroller" showheader="false" sidebar="false" action="{!ADtip}" standardStylesheets="false">
+<body bgcolor="Silver">
+<apex:form >
+{!returntip.tip_description__c}&nbsp;  <apex:outputlink value="{!returntip.Link__c}" rendered="{!IF(returntip.Link__c != '', true, false)}" target="_blank" onclick="countclick()">{!returntip.Link_Text__c}</apex:outputlink>
+<apex:actionfunction name="countclick" action="{!countclick}"/>
+</apex:form>
+</body>
+</apex:page>

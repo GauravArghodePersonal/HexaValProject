@@ -1,0 +1,138 @@
+<apex:page setup="false" title="Apex Batch Jobs" 
+           sidebar="false" controller="Apex_Batch_Jobs_Controller">
+
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-1.6.2.min.js')}" />
+
+    <apex:form id="theForm">
+        <apex:pageMessages escape="false"/>
+    <apex:pageBlock id="filter" title="Recent Jobs">
+        <apex:facet name="header">
+            <apex:outputPanel layout="block" styleClass="bold center"><br/>
+            <apex:actionStatus id="astat1">
+            <apex:facet name="start">
+                <apex:outputPanel ><table class="tbl1"><tr><td>
+                <apex:outputText styleClass="bold" value=" Please wait ...">
+                    <apex:image value="{!$Resource.spinner}"/>
+                </apex:outputText></td></tr></table></apex:outputPanel>
+            </apex:facet>
+            <apex:facet name="stop">
+                <apex:outputPanel ><table class="tbl1"><tr>
+                <td width="15%">Apex Batch Jobs</td>
+                <td width="20%"><apex:outputLabel value="View : "/>
+                    <apex:selectList value="{!outView}" size="1">
+                    <apex:selectOptions value="{!outViews}" />
+                    <apex:actionSupport event="onchange" action="{!changeView}" 
+                                        status="astat1" rerender="theForm"/>
+                    </apex:selectList>
+                    <apex:commandButton value="Go" action="{!changeView}"
+                                        status="astat1" rerender="theForm"/></td>
+                                 
+                <td width="20%"><apex:outputPanel styleClass="countdown"/></td>
+                
+                <td width="45%"><apex:outputLabel value="Job : "/>
+                    <apex:selectList value="{!jobName}" size="1">
+                        <apex:selectOptions value="{!jobNames}" />
+                    </apex:selectList>
+                    <apex:commandButton value="Submit Job" action="{!submitJob}"
+                                        status="astat1" rerender="theForm"/></td>
+                                        
+                </tr></table></apex:outputPanel>
+            </apex:facet></apex:actionStatus><br/></apex:outputPanel>
+        </apex:facet>
+        
+        <apex:pageBlockTable value="{!batchJobs}" var="j">
+            <apex:column headerValue="Action">
+                <apex:outputPanel rendered="{!if(j.ItemCompleted = true,false,true)}">
+                    <b><a href="/setup/asyncApex/abortJob?id={!j.Name}" 
+                          target="_blank" onclick="return getConfirm('Abort the job?');">
+                          Abort Job</a></b>
+                </apex:outputPanel>
+            </apex:column>
+            <apex:column headerValue="Apex Class" value="{!j.ClassName}"/> 
+            <apex:column headerValue="Job Type" value="{!j.Job_Type}"/> 
+            <apex:column headerValue="Start Date" value="{!j.Formatted_CreatedDate}"/> 
+            <apex:column headerValue="Completion Info"> 
+                <apex:outputPanel >
+                    <apex:outputText value="{!j.EstimatedCompletionDateTime}" escape="false"
+                                     rendered="{!if(j.ItemCompleted = true,false,true)}" />
+                    <apex:outputText value="{!j.Formatted_CompletedDate}" escape="false"
+                                     rendered="{!if(j.ItemCompleted = true,true,false)}" />
+                </apex:outputPanel>
+            </apex:column>   
+            <apex:column headerValue="Status" value="{!j.Status}"/> 
+            <apex:column headerValue="Progress"> 
+                <div class="progressBar">
+                    <div class="progress" style="width: {!j.Percent}%;">
+                        {!j.Percent}%
+                    </div>
+                </div>
+            </apex:column>
+            <apex:column headerValue="Batches Processed" value="{!j.Records_Processed}" 
+                         style="text-align:center;"/> 
+            <apex:column headerValue="Total Batches" value="{!j.Total_Records}" 
+                         style="text-align:center;"/> 
+            <apex:column headerValue="Errors" value="{!j.NumberOfErrors}" 
+                         style="text-align:center;"/> 
+            <apex:column headerValue="Created By" value="{!j.CreatedBy}"/>
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+    
+    <apex:actionFunction name="refreshView" action="{!refreshView}"
+                         immediate="true" oncomplete="resetCount();"
+                         rerender="theForm" status="astat1"/>
+
+    </apex:form>
+ 
+    <script>
+        var $j = jQuery.noConflict();
+        var count, intId;
+        
+        $j(function() {
+            resetCount(); startCountdown();
+        });
+
+        function resetCount() {count = 20;}
+        
+        function startCountdown() {
+            intId = setInterval("countdown()", 1000); return true;
+        }
+        
+        function countdown() {
+            $j("span.countdown").html("Page refreshes in " + count + " seconds");
+            if (count == 0) {refreshView();} count--;
+        }
+        
+        function getConfirm(q) {
+            answer = confirm(q);
+            return (answer != 0);
+        }
+    </script>
+
+    <style>
+        .bold {font-weight: bold;}
+        .center {text-align: center;}
+        .left {text-align: left;}
+        .right {text-align: right;}
+        .nowrap {white-space: nowrap;}
+        .tbl1 tr {line-height: 24px;}
+        .tbl1 td {white-space: nowrap;}
+        .progressBar {
+            background-color: #f8f8f8;
+            border:1px solid #DDDDDD;
+            height: 19px;
+            width: 150px;
+            -moz-border-radius: 5px; 
+            -webkit-border-radius: 5px;}
+            
+        .progress {
+            background-color: #F7B64B;
+            border:1px solid #E78F08;
+            height: 100%;
+            margin: -1px;
+            text-align: center;
+            -moz-border-radius: 5px; 
+            -webkit-border-radius: 5px;
+            line-height: 18px;}
+    </style>
+ 
+</apex:page>

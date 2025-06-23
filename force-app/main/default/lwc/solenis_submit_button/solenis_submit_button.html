@@ -1,0 +1,16 @@
+<template>
+    <template if:false={error}>
+        <center>
+            <br/><br/><br/>
+            <span class="m-pnl-css">
+            Updating Label Request Status - Submitted... Please Wait.
+            </span><br><br></br></br>
+            <img src="/img/waiting_dots.gif" alt="Please wait..." title="Please wait..." height="20" width="196"/>
+        </center>
+    </template>
+    <template if:true={error}>
+        <di class="m-pnl-css m-error">
+            {error}        
+        </di>
+    </template>
+</template>

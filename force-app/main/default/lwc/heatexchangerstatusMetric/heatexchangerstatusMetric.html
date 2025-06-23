@@ -1,0 +1,102 @@
+<template>
+    <lightning-card title="Heat Exchanger Status">
+        <!--for tube side -->
+        <template if:true={firstChildRecord}>
+          <template if:true={childrecEqType}>
+            <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                <thead>
+                    <tr>
+                        <th>Label</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Latest Flow Study Date</td>
+                        <td>{firstChildRecord.fwDate}</td>
+                    </tr>
+                    <tr>
+                        <td>Latest Hydrothermal Stress Coefficient</td>
+                        <td>{firstChildRecord.htsc}</td>
+                    </tr>
+                    <tr>
+                        <td>Latest Potential Vulnerability</td>
+                        <td>{firstChildRecord.fsPerfVul}</td>
+                    </tr>
+                    <tr>
+                        <td>Latest Flow Study Velocity (m/sec.)</td>
+                        <td>{firstChildRecord.fsWaterVel}</td>
+                    </tr>
+                    <tr>
+                        <td>Days since last Flow Study</td>
+                        <td>{firstChildRecord.fwDays}</td>
+                    </tr>
+                    <tr>
+                        <td>Days since last Cleaning</td>
+                        <td>{firstChildRecord.cleanDays}</td>
+                    </tr>
+                    <tr>
+                        <td>Days since last Tube Leak</td>
+                        <td>{firstChildRecord.tubleakDays}</td>
+                    </tr>
+                    <tr>
+                        <td>Days since last Retube/Replace</td>
+                        <td>{firstChildRecord.retubDays}</td>
+                    </tr>
+                    <tr>
+                        <td>Days since last Turnaround</td>
+                        <td>{firstChildRecord.turnarDays}</td>
+                    </tr>
+                </tbody>
+            </table>
+          </template>
+        <template if:false={childrecEqType}>
+           <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                <thead>
+                    <tr>
+                        <th>Label</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Latest Flow Study Date</td>
+                        <td>{firstChildRecord.fwDate}</td>
+                    </tr>
+                    <tr>
+                        <td>Latest Hydrothermal Stress Coefficient</td>
+                        <td>{firstChildRecord.htsc}</td>
+                    </tr>
+                    <tr>
+                        <td>Latest Cross Flow Velocity</td>
+                        <td>{firstChildRecord.fsWaterVel}</td>
+                    </tr>
+                    <tr>
+                        <td>Days since last Flow Study</td>
+                        <td>{firstChildRecord.fwDays}</td>
+                    </tr>
+                    <tr>
+                        <td>Days since last Cleaning</td>
+                        <td>{firstChildRecord.cleanDays}</td>
+                    </tr>
+                    <tr>
+                        <td>Days since last Tube Leak</td>
+                        <td>{firstChildRecord.tubleakDays}</td>
+                    </tr>
+                    <tr>
+                        <td>Days since last Retube/Replace</td>
+                        <td>{firstChildRecord.retubDays}</td>
+                    </tr>
+                    <tr>
+                        <td>Days since last Turnaround</td>
+                        <td>{firstChildRecord.turnarDays}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </template>                
+        </template>
+        <template if:false={firstChildRecord}>
+            <p>No data available</p>
+        </template>
+    </lightning-card>
+</template>

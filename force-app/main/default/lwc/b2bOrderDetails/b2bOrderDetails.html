@@ -1,0 +1,214 @@
+<template>
+     <template if:true={loadingflag}>
+         <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+    </template>
+    <template if:true={ordersflag}>
+        <lightning-card  variant="Narrow"  title="Your Orders/Tracking">
+            <lightning-button-icon  icon-name="utility:down" variant="border-filled" alternative-text="Show More" slot="actions"></lightning-button-icon>
+            <div class="slds-crd slds-var-p-around_x-small">
+                <template if:true={orderShowList}>
+                    <template if:true={orderShowList.length}>
+                        <div class="content">
+                            <div class="slds-grid slds-wrap">
+                                <lightning-layout multiple-rows>
+                                    <!-- heading -->
+                                    <!-- heading Complete-->
+                                    <template for:each={orderShowList}
+                                              for:item="order">
+                                        
+                                        <lightning-layout-item key={order.OrderID} size="12" padding="around-small" small-device-size="3" medium-device-size="6" large-device-size="3" >
+                                            <div class="tableChild" key={order.orderID}>
+                                                <a  data-item={order.orderID} onclick={orderclickHandler}>{order.sapOrderNumber}</a>
+                                                
+                                            </div>
+                                        </lightning-layout-item>
+                                        <lightning-layout-item key={order.OrderID} size="12" padding="around-small" small-device-size="3" medium-device-size="6" large-device-size="3" >
+                                            <div class="tableChild" key={order.OrderID}>{order.poNumber}</div>
+                                        </lightning-layout-item>
+                                        <lightning-layout-item key={order.OrderID} size="12" padding="around-small" small-device-size="3" medium-device-size="6" large-device-size="3" >
+                                            <div class="tableChild" key={order.OrderID}>{order.status}</div>
+                                        </lightning-layout-item>
+                                        <lightning-layout-item key={order.OrderID} size="12" padding="around-small" small-device-size="3" medium-device-size="6" large-device-size="3" >
+                                            <!-- <div class="tableChild" key={order.OrderID}>{order.datePlaced}</div> -->
+                                            <lightning-formatted-date-time value={order.datePlaced}></lightning-formatted-date-time>
+                                        </lightning-layout-item>
+                                    </template>
+                                </lightning-layout>
+                            </div>
+                        </div>
+                    </template>
+                    <template if:false={orderShowList.length}>
+                        <p>No Orders found</p>
+                    </template>
+                </template>
+            </div>
+            
+            <!-- Product Pagination Component here-->
+            <template if:true={orderCount}>
+                <c-b2b-pagination page-size={pageSize} record-count={orderCount} oncallpagechange={pageChange}></c-b2b-pagination>
+            </template>
+        </lightning-card>
+    </template>
+
+    <template if:true={orderDetailsflag}>
+        <div class="slds-card slds-var-p-around_x-small box">
+            <div class="header-column ">
+                <img  src={brandLogo}
+                        class="product"
+                        alt="Logo" height='10%' width='10%'/>
+            </div>
+            <div class="slds-grid slds-wrap">
+                
+                <div class="slds-col slds-medium-size--6-of-12">
+                    <div class="slds-text-align_left title slds-text-title_bold">ORDER DETAILS</div>
+                </div>
+                <div class="slds-col slds-medium-size--6-of-12">
+                    <lightning-layout multiple-rows class="tabletopHeader">
+                        <div class="topcorner">
+                            <lightning-button-icon icon-name="utility:print"  size="x-large"  onclick={handlePDF}   variant="container" alternative-text="Print"      title="Print"></lightning-button-icon>
+                        </div>
+                        
+                        <lightning-layout-item class="slds-border_right"  size="12" padding="around-small"  small-device-size="3" medium-device-size="3" large-device-size="3" >
+                            <div class="custom-box itemlabel">PO Number</div>
+                            <div class="custom-box itemvalue">{poNumber}<br/></div>
+                        </lightning-layout-item>
+                        
+                        <lightning-layout-item class="slds-border_right"  size="12" padding="around-small" small-device-size="3" medium-device-size="3" large-device-size="3" >
+                            <div class="custom-box itemlabel">Order Status</div>
+                            <div class="custom-box itemvalue">{orderstatusheader}</div>
+                        </lightning-layout-item>
+                        <lightning-layout-item  class="slds-border_right"  size="12" padding="around-small" small-device-size="3" medium-device-size="3" large-device-size="3" >
+                            <div class="custom-box itemlabel">Order Number</div>
+                            <div class="custom-box itemvalue">{orderNumber}<br/></div>
+                        </lightning-layout-item>
+                        <lightning-layout-item  size="12" padding="around-small" small-device-size="3" medium-device-size="3" large-device-size="3">
+                            <div class="custom-box itemlabel">Date Placed</div>
+                            <!-- <div class="custom-box itemvalue">{datePlaced}<br/></div> -->
+                            <lightning-formatted-date-time class="custom-box itemvalue" value={datePlaced}></lightning-formatted-date-time>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </div>
+            </div>
+            
+
+            <hr color="#e6e6e6" size="1" width="100%" style="margin: revert;"/>
+            <br/>
+            
+            <div class="paddingaround">
+                <lightning-layout class="custom-box slds-box slds-p-around_medium " multiple-rows >
+                    <lightning-layout-item size="12" small-device-size="4" medium-device-size="4" large-device-size="4">
+                        <div>
+                            <p class="slds-text-title_bold" title="Sold To">Sold To</p>
+                            <hr color="#e6e6e6" size="1" width="100%" style="margin: revert;"/>
+                            <p class="itemvalue">{soldtoStreet}</p>
+                            <p class="itemvalue">{soldtoCity}, {soldtoState}</p>
+                            <br/>
+                            <p class="itemvalue">{soldtoPostalCode} {soldtoCountry} </p>
+                        </div>
+                    </lightning-layout-item>
+                    <lightning-layout-item  size="12" small-device-size="4" medium-device-size="4" large-device-size="4">
+                        <div>
+                            <p class="slds-text-title_bold" title="Ship To">Ship To</p>
+                            <hr color="#e6e6e6" size="1" width="100%" style="margin: revert;"/>
+                            <p class="itemvalue">{shippingStreet}</p>
+                            <p class="itemvalue">{shippingCity}, {shippingState}</p>
+                            <br/>
+                            <p class="itemvalue">{shippingCountry} {shippingPostalCode} </p>
+                        </div>
+                    </lightning-layout-item>
+                    <lightning-layout-item  size="12"  small-device-size="4" medium-device-size="4" large-device-size="4">
+                        <div>
+                            <p class="slds-text-title_bold" title="Bill To">Bill To</p>
+                            <hr color="#e6e6e6" size="1" width="100%" style="margin: revert;"/>
+                            <p class="itemvalue">{billingStreet}</p>
+                            <p class="itemvalue">{billingCity}, {billingState}</p>
+                            <br/>
+                            <p class="itemvalue">{billingCountry} {billingPostalCode}</p>
+                        </div>
+                    </lightning-layout-item>
+                    
+                    <lightning-layout-item  size="12"  small-device-size="12" medium-device-size="12" large-device-size="12">
+                        <br/>
+                        <hr color="#e6e6e6" size="1" width="100%" style="margin: revert;"/>
+                        <p> <span class="slds-text-title_bold">Shipping Method </span><span class="itemvalue">{deliveryInst}</span> </p> 
+                        
+                    </lightning-layout-item>
+                </lightning-layout>
+            </div>
+
+            <div class="slds-card slds-var-p-around_x-small box" style="margin-top: 25px;
+                                                                        width: 100%;">
+                <template for:each={orderliineitemFinal} for:item="orderitem" for:index="index">
+                    <div key={orderitem.id}>  
+                        
+                        <c-b2b-Order-History-Card key={orderitem} record-id={orderitem.Id} order-item={orderitem}
+                                                  effective-account-id={effectiveAccountId}></c-b2b-Order-History-Card> 
+                        
+                        <div key={orderitem.id} class="detailbox">  
+                            <lightning-layout multiple-rows>
+                                <lightning-layout-item  size="12" padding="around-small" small-device-size="2" medium-device-size="2" large-device-size="2" >
+                                    <div class="custom-box itemlabel">Position Number</div><br/>
+                                    <div class="itemvalue">{orderitem.SAP_OrderlineNumber__c}</div>
+                                </lightning-layout-item>
+                                <lightning-layout-item   size="12" padding="around-small" small-device-size="1" medium-device-size="1" large-device-size="1" >
+                                    <div class="custom-box itemlabel">Delivery</div><br/>
+                                    <template if:true={orderitem.packinglistflag}>
+                                        <a title="Click to download Packagelist"> <div class="tableHyperlink" data-id={orderitem.PackingList_Id} onclick={b2bDownloadPack}>Packing List</div></a> <br/>
+                                    </template>
+                                    <template if:true={orderitem.packinglistflag}>
+                                        <a title="Click to download Bill of Landing"> <div class="tableHyperlink" data-id={orderitem.PackingList_Id} onclick={b2bDownloadBOL}>Bill of Lading</div></a>
+                                    </template>
+                                </lightning-layout-item>
+                                <lightning-layout-item size="12" padding="around-small" small-device-size="2" medium-device-size="2" large-device-size="2" >
+                                    <div class="custom-box itemlabel">Invoice Number</div><br/>
+                                    <a title="Click to download invoice"> <div class="tableHyperlink" data-id={orderitem.Invoice} onclick={b2bDownloadInvoice}>{orderitem.Invoice}</div></a>
+                                </lightning-layout-item>
+                                <lightning-layout-item  size="12" padding="around-small" small-device-size="2" medium-device-size="2" large-device-size="2" >
+                                    <div class="custom-box itemlabel">Order Status</div><br/>
+                                    <div class="custom-box itemvalue">{orderitem.Line_Status}</div>
+                                </lightning-layout-item>
+                                <lightning-layout-item  size="12" padding="around-small" small-device-size="2" medium-device-size="2" large-device-size="2" >
+                                    <div class="custom-box itemlabel">Expected Ship Date</div><br/>
+                                    <!-- <div class="custom-box itemvalue">{orderitem.Exp_Del_Date}</div> -->
+                                    <lightning-formatted-date-time class="custom-box itemvalue" value={orderitem.Exp_Del_Date}></lightning-formatted-date-time>
+                                </lightning-layout-item>
+                                <lightning-layout-item  size="12" padding="around-small" small-device-size="2" medium-device-size="2" large-device-size="2" >
+                                    <div class="custom-box itemlabel">Tracking Number</div><br/>
+                                    <div class="custom-box itemvalue tableHyperlink"> 
+                                        <a title="Click to track the product"> <div class="tableHyperlink"  data-id={orderitem.trackingLink} onclick={opentracking}>{orderitem.Tracking_Id}</div></a> <br/>
+                                    </div>
+                                </lightning-layout-item>
+                                <lightning-layout-item   size="12" padding="around-small" small-device-size="1" medium-device-size="1" large-device-size="1" >
+                                    <div class="custom-box itemlabel">Carrier</div><br/>
+                                    <div class="custom-box itemvalue"  tooltip="Kindly click the traking id for tracking" >{orderitem.Carrier_Name}</div>
+                                </lightning-layout-item>
+                            </lightning-layout>
+                        </div>
+
+                        <hr key={orderitem.id} color="#e6e6e6" size="1" width="100%" style="margin: revert;"/>
+                    </div>
+                </template>
+                
+                <lightning-layout multiple-rows>
+                    <lightning-layout-item class="slds-border_to" size="12" padding="around-small" small-device-size="12" medium-device-size="12" large-device-size="12">
+                        <!--<div><span class="title floatleft">Total Cost </span> <span class="title floatright">{totalAmount} USD1 </span></div> -->
+<template if:true={saptotalFlag}>
+                        <div><span class="title floatleft">Total Cost </span> <span class="title floatright"><lightning-formatted-number
+                                            currency-code={currencyisocode}
+                                            format-style="currency"
+                                            value={totalamountSAP} currency-display-as="code">
+                </lightning-formatted-number> </span></div>
+</template>
+<template if:false={saptotalFlag}>
+    <div><span class="title floatleft">Total Cost </span> <span class="title floatright"><lightning-formatted-number
+                                            currency-code={currencyisocode}
+                                            format-style="currency"
+                                            value={totalAmount} currency-display-as="code">
+                </lightning-formatted-number> </span></div>
+</template>
+                    </lightning-layout-item>
+                </lightning-layout>
+            </div>
+        </div>
+    </template>
+</template>

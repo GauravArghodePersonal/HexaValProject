@@ -1,0 +1,220 @@
+<apex:page showHeader="false" sidebar="false">
+<html>
+    <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <style>
+        .clearfix:after {
+            visibility: hidden;
+            display: block;
+            font-size: 0;
+            content: " ";
+            clear: both;
+            height: 0;
+        }
+            .clearfix { display: inline-block; }
+            /* start commented backslash hack \*/
+            * html .clearfix { height: 1%; }
+            .clearfix { display: block; }
+            /* close commented backslash hack */
+        body, html {
+            height: 100%;
+            margin: 0;
+            color: #223949 !important;
+        }
+
+        .bg {
+            /* The image used */
+            width: 100%;
+            margin: 0 auto;
+        
+            /* Full height */
+            height: 100%; 
+
+            /* Center and scale the image nicely */
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        .logo {
+            margin: 0 auto;
+            width: 50%;
+        }
+        .logo_info {
+            width:360px; padding-top: 50px;
+        }
+        .logo_sfdc {
+            width: 208px;
+            padding-top: 10px;
+        }
+        .introContent {
+            font-weight: 500 !important;
+            padding-top: 15px;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0 auto;
+            font-size: 30px;
+            text-align: center;
+        }
+        .introContent1 {
+            
+            padding-top: 15px;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0 auto;
+            font-size: 18px;
+            text-align: left;
+        }
+         .contentOld {
+            font-weight: 500 !important;
+            
+            padding:25px 50px 15px 100px;
+            font-family: Arial, sans-serif;
+            margin: 10 auto;
+            font-size: 18px;
+            text-align: left;
+        }
+        
+        .content {
+            font-weight: 500 !important;
+            padding-top:27px;
+            font-family: Arial, sans-serif;
+            font-size: 32px;
+            text-align: left;
+        }
+        .footerImage {
+            padding-top : 13%;
+            width: 100%;
+        }
+        .laptop {
+            float: left;
+        }
+        .emoji{
+            width: 40%;
+            float: left;
+            
+        }
+        
+        span {
+          animation: blinker 2s ease infinite;
+        }
+    
+        @keyframes blinker {
+          50% {
+            opacity: 0;
+          }
+        }
+       .blinkingParent{
+            font-size: 28px;
+        }
+        .blinking{
+            width: 620px;
+            margin: 0 auto;
+            animation:blinkingText 1.2s ease infinite;
+        }
+        @keyframes blinkingText{
+            0%{     color: #ff0000;    }
+            49%{    color: #ff0000; }
+            60%{    color: transparent; }
+            99%{    color:transparent;  }
+            100%{   color: #ff0000;    }
+        }
+        #ie{
+            display : none;
+        }
+        .lighting{
+            font-size: 28px;
+            color: #223949 !important; 
+            margin: 0 auto;
+            width: 620px; 
+        }
+    </style>
+    </head>
+    <body>    
+           
+            <div class="bg" style="background-image:url('{!$Resource.BkgdAngle}');">
+                <div class="clearfix iconClass">
+                    <div class="logo" style="float:left">
+                        <apex:image styleClass="logo_info" value="{!$Resource.solenis_login_logo}"/>
+                    </div>
+                    <div class="" style="float:right">
+                        <apex:image styleClass="logo_sfdc" value="{!$Resource.solenis_sfdc}"/>
+                    </div>
+                </div>
+                <div id="ie" class="blinkingParent">
+                    <div class="blinking">You are using Internet Explorer which is not supported browser for lightning.</div> 
+                    <div class="lighting" style="Margin-top:10px;">For Lightning Experience, please use Google Chrome or Microsoft Edge.</div>
+                </div>
+
+                <div id ="other" class="introContent">
+                    <!--Lightning Experience is <span>Coming</span>-->
+                    <u>Welcome All Pool Solution users to Solenis Salesforce.com..!!</u>
+                  </div>
+                   <div id ="otherContent" class="contentOld">
+                       <div>Please login using the Single Sign On enabled link on your screen. You do not need a username and password to login. 
+							<br/><br/>
+						</div>
+					<div align="center">
+							<apex:image styleClass="center" value="{!$Resource.SolenisLoginSSO}" width="35%"/>
+						</div>	
+                    <div>
+                        <br/><b>Training</b>
+							<br/>	As a reminder, links to prior training sessions can be found <a href="https://solenis.sharepoint.com/sites/ProjectZeus866/Shared%20Documents/Forms/AllItems.aspx?csf=1&web=1&e=zh2H3e&cid=dd0e24ce%2D64b3%2D4e11%2Daa2c%2Dc5d3536a81df&RootFolder=%2Fsites%2FProjectZeus866%2FShared%20Documents%2FChange%20Management%2FNon%20ERP%20Training%2FSFDC&FolderCTID=0x01200019CD59D12AD12942BC7EC6443120891C&InitialTabId=Ribbon%2ERead&VisibilityContext=WSSTabPersistence">here</a>. Starting February 1, 2022, we have scheduled open office hours to discuss any issues or concerns related to SFDC on a teams call. Please join one of the following SFDC Pool Solutions Teams calls:
+								<ul class="b">
+								&emsp;<li> NA and LATAM daily from February 1 to February 11 at 8:00 a.m. to 9:00 a.m. EST</li>							
+								&emsp; <li>EMEA and AP on February 1 and from February 3 to February 11 from 8:30 to 9:30 CEST</li>
+								</ul>
+							<br/><br/>
+							<b>Questions? </b>
+							<br/>
+								If you have any IT-related questions concerning the new process or training in Solenis SFDC, please contact:							
+								<ul class="b">
+								&emsp; <li>NA and LATAM: Richa Sharma <a href="rsharma@solenis.com">rsharma@solenis.com</a></li>
+								&emsp; <li>EMEA: Alain Enou  <a href="aenou@solenis.com">aenou@solenis.com</a></li>	
+								</ul>
+                    </div>
+                </div>
+                
+            </div>
+            <!--Script-->
+            <script> 
+            //detects if user uses Internet Explorer 
+            //returns version of IE or false, if browser is not IE 
+            //Function to detect IE or not 
+            function IEdetection() { 
+                var ua = window.navigator.userAgent; 
+                var msie = ua.indexOf('MSIE '); 
+                if (msie > 0) { 
+                    // IE 10 or older, return version number 
+                    return ('getHim' + parseInt(ua.substring( 
+                      msie + 5, ua.indexOf('.', msie)), 10)); 
+                } 
+                var trident = ua.indexOf('Trident/'); 
+                if (trident > 0) { 
+                    // IE 11, return version number 
+                    var rv = ua.indexOf('rv:'); 
+                    return ('getHim' + parseInt(ua.substring( 
+                      rv + 3, ua.indexOf('.', rv)), 10)); 
+                } 
+                var edge = ua.indexOf('Edge/'); 
+                if (edge > 0) { 
+                    //Edge (IE 12+), return version number 
+                    return ('IE ' + parseInt(ua.substring( 
+                      edge + 5, ua.indexOf('.', edge)), 10)); 
+                } 
+                // User uses other browser 
+                return ('Not IE'); 
+            } 
+            var result = IEdetection(); 
+            if(result.indexOf('get') !== -1){
+            <!--alert('hi');-->
+                document.getElementById("ie").style.display = "block";
+                document.getElementById("other").style.display = "none";
+                document.getElementById("otherContent").style.display = "none";
+                document.getElementById("otherContent1").style.display = "none";
+            }
+            <!--document.write(result); -->
+        </script>
+    </body>
+</html>
+
+</apex:page>

@@ -1,0 +1,121 @@
+<apex:page standardController="Pricing_Condition__c" 
+           extensions="PricingConditionListController"
+           recordSetVar="pricingConditions"
+           sidebar="false" action="{!setExtendablePCs}">
+    <apex:form id="actionForm">
+        <apex:variable var="decimals" value="4"/>
+        <apex:variable var="locale" value="{!userLocale}"/>
+        <apex:pageBlock Title="Pricing Conditions to Extend" mode="detail" id="thePageBlock">
+            <apex:pageMessages />
+            <apex:pageBlockButtons location="top">
+                <apex:actionStatus id="extendStatusMsg">
+                    <apex:facet name="start">
+                        <apex:outputText escape="false" style="font-weight: bold;" 
+                                         value="&nbsp;{!$Label.Please_Wait}...">
+                            <apex:image value="{!$Resource.spinner}"/>
+                        </apex:outputText>
+                    </apex:facet>
+                    <apex:facet name="stop">
+                        <apex:outputPanel >
+                        <apex:commandButton value="Submit"
+                            action="{!extendPricingConditions}" 
+                            rendered="{!NOT(extendJobSubmitted)}" rerender="thePageBlock"
+                            status="extendStatusMsg"/>
+                        <apex:commandButton value="Cancel"
+		                    action="{!gotoListPage1}"/>
+		                </apex:outputPanel>
+                    </apex:facet>
+                </apex:actionStatus>
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection columns="1">
+                <apex:pageBlockSectionItem dataStyle="text-align: center;">
+                    <apex:outputText value="Review the following Prices before submitting to extend."/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Extend Validity Date To"/>
+                    <apex:outputField value="{!pc.Valid_To_Date__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Reasons for Extension"/>
+                    <apex:outputText value="{!userComments}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!renderExtendAtSoldTo}"
+                                           labelStyle="white-space:nowrap;">
+                    <apex:outputText value="Extend ShipTo level Prices at SoldTo level?"/>
+                    <apex:inputField value="{!pc.Active__c}"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection columns="1">
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value=""/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:pageBlockTable value="{!slist}" var="p">
+                        <apex:column >
+                            <apex:facet name="header">Account Name<br/>and Number<br/>Customer Group</apex:facet>
+                            <apex:outputLink value="/{!p.pricingCondition.Account__r.Id}"> 
+                                <apex:outputText value="{!p.pricingCondition.Account__r.Name}"/>
+                            </apex:outputLink>
+                            <br/><apex:outputText value="{!p.accountNumber}"/>
+                            <br/><apex:outputText value="{!p.pricingCondition.Account__r.SAP_Customer_Group_1_Desc__c}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Material Name<br/>and Number</apex:facet>
+                            <apex:outputLink value="/{!p.pricingCondition.Material2__r.Id}"> 
+                                <apex:outputText value="{!p.pricingCondition.Material2__r.Material_Desc__c}"/>
+                            </apex:outputLink>
+                            <br/><apex:outputText value="{!p.materialNumber}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Invoice<br/>Price</apex:facet>
+                            <apex:outputLink value="/{!p.pricingCondition.Id}">
+                            <c:Currency value="{!p.invoicePrice}"
+                                        code="{!p.pricingCondition.CurrencyIsoCode}"
+                                        decimals="{!decimals}" locale="{!locale}"/>
+                            </apex:outputLink>
+                        </apex:column>
+                        <apex:column rendered="{!renderNewInvoicePrice}" >
+                            <apex:facet name="header">Invoice<br/>Price<br/>(New)</apex:facet>
+                            <apex:outputPanel >
+                            <c:Currency value="{!p.invoicePrice}"
+                                        code="{!p.pricingCondition.CurrencyIsoCode}"
+                                        decimals="{!decimals}" locale="{!locale}"
+                                        rendered="{!!p.isInvoicePriceChanged}"/>
+                            <c:Currency value="{!p.pricingCondition.Invoice_Price__c}"
+                                        code="{!p.pricingCondition.CurrencyIsoCode}"
+                                        decimals="{!decimals}" locale="{!locale}"
+                                        rendered="{!p.isInvoicePriceChanged}"/>
+                            </apex:outputPanel>
+                        </apex:column>
+                        <apex:column rendered="{!renderMarketPrice}">
+                            <apex:facet name="header">Market<br/>Price</apex:facet>
+                            <c:Currency value="{!p.pricingCondition.Market_Price__c}"
+                                        code="{!p.pricingCondition.CurrencyIsoCode}"
+                                        decimals="{!decimals}" locale="{!locale}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Payment<br/>Term</apex:facet>
+                            <apex:outputText value="{!p.pricingCondition.Payment_Term_Explanation__c}"/><br/>
+                            <apex:outputField value="{!p.pricingCondition.Payment_Terms__c}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Valid From<br/>and To</apex:facet>
+                            <apex:outputField value="{!p.pricingCondition.Valid_From_Date__c}"/><br/>
+                            <apex:outputField value="{!p.pricingCondition.Valid_To_Date__c}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Record<br/>Status</apex:facet>
+                            <apex:outputField value="{!p.pricingCondition.Record_Status__c}"/>
+                        </apex:column>
+                        <apex:column width="300px">
+                            <apex:facet name="header">Comments</apex:facet>
+                            <apex:outputText escape="false" value="{!p.comments}" 
+                                             style="font-weight: bold; color: red;"/>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

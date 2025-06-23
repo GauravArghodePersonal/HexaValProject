@@ -1,0 +1,15 @@
+<apex:page standardController="Lead" showHeader="False">
+<SCRIPT LANGUAGE="JavaScript">
+function popUp(URL) {
+day = new Date();
+id = day.getTime();
+eval("page" + id + " = window.open(URL, '" + id + "', 'toolbar=0,scrollbars=1,location=0,statusbar=0,menubar=0,resizable=0,width=550,height=600,left = 935,top = 550');");
+}
+</script>
+<style>
+div {text-indent:100px;}
+</style>
+<form>
+<div><input type="button" value="Definitions" onClick="javascript:popUp('../apex/AWTCustomerGrp1Defs')"/></div>
+</form>
+</apex:page>

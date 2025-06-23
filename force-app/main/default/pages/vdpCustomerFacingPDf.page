@@ -1,0 +1,94 @@
+<apex:page controller="vdpCustomerFacingPDfController" cache="true" showHeader="false" sidebar="false" standardStylesheets="false" renderAs="pdf" applyBodyTag="false" applyHtmlTag="false">
+<html>
+    <head>
+        <style type="text/css" media="print">
+                @page {
+                    margin-bottom: 3cm;
+                @bottom-center {
+                     content: element(footer);
+                    }
+                }
+                div.footer {
+                    display: block;
+                    padding: 0px;
+                    position: running(footer);
+                }
+                .pagenumber:before {
+                                        content: counter(page);
+                }
+                .pagecount:before {
+                             content: counter(pages);
+                }
+
+                
+                .clearfix:after {
+                    clear: both;
+                }
+
+                
+                <!--#cva
+                    {
+                      display: block; margin-left: auto; margin-right: auto;
+                      }
+                 #Solenislogo{
+                     float: Right;font-family: Arial Unicode MS;font-weight: bold;
+                 } -->    
+        </style>
+    </head>
+    <apex:repeat value="{!multipdfList}" var="ValueAdvantage__c">
+    <body style="width=700px;">
+    <!--<apex:image id="theImage" value="{!$Resource.VDPPDF}" width="600" height="800" alt="Description of image here"/>-->
+        <div id="Solenislogo" style="float: Right;font-family: Arial Unicode MS;font-weight: bold;"><apex:image title="Solenis Logo" alt="Solenis Logo" styleClass="logo_size" url="{!URLFOR($Resource.SolenisLogowithcaption)}" /></div>
+        <div class="clearfix" style="height: 100px;font-family: Arial Unicode MS">
+                <div style="height: 46px;width: 50%;float: left;"><p style="color: #4682B4;font-size: 24px;font-weight: bold;line-height: 0.7;"><b>ValueAdvantage</b><br/>
+                <!--<b style="font-size: 10px;font-family: Arial Unicode MS;color:red;">For Internal Use Only - Confidential Information, Do Not Distribute </b>-->
+                 </p><br/>
+                
+                    <!--<p style="color:#708090;"><b>{!ValueAdvantage__c.Value_Focus_Area__c}</b></p>-->
+                </div>
+                
+                <div style="display: block; margin-left: 30%;float: left;margin-Top: 3%;"><b style="font-family: Arial Unicode MS ;font-weight: bold;font-size: 16px;">{!ValueAdvantage__c.Name}</b></div>
+         </div>      
+        <div>
+            <div class="clearfix" style="float: left;width: 25%;">
+                <P style="background: #2e5cb8;font-size: 14px;color: white;margin-left: 0%;font-family: Arial Unicode MS;width:80%" > Opportunity Statement</P>
+                <div style="font-family: Arial Unicode MS;font-size: 12px;margin-right: 5%;">{!ValueAdvantage__c.Problem_Statement__c}</div>
+            </div>
+            <!--<div Style="border-left: 1px solid #4682B4;height: 900px;float : left; margin-left: 3%; top : 10px"></div>-->
+            <div style="float: left;width: 70%;font-family: Arial Unicode MS;border-left: 1px solid #4682B4">       
+               <div style="margin-left: 5%;">
+               <!-- <div Class="boldedUnicode "><P ><b style="color:#4682B4;font-size: 14px;font-weight: bold;text-align: left;">Opportunity Statement</b><br/>
+                <b style="text-align: justify; text-justify: inter-word;font-size:12px;">{!ValueAdvantage__c.Problem_Statement__c} </b></p>  </div>-->
+                <div><P ><b style="color:#4682B4;font-size: 14px;font-weight: bold;text-align: left;">Solenis Recommendation</b><br/>
+                <b style="text-align: justify; text-justify: inter-word;font-size:12px;">{!ValueAdvantage__c.Solenis_Recommendation__c}</b></p></div>
+                <div ><P><b style="color:#4682B4;font-size: 14px;font-weight: bold;text-align: left;">Value Proposition</b><br/>
+                <b style="font-size:12px;">{!ValueAdvantage__c.Value_Proposition__c}</b> </p> </div>            
+                <!--<div><p><b style="background: #2e5cb8;font-size: 14px;font-weight: bold;color: white;" > Learnings </b><br/>
+                <apex:dataTable value="{!VpdList}" var="vdp">
+                <b style="text-align: justify; font-size: 14px;text-justify: inter-word;"><apex:column ><b style="text-align: justify; text-justify: inter-word;font-size:12px;"><apex:outputField value="{!vdp.Learnings__c}" /></b></apex:column></b>  </apex:dataTable></p></div>-->
+                
+                <!--<div><P ><b style="color:#4682B4;">Savings Type:</b> {!ValueAdvantage__c.Savings_Type__c}</p></div>-->            
+                <!--<div><P ><b style="color:#4682B4;">Customer Value Type </b>{!ValueAdvantage__c.Customer_Value_Type__c}</p></div>-->
+                <div><P><b style="color:#4682B4;font-size: 14px;font-weight: bold;text-align: left;">Value Focus Area</b>&nbsp;<b style="font-size: 12px;">{!ValueAdvantage__c.Value_Focus_Area__c}</b> </p>  </div>
+                <!--<div><P ><b style="color:#4682B4;font-size: 14px;font-weight: bold;text-align: left;">Total Cost Savings </b><apex:outputText style="font-size:12px;" rendered="{!if(ValueAdvantage__c.Total_Cost_Savings__c>0,true,false)}"><b style="font-size:12px;">{!TEXT(ValueAdvantage__c.Total_Cost_Savings__c)} &nbsp; {!ValueAdvantage__c.CurrencyIsoCode}</b></apex:outputText></p></div>-->
+                              
+                <div><P ><b style="color:#4682B4;font-size: 14px;font-weight: bold;text-align: left;">Total Cost Savings </b><apex:outputText value="{0, number, ###,##0}" style="font-size:12px;" rendered="{!if(ValueAdvantage__c.Total_Cost_Savings__c>0,true,false)}"><b style="font-size:12px;"> <apex:param value="{!ValueAdvantage__c.Total_Cost_Savings__c}"/>  &nbsp; {!ValueAdvantage__c.CurrencyIsoCode}</b></apex:outputText></p></div>              
+                <!--<div><b style="color:#4682B4;font-size: 14px;font-weight: bold;text-align: left;">Customer Team</b>
+                <b style="font-size: 12px;">{!ValueAdvantage__c.Customer_Team__c}</b>  </div>-->
+                <div><P><b style="color:#4682B4;font-size: 14px;font-weight: bold;">Project Status</b>&nbsp;<b style="font-size: 12px;">{!ValueAdvantage__c.Project_Status__c}</b></p>   </div>
+                <div><P ><b style="color:#4682B4;font-size: 14px;font-weight: bold;">Actual Date Completed</b> <apex:outputText style="font-size:12px;" value="{0, date, MMMM d','  yyyy}"> <apex:param value="{!ValueAdvantage__c.Actual_Date_Completed__c}" /> </apex:outputText>&nbsp;&nbsp;&nbsp;&nbsp;
+                <b style="color:#4682B4;font-size: 14px;font-weight: bold;">Actual Date Approved</b> <apex:outputText style="font-size:12px;" value="{0, date, MMMM d','  yyyy}"> <apex:param value="{!ValueAdvantage__c.Actual_Date_Approved__c}" /> </apex:outputText></p></div>
+               </div>
+                
+            </div>
+        </div>
+            <div id="footer" style="float: left;font-family: Arial Unicode MS">
+                <P style="font-size: 10px"><b style="color:#4682B4;">Report Generated By </b>{!$User.Full_Name__c}, &nbsp;<apex:outputText value="{0, date, MMMM d',' yyyy hh:mm a}" label="Last Updated:" ><apex:param value="{!Now()- 0.166666664}" /> </apex:outputText>  </p> 
+                <div style=" display: block;margin-left: 35%; margin-right: auto;"><apex:image id="cva" title="Solenis Logo" width="170" height="60" alt="Solenis Logo" styleClass="logo_size" url="{!URLFOR($Resource.CvaImage)}" />
+                </div>
+                <p style="font-size:8px;">All statement, information and data presented herein are believed to be accurate and reliable, but are not to be taken as a guarentee, an express, warranty, or an implied warranty of merchantability or fitness for a particular purpose, or representation, express or implied, for which solenis and its affiliates and subsidiaries assume legal responsibility. <sup>TM</sup> Trademark, solenis or its subsidiaries, registered in various countries. *Trademark owned by a third party. ©2015, solenis.</p>
+            </div>
+    </body>
+    </apex:repeat>
+</html>              
+</apex:page>

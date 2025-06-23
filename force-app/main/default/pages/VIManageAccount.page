@@ -1,0 +1,2 @@
+<apex:page controller="FlintSiteHomeController" >
+</apex:page>

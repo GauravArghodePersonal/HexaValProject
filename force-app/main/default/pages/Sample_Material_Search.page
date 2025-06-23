@@ -1,0 +1,241 @@
+<apex:page standardController="Sample_Material__c" 
+           extensions="Sample_Request_Controller" sidebar="false" 
+           action="{!sampMatSrchAction}" id="thePage">
+
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-1.6.2.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-ui-1.8.16.custom.min.js')}" />
+    <style type="text/css">
+        @import "{!URLFOR($Resource.jQuery, 'css/redmond/jquery-ui-1.8.16.custom.css')}";
+    </style>
+
+    <apex:stylesheet value="{!$Resource.SampleRequestStyles}" />
+
+    <apex:outputPanel id="panel1" styleClass="panel1">
+    
+    <apex:pageMessages id="msgs" escape="false"/>
+
+    <apex:form id="form1">
+    
+        <apex:pageBlock id="pblock1" title="Sample Material Search" mode="edit">
+	        <apex:pageBlockButtons location="top">
+	            <apex:actionStatus id="searchStatus">
+	                <apex:facet name="start">
+	                    <apex:outputText styleClass="bold" value=" Please wait ...">
+	                        <apex:image value="{!$Resource.spinner}"/>
+	                    </apex:outputText>
+	                </apex:facet>
+	                <apex:facet name="stop">
+	                    <apex:outputPanel styleClass="nowrap">
+	                    <apex:commandButton action="{!searchSampleMaterials}" 
+	                                        value="Search" 
+	                                        rerender="panel1" status="searchStatus"/>
+	                    </apex:outputPanel>
+	                </apex:facet></apex:actionStatus>
+	        </apex:pageBlockButtons>
+        
+        <apex:outputPanel id="searchForm">
+            <table class="bold" width="100%">
+
+            <tr>
+
+                <td class="mcol1">Dist. Channel</td><td class="mcol2">
+                <apex:selectList size="1" value="{!sampleRequest.Dist_Channel__c}">
+                    <apex:actionSupport event="onchange" action="{!changeDistChan}" 
+                                        status="searchStatus" rerender="form1"/>
+                    <apex:selectOptions value="{!distChanOpts}"/>
+                </apex:selectList></td>
+
+                <td class="mcol1">Sample Center</td><td class="mcol2">
+                <apex:selectList size="1" value="{!sampleRequest.Sample_Center__c}">
+                    <apex:actionSupport event="onchange" action="{!setSampleCenter}" 
+                                        status="searchStatus" rerender="form1"/>
+                    <apex:selectOptions value="{!sampleCenterOpts}"/>
+                </apex:selectList></td>
+
+                <td class="mcol1"><apex:outputLabel rendered="{!isAHWT}" value="No-Charge Order"/></td>
+                <td class="mcol2">
+                <apex:outputPanel rendered="{!isAHWT}">
+                    <apex:inputCheckbox value="{!commercialOrder}">
+                    <apex:actionSupport event="onclick" action="{!changeCommercialOrder}" 
+                                        rerender="form1" status="searchStatus"/>
+                    </apex:inputCheckbox>
+                    <span id="commercial-_help" class="helpButton">Commercial
+                        <img class="helpOrb" title="" alt="" src="/s.gif"/>
+                        <script type="text/javascript">
+                            sfdcPage.setHelp('commercial', 'Commercially available package size within that sales org. (ie.: pail, drum, bag, tote,etc)');
+                        </script>
+                    </span>
+
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                    <apex:inputCheckbox value="{!noncmrcialOrder}">
+                    <apex:actionSupport event="onclick" action="{!changeNoncmrcialOrder}" 
+                                        rerender="form1" status="searchStatus"/>
+                    </apex:inputCheckbox>
+                    <span id="noncommercial-_help" class="helpButton">Non-Commercial
+                        <img class="helpOrb" title="" alt="" src="/s.gif"/>
+                        <script type="text/javascript">
+                            sfdcPage.setHelp('noncommercial', 'sample size of 50 - 500 ml  (approved sample materials only)');
+                        </script>
+                    </span>
+                    
+                </apex:outputPanel></td>
+
+                    </tr>
+
+                    <tr>
+
+                <td class="mcol1">Sales Org</td><td class="mcol2">
+                <apex:selectList size="1" value="{!sampleRequest.Sales_Org__c}">
+                    <apex:actionSupport event="onchange" action="{!changeSalesOrg}" 
+                                        status="searchStatus" rerender="form1"/>
+                    <apex:selectOptions value="{!salesOrgOpts}"/>
+                </apex:selectList></td>
+
+                <td class="mcol1">Material</td><td class="mcol2">
+                <apex:inputText value="{!matSrchString}" styleClass="txt1"/></td>
+
+                <td colspan="2"></td>
+
+                    </tr>
+
+            </table>                    
+        </apex:outputPanel>
+        </apex:pageBlock>
+            
+        <apex:pageBlock id="matCatalog" mode="edit" rendered="{!renderMatCatalog}">
+            <table class="bold" width="100%">
+
+                    <tr><td class="centernw" width="15%">
+                        <apex:outputText value="Records: {!pc1.recordFrom} - {!pc1.recordTo} of {!pc1.resultSize}" 
+                                         styleClass="nowrap"/>
+                    </td>
+
+                    <td class="centernw" width="70%">
+                            <apex:actionStatus id="pageControls">
+                                <apex:facet name="start">
+                                    <apex:outputText styleClass="bold" value=" Please wait ...">
+                                        <apex:image value="{!$Resource.spinner}"/>
+                                    </apex:outputText>
+                                </apex:facet>
+                                <apex:facet name="stop">
+                                <apex:outputPanel >
+                                <apex:outputText value="Rows Per Page:"/>&nbsp;
+                                <apex:selectList id="pageSize" value="{!pc1.pageSize}" size="1" title="Rows Per Page:">
+                                    <apex:actionSupport event="onchange" action="{!pc1Size}" 
+                                                    rerender="matCatalog" status="pageControls"/>
+                                    <apex:selectOption itemLabel="20" itemValue="20"/>
+                                    <apex:selectOption itemLabel="50" itemValue="50"/>
+                                    <apex:selectOption itemLabel="100" itemValue="100"/>
+                                    <apex:selectOption itemLabel="200" itemValue="200"/>
+                                </apex:selectList>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <apex:commandButton action="{!pc1Frst}" disabled="{!NOT(pc1.hasPrevious)}" 
+                                                    rerender="matCatalog" status="pageControls"
+                                                    title="First Page" value="<<"/>&nbsp;&nbsp;
+                                <apex:commandButton action="{!pc1Prev}" disabled="{!NOT(pc1.hasPrevious)}" 
+                                                    rerender="matCatalog" status="pageControls"
+                                                    title="Prev Page" value="<"/>
+                                                    
+                                Previous&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Next&nbsp;
+                                
+                                <apex:commandButton action="{!pc1Next}" disabled="{!NOT(pc1.hasNext)}" 
+                                                    rerender="matCatalog" status="pageControls"
+                                                    title="Next Page" value=">"/>&nbsp;&nbsp;
+                                <apex:commandButton action="{!pc1Last}" disabled="{!NOT(pc1.hasNext)}" 
+                                                    rerender="matCatalog" status="pageControls"
+                                                    title="Last Page" value=">>"/>
+                                </apex:outputPanel>
+                            </apex:facet>
+                        </apex:actionStatus>
+                    </td>
+
+                    <td class="centernw" width="15%">
+                        <apex:outputText value="Page: {!pc1.pageNumber} of {!pc1.lastPageNumber}"/>
+                    </td>
+                    </tr>
+
+            </table>
+                    
+	        <apex:pageBlockTable value="{!matCatalog}" var="m" >
+	            <apex:column headerClass="mcol1" styleClass="mcol1" width="40px">
+	                <apex:facet name="header">#</apex:facet>
+	                <apex:outputText value="{!m.recNum}"/>
+	            </apex:column>
+	
+	            <apex:column width="400px">
+	                <apex:facet name="header">Material Name</apex:facet>
+	                <apex:outputText value="{!m.matName}"/>
+	            </apex:column>
+	            <apex:column width="400px">
+	                <apex:facet name="header">Sample Size</apex:facet>
+	                <apex:outputText value="{!m.matUom}"/>
+	            </apex:column>
+	            <apex:column width="100px" rendered="{!isCMCSampCenter}">
+	                <apex:facet name="header">Unit Weight</apex:facet>
+	                <apex:outputText value="{!m.matUwt}"/>
+	            </apex:column>
+	            <apex:column width="100px" rendered="{!isCMCSampCenter}">
+	                <apex:facet name="header">Out of Stock?</apex:facet>
+	                <apex:outputText value="{!m.outOfStock}"/>
+	            </apex:column>
+                <apex:column width="100px" rendered="{!!isCMCSampCenter}">
+                    <apex:facet name="header">Dist.Channel</apex:facet>
+                    <apex:outputText value="{!m.distChan}"/>
+                </apex:column>
+                <apex:column width="100px" rendered="{!!isCMCSampCenter}">
+                    <apex:facet name="header">Sales Org</apex:facet>
+                    <apex:outputText value="{!m.salesOrg}"/>
+                </apex:column>
+	            <apex:column width="60px">
+	            </apex:column>
+	        </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>
+    
+    </apex:outputPanel>
+
+    <script type="text/javascript">
+        var $j = jQuery.noConflict();
+    </script>
+
+    <style>
+        .panel1 input[type="checkbox"] {margin-left: 0;}
+        .tbl {border-spacing: 0; border-collapse: collapse; width: 100%;}
+        .tbl td {padding: 4px; vertical-align: top; width: 16%; white-space: nowrap;}
+        .tbl td.lbl, .lbl {color: #4a4a56; font-weight: bold; text-align: right;}
+        .tbl td.fld, .fld {width: 15em;}
+        .tbl td.fld2, .fld2 {width: 5em;}
+        .tbl td a.error {border: 0px !important;}
+        .tbl td a.fld {border: 0px;}
+        .tbl td.msg, .msg {background-color: #ffc; color: blue; font-weight: bold; text-align: center;}
+        .tbl td .chkbx {margin-left: 0px; padding-left: 0px; width: 10px;}
+        .txt1 {width: 15em;}
+        .txta {height: 50px; width: 100%;}
+        .w100 {width: 100%;}
+        .chkbx {text-align: center; width: 20px;}
+        .bold {font-weight: bold;}
+        .boldblue {color: blue; font-weight: bold;}
+        .center {text-align: center;}
+        .centernw {text-align: center; white-space: nowrap;}
+        .left {text-align: left;}
+        .right {text-align: right;}
+        .nowrap {white-space: nowrap;}
+        .value {font-weight: normal;}
+        .reqd {color: red;}
+        .error {background-color: #ffc; border: 1px solid !important;}
+        .onfocus {border: 2px solid #7f9db9;}
+        .onblur {border: 1px solid #7f9db9;}
+        .matName {white-space: nowrap; width: 200px;}
+        .matNotes {white-space: nowrap; padding: 12px; width: 100%;}
+        .matUom {white-space: nowrap; width: 100px;}
+        .invfld1 {width: 200px;}
+        .notes2 {width: 260px;}
+        .pbtr1 {background-color: #f8f8f8; text-align: center;}
+        .pbtd1 {font-weight: bold; padding: 12px; text-align: left;
+                vertical-align: middle; white-space: nowrap; width: 33%;}
+        .mcol1 {text-align: right; white-space: nowrap; padding-right: 10px !important;}
+        .mcol2 {text-align: left; white-space: nowrap;}
+        .pageid {font-size: 70%; float: right;}
+        .no-title .ui-dialog-titlebar {display: none;}
+    </style>
+</apex:page>

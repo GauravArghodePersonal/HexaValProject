@@ -1,0 +1,37 @@
+<apex:page id="thePage" standardController="Asset_Work_Order__c" 
+           title="Asset Work Order" extensions="AssetWorkOrderController"
+           sidebar="false" renderAs="pdf">
+
+    <apex:stylesheet value="{!$Resource.asset_work_order_pdf_css}"/>
+
+	    <apex:outputPanel styleClass="header_left" layout="block">
+            <div style="padding: 10px;">
+                <apex:image value="{!$Resource.AshlandLogo}"/>
+            </div>
+	    </apex:outputPanel>
+
+        <c:AssetWorkOrder1 workOrderId="{!workOrderId}"/>
+
+        <br/><br/><br/>
+        
+        <table>
+        
+        <tr><td class="lbl" width="10%">Equipment<br/>Technician<br/>Comments</td>
+            <td colspan="5" height="120px"></td></tr>
+
+        <tr><td class="lbl" width="10%">Customer<br/>Name</td>
+            <td width="30%" height="60px">&nbsp;</td>
+            <td class="lbl" width="10%">Signature</td>
+            <td width="30%">&nbsp;</td>
+            <td class="lbl" width="10%">Date</td>
+            <td width="10%">&nbsp;</td></tr>
+
+        <tr><td class="lbl" width="10%">Equipment<br/>Technician<br/>Name</td>
+            <td width="30%" height="60px">&nbsp;</td>
+            <td class="lbl" width="10%">Signature</td>
+            <td width="30%">&nbsp;</td>
+            <td class="lbl" width="10%">Date</td>
+            <td width="10%">&nbsp;</td></tr>
+
+        </table>
+</apex:page>

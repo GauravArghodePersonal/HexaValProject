@@ -1,0 +1,226 @@
+<apex:page controller="PricingSurcharge_Controller" action="{!initAction}"
+           sidebar="false" tabStyle="Pricing_Surcharge__c">
+
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-1.6.2.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-ui-1.8.16.custom.min.js')}" />
+    <style type="text/css">
+        @import "{!URLFOR($Resource.jQuery, 'css/redmond/jquery-ui-1.8.16.custom.css')}";
+    </style>
+
+    <div id="div1">
+    <apex:form id="form1"><apex:pageBlock mode="edit">
+
+        <apex:pageBlockSection columns="1" collapsible="false">
+            <apex:facet name="header"><apex:outputPanel layout="block" styleClass="pbshdr1">
+                <apex:actionStatus id="topBtns">
+                    <apex:facet name="start"><apex:outputText styleClass="bold" value=" Please wait ...">
+                        <apex:image styleClass="spinner" value="{!$Resource.spinner}"/></apex:outputText>
+                    </apex:facet>
+
+                    <apex:facet name="stop"><apex:outputPanel >
+                        <apex:commandButton action="{!find1}" value="Search" rendered="{!renderFindBtn}"
+                                            status="topBtns" rerender="form1"/>
+
+                        <apex:commandButton action="{!cancel1}" value="Cancel" rendered="{!renderCancelBtn}"
+                                            status="topBtns" rerender="form1" immediate="true"/>
+
+                        <apex:commandButton action="{!save1}" value="Save" rendered="{!renderSaveBtn}"
+                                            status="topBtns" rerender="form1"/>
+                    </apex:outputPanel></apex:facet>
+                </apex:actionStatus>
+            </apex:outputPanel></apex:facet>
+
+            <apex:pageMessages escape="false" rendered="{!renderPageMsgs}"/>
+
+            <apex:outputPanel ><table class="tbl1">
+                <colgroup>
+                    <col style="width: 100px;"/> <!-- SoldTo     -->
+                    <col style="width: 100px;"/> <!-- SalesOrg   -->
+                    <col style="width: 100px;"/> <!-- DistChan   -->
+                    <col style="width: 100px;"/> <!-- Divsn      -->
+                    <col style="width: 100px;"/> <!-- Plant Code -->
+                    <col style="width: 100px;"/> <!-- UOM        -->
+                    <col style="width: 100px;"/> <!-- Currency   -->
+                    <col style="width:  66px;"/> <!-- Begin Date -->
+                </colgroup>
+
+                <tr>
+                    <th>Sold To</th>
+                    <th>SalesOrg</th>
+                    <th>DistChan</th>
+                    <th>Divison</th>
+                    <th>Plant</th>
+                    <th>UOM</th>
+                    <th>Currency</th>
+                    <th>Begin Date</th>
+                </tr>
+
+                <tr>
+                    <td><apex:inputText value="{!accNumber}" disabled="{!renderSaveBtn}" maxlength="10" size="10"
+                                        styleClass="fld1" style="width: 75px;"/></td>
+
+                    <td><apex:selectList size="1" styleClass="slist" value="{!salesOrg}"
+                                         disabled="{!renderSaveBtn}">
+                            <apex:selectOptions value="{!salesOrgOpts}"/></apex:selectList></td>
+
+                    <td><apex:selectList size="1" styleClass="slist" value="{!distChan}"
+                                         disabled="{!renderSaveBtn}">
+                            <apex:selectOptions value="{!distChanOpts}"/></apex:selectList></td>
+
+                    <td><apex:selectList size="1" styleClass="slist" value="{!divsnCode}"
+                                         disabled="{!renderSaveBtn}">
+                            <apex:selectOptions value="{!dvsnCodeOpts}"/></apex:selectList></td>
+
+                    <td><apex:selectList size="1" styleClass="slist" value="{!plantCode}"
+                                         disabled="{!renderSaveBtn}">
+                            <apex:selectOptions value="{!plntCodeOpts}"/></apex:selectList></td>
+
+                    <td><apex:selectList size="1" styleClass="slist" value="{!uomCode}">
+                            <apex:selectOptions value="{!suomCodeOpts}"/></apex:selectList></td>
+
+                    <td><apex:selectList size="1" styleClass="slist" value="{!surcharge.CurrencyIsoCode}">
+                            <apex:selectOptions value="{!currencyOpts}"/></apex:selectList></td>
+
+                    <td><apex:inputField value="{!surcharge.Begin_Date__c}"
+                                         styleClass="fld1" style="width: 66px;"/></td>
+                </tr>
+
+                <!-- tr><td colspan="99">&nbsp;</td></tr -->
+
+                <tr><th colspan="4">{!accName}</th>
+                    <th colspan="4">{!plantName}</th></tr>
+
+                <tr><th colspan="2" class="right">Surcharge Scales:</th><th class="right">#</th>
+                    <th class="right">Quantity</th><th class="right">Amount</th>
+                    <th colspan="3" class="left">
+                        <apex:actionStatus id="addBtn">
+                            <apex:facet name="start"><apex:outputText styleClass="bold" value="">
+                                <apex:image styleClass="spinner" value="{!$Resource.spinner}"/></apex:outputText>
+                            </apex:facet><apex:facet name="stop"><apex:outputPanel >
+                                <apex:commandLink action="{!add1}" value="+" styleClass="btn lnk1"
+                                    title="Click to add a row to enter new Scale"
+                                    rendered="{!renderSaveBtn}" status="addBtn" rerender="form1"/>
+                            </apex:outputPanel></apex:facet>
+                        </apex:actionStatus>
+                    </th></tr>
+
+                <apex:repeat value="{!scales}" var="s"><tr>
+                    <td colspan="3" class="right">{!s.rowNum}</td>
+                    <td class="right">
+                        <apex:inputField rendered="{!renderSaveBtn}" value="{!s.psb.Scale_Qty__c}" styleClass="fld1"/>
+                        <apex:outputField rendered="{!!renderSaveBtn}" value="{!s.psb.Scale_Qty__c}" styleClass="fld1"/></td>
+                    <td class="right">
+                        <apex:inputField rendered="{!renderSaveBtn}" value="{!s.psb.Amount__c}" styleClass="fld1"/>
+                        <apex:outputField rendered="{!!renderSaveBtn}" value="{!s.psb.Amount__c}" styleClass="fld1"/></td>
+                    <td colspan="3" class="left">
+                        <apex:actionStatus id="delBtn">
+                            <apex:facet name="start"><apex:outputText styleClass="bold" value="">
+                                <apex:image styleClass="spinner" value="{!$Resource.spinner}"/></apex:outputText>
+                            </apex:facet><apex:facet name="stop"><apex:outputPanel >
+                                <apex:commandLink action="{!del1}" value="-" styleClass="btn lnk2"
+                                    title="Click to delete this row"
+                                    rendered="{!renderSaveBtn}" status="delBtn" rerender="form1">
+                                    <apex:param name="rn1" value="{!s.rowNum}" assignTo="{!rowNum1}"/>
+                                </apex:commandLink>
+                            </apex:outputPanel></apex:facet>
+                        </apex:actionStatus></td>
+                </tr></apex:repeat>
+<!--
+                <tr><th colspan="9" class="center"><apex:outputPanel rendered="{!renderSaveBtn}">
+                        Scales with blank Quantity will be deleted on clicking the Save button</apex:outputPanel>
+                    </th></tr>
+-->
+            </table></apex:outputPanel>
+        </apex:pageBlockSection>
+
+    </apex:pageBlock></apex:form>
+    </div>
+
+    <script type="text/javascript">
+        function setFocusOnLoad() {}
+
+        var $j = jQuery.noConflict();
+
+        function log(msg) {if(window.console){console.log(msg);}}
+
+        function setfocus(fid) {
+            //log('setfocus : fid = ' + fid);
+            var fld = document.getElementById(fid);
+            //log('setfocus : fld = ' + fld);
+            if (fld != null) {fld.focus();}
+        }
+    </script>
+
+    <style>
+        #div1         {margin: 0 auto; overflow: auto; width: 720px;}
+
+        #waitMsgDiv   {display: none; font-weight: bold; height: 20px;
+                       text-align: center; vertical-align: middle;}
+
+        .pbBody {margin: 0 !important;}
+
+        .pbBody table input,
+        .pbBody table textarea {border: 1px solid #e0e3e5;}
+
+        .pbBody table.list .dateFormat {display: none !important;}
+        .pbBody table.list tr.headerRow th.chkbx {padding-left: 3px;}
+        .pbBody table.list tr.headerRow th.reqd  {color: red;}
+        .no-title .ui-dialog-titlebar {display: none;}
+
+        .Custom20Tab .bPageBlock {border: 1px solid #8bbec1 !important;}
+        .bPageBlock .pbBody .pbSubheader {border-bottom: 1px solid #8bbec1 !important;}
+        .bPageBlock .pbBody .pbSubsection {padding-right: 10px;}
+        .detailList .data2Col {padding: 3px 1px 3px 0px !important;}
+
+        .tbl1         {width: 100%;}
+
+        .tbl1 .dateFormat {display: none !important;}
+
+        .tbl1,
+        .tbl1 th,
+        .tbl1 td      {border: 0px solid #eaeaea;
+                       border-collapse: collapse; padding: 4px;}
+
+        .tbl1 th,
+        .tbl1 td      {text-align: center; width: 80px; height: 20px;
+                       vertical-align: middle !important;
+                       white-space: nowrap; font-size: 100%;}
+
+        .tbl1 th.center,
+        .tbl1 td.center,
+        .center       {text-align: center;}
+
+        .tbl1 th.left,
+        .tbl1 td.left,
+        .left         {text-align: left;}
+
+        .tbl1 th.right,
+        .tbl1 td.right,
+        .right        {text-align: right;}
+
+        .bold         {font-size: 100%; font-weight: bold;}
+
+        .boldblue     {color: blue; font-weight: bold;}
+
+        .nowrap       {white-space: nowrap;}
+
+        .pbshdr1      {font-size: 100%; font-weight: bold; height: 20px;
+                       text-align: center; vertical-align: middle;}
+
+        .slist        {font-size: 100%;}
+
+        .fld1         {padding: 2px 4px; line-height: 16px; 
+                       width: 80px; text-align: right;}
+
+        .btn1         {padding: 0px 4px 2px 4px !important; width: 20px;}
+
+        .lnk1         {padding: 2px 6px !important; line-height: 16px;
+                       text-decoration: none;}
+        .lnk1:hover   {text-decoration: none;}
+
+        .lnk2         {padding: 2px 7px !important; line-height: 16px;
+                       text-decoration: none;}
+        .lnk2:hover   {text-decoration: none;}
+    </style>
+
+</apex:page>

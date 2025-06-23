@@ -1,0 +1,66 @@
+<apex:page showHeader="false" title="Website Not Available">
+        <style>
+            #bannerBackground {
+                padding-right:0px !important;
+                padding-left:0px !important;
+                    
+            }
+            #bannerBackground{
+                    background-image: url('https://eshop.qa.solenis.com/sfsites/c/resource/1646823885000/B2B_BackgroundImage?') !important;
+                    text-align: center;
+                    overflow-y: auto !important;
+            }
+            #bannerBackground h3 {
+                font-size: 30px !important;
+                font-weight: bold !important;
+                font-family: system-ui !important;
+                color: #fff;
+            }
+            #bannerBackground p {
+                color: #fff !important;
+                font-size: 18px !important;
+                margin-bottom: 12px !important;
+                margin-top: 1px !important;
+            }
+        </style>
+      <div id="bannerBackground" style="padding-left: 0px;" >
+            
+            
+            <br></br>
+            <br></br>
+            <br></br>
+            <!--<img src="https://eshop.qa.solenis.com/sfsites/c/resource/solenis_login_logo" width="20%" height="20%"  /> -->
+            <apex:image url="{!$Resource.solenis_login_logo}" width="20%" height="20%" />
+            <br></br>
+            <!--<h3>Hello!</h3>-->
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <p>The current eShop platform is unavailable as we are transitioning to our new Solenis customer order portal.  </p>
+            <br></br>
+            <p> To place an order or check the status of an order, please contact customer service:</p>
+            <br></br>
+            <p>  Email: <u>poolsolutions@solenis.com</u>  </p>
+            <br></br>
+            <p>  Phone: 1-800-248-7665 </p>
+            <br></br>
+            <!--<p><b>Check back on May 23rd to register or log in to the new on-line portal!</b></p>-->
+            <br></br>
+            <p><b>Thank you for your patience during this transition.</b></p>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+        </div>
+</apex:page>

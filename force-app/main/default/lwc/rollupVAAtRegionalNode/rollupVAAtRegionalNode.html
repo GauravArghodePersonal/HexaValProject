@@ -1,0 +1,133 @@
+<template>
+    <lightning-spinner if:true={isLoading}></lightning-spinner>
+    <lightning-card title = "ValueAdvantages Summary" class="slds-p-left_medium">
+        <div class="scrollable-table">
+        <div class="exampleHolder" if:true={showspinner}>
+        <lightning-spinner alternative-text="Loading" size="xx-small"></lightning-spinner>
+        </div>
+        <template if:false={showText}>
+            <article class="slds-card">
+                <div class="slds-card__body">
+                    <table class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered slds-table_fixed-layout" role="grid" aria-label="Example table in a Card">
+                        <thead if:true={shouldShowHeader}>
+                            <tr class="slds-line-height_reset">
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Name">Name</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Stage">Account Number</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Stage">Plant Area</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Stage">Actual Status</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Stage">Approval Date</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Stage">Cost Saving Area</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Stage">Cost Avoidance Area</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Probability">Delivery Date</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Close Date">Expected Annual value</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Close Date">Approver</div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={VAaccounts} for:item="VAaccount">
+                                <template for:each={VAaccount.R00N3000000108HTEAY__r} for:item="va">
+                                    <template if:true={va}>
+                                        <tr class="slds-hint-parent" key={va.Id}>
+                                            <td>
+                                                <div class="slds-truncate" title={va.Name}>
+                                                    <a href="#" onclick={navigateToValueAdvantage} tabindex="-1" data-record-id={va.Id}>{va.Name}</a>
+                                                </div>
+                                            </td>
+                                            <td role="gridcell">
+                                                <div class="slds-truncate" title={va.Customer__r.AccountNumber}>
+                                                    {va.Customer__r.AccountNumber}
+                                                </div>
+                                            </td>
+                                            <td role="gridcell">
+                                                <div class="slds-truncate" title={va.Value_Focus_Area__c}>
+                                                    {va.Value_Focus_Area__c}
+                                                </div>
+                                            </td>
+                                            <td role="gridcell">
+                                                <div class="slds-truncate" title={va.Actual_Status__c}>
+                                                    {va.Actual_Status__c}
+                                                </div>
+                                            </td>
+                                            <td role="gridcell">
+                                                <div class="slds-truncate" title={va.Actual_Date_Approved__c}>
+                                                    {va.Actual_Date_Approved__c}
+                                                </div>
+                                            </td>
+                                            <td role="gridcell">
+                                                <div class="slds-truncate" title={va.Customer_Value_Type_Cost_Savings__c}>
+                                                    {va.Customer_Value_Type_Cost_Savings__c}
+                                                </div>
+                                            </td>
+                                            <td role="gridcell">
+                                                <div class="slds-truncate" title={va.Customer_Value_Type_Cost_Avoidance__c}>
+                                                    {va.Customer_Value_Type_Cost_Avoidance__c}
+                                                </div>
+                                            </td>
+                                            <td role="gridcell">
+                                                <div class="slds-truncate" title={va.Delivering_Value_Date__c}>
+                                                    {va.Delivering_Value_Date__c}
+                                                </div>
+                                            </td>
+                                            <td role="gridcell">
+                                                <div class="slds-truncate" title={va.Expected_Annual_Value__c}>
+                                                    {va.Expected_Annual_Value__c}
+                                                </div>
+                                            </td>
+                                            <td role="gridcell">
+                                                <div class="slds-truncate" title={va.Approver__r.Name}>
+                                                    {va. Approver__r.Name}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                </template>
+                            </template>
+                        </tbody>
+                        <tfoot>
+                            <tr class="slds-line-height_reset slds-theme_shade">
+                                <td role="gridcell">
+                                    <div class="slds-truncate" title="Total Expected Annual"><b>Total Expected Annual Value</b></div>
+                                </td>
+                                <td role="gridcell"></td> <!-- Blank Column 1 -->
+                                <td role="gridcell"></td>
+                                <td role="gridcell"></td>
+                                <td role="gridcell"></td>
+                                <td role="gridcell"></td>
+                                <td role="gridcell"></td>
+                                <td role="gridcell"></td>
+                                <td role="gridcell">
+                                    <div class="slds-truncate" title="Total Expected Annual Value"><b>{totalValue}</b></div>
+                                </td>
+                                <td role="gridcell"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </article>
+        </template>
+        </div>
+        <template if:true={showText}>
+            No data found.
+        </template>
+    </lightning-card>
+    </template>

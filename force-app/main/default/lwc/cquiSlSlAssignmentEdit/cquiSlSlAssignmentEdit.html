@@ -1,0 +1,419 @@
+<template>
+    
+    <c-cq-record-form-container has-loaded={allDone} hide-save={hideSave} title={pageTitle} onsave={saveRecord} oncancel={cancelForm} onsaveandnew={saveAndNewForm} is-saving={isSaving}
+    main-obj={objInfo} form-errors={formErrors} lightning-icon="" save-and-new="true">
+        <div slot="sections" class="slds-col slds-size_1-of-1">
+                    
+                
+                   
+        <template if:true={sectionHider.expando_unique_id_1}>
+            <c-cq-record-form-section section-title={CQSL_INFORMATION} expando-unique-id="expando-unique-id-1" edit-heading="true" detail-heading="false">
+                <div slot="sectionsItem">
+                    <div class="slds-grid slds-gutters slds-wrap">
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_PLANT_CODE__C} value={v_CQ_SL_PLANT_CODE__C}
+                                            display-value={d_CQ_SL_PLANT_CODE__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Required">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_REGION__C} value={v_CQ_SL_REGION__C}
+                                            display-value={d_CQ_SL_REGION__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Required">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_CHOOSE_CA_USER_BY_DEFAULT__C} value={v_CQ_SL_CHOOSE_CA_USER_BY_DEFAULT__C}
+                                            display-value={d_CQ_SL_CHOOSE_CA_USER_BY_DEFAULT__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_SQX_CA_USER__C} value={v_CQ_SL_SQX_CA_USER__C}
+                                            display-value={d_CQ_SL_SQX_CA_USER__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_CA_QUEUE__C} value={v_CQ_SL_CA_QUEUE__C}
+                                            display-value={d_CQ_SL_CA_QUEUE__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_CHOOSE_LOGISICS_USER_BY_DEFAULT__C} value={v_CQ_SL_CHOOSE_LOGISICS_USER_BY_DEFAULT__C}
+                                            display-value={d_CQ_SL_CHOOSE_LOGISICS_USER_BY_DEFAULT__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_SQX_LOGISTICS_USER__C} value={v_CQ_SL_SQX_LOGISTICS_USER__C}
+                                            display-value={d_CQ_SL_SQX_LOGISTICS_USER__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_LOGISICS_QUEUE__C} value={v_CQ_SL_LOGISICS_QUEUE__C}
+                                            display-value={d_CQ_SL_LOGISICS_QUEUE__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_CHOOSE_MANUFACT_USER_BY_DEFAULT__C} value={v_CQ_SL_CHOOSE_MANUFACT_USER_BY_DEFAULT__C}
+                                            display-value={d_CQ_SL_CHOOSE_MANUFACT_USER_BY_DEFAULT__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_SQX_MANUFACTURING_USER__C} value={v_CQ_SL_SQX_MANUFACTURING_USER__C}
+                                            display-value={d_CQ_SL_SQX_MANUFACTURING_USER__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_MANUFACTURING_QUEUE__C} value={v_CQ_SL_MANUFACTURING_QUEUE__C}
+                                            display-value={d_CQ_SL_MANUFACTURING_QUEUE__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_CHOOSE_OTC_USER_BY_DEFAULT__C} value={v_CQ_SL_CHOOSE_OTC_USER_BY_DEFAULT__C}
+                                            display-value={d_CQ_SL_CHOOSE_OTC_USER_BY_DEFAULT__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_SQX_OTC_USER__C} value={v_CQ_SL_SQX_OTC_USER__C}
+                                            display-value={d_CQ_SL_SQX_OTC_USER__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_OTC_QUEUE__C} value={v_CQ_SL_OTC_QUEUE__C}
+                                            display-value={d_CQ_SL_OTC_QUEUE__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_CHOOSE_PLANNING_USER_BY_DEFAULT__C} value={v_CQ_SL_CHOOSE_PLANNING_USER_BY_DEFAULT__C}
+                                            display-value={d_CQ_SL_CHOOSE_PLANNING_USER_BY_DEFAULT__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_SQX_PANNING_USER__C} value={v_CQ_SL_SQX_PANNING_USER__C}
+                                            display-value={d_CQ_SL_SQX_PANNING_USER__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_PLANNING_QUEUE__C} value={v_CQ_SL_PLANNING_QUEUE__C}
+                                            display-value={d_CQ_SL_PLANNING_QUEUE__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_CHOOSE_STP_PRO_USER_BY_DEFAULT__C} value={v_CQ_SL_CHOOSE_STP_PRO_USER_BY_DEFAULT__C}
+                                            display-value={d_CQ_SL_CHOOSE_STP_PRO_USER_BY_DEFAULT__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_SQX_STP_PROCUREMENT_USER__C} value={v_CQ_SL_SQX_STP_PROCUREMENT_USER__C}
+                                            display-value={d_CQ_SL_SQX_STP_PROCUREMENT_USER__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_STP_PROCUREMENT_QUEUE__C} value={v_CQ_SL_STP_PROCUREMENT_QUEUE__C}
+                                            display-value={d_CQ_SL_STP_PROCUREMENT_QUEUE__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_GLOBAL_COMPLIANCE_USER_DEFAULT__C} value={v_CQ_SL_GLOBAL_COMPLIANCE_USER_DEFAULT__C}
+                                            display-value={d_CQ_SL_GLOBAL_COMPLIANCE_USER_DEFAULT__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_SQX_GLOBAL_COMPLIANCE_USER__C} value={v_CQ_SL_SQX_GLOBAL_COMPLIANCE_USER__C}
+                                            display-value={d_CQ_SL_SQX_GLOBAL_COMPLIANCE_USER__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_GLOBAL_COMPLIANCE_QUEUE__C} value={v_CQ_SL_GLOBAL_COMPLIANCE_QUEUE__C}
+                                            display-value={d_CQ_SL_GLOBAL_COMPLIANCE_QUEUE__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_GLOBAL_TRADE_MGT_USER_DEFAULT__C} value={v_CQ_SL_GLOBAL_TRADE_MGT_USER_DEFAULT__C}
+                                            display-value={d_CQ_SL_GLOBAL_TRADE_MGT_USER_DEFAULT__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_SQX_GLOBAL_TRADE_MANAGEMENT_USER__C} value={v_CQ_SL_SQX_GLOBAL_TRADE_MANAGEMENT_USER__C}
+                                            display-value={d_CQ_SL_SQX_GLOBAL_TRADE_MANAGEMENT_USER__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CQ_SL_GLOBAL_TRADE_MANAGEMENT_QUEUE__C} value={v_CQ_SL_GLOBAL_TRADE_MANAGEMENT_QUEUE__C}
+                                            display-value={d_CQ_SL_GLOBAL_TRADE_MANAGEMENT_QUEUE__C} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Edit">
+                                </c-cq-form-item>
+                                
+                            </div>
+                         
+                    </div>
+                </div>
+            </c-cq-record-form-section>
+        </template>
+                 
+            
+                
+                   
+        <template if:true={sectionHider.expando_unique_id_2}>
+            <c-cq-record-form-section section-title={CQSL_SYSTEM_INFORMATION} expando-unique-id="expando-unique-id-2" edit-heading="true" detail-heading="false">
+                <div slot="sectionsItem">
+                    <div class="slds-grid slds-gutters slds-wrap">
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_CREATEDBYID} value={v_CREATEDBYID}
+                                            display-value={d_CREATEDBYID} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Readonly">
+                                </c-cq-form-item>
+                                
+                            </div>
+                        
+                            
+                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    
+                                    
+                                <c-cq-form-item class="cq-form-item" field={f_LASTMODIFIEDBYID} value={v_LASTMODIFIEDBYID}
+                                            display-value={d_LASTMODIFIEDBYID} onvaluechanged={valueChanged} 
+                                            layout-behaviour="Readonly">
+                                </c-cq-form-item>
+                                
+                            </div>
+                         
+                    </div>
+                </div>
+            </c-cq-record-form-section>
+        </template>
+                 
+            
+                
+                   
+        <template if:true={sectionHider.expando_unique_id_3}>
+            <c-cq-record-form-section section-title={CQSL_CUSTOM_LINKS} expando-unique-id="expando-unique-id-3" edit-heading="true" detail-heading="false">
+                <div slot="sectionsItem">
+                    <div class="slds-grid slds-gutters slds-wrap">
+                         
+                    </div>
+                </div>
+            </c-cq-record-form-section>
+        </template>
+                 
+            
+    
+        
+
+        </div>
+    </c-cq-record-form-container>
+</template>

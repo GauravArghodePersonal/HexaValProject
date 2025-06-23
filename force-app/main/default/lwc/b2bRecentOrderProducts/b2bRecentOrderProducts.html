@@ -1,0 +1,10 @@
+<template>
+    <template if:true={showRecentOrder}>
+        <h1 class="slds-text-heading_large slds-p-bottom_medium">YOUR LAST ORDERED PRODUCTS</h1>
+    </template>
+    <template for:each={ordersItems}
+                for:item="orderItem" if:true={showRecentOrder}>
+        <c-b2b-order-product-card key={orderItem} record-id={orderItem.Id} order-item={orderItem}
+        effective-account-id={effectiveAccountId} onaddtocart = {handleAddtoCart}></c-b2b-order-product-card>
+    </template>
+</template>

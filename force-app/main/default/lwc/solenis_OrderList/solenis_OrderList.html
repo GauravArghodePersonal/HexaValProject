@@ -1,0 +1,201 @@
+<template>
+	<div class='content'>
+		<template if:true={loadingflag}>
+			<lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+		</template>
+		<div class="slds-box bgcolorBox slds-m-around_large dropshadow">
+			<div class="address-container">
+				<img alt="Account" src={buildingIcon} height="45" width="45"/>
+				<div class="address-text">
+					<p class="headerContent1"><strong>SHIP TO ADDRESS</strong></p>
+					<p class="headerContent2">
+						{accountNumber}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{accountName}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{address}
+					</p>
+				</div>
+			</div>
+		</div>
+		
+		<div class="slds-grid slds-wrap">
+			<div class="slds-col slds-size_12-of-12">
+				<div class="slds-box slds-var-m-around_large dropshadow2">
+					<div class="slds-grid slds-wrap">
+						<div class="slds-col slds-size_6-of-12">
+							<img class="floatLeft backbtn" style="cursor: pointer;" alt="Back to Home" title="Back to Home" src={backIcon} height="20" width="20" onclick={backToHome}/>
+							<div class="slds-p-left_small slds-text-align_left title floatLeft">YOUR ORDERS/TRACKING
+							</div>
+						</div>
+						<div class="slds-col slds-size_6-of-12">
+							<div class="demo-only demo-only--sizing slds-grid slds-wrap">
+								<div class="slds-size_1-of-12">
+									<div class="slds-text-align_center slds-m-around_x-small"></div>
+								</div>
+								<div class="slds-size_1-of-12">
+									<div class="slds-text-align_center slds-m-around_x-small"></div>
+								</div>
+								<div class="slds-size_1-of-12">
+									<div class="slds-text-align_center slds-m-around_x-small"></div>
+								</div>
+								<div class="slds-size_1-of-12">
+									<div class="slds-text-align_center slds-m-around_x-small"></div>
+								</div>
+								<div class="slds-size_1-of-12">
+									<div class="slds-text-align_center slds-m-around_x-small">
+										<div class="slds-grid slds-wrap floatRight pstabt sortStyle">
+											<img src={sorticonurl} style="width: 32px;cursor: pointer;" title="Sort" onclick={showList}>
+											<div if:true={showdropdown}
+												class="slds-dropdown slds-dropdown_actions slds-dropdown_right customdrpdwn">
+												<ul class="slds-dropdown__list" role="menu">
+													<li class="slds-dropdown__item" role="presentation">
+														<a href="javascript:void(0);" role="menuitem" tabindex="0"
+															data-sort="DateSort" onclick={handleOnselectSort}>
+															<span class="slds-truncate" title="Sort BY Date">Sort By Date</span>
+														</a>
+													</li>
+													<li class="slds-dropdown__item" role="presentation"
+														data-sort="OrderNumberSort" onclick={handleOnselectSort}>
+														<a href="javascript:void(0);" role="menuitem" tabindex="-1">
+															<span class="slds-truncate" title="Sort By Order Number">Sort By Order Number</span>
+														</a>
+													</li>
+												</ul>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="slds-size_3-of-12 width110px">
+									<div class="slds-text-align_center slds-m-top_x-small">
+										<button class="button" title="Reorder" onclick={handleReorderClick}>Reorder</button>
+									</div>
+								</div>
+								<div class="slds-size_1-of-12">
+									<div class="slds-text-align_center slds-m-around_x-small">
+										<!-- <lightning-combobox class="floatRight" name="Select" value={value} options={options} onchange={handleChange}
+																				variant="label-hidden"></lightning-combobox> -->
+										<div class="calender btn" title="Select a date range">
+											<img alt="calender btn" src={calenderIcon} height="20" width="20" onclick={handleCalenderClick}/>
+										</div>
+									</div>
+								</div>
+								<div class="slds-size_3-of-12 width145px">
+									<div class="slds-text-align_center slds-m-around_x-small">
+										<div class="paddingTop5px">
+											<div class="slds-text-align_right textColor">{pageStartIndex}-{pageEndIndex} of
+												{orderCount} Orders</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="slds-crd slds-var-m-around_x-small">
+						<template if:true={orderShowList}>
+							<template if:true={orderShowList.length}>
+								<div class="content">
+									<div class="slds-gri slds-wrap">
+										<lightning-layout multiple-rows>
+											<hr class="hr" />
+											<lightning-layout-item class="slds-border_top slds-border_bottom" size="12"
+												small-device-size="3" medium-device-size="6" large-device-size="3">
+												<div class="tableheader">ORDER NUMBER</div>
+											</lightning-layout-item>
+											<lightning-layout-item class="slds-border_top slds-border_bottom" size="12"
+												small-device-size="3" medium-device-size="6" large-device-size="2">
+												<div class="tableheader">P.O. NUMBER</div>
+											</lightning-layout-item>
+											<lightning-layout-item class="slds-border_top slds-border_bottom" size="12"
+												small-device-size="3" medium-device-size="6" large-device-size="3">
+												<div class="tableheader">ORDER STATUS</div>
+											</lightning-layout-item>
+											<lightning-layout-item class="slds-border_top slds-border_bottom" size="12"
+												small-device-size="3" medium-device-size="6" large-device-size="2">
+												<div class="tableheader">DATE PLACED</div>
+											</lightning-layout-item>
+											<lightning-layout-item class="slds-border_top slds-border_bottom" size="12"
+												small-device-size="3" medium-device-size="6" large-device-size="2">
+												<div class="tableheader">SHIP TO NUMBER</div>
+											</lightning-layout-item>
+											<hr class="hr" />
+											<hr class="hr" />
+											<template for:each={orderShowList} for:item="order">
+												<lightning-layout-item key={order.OrderID} size="12"
+													padding="around-small" small-device-size="3" medium-device-size="6"
+													large-device-size="3">
+													<div class="tableHyperlink" key={order.orderID}>
+														<a class="tableHyperlink" data-item={order.orderID}
+															onclick={orderclickHandler}>{order.sapOrderNumber}</a>
+													</div>
+												</lightning-layout-item>
+												<lightning-layout-item key={order.OrderID} size="12"
+													padding="around-small" small-device-size="3" medium-device-size="6"
+													large-device-size="2">
+													<div class="tableChild" key={order.OrderID}>{order.poNumber}</div>
+												</lightning-layout-item>
+												<lightning-layout-item key={order.OrderID} size="12"
+													padding="around-small" small-device-size="3" medium-device-size="6"
+													large-device-size="3">
+													<div class="tableChild" key={order.OrderID}>{order.status}</div>
+												</lightning-layout-item>
+												<lightning-layout-item key={order.OrderID} size="12"
+													padding="around-small" small-device-size="3" medium-device-size="6"
+													large-device-size="2">
+													<lightning-formatted-date-time class="tableChild"
+														key={order.OrderID} value={order.effectivedate}>
+													</lightning-formatted-date-time>
+												</lightning-layout-item>
+												<lightning-layout-item key={order.OrderID} size="12"
+													padding="around-small" small-device-size="3" medium-device-size="6"
+													large-device-size="2">
+													<div class="tableChild" key={order.OrderID}>{order.ShiptoNumber}
+													</div>
+												</lightning-layout-item>
+											</template>
+										</lightning-layout>
+									</div>
+								</div>
+							</template>
+							<template if:false={orderShowList.length}>
+								<div class="slds-align_absolute-center slds-p-around_medium">No Orders found</div>
+							</template>
+						</template>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Product Pagination Component here-->
+		<div class="slds-grid slds-wrap" style="width: 90%;margin: 20px auto; overflow-x: auto;">
+			<div class="slds-col slds-size_12-of-12">
+				<div if:true={orderShowList.length}>
+					<!-- <c-b2b-pagination page-size={pageSize} record-count={orderCount} oncallpagechange={pageChange}>
+					</c-b2b-pagination> -->
+					<c-generic-pagination totalrecords={orderCount} page-size={pageSize} onpagination={pageChange}></c-generic-pagination>
+				</div>
+			</div>
+		</div>
+
+		<!-- Reorder Modal -->
+		<template if:true={openReorder}>
+			<c-ex-reorder effective-account-id={effectiveAccountId}></c-ex-reorder>
+		</template>
+	</div>
+	<!-- Date Range Selector Modal -->
+	<template if:true={showDatePicker}>
+		<section onkeyup={handleKeyUp} class="slds-modal slds-fade-in-open">
+			<div class="slds-modal__container">
+				<button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeDatePickerModal}>
+					<lightning-icon icon-name="utility:close"
+						alternative-text="close"
+						variant="inverse"
+						size="small" ></lightning-icon>
+					<span class="slds-assistive-text">Close</span>
+				</button>
+				<div class="slds-modal__content slds-p-around_medium">
+					<c-solenis_-date-range-picker range-in-millisecs={range} start-date-label="From" end-date-label="To"
+						start-date={startDate} end-date={endDate} ongetdatevalues={handleGetDates}>
+					</c-solenis_-date-range-picker>
+				</div>
+			</div>
+		</section>
+		<div class="slds-backdrop slds-backdrop_open" role="presentation" onclick={closeDatePickerModal}></div>
+	</template>
+</template>

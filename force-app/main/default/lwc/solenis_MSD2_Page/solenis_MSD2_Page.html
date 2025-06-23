@@ -1,0 +1,232 @@
+<template>
+    <template if:true={result}>
+        <lightning-accordion allow-multiple-sections-open active-section-name={activeSections}>
+            <lightning-accordion-section name="A" label="SAP Material Details">
+        <div class="contentContainer slds-box slds-theme_shade">
+            <div class="slds-grid slds-clearfix dataRow slds-gutters">
+                <div class="slds-col slds-size_6-of-12 slds-float_left leftColumn slds-clearfix">
+                    <div class="slds-float_left slds-p-around_medium key">Material Number</div>
+                    <div class="slds-float_left slds-p-around_medium value">{result.Matnum}</div>
+                </div>
+                <div class="slds-col slds-size_6-of-12 slds-float_left rightColumn slds-clearfix">
+                    <div class="slds-float_left slds-p-around_medium key">Material Desc</div> 
+                    <div class="slds-float_left slds-p-around_medium value">{result.CaseObject.Material_Desc__c}</div>
+                </div>
+            </div>
+            <div class="slds-grid slds-clearfix dataRow slds-gutters">
+                <div class="slds-col slds-size_6-of-12 slds-float_left leftColumn slds-clearfix">
+                    <div class="slds-float_left slds-p-around_medium key">Sales Org / Code</div>
+                    <div class="slds-float_left slds-p-around_medium value">{result.CaseObject.SalesOrg_Desc__c} / {result.CaseObject.Sales_Org_Code__c}</div>
+                </div>
+                <div class="slds-col slds-size_6-of-12 slds-float_left rightColumn slds-clearfix">
+                    <div class="slds-float_left slds-p-around_medium key">Distribution Channel</div> 
+                    <div class="slds-float_left slds-p-around_medium value">{result.CaseObject.DistChannel_Desc__c} / {result.CaseObject.Dist_Channel_Code__c}</div>
+                </div>
+            </div>
+            <div class="slds-grid slds-clearfix dataRow slds-gutters">
+                <div class="slds-col slds-size_6-of-12 slds-float_left leftColumn slds-clearfix">
+                    <div class="slds-float_left slds-p-around_medium key">Sales UOM Desc</div>
+                    <div class="slds-float_left slds-p-around_medium value">{result.CaseObject.Sales_UOM_Desc__c}</div>
+                </div>
+                <div class="slds-col slds-size_6-of-12 slds-float_left rightColumn slds-clearfix">
+                    <div class="slds-float_left slds-p-around_medium key">Gross Weight</div> 
+                    <div class="slds-float_left slds-p-around_medium value">{result.CaseObject.Gross_Weight__c}</div>
+                </div>
+            </div>
+            <div class="slds-grid slds-clearfix dataRow slds-gutters">
+                <div class="slds-col slds-size_6-of-12 slds-float_left leftColumn slds-clearfix">
+                    <div class="slds-float_left slds-p-around_medium key">Minimum Order Quantity</div>
+                    <div class="slds-float_left slds-p-around_medium value">{result.CaseObject.Minimum_Order_Qty__c}</div>
+                </div>
+                <div class="slds-col slds-size_6-of-12 slds-float_left rightColumn slds-clearfix">
+                    <div class="slds-float_left slds-p-around_medium key">Net Weight</div> 
+                    <div class="slds-float_left slds-p-around_medium value">{result.CaseObject.Net_Weight__c}</div>
+                </div>
+            </div>
+            <div class="slds-grid slds-clearfix dataRow slds-gutters">
+                <div class="slds-col slds-size_6-of-12 slds-float_left leftColumn slds-clearfix">
+                    <div class="slds-float_left slds-p-around_medium key">Base UOM Desc</div>
+                    <div class="slds-float_left slds-p-around_medium value">{result.baseUOM}</div>
+                </div>
+                <div class="slds-col slds-size_6-of-12 slds-float_left rightColumn slds-clearfix">
+                    <div class="slds-float_left slds-p-around_medium key">Weight UOM Desc</div> 
+                    <div class="slds-float_left slds-p-around_medium value">{result.weightUOM}</div>
+                </div>
+            </div>
+            <div class="slds-grid slds-clearfix dataRow slds-gutters">
+                <div class="slds-col slds-size_6-of-12 slds-float_left leftColumn slds-clearfix">
+                    <div class="slds-float_left slds-p-around_medium key">Gross Weight in LBs</div>
+                    <div class="slds-float_left slds-p-around_medium value">{result.CaseObject.Gross_Weight_in_LBs__c}</div>
+                </div>
+                <div class="slds-col slds-size_6-of-12 slds-float_left rightColumn slds-clearfix">
+                    <div class="slds-float_left slds-p-around_medium key">Material Container Desc</div> 
+                    <div class="slds-float_left slds-p-around_medium value">{result.materialContainerDesc}</div>
+                </div>
+            </div>
+            <div class="slds-grid slds-clearfix dataRow slds-gutters">
+                <div class="slds-col slds-size_6-of-12 slds-float_left leftColumn slds-clearfix">
+                    <div class="slds-float_left slds-p-around_medium key">Net Weight in LBs</div>
+                    <div class="slds-float_left slds-p-around_medium value">{result.CaseObject.Net_Weight_in_LBs__c}</div>
+                </div>
+                <div class="slds-col slds-size_6-of-12 slds-float_left rightColumn slds-clearfix">
+                    <div class="slds-float_left slds-p-around_medium key">Material Group Desc</div> 
+                    <div class="slds-float_left slds-p-around_medium value">{result.materialGroupDesc}</div>
+                </div>
+            </div>
+            <div class="slds-grid slds-clearfix dataRow slds-gutters">
+                <div class="slds-col slds-size_6-of-12 slds-float_left leftColumn slds-clearfix">
+                    <div class="slds-float_left slds-p-around_medium key">Material Type Desc</div>
+                    <div class="slds-float_left slds-p-around_medium value">{result.materialTypeDesc}</div>
+                </div>
+                <div class="slds-col slds-size_6-of-12 slds-float_left rightColumn slds-clearfix">
+                    <div class="slds-float_left slds-p-around_medium key">Material Group1 Desc</div> 
+                    <div class="slds-float_left slds-p-around_medium value">{result.CaseObject.Material_Group1_Desc__c}</div>
+                </div>
+            </div>
+            <div class="slds-grid slds-clearfix dataRow slds-gutters">
+                <div class="slds-col slds-size_6-of-12 slds-float_left leftColumn slds-clearfix">
+                    <div class="slds-float_left slds-p-around_medium key">Material Deleted?</div>
+                    <div class="slds-float_left slds-p-around_medium value">{result.CaseObject.markedForDeletion}</div>
+                </div>
+                <div class="slds-col slds-size_6-of-12 slds-float_left rightColumn slds-clearfix">
+                    <div class="slds-float_left slds-p-around_medium key">Material Group2 Desc</div> 
+                    <div class="slds-float_left slds-p-around_medium value">{result.CaseObject.Material_Group2_Desc__c}</div>
+                </div>
+            </div>
+            <div class="slds-grid slds-clearfix dataRow slds-gutters">
+                <div class="slds-col slds-size_6-of-12 slds-float_left leftColumn slds-clearfix">
+                    <div class="slds-float_left slds-p-around_medium key">SalesArea Deleted</div>
+                    <div class="slds-float_left slds-p-around_medium value">{result.CaseObject.Deletion_Flag__c}</div>
+                </div>
+                <div class="slds-col slds-size_6-of-12 slds-float_left rightColumn slds-clearfix">
+                    <div class="slds-float_left slds-p-around_medium key">Material Owning Division</div> 
+                    <div class="slds-float_left slds-p-around_medium value">{result.divisionDesc}</div>
+                </div>
+            </div>
+            <div class="slds-grid slds-clearfix dataRow slds-gutters">
+                <div class="slds-col slds-size_6-of-12 slds-float_left leftColumn slds-clearfix">
+                    <div class="slds-float_left slds-p-around_medium key">Cross-Plant Material Status</div>
+                    <div class="slds-float_left slds-p-around_medium value">{result.distMatStatus}</div>
+                </div>
+                <div class="slds-col slds-size_6-of-12 slds-float_left rightColumn slds-clearfix">
+                    <div class="slds-float_left slds-p-around_medium key">Sample Material?</div> 
+                    <div class="slds-float_left slds-p-around_medium value">
+                        <template if:true= {result.enableSample}>
+                            <img src="/servlet/servlet.ImageServer?id=01550000001yWX5&oid=00Dm00000003dl5" alt="Yes" height="20" width="20"/>
+                        </template>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-grid slds-clearfix dataRow slds-gutters">
+                <div class="slds-col slds-size_6-of-12 slds-float_left leftColumn slds-clearfix">
+                    <div class="slds-float_left slds-p-around_medium key">Dist-Chan Material Status	</div>
+                    <div class="slds-float_left slds-p-around_medium value">{result.CaseObject.Dist_Channel_Material_Status__c}</div>
+                </div>
+                <div class="slds-col slds-size_6-of-12 slds-float_left rightColumn slds-clearfix">
+                    <div class="slds-float_left slds-p-around_medium key">NP-Effective Date</div> 
+                    <div class="slds-float_left slds-p-around_medium value">{result.CaseObject.NP_Effective_Date__c}</div>
+                </div>
+            </div>
+            <div class="slds-grid slds-clearfix dataRow slds-gutters">
+                <div class="slds-col slds-size_6-of-12 slds-float_left leftColumn slds-clearfix">
+                    <div class="slds-float_left slds-p-around_medium key">NP Global Region</div>
+                    <div class="slds-float_left slds-p-around_medium value">{result.CaseObject.NP_Global_Region__c}</div>
+                </div>
+                <div class="slds-col slds-size_6-of-12 slds-float_left rightColumn slds-clearfix">
+                    <div class="slds-float_left slds-p-around_medium key">NPI Product?</div> 
+                    <div class="slds-float_left slds-p-around_medium value">
+                        <template if:true= {result.enableNPI}>
+                            <img src="/servlet/servlet.ImageServer?id=01550000001yWX5&oid=00Dm00000003dl5" alt="Yes" height="20" width="20"/>
+                        </template>
+                        <template if:false= {result.enableNPI}>
+                            <img src="/servlet/servlet.ImageServer?id=01550000001yWX4&oid=00Dm00000003dl5" alt="No" height="18" width="18"/>
+                        </template>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-grid slds-clearfix dataRow slds-gutters">
+                <div class="slds-col slds-size_6-of-12 slds-float_left leftColumn slds-clearfix">
+                    <div class="slds-float_left slds-p-around_medium key">Last Modified Date</div>
+                    <div class="slds-float_left slds-p-around_medium value">{result.CaseObject.LastModifiedDate}</div>
+                </div>
+                <div class="slds-col slds-size_6-of-12 slds-float_left rightColumn slds-clearfix">
+                    <div class="slds-float_left slds-p-around_medium key">Last Modified By</div> 
+                    <div class="slds-float_left slds-p-around_medium value">{result.CaseObject.solenisLastmodyName__c}</div>
+                </div>
+            </div>
+        </div>
+    </lightning-accordion-section>
+    <lightning-accordion-section name="B" label="Product Hierarchy">
+            <div class="contentContainer slds-box slds-theme_shade prod">
+                <div class="slds-grid slds-clearfix dataRow slds-gutters">
+                    <div class="slds-col slds-float_left leftColumn slds-clearfix">
+                    <div class="slds-float_left slds-p-around_medium key">Business</div>
+                    <div class="slds-float_left slds-p-around_medium value">{result.phd} - {result.PH1}</div>
+                    </div>
+                </div>
+                <div class="slds-grid slds-clearfix dataRow slds-gutters">
+                    <div class="slds-col slds-float_left leftColumn slds-clearfix">
+                    <div class="slds-float_left slds-p-around_medium key">SBU</div>
+                    <div class="slds-float_left slds-p-around_medium value">{result.PH2_Line} - {result.PH2}</div>
+                    </div>
+                </div>
+                <div class="slds-grid slds-clearfix dataRow slds-gutters">
+                    <div class="slds-col slds-float_left leftColumn slds-clearfix">
+                    <div class="slds-float_left slds-p-around_medium key">Product Group</div>
+                    <div class="slds-float_left slds-p-around_medium value">{result.PH3_Group} - {result.PH3}</div>
+                    </div>
+                </div>
+                <div class="slds-grid slds-clearfix dataRow slds-gutters">
+                    <div class="slds-col slds-float_left leftColumn slds-clearfix">
+                    <div class="slds-float_left slds-p-around_medium key">Product Supplier</div>
+                    <div class="slds-float_left slds-p-around_medium value">{result.PH4_Supplier} - {result.PH4}</div>
+                    </div>
+                </div>
+                <div class="slds-grid slds-clearfix dataRow slds-gutters">
+                    <div class="slds-col slds-float_left leftColumn slds-clearfix">
+                    <div class="slds-float_left slds-p-around_medium key">Product Family</div>
+                    <div class="slds-float_left slds-p-around_medium value">{result.PH5_Family} - {result.PH5}</div>
+                    </div>
+                </div>
+                <div class="slds-grid slds-clearfix dataRow slds-gutters">
+                    <div class="slds-col slds-float_left leftColumn slds-clearfix">
+                    <div class="slds-float_left slds-p-around_medium key">Product Segment</div>
+                    <div class="slds-float_left slds-p-around_medium value">{result.PH6_Segment} - {result.PH6}</div>
+                    </div>
+                </div>
+                <div class="slds-grid slds-clearfix dataRow slds-gutters">
+                    <div class="slds-col slds-float_left leftColumn slds-clearfix">
+                    <div class="slds-float_left slds-p-around_medium key">Product SubSegment</div>
+                    <div class="slds-float_left slds-p-around_medium value">{result.PH7_SubSegment} - {result.PH7}</div>
+                    </div>
+                </div>
+            </div>
+        </lightning-accordion-section>
+        <lightning-accordion-section name="C" label="Plants"> <span><lightning-input type="toggle" message-toggle-active= "Hide Deleted" message-toggle-inactive="Show Deleted" label="Show deleted / Hide deleted" name="input1" onclick={handleChange}> </lightning-input></span>
+            <div class="contentContainer slds-box slds-theme_shade">
+                <div style="position: relative;">
+                    <div if:true={spinnerActive} class="spinnerDiv">
+                        <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+                    </div>
+                    <lightning-datatable
+                            key-field="id"
+                            columns={plantcolumns}
+                            data= {result.plants}                           
+                            hide-checkbox-column
+                            default-sort-direction={defaultSortDirection}
+                            sorted-direction={sortDirection}
+                            sorted-by={sortedBy}>
+                    </lightning-datatable>
+                </div>
+                    
+            </div>   
+        </lightning-accordion-section>
+        <lightning-accordion-section name="D" label="Alternate UOM">
+            <div class="contentContainer slds-box slds-theme_shade">
+                <lightning-datatable key-field="id" data={result.AltUOM} columns={UOMcolumns} hide-checkbox-column>
+                </lightning-datatable>
+            </div>   
+        </lightning-accordion-section>
+    </lightning-accordion>
+    </template>
+</template>

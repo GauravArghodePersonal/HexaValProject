@@ -1,0 +1,63 @@
+h1 {
+    color: rgb(0, 112, 210);
+}
+p {
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+    text-align: center !important;
+    margin-top: -15px;
+    margin-bottom: 10px;
+}
+.app {
+    background-color: #f0f0f0;
+    height: 100vh;
+    overflow: scroll;
+}
+table{
+    border: 1px solid #e0dede;
+    border-collapse: collapse;
+}
+.scheduledJobs{
+    text-align: left !important;
+    padding-left: 10px;
+}
+.scheduledJobsButton{
+    text-align: left !important;
+    padding-left: 3px;
+    vertical-align: middle;
+}
+th{
+    border: 1px solid #e0dede;
+    border-collapse: collapse;
+    float: center;
+    text-align: center;
+}
+td{
+    border: 1px solid #e0dede;
+    border-collapse: collapse;
+    float: center;
+    text-align: center;
+    align-content: center;
+    padding: 5px;
+    height: auto;
+}
+.tdBlank{
+    border: 1px solid #e0dede;
+    border-collapse: collapse;
+    float: center;
+    text-align: center;
+    align-content: center;
+    padding: 5px;
+    height: 25px;
+}
+tr{
+    border: 1px solid #e0dede;
+    border-collapse: collapse;
+    float: center;
+}
+.slds-spinner_container, .backgroundInverse{
+    background-color: #16325c7d;
+    z-index: 1 !important;
+}
+.m-error{
+    color: red;
+}

@@ -1,0 +1,95 @@
+<apex:page showheader="false" sidebar="false" standardStylesheets="false" >
+<apex:stylesheet value="{!URLFOR($Resource.SlideShowZip,'/css/slideshow.css')}" />
+    <apex:includeScript value="{!URLFOR($Resource.SlideShowZip,'/js/jquery.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.SlideShowZip,'/js/jquery.cycle.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.SlideShowZip,'/js/slideshow.js')}" />
+
+    <div id="slideshow" width="100%">
+       <ul class="slides-nav">
+               <li align="center"><a href="#slide-1">
+                    SALESFORCE CLASSIC IS RETIRING
+                </a></li>            
+                <li align="center"><a href="#slide-3">
+                      SFDC Lightning experience 
+                </a></li> 
+            </ul>
+        <div class="slides">
+           <ul style="height:750px;">
+<!-- ---------------------------------------------------------------------------------------------------------------------------------------------------- -->
+               <li id="slide-1">
+                     <table cellpadding="2">
+                            <tr>
+                                <td><font size="4"><b>SALESFORCE CLASSIC IS RETIRING!</b></font>
+                                    <p>Starting from October 16th, 2020, 2020, SFDC Classic Interface will be retiring for all Solenis SFDC users.<br/>
+                                     Please note that all users have default Lightning Experience and no choice to Switch to Salesforce Classic.</p> 
+                                        <b>
+                                        Important Note: IE is not a supported browser for Lightning. <br/>
+                                        Please use Google Chrome Or Microsoft Edge for Lightning.<br/>
+                                        </b>
+                                        &nbsp;
+                                        &nbsp;
+                                        <br/>
+                                        <br/>
+                                    <b>Why are we retiring Salesforce Classic?</b>
+                                        <p>We have migrated all Salesforce functionality to Lightning Experience. <br/>
+                                          Lightning will drive future improvements and any new advancements related to new features and functionalities.</p>
+                                     <b>What will happen after Salesforce Classic retirement ?</b> 
+                                       <p>All users will be default to Salesforce Lightning experience and no longer be able switch to Classic.</p>
+                                     <b>Training</b>
+                                       <p>Lightning training video links are available for your review <a href="https://web.microsoftstream.com/video/faa66d4a-512d-45b0-a3f2-aa2a3c57049c">Here</a> </p>
+                                     <b>Issues/Problems</b>
+                                        <p>You will follow the normal process by creating an Incident in ServiceNow for SFDC.</p>
+                                     <b>Questions?</b>
+                                       <p>If you have any questions concerning the new process in SFDC, please contact your BRM from your region.
+                                         <ul style="width:0px !important;">
+                                              <li style="padding :10px !important;">Richa Sharma <a href="mailto:rsharma@solenis.com">rsharma@solenis.com</a>(NA and LATAM)</li>
+                                              <li style="padding :10px !important;">Alain Enou <a href="mailto:aenou@soelnis.com">aenou@soelnis.com</a>(EMEA and APAC)</li>
+                                         </ul>    
+                                     </p>
+                                      <!--<p>Your global team members:</p>
+                                       
+                                        <p style="background-color:powderblue"> Sreenivas Amirisetti, Lawrence Anker, Jo Ordonez, Federica Di Iorio, Pedro Queirós, Joanne HSIEH, 
+                                           Richa Sharma, Idejam Lucas Castelucio Macedo, Davi Pires Richetti, Scott Fillmore, Brad Westley, 
+                                           Thomas Bernard, David Behrens, Mark Bruner, Andrew Ledlie, Alain Enou, Gustavo Santos,  
+                                           Max SUN, Richard Brooks,  Ari Koskela, Paul Knight, Flavio Bueno de Oliveira, 
+                                           Srinivasan Muthu, Elgay Kalay, John Bujold</p>-->
+                                    </td>
+                            </tr>
+                        </table>
+                    </li>
+              
+               <li id="slide-3">
+                        <table cellpadding="2">
+                             <!--<div class="clearfix iconClass" style="height:110px;">
+                               <div class="logo" style="float:left;margin: 0 auto;">
+                                    <apex:image styleClass="logo_info" style="width:220px; padding-top: 30px;" value="{!$Resource.solenis_login_logo}"/>
+                                </div>
+                                <div class="" style="float:right">
+                                    <apex:image styleClass="logo_sfdc" style="width: 150px;" value="{!$Resource.solenis_sfdc}"/>
+                                </div>
+                                 
+                            </div>-->
+                            <div style="Margin-top:25px;">
+                                <div style="width:619px;font-size: 28px;margin: 0 auto;font-align;center">
+                                   <center> Lightning Experience</Center>
+                                </div>
+                                <br/>
+                                <div >
+                                    <div style="width:619px;font-size: 18px;margin: 0 auto;color: #ff0000;">
+                                         <center>Internet Explorer is not supported browser for lightning. </center>
+                                    </div>
+                                    <div style="margin-top:20px;">
+                                        Please Use Google Chrome or Microsoft Edge.If you still in classic view kindly click on "Switch to Lightning Experience" at the top of the page (kindly see the below screenshot) and explore the much awaited Salesforce "Lightning" Experience.
+                                     </div>
+                                    <div style="margin-top:10px;">
+                                        <apex:image value="{!$Resource.switch2light}"/>
+                                    </div>
+                                </div>
+                            </div>
+                    </table>
+                    </li>
+                  
+                </ul>
+        </div>
+    </div>
+</apex:page>

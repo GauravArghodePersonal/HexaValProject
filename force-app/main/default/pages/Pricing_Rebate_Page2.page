@@ -1,0 +1,911 @@
+<!--Last Modified by Srinivasan Muthu from TechM for CR-Request-0629-->
+
+<apex:page id="thePage" standardController="Pricing_Rebate__c"
+           title="Pricing Rebate" extensions="Pricing_Rebate_Controller"
+           sidebar="false" lightningStylesheets="true">
+
+    <apex:includeScript value="{!URLFOR($Resource.tablesorter, 'jquery.1.7.1.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.tablesorter, 'jquery.tablesorter.min.js')}"/>
+
+    <script type="text/javascript">
+        function getConfirm(q) {
+            answer = confirm(q);
+            return (answer != 0);
+        }
+    </script>
+
+    <apex:variable var="shiptoLvlMsg1" value="Rebates are normally entered at the Sold-To level."/>
+    <apex:variable var="shiptoLvlMsg2" value="Please validate that the rebate should be at the Ship-To level."/>
+
+    <apex:form id="frmMain">
+        <apex:pageMessages id="error"/>
+        <apex:actionStatus id="rebateBlockStat">
+            <apex:facet name="start">
+                <apex:outputText escape="false" style="font-weight: bold;"
+                                 value="&nbsp;{!$Label.Please_Wait}...">
+                    <apex:image value="{!$Resource.spinner}"/>
+                </apex:outputText>
+            </apex:facet>
+            <apex:facet name="stop">
+        <apex:pageBlock title="Pricing Rebate Edit" id="rebatePageBlock" rendered="{!displayRebatePage}">
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!gotoPage1}" rendered="{!renderGoto1}"
+                                    immediate="true" value="Previous"/>&nbsp;&nbsp;
+                <apex:commandButton action="{!save}" value="Save" rendered="{!allowedToCreate}"/>
+                <apex:commandButton action="{!saveAndSubmit}" value="Save & Submit" rendered="{!allowedToCreate}"/>
+                <apex:commandButton action="{!updateRebateInfo}" value="Update Rebate Info" rendered="{!allowedToCreate}"/>
+                <apex:commandButton action="{!cancel}" value="Cancel" />
+               <!--Updated Line no:37 for the CR-Request-0629 By TechM-->
+                <apex:commandButton value="Expire" onclick="onControllerReturn();" rendered="{!renderExpireBtn}" rerender="dummypannel" />
+                <apex:commandButton action="{!deleteRebate}" value="Delete"
+                                    onclick="return getConfirm('Delete the Pricing Rebate?');"
+                                    rendered="{!renderDeleteBtn}"/>
+            </apex:pageBlockButtons>
+            <!-- apex:actionFunction name="getRebateRecipientInfo" action="{!getRebateRecipientInfo}" / -->
+            <apex:pageBlockSection title="Rebate Information" id="rebateInfo">
+<!-- ------------------------------------------------------------------------------------------------------------------- -->
+                <apex:outputField label="Rebate Agreement Number" value="{!rebate.Name}"/>
+                <apex:inputField value="{!rebate.SAP_Rebate_Agreement_Number__c}" style="width: 240px;"/>
+<!-- ------------------------------------------------------------------------------------------------------------------- -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Sales Org"/>
+                    <apex:outputText value="{!rebate.Sales_Org_Description__c} - {!rebate.Sales_Org__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!rebateFromAccount == null || rebateFromAccount == false}">
+                    <apex:outputLabel value="Rebate Recipient" />
+                        <apex:outputPanel >
+                            <apex:actionStatus id="rcptLinkStat">
+                                <apex:facet name="start">
+                                    <apex:outputText escape="false" style="font-weight: bold;"
+                                                     value="&nbsp;{!$Label.Please_Wait}...">
+                                        <apex:image value="{!$Resource.spinner}"/>
+                                    </apex:outputText>
+                                </apex:facet>
+                                <apex:facet name="stop">
+                            <apex:commandLink value="Select Recipient"
+                                    action="{!searchCustomer}" rerender="frmMain" status="rcptLinkStat">
+                                <apex:param name="invokedFromSelectRecipient" value="true" />
+                            </apex:commandLink>
+                                </apex:facet>
+                           </apex:actionStatus>
+                        </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!rebateFromAccount == true}">
+                    <apex:outputText value="Rebate Recipient"/>
+                    <apex:outputLink value="/{!rebateRecipient.Id}">
+                        <apex:outputText value="{!rebateRecipient.Name} - {!accountNumber}"/>
+                    </apex:outputLink>
+                </apex:pageBlockSectionItem>
+<!-- ------------------------------------------------------------------------------------------------------------------- -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Dist Channel"/>
+                    <apex:outputText value="{!rebate.Dist_Channel_Description__c} - {!rebate.Dist_Channel__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="EndUse Customer">
+                    <apex:outputText value="EndUse Customer"/>
+                    <apex:inputField value="{!rebate.EndUse_Customer__c}" style="width: 240px;"/>
+                </apex:pageBlockSectionItem>
+<!-- ------------------------------------------------------------------------------------------------------------------- -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Division"/>
+                    <apex:outputText value="{!rebate.Division_Description__c} - {!rebate.Division__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="{!lisd.helpText_sd}">
+                    <apex:outputText value="Sales District"/>
+                    <apex:outputField value="{!rebate.Sales_District_Desc__c}" />
+                </apex:pageBlockSectionItem>
+<!-- ------------------------------------------------------------------------------------------------------------------- -->
+                <apex:outputField value="{!rebate.Status__c}"/>
+                <apex:pageBlockSectionItem helpText="{!lisd.helpText_so}">
+                    <apex:outputText value="Sales Office"/>
+                    <apex:outputField value="{!rebate.Sales_Office_Desc__c}" />
+                </apex:pageBlockSectionItem>
+<!-- ------------------------------------------------------------------------------------------------------------------- -->
+                <apex:inputField value="{!rebate.Rebate_Start_Date__c}" required="true"/>
+                <apex:pageBlockSectionItem helpText="{!lisd.helpText_sg}">
+                    <apex:outputText value="Sales Group"/>
+                    <apex:outputField value="{!rebate.Sales_Group_Desc__c}" />
+                </apex:pageBlockSectionItem>
+<!-- ------------------------------------------------------------------------------------------------------------------- -->
+                <apex:inputField value="{!rebate.Rebate_End_Date__c}" required="true"/>
+                <apex:pageBlockSectionItem helpText="{!lisd.helpText_cg}">
+                    <apex:outputText value="Customer Group"/>
+                    <apex:outputField value="{!rebate.Customer_Group_Desc__c}" />
+                </apex:pageBlockSectionItem>
+<!-- ------------------------------------------------------------------------------------------------------------------- -->
+                <apex:pageBlockSectionItem rendered="{!rebate.Id == null && rebateChangeable == true}">
+                    <apex:outputLabel value="{!$ObjectType.Pricing_Rebate__c.fields.Rebate_Agreement_Type__c.label}" />
+                    <apex:outputPanel layout="block" styleClass="requiredInput">
+                        <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+                            <apex:selectList value="{!rebateAgreementType}" size="1" style="width: 240px;">
+                                <apex:selectOptions value="{!rebateAgreementTypeOptions}"/>
+                                <apex:actionSupport action="{!onRebateTypeChange}" event="onchange"
+                                                    reRender="frmMain" status="rebateBlockStat" oncomplete="init();"/>
+                            </apex:selectList>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:outputField value="{!rebate.Rebate_Agreement_Type__c}" rendered="{!rebate.Id != null}"/>
+                <apex:pageBlockSectionItem rendered="{!rebate.Id == null && rebateChangeable == false}">
+                    <apex:outputLabel value="{!$ObjectType.Pricing_Rebate__c.fields.Rebate_Agreement_Type__c.label}" />
+                    <apex:outputPanel layout="block" styleClass="requiredInput">
+                        <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+                            <apex:selectList value="{!rebateAgreementType}" size="1"
+                                              style="width: 240px;" disabled="{!rebateOptionsSet}">
+                                <apex:selectOptions value="{!rebateAgreementTypeOptions}"/>
+                                <apex:actionSupport action="{!onRebateTypeChange}" event="onchange"
+                                                    reRender="frmMain" status="rebateBlockStat" oncomplete="init();"/>
+                            </apex:selectList>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:outputField value="{!rebate.Seller__c}" />
+<!-- ------------------------------------------------------------------------------------------------------------------- -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$ObjectType.Pricing_Rebate__c.fields.Condition_Type__c.label}" />
+                    <apex:outputPanel layout="block" styleClass="requiredInput">
+                        <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+                        <apex:selectList id="slCondType" value="{!conditionType}" size="1"
+                                         disabled="{!condTypeDisabled}" style="width: 240px;">
+                            <apex:selectOptions value="{!conditionTypeOptions}"/>
+                            <apex:actionSupport action="{!getRebateTables}" event="onchange"
+                                                reRender="frmMain" status="rebateBlockStat" oncomplete="init();"/>
+                        </apex:selectList>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:outputField value="{!rebate.Cloned_from_Pricing_Rebate__c}" />
+<!-- ------------------------------------------------------------------------------------------------------------------- -->
+                <apex:inputField value="{!rebate.Internal_Comments__c}"
+                                 styleClass="txta1"/>
+                <apex:pageBlockSectionItem id="tableListSection">
+                    <apex:outputLabel value="{!$ObjectType.Pricing_Rebate__c.fields.Tables__c.label}" />
+                    <apex:outputPanel >
+                    <apex:outputPanel layout="block" styleClass="requiredInput" rendered="{!!readonlyTables}">
+                        <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+                        <apex:selectList id="slTables" value="{!tableList}"
+                            multiselect="true" size="3" style="width: 240px;">
+                            <apex:selectOptions value="{!tablesOptions}"/>
+                        </apex:selectList>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!readonlyTables}" layout="block">
+                        <apex:outputText escape="false" value="{!tablesOutput}"/>
+                    </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <!--<apex:outputField label="Approvers Record Name" value="{!rebateApprovers.Name}"/>
+                <apex:outputField label="Approver 3"  value="{!rebateApprovers.Approver_3__r.Name}"/>
+                <apex:outputField label="Approver 1"  value="{!rebateApprovers.Approver_1__r.Name}"/>
+                <apex:outputField label="Approver 3a" value="{!rebateApprovers.Approver_3a__r.Name}"/>
+                <apex:outputField label="Approver 2"  value="{!rebateApprovers.Approver_2__r.Name}"/>
+                <apex:outputField label="Approver 3b" value="{!rebateApprovers.Approver_3b__r.Name}"/>-->
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection id="custInfo" columns="1">
+                <apex:facet name="header"><apex:outputPanel styleClass="pbshdr">
+                <apex:outputText value="Customer Information : "/>
+                <apex:actionStatus id="accLinkStat">
+                    <apex:facet name="start">
+                        <apex:outputText escape="false" style="font-weight: bold;"
+                                         value="&nbsp;{!$Label.Please_Wait}...">
+                            <apex:image value="{!$Resource.spinner}"/>
+                        </apex:outputText>
+                    </apex:facet>
+                    <apex:facet name="stop"><apex:outputPanel >
+                        <apex:commandLink value="Add Customer" action="{!addCustomer}"
+                            rerender="frmMain" status="accLinkStat" style="color: #262673;">
+                            <apex:param name="invokedFromAddCustomer" value="true" />
+                        </apex:commandLink>
+                        <apex:outputText value="&nbsp;&nbsp;" escape="false" />
+                        <apex:commandLink value="Delete" action="{!deleteCustomers}"
+                            rerender="frmMain" status="accLinkStat"
+                            oncomplete="init();" style="color: #262673;" />
+                        <apex:outputText value="&nbsp;&nbsp;" escape="false" />
+                        <apex:commandLink value="Copy First Row to All"
+                            rendered="{!displayCustomerAndMaterial == false}"
+                            action="{!copyCustomerValues}"
+                            rerender="pbtCusts" status="accLinkStat"/>
+                    </apex:outputPanel></apex:facet>
+               </apex:actionStatus></apex:outputPanel></apex:facet>
+
+                    <apex:pageBlockTable id="pbtCusts" value="{!customersAdded}" var="customer"
+                                         rendered="{!NOT(ISNULL(customersAdded))}">
+                        <apex:column >
+                            <apex:facet name="header">
+                                <apex:inputCheckbox id="allAcc1" value="{!allAcc1}"
+                                    onclick="cb_checkAll(this.form, this, 'rowAcc1')"/>
+                            </apex:facet>
+                            <apex:inputCheckbox id="rowAcc1" value="{!customer.deleteCustomer}"
+                                rendered="{!customer.displayDeleteCheckBox}"
+                                onclick="cb_toggleAllCheckbox(this.form, 'allAcc1', 'rowAcc1');"/>
+                        </apex:column>
+
+                        <apex:column headerValue="Account">
+                            <apex:outputLink value="/{!customer.acc.Id}" target="_blank">
+                                {!customer.accountNumber}</apex:outputLink>
+                        </apex:column>
+                        <apex:column headerValue="Account Name">{!customer.acc.Name}</apex:column>
+                        <apex:column headerValue="Account Level">
+                            <apex:actionStatus id="accountLvlStat">
+                            <apex:facet name="start">
+                                <apex:outputText styleClass="bold" value=" Please wait ...">
+                                    <apex:image value="{!$Resource.spinner}"/>
+                                </apex:outputText>
+                            </apex:facet>
+                            <apex:facet name="stop">
+                            <apex:selectList value="{!customer.accountLevel}"
+                                             disabled="{!customer.accountLevelReadonly}"
+                                             size="1" style="width:70px">
+                                <apex:actionSupport event="onchange" action="{!setRenderShiptoLvlMsg}"
+                                                    rerender="custInfo" status="accountLvlStat"/>
+                                <apex:selectOptions value="{!customer.accountLevels}"/>
+                            </apex:selectList></apex:facet></apex:actionStatus>
+                        </apex:column>
+                        <apex:column rendered="{!displayCustomerAndMaterial == false}" title="{!amountHelpText}">
+                            <apex:outputPanel layout="block" styleClass="requiredInput">
+                                <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+                                <apex:inputField value="{!customer.rebateDetail.Amount__c}"/>
+                            </apex:outputPanel>
+                            <apex:facet name="header">
+                                <span id="accAmount-_help" class="helpButton">{!amountLabel}
+                                   <img class="helpOrb" title="" alt="" src="/s.gif"/>
+                                    <script type="text/javascript">
+                                        sfdcPage.setHelp('accAmount', '{!amountHelpText}');
+                                    </script>
+                                </span><br/>
+                            </apex:facet>
+                        </apex:column>
+                        <apex:column headerValue="Unit" rendered="{!displayCustomerAndMaterial == false && displayonlyAmountAndAccrual == false}">
+                            <apex:outputPanel layout="block" styleClass="requiredInput">
+                                <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+                                <apex:selectList value="{!customer.rebateDetail.Unit__c}"
+                                                 size="1" style="width:50px">
+                                    <apex:selectOptions value="{!currencyCodes}"/>
+                                </apex:selectList>
+                            </apex:outputPanel>
+                        </apex:column>
+                        <apex:column headerValue="Per" rendered="{!displayCustomerAndMaterial == false && displayonlyAmountAndAccrual == false}">
+                            <apex:outputPanel layout="block" styleClass="requiredInput">
+                                <!--apex:outputPanel layout="block" styleClass="requiredBlock"/-->
+                                <apex:outputField value="{!customer.rebateDetail.Per__c}"/>
+                            </apex:outputPanel>
+                        </apex:column>
+                        <apex:column headerValue="UoM" rendered="{!displayCustomerAndMaterial == false && displayonlyAmountAndAccrual == false}">
+                            <apex:outputPanel layout="block" styleClass="requiredInput">
+                                <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+                                <apex:selectList value="{!customer.rebateDetail.UoM__c}"
+                                                 size="1" style="width:44px">
+                                    <apex:selectOptions value="{!uomCodes}"/>
+                                </apex:selectList>
+                            </apex:outputPanel>
+                        </apex:column>
+                        <apex:column rendered="{!displayCustomerAndMaterial == false}">
+                            <apex:outputPanel layout="block" styleClass="requiredInput">
+                                <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+                                <apex:inputField value="{!customer.rebateDetail.Accrual__c}"/>
+                            </apex:outputPanel>
+                            <apex:facet name="header">
+                                <span id="accAccrual-_help" class="helpButton">{!accrualLabel}
+                                    <img class="helpOrb" title="" alt="" src="/s.gif"/>
+                                    <script type="text/javascript">
+                                        sfdcPage.setHelp('accAccrual', '{!accrualHelpText}');
+                                    </script>
+                                </span><br/>
+                            </apex:facet>
+                        </apex:column>
+                        <apex:column headerValue="MFD">
+                            <apex:inputCheckbox value="{!customer.mfd}"
+                                    rendered="{!customer.displayDeleteCheckBox == false}"
+                                    disabled="{!IF(rebate.Status__c == 'Approved', false, (ISNULL(rebate.Cloned_from_Pricing_Rebate__c) || ISNULL(customer.rebateDetail.Id)))}"/>
+                        </apex:column>
+                    </apex:pageBlockTable>
+
+                    <apex:outputPanel layout="block" rendered="{!renderShiptoLvlMsg}"
+                                      styleClass="right warning">
+                        <apex:outputText value="{!shiptoLvlMsg1}"/>&nbsp;
+                        <apex:outputText value="{!shiptoLvlMsg2}"/>
+                    </apex:outputPanel>
+
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection id="materialInfo" columns="1" rendered="{!displayCustomerAndMaterial == true}">
+                <apex:facet name="header"><apex:outputPanel styleClass="pbshdr">
+                <apex:outputText value="Material Information : "/>
+                <apex:actionStatus id="matLinkStat">
+                    <apex:facet name="start">
+                        <apex:outputText escape="false" style="font-weight: bold;"
+                                         value="&nbsp;{!$Label.Please_Wait}...">
+                            <apex:image value="{!$Resource.spinner}"/>
+                        </apex:outputText>
+                    </apex:facet>
+                    <apex:facet name="stop"><apex:outputPanel >
+                        <apex:commandLink value="Add Material" action="{!searchMaterial}"
+                            rerender="frmMain" status="matLinkStat" style="color: #262673;">
+                            <apex:param name="invokedFromAddMaterial" value="true" />
+                        </apex:commandLink>
+                        <apex:outputText value="&nbsp;&nbsp;" escape="false" />
+                        <apex:commandLink value="Delete" action="{!deleteMaterials}"
+                            rerender="frmMain" status="matLinkStat"
+                            oncomplete="init();" style="color: #262673;" />
+                        <apex:outputText value="&nbsp;&nbsp;" escape="false" />
+                        <apex:commandLink value="Copy First Row to All" action="{!copyMaterialValues}"
+                            rerender="pbtMats" status="matLinkStat" style="color: #262673;" />
+                    </apex:outputPanel></apex:facet>
+               </apex:actionStatus></apex:outputPanel></apex:facet>
+                    <apex:pageBlockTable id="pbtMats" value="{!materialsAdded}" var="material" rendered="{!NOT(ISNULL(materialsAdded))}">
+                        <apex:column >
+                            <apex:facet name="header">
+                                <apex:inputCheckbox id="allMat1" value="{!allMat1}"
+                                    onclick="cb_checkAll(this.form, this, 'rowMat1')"/>
+                            </apex:facet>
+                            <apex:inputCheckbox id="rowMat1" value="{!material.deleteMaterial}"
+                                rendered="{!material.displayDeleteCheckBox}"
+                                onclick="cb_toggleAllCheckbox(this.form, 'allMat1', 'rowMat1');"/>
+                        </apex:column>
+
+                        <apex:column headerValue="Material" width="70px">
+                            <apex:outputLink value="/{!material.material.Id}" target="_blank">{!material.materialNumber}</apex:outputLink>
+                        </apex:column>
+                        <apex:column headerValue="Material Description">{!material.material.Name}</apex:column>
+                        <apex:column headerValue="{!amountLabel}" title="{!amountHelpText}">
+                            <apex:outputPanel layout="block" styleClass="requiredInput">
+                                <apex:outputPanel layout="block" styleClass="requiredBlock" title="{!amountHelpText}" />
+                                <apex:inputField value="{!material.rebateDetail.Amount__c}"/>
+                            </apex:outputPanel>
+                               <!-- <apex:facet name="header">
+                                <span id="matAmount-_help" class="helpButton">{!amountLabel}
+                                <img class="helpOrb" title="" alt="" src="/s.gif"/>
+                                    <script type="text/javascript">
+                                        sfdcPage.setHelp('matAmount', '{!amountHelpText}');
+                                    </script>
+                                </span><br/>
+                            </apex:facet>-->
+                        </apex:column>
+                        <apex:column headerValue="Unit" rendered="{!displayonlyAmountAndAccrual == false}">
+                            <apex:outputPanel layout="block" styleClass="requiredInput">
+                                <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+                                <apex:selectList value="{!material.rebateDetail.Unit__c}"
+                                                 size="1" style="width:50px">
+                                    <apex:selectOptions value="{!currencyCodes}"/>
+                                </apex:selectList>
+                            </apex:outputPanel>
+                        </apex:column>
+                        <apex:column headerValue="Per" rendered="{!displayonlyAmountAndAccrual == false}">
+                            <apex:outputPanel layout="block" styleClass="requiredInput">
+                                <!--apex:outputPanel layout="block" styleClass="requiredBlock"/-->
+                                <apex:outputField value="{!material.rebateDetail.Per__c}" style="width:50px"/>
+                            </apex:outputPanel>
+                        </apex:column>
+                        <apex:column headerValue="UoM" rendered="{!displayonlyAmountAndAccrual == false}">
+                            <apex:outputPanel layout="block" styleClass="requiredInput">
+                                <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+                                <apex:selectList value="{!material.rebateDetail.UoM__c}"
+                                                 size="1" style="width:44px">
+                                    <apex:selectOptions value="{!uomCodes}"/>
+                                </apex:selectList>
+                            </apex:outputPanel>
+                        </apex:column>
+                        <apex:column headerValue="{!accrualLabel}" title="{!accrualHelpText}">
+                            <apex:outputPanel layout="block" styleClass="requiredInput" title="{!accrualHelpText}">
+                                <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+                                <apex:inputField value="{!material.rebateDetail.Accrual__c}"/>
+                            </apex:outputPanel>
+                            <!--<apex:facet name="header">
+                                <span id="matAccrual-_help" class="helpButton">{!accrualLabel}
+                                    <img class="helpOrb" title="" alt="" src="/s.gif"/>
+                                    <script type="text/javascript">
+                                        sfdcPage.setHelp('matAccrual', '{!accrualHelpText}');
+                                    </script>
+                                </span><br/>
+                            </apex:facet>-->
+                        </apex:column>
+                        <apex:column headerValue="MFD">
+                            <apex:inputCheckbox value="{!material.mfd}"
+                                    rendered="{!material.displayDeleteCheckBox == false}"
+                                    disabled="{!IF(rebate.Status__c == 'Approved', false, (ISNULL(rebate.Cloned_from_Pricing_Rebate__c) || ISNULL(material.rebateDetail.Id)))}"/>
+                        </apex:column>
+                    </apex:pageBlockTable>
+            </apex:pageBlockSection>
+        </apex:pageBlock></apex:facet></apex:actionStatus>
+
+        <apex:outputPanel rendered="{!renderCancelBtn}" layout="block" styleClass="center">
+            <apex:commandButton action="{!gotoAccountPage}" value="Go Back to Account Page" />
+        </apex:outputPanel>
+
+        <apex:pageBlock title="Customer Selector" id="customerSelector" rendered="{!displayCustomerSelector}">
+
+            <apex:pageBlockSection >
+                <apex:pageBlockSectionItem rendered="{!!isReadOnly}">
+                    <apex:outputLabel value="{!$ObjectType.Pricing_Rebate__c.fields.Sales_Org__c.label}" />
+                    <apex:selectList value="{!custSearch.salesOrg}" size="1">
+                        <apex:selectOptions value="{!custSearch.salesOrgOptions}"/>
+                        <apex:actionSupport action="{!populateDistChannel}" event="onchange"
+                            rerender="customerSelector" status="accSrchBtnStat"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!isReadOnly}">
+                    <apex:outputLabel value="{!$ObjectType.Pricing_Rebate__c.fields.Sales_Org__c.label}" />
+                    <apex:selectList value="{!custSearch.salesOrg}" size="1" disabled="true">
+                        <apex:selectOptions value="{!custSearch.salesOrgOptions}"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Account Number" />
+                    <apex:inputText value="{!custSearch.accNumber}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!!isReadOnly}">
+                    <apex:outputLabel value="{!$ObjectType.Pricing_Rebate__c.fields.Dist_Channel__c.label}" />
+                    <apex:selectList value="{!custSearch.distChannel}" size="1">
+                        <apex:selectOptions value="{!custSearch.distChannelOptions}"/>
+                        <apex:actionSupport action="{!populateDivision}" event="onchange"
+                            rerender="customerSelector" status="accSrchBtnStat"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!isReadOnly}">
+                    <apex:outputLabel value="{!$ObjectType.Pricing_Rebate__c.fields.Dist_Channel__c.label}" />
+                    <apex:selectList value="{!custSearch.distChannel}" size="1" disabled="true">
+                        <apex:selectOptions value="{!custSearch.distChannelOptions}"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Account Name" />
+                    <apex:inputText value="{!custSearch.accName}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!!isReadOnly}">
+                    <apex:outputLabel value="{!$ObjectType.Pricing_Rebate__c.fields.Division__c.label}" />
+                    <apex:selectList value="{!custSearch.division}" size="1">
+                        <apex:selectOptions value="{!custSearch.divisionOptions}"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!isReadOnly}">
+                    <apex:outputLabel value="{!$ObjectType.Pricing_Rebate__c.fields.Division__c.label}" />
+                    <apex:selectList value="{!custSearch.division}" size="1" disabled="true">
+                        <apex:selectOptions value="{!custSearch.divisionOptions}"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="City" />
+                    <apex:inputText value="{!custSearch.accCity}" />
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection columns="1">
+                <apex:actionStatus id="accSrchBtnStat">
+                    <apex:facet name="start">
+                        <apex:outputText escape="false" style="font-weight: bold;"
+                                         value="&nbsp;{!$Label.Please_Wait}...">
+                            <apex:image value="{!$Resource.spinner}"/>
+                        </apex:outputText>
+                    </apex:facet>
+                    <apex:facet name="stop">
+                <apex:outputPanel style="text-align:center;" layout="block">
+                    <apex:commandButton value="Search" action="{!searchCustomer}"
+                        status="accSrchBtnStat" rerender="custSearchResults"/>
+                    <apex:commandButton value="Clear" action="{!clearCustomerSelector}"
+                        status="accSrchBtnStat" rerender="customerSelector"/>
+                    <apex:commandButton value="OK" status="accSrchBtnStat"
+                        action="{!addCustomersToRebate}" rendered="{!isReadOnly}"
+                        rerender="frmMain,custInfo,slCondType,slTables"
+                        oncomplete="init();"/>
+                    <apex:commandButton value="Cancel" status="accSrchBtnStat"
+                        action="{!cancelCustomerSelector}" rerender="frmMain"/>
+                </apex:outputPanel></apex:facet>
+               </apex:actionStatus>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection id="custSearchResults" columns="1">
+                <apex:pageBlockTable value="{!accountList}" var="acc">
+            <apex:facet name="caption">
+                <apex:outputPanel layout="block">
+                <table bgcolor="#f8f8f8" class="bold" width="100%"><tr>
+                    <td class="center" width="20%">
+                        <apex:outputText value="{!$Label.Records}: {!apc.recordFrom} - {!apc.recordTo} {!$Label.of} {!apc.resultSize}"
+                                         styleClass="nowrap"/>
+                    </td>
+
+                    <td class="center" width="65%">
+                            <apex:actionStatus id="pageControls">
+                                <apex:facet name="start">
+                                    <apex:outputText escape="false" style="font-weight: bold;"
+                                                     value="&nbsp;{!$Label.Please_Wait}...">
+                                        <apex:image value="{!$Resource.spinner}"/>
+                                    </apex:outputText>
+                                </apex:facet>
+                                <apex:facet name="stop">
+                                <apex:outputPanel >
+                                <apex:outputText value="{!$Label.Records_Per_Page}:"/>&nbsp;
+                                <apex:selectList id="pageSize" value="{!apc.pageSize}" size="1" title="{!$Label.Records_Per_Page}">
+                                    <apex:actionSupport event="onchange"
+                                                    rerender="custSearchResults" status="pageControls"/>
+                                    <apex:selectOption itemLabel="50" itemValue="50"/>
+                                    <apex:selectOption itemLabel="100" itemValue="100"/>
+                                    <apex:selectOption itemLabel="200" itemValue="200"/>
+                                </apex:selectList>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <apex:commandButton action="{!apc.first}" disabled="{!NOT(apc.hasPrevious)}"
+                                                    rerender="custSearchResults" status="pageControls"
+                                                    title="{!$Label.First_Page}" value="<<"/>&nbsp;&nbsp;
+                                <apex:commandButton action="{!apc.previous}" disabled="{!NOT(apc.hasPrevious)}"
+                                                    rerender="custSearchResults" status="pageControls"
+                                                    title="{!$Label.Prev_Page}" value="<"/>
+
+                                {!$label.Previous}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{!$label.Next}&nbsp;
+
+                                <apex:commandButton action="{!apc.next}" disabled="{!NOT(apc.hasNext)}"
+                                                    rerender="custSearchResults" status="pageControls"
+                                                    title="{!$Label.Next_Page}" value=">"/>&nbsp;&nbsp;
+                                <apex:commandButton action="{!apc.last}" disabled="{!NOT(apc.hasNext)}"
+                                                    rerender="custSearchResults" status="pageControls"
+                                                    title="{!$Label.Last_Page}" value=">>"/>
+                                </apex:outputPanel>
+                            </apex:facet>
+                        </apex:actionStatus>
+                    </td>
+
+                    <td class="center" width="15%">
+                        <apex:outputText value="{!$Label.Page}: {!apc.pageNumber} {!$Label.of} {!apc.lastPageNumber}"/>
+                    </td>
+                    </tr></table>
+                </apex:outputPanel>
+            </apex:facet>
+
+                    <apex:column headerValue="#" >{!acc.recordNumber}</apex:column>
+                    <apex:column headerValue="" rendered="{!!isReadOnly}">
+                        <apex:actionsupport action="{!submitRecipient}" status="accSrchBtnStat"
+                                event="onclick" rerender="frmMain" oncomplete="init();">
+                            <input type="radio">
+                                <apex:param name="SelectedAccId" value="{!acc.acc.Id}"/>
+                            </input>
+                        </apex:actionsupport>
+                    </apex:column>
+                    <apex:column rendered="{!isReadOnly}">
+                        <apex:facet name="header">
+                            <apex:inputCheckbox id="allAcc2" value="{!allAcc2}"
+                                onclick="cb_checkAll(this.form, this, 'rowAcc2')"/>
+                        </apex:facet>
+                        <apex:inputCheckbox id="rowAcc2" value="{!acc.addToRebate}"
+                            onclick="cb_toggleAllCheckbox(this.form, 'allAcc2', 'rowAcc2');"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Sales Area</apex:facet>
+                        <apex:outputText value="{0} {1} {2}">
+                            <apex:param value="{!acc.acc.SAP_Sales_Org__c}"/>
+                            <apex:param value="{!acc.acc.SAP_DistChannel__c}"/>
+                            <apex:param value="{!acc.acc.SAP_DivisionCode__c}"/>
+                        </apex:outputText>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Account<br/>Number</apex:facet>
+                        <apex:outputText value="{!acc.accountNumber}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Account Name</apex:facet>
+                        <apex:outputText value="{!acc.acc.Name}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Account Address</apex:facet>
+                        <apex:outputText value="{0}, {1}, {2}">
+                            <apex:param value="{!acc.acc.BillingStreet}"/>
+                            <apex:param value="{!acc.acc.BillingCity}"/>
+                            <apex:param value="{!acc.acc.BillingState}"/>
+                        </apex:outputText>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Account Types</apex:facet>
+                        <apex:outputField value="{!acc.acc.SAP_Partner_Functions__c}"/>
+                    </apex:column>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+
+        <apex:pageBlock title="Material Selector" id="materialSelector" rendered="{!displayMaterialSelector}">
+
+            <apex:pageBlockSection >
+                <apex:pageBlockSectionItem rendered="{!!isReadOnly}">
+                    <apex:outputLabel value="{!$ObjectType.Pricing_Rebate__c.fields.Sales_Org__c.label}" />
+                    <apex:selectList value="{!materialSearch.salesOrg}" size="1">
+                        <apex:selectOptions value="{!materialSearch.salesOrgOptions}"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!isReadOnly}">
+                    <apex:outputLabel value="{!$ObjectType.Pricing_Rebate__c.fields.Sales_Org__c.label}" />
+                    <apex:selectList value="{!materialSearch.salesOrg}" size="1" disabled="true">
+                        <apex:selectOptions value="{!materialSearch.salesOrgOptions}"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Material Number" />
+                    <apex:inputText value="{!materialSearch.materialNumber}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!!isReadOnly}">
+                    <apex:outputLabel value="{!$ObjectType.Pricing_Rebate__c.fields.Dist_Channel__c.label}" />
+                    <apex:selectList value="{!materialSearch.distChannel}" size="1">
+                        <apex:selectOptions value="{!materialSearch.distChannelOptions}"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!isReadOnly}">
+                    <apex:outputLabel value="{!$ObjectType.Pricing_Rebate__c.fields.Dist_Channel__c.label}" />
+                    <apex:selectList value="{!materialSearch.distChannel}" size="1" disabled="true">
+                        <apex:selectOptions value="{!materialSearch.distChannelOptions}"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Material Description" />
+                    <apex:inputText value="{!materialSearch.materialDesc}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Business" />
+                    <apex:selectList value="{!materialSearch.prodHierarchy5}" size="1">
+                        <apex:selectOptions value="{!materialSearch.prodHierarchy5Options}"/>
+                        <apex:actionSupport action="{!populateProductHierarchy6}" event="onchange" rerender="materialSelector" status="progressSpinnerPanel"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem id="prodHierarchy6">
+                    <apex:outputLabel value="SBU"/>
+                    <apex:selectList value="{!materialSearch.prodHierarchy6}" size="1">
+                        <apex:selectOptions value="{!materialSearch.prodHierarchy6Options}"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection columns="1">
+                <apex:actionStatus id="matSrchBtnStat">
+                    <apex:facet name="start">
+                        <apex:outputText escape="false" style="font-weight: bold;"
+                                         value="&nbsp;{!$Label.Please_Wait}...">
+                            <apex:image value="{!$Resource.spinner}"/>
+                        </apex:outputText>
+                    </apex:facet>
+                    <apex:facet name="stop">
+                <apex:outputPanel style="text-align:center;" layout="block">
+                    <apex:commandButton value="Search" action="{!searchMaterial}"
+                        status="matSrchBtnStat" rerender="matSearchResults"/>
+                    <apex:commandButton value="Clear" action="{!clearMaterialSelector}"
+                        status="matSrchBtnStat" rerender="materialSelector"/>
+                    <apex:commandButton value="OK" status="matSrchBtnStat"
+                        action="{!addMaterialsToRebate}"
+                        rerender="frmMain,materialInfo,slCondType,slTables"
+                        oncomplete="init();"/>
+                    <apex:commandButton value="Cancel" status="matSrchBtnStat"
+                        action="{!cancelMaterialSelector}" rerender="frmMain"/>
+                </apex:outputPanel></apex:facet>
+               </apex:actionStatus>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection id="matSearchResults" columns="1">
+                <apex:pageBlockTable value="{!materialList}" var="material">
+
+            <apex:facet name="caption">
+                <apex:outputPanel layout="block">
+                <table bgcolor="#f8f8f8" class="bold" width="100%"><tr>
+                    <td class="center" width="20%">
+                        <apex:outputText value="{!$Label.Records}: {!mpc.recordFrom} - {!mpc.recordTo} {!$Label.of} {!mpc.resultSize}"
+                                         styleClass="nowrap"/>
+                    </td>
+
+                    <td class="center" width="65%">
+                            <apex:actionStatus id="pageControls">
+                                <apex:facet name="start">
+                                    <apex:outputText escape="false" style="font-weight: bold;"
+                                                     value="&nbsp;{!$Label.Please_Wait}...">
+                                        <apex:image value="{!$Resource.spinner}"/>
+                                    </apex:outputText>
+                                </apex:facet>
+                                <apex:facet name="stop">
+                                <apex:outputPanel >
+                                <apex:outputText value="{!$Label.Records_Per_Page}:"/>&nbsp;
+                                <apex:selectList id="pageSize" value="{!mpc.pageSize}" size="1"
+                                    title="{!$Label.Records_Per_Page}">
+                                    <apex:actionSupport event="onchange"
+                                        rerender="matSearchResults" status="pageControls"/>
+                                    <apex:selectOption itemLabel="50" itemValue="50"/>
+                                    <apex:selectOption itemLabel="100" itemValue="100"/>
+                                    <apex:selectOption itemLabel="200" itemValue="200"/>
+                                </apex:selectList>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <apex:commandButton action="{!mpc.first}" disabled="{!NOT(mpc.hasPrevious)}"
+                                                    rerender="matSearchResults" status="pageControls"
+                                                    title="{!$Label.First_Page}" value="<<"/>&nbsp;&nbsp;
+                                <apex:commandButton action="{!mpc.previous}" disabled="{!NOT(mpc.hasPrevious)}"
+                                                    rerender="matSearchResults" status="pageControls"
+                                                    title="{!$Label.Prev_Page}" value="<"/>
+
+                                {!$label.Previous}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{!$label.Next}&nbsp;
+
+                                <apex:commandButton action="{!mpc.next}" disabled="{!NOT(mpc.hasNext)}"
+                                                    rerender="matSearchResults" status="pageControls"
+                                                    title="{!$Label.Next_Page}" value=">"/>&nbsp;&nbsp;
+                                <apex:commandButton action="{!mpc.last}" disabled="{!NOT(mpc.hasNext)}"
+                                                    rerender="matSearchResults" status="pageControls"
+                                                    title="{!$Label.Last_Page}" value=">>"/>
+                                </apex:outputPanel>
+                            </apex:facet>
+                        </apex:actionStatus>
+                    </td>
+
+                    <td class="center" width="15%">
+                        <apex:outputText value="{!$Label.Page}: {!mpc.pageNumber} {!$Label.of} {!mpc.lastPageNumber}"/>
+                    </td>
+                    </tr></table>
+                </apex:outputPanel>
+            </apex:facet>
+
+                    <apex:column headerValue="#" >{!material.recordNumber}</apex:column>
+                    <apex:column >
+                        <apex:facet name="header">
+                            <apex:inputCheckbox id="allMat2" value="{!allMat2}"
+                                onclick="cb_checkAll(this.form, this, 'rowMat2')"/>
+                        </apex:facet>
+                        <apex:inputCheckbox id="rowMat2" value="{!material.addToRebate}"
+                            onclick="cb_toggleAllCheckbox(this.form, 'allMat2', 'rowMat2');"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Material<br/>Number</apex:facet>
+                        <apex:outputText value="{!material.materialNumber}"/>
+                    </apex:column>
+                    <apex:column headerValue="Material Description" >{!material.material.Material_Desc__c}</apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Sales<br/>Org</apex:facet>
+                        <apex:outputText value="{!material.material.Sales_Org_Code__c}"/>
+                    </apex:column>
+                    <!--<apex:column headerValue="PH5" >{!material.material.PH5_Family__c}</apex:column>
+                    <apex:column headerValue="PH6" >{!material.material.PH6_Segment__c}</apex:column>-->
+                    <apex:column headerValue="Business" >{!material.material.PH1__c}</apex:column>
+                    <apex:column headerValue="SBU" >{!material.material.PH2__c}</apex:column>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+
+        </apex:pageBlock>
+    </apex:form>
+    <!--Added the lines 754 to 776 for the CR-Request-0629  By TechM-->
+    <div id="light" class="popUpBlock">
+        <apex:form >
+        <apex:outputText >Notify to MD and Expire Pricing Rebate</apex:outputText>
+        <apex:inputCheckbox value="{!rebatenotify}" />
+        <apex:commandbutton value="Ok" action="{!expireRebate}"/>
+        <apex:commandbutton value="Cancel" rerender="" onClick="onControllerReturn();"/>
+        
+            <script type="text/javascript"> 
+                  function onControllerReturn() {
+                     //document.getElementById('light').style.display='block';
+                     
+                     if(document.getElementById('light').style.display =='none' || document.getElementById('light').style.display ==''){
+                       document.getElementById('light').style.display='block';
+                     }
+                     else{
+                      document.getElementById('light').style.display='none';
+                     }
+                      return false;
+                  }
+                  
+        </script>
+        </apex:form>
+ </div>
+
+    <script type="text/javascript">
+        var $j = jQuery.noConflict();
+        function init() {
+            $j("#{!$Component.frmMain.rebatePageBlock.custInfo.pbtCusts}".replace(/(:|\.)/g,'\\\\$1')).tablesorter({
+                sortList: [[2,0]],
+                headers: {
+                    0: {sorter: false},
+                    3: {sorter: false},
+                    4: {sorter: false},
+                    5: {sorter: false}
+                }
+            });
+            $j("#{!$Component.frmMain.rebatePageBlock.materialInfo.pbtMats}".replace(/(:|\.)/g,'\\\\$1')).tablesorter({
+                sortList: [[2,0]],
+                headers: {
+                    0: {sorter: false},
+                    3: {sorter: false},
+                    4: {sorter: false},
+                    5: {sorter: false},
+                    6: {sorter: false},
+                    7: {sorter: false},
+                    8: {sorter: false}
+                }
+            });
+        }
+        $j(document).ready(function() {init();});
+
+        function cb_getElementById(f, eid) {
+            var e;
+            for (i = 0; i < f.elements.length; i++) {
+                e = f.elements[i];
+                if (e.id.indexOf(eid) != -1) {
+                    break;
+                }
+            }
+            return e;
+        }
+
+        function cb_checkAll(frm, allcb, rowcb) {
+            for (var i = 0; i < frm.elements.length; i++) {
+                var e = frm.elements[i];
+                if (e.id.indexOf(rowcb) != -1 &&
+                    e.disabled == false) {
+                    e.checked = allcb.checked;
+                }
+            }
+        }
+
+        function cb_toggleAllCheckbox(f, allcb, rowcb) {
+            var acb = cb_getElementById(f, allcb);
+            if (acb) {
+                acb.checked = cb_isAllChecked(f, rowcb);
+            }
+        }
+
+        function cb_isAllChecked(f, rowcb) {
+            var rcb = cb_getElementById(f, rowcb);
+            if (!rcb.checked) {
+                return false;
+            }
+            var b = true;
+            for (i = 0; i < f.elements.length; i++) {
+                var e = f.elements[i];
+                if (e.id.indexOf(rowcb) != -1) {
+                    b = b && e.checked;
+                    if (!b) {break;}
+                }
+            }
+            return b;
+        }
+
+    </script>
+<!--Request-0629 For this request updated the style sheet-->
+    <style type="text/css">
+        th.headerRow {
+            background-image: none !important;
+            background-color: #C6E1FF !important;
+        }
+        th.header {
+            background-image: url({!URLFOR($Resource.tablesorter, 'bg.gif')}) !important;
+            background-repeat: no-repeat !important;
+            background-position: center right !important;
+            cursor: pointer;
+        }
+        th.headerSortUp {
+            background-image: url({!URLFOR($Resource.tablesorter, 'asc.gif')}) !important;
+        }
+        th.headerSortDown {
+            background-image: url({!URLFOR($Resource.tablesorter, 'desc.gif')}) !important;
+        }
+        textarea{ width:100%; }
+        .tbl {border-spacing: 0; border-collapse: collapse; width: 100%;}
+        .bold {font-weight: bold;}
+        .center {text-align: center;}
+        .right {text-align: right;}
+        .nowrap {white-space: nowrap;}
+        .pbshdr {font-color: white; font-weight: bold;}
+        .pbshdr a:link {color: white;}
+        .txtbox1 {background-color: #f8f8f8; border: 1px solid #7f9db9; width: 14em;}
+        .txtbox2 {width: 14em;}
+        .warning {font-color: red; font-weight: bold;}
+        .labelCol {white-space: nowrap;}
+        .txta1 {height: 45px; width: 240px; resize: none; overflow: auto;}
+        
+         .backgroundBlack{
+            display: none;
+            position: absolute;
+            top: 0%;
+            left: 0%;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            z-index:1001;
+            -moz-opacity: 0.6;
+            opacity:.60;
+            filter: alpha(opacity=60);
+        }
+        .popUpBlock {
+            display: none;
+            position: absolute;
+            top: 100px;
+            left: 15%;
+            width: 70%;
+            padding: 10px;
+            border: 2px solid grey;
+            background-color: white;
+            z-index:1002;
+            overflow: auto;
+        }
+    </style>
+
+</apex:page>

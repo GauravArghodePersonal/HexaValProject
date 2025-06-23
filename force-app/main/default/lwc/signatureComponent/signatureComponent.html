@@ -1,0 +1,21 @@
+<!--------------  Signature Pad Component  ----------->
+<template>
+	<lightning-card title={header}>
+		<lightning-button slot="actions" class="decl-button-primary slds-m-right_small" label="Clear" title="Clear Panel" 
+			onclick={handleClearClick} ontouchstart={handleClearClick}>
+		</lightning-button>
+		<lightning-button slot="actions" class="decl-button-primary" label="Save" title="Save Signature"
+			onclick={handleSaveClick}>
+		</lightning-button>
+		<div class="slds-size_12-of-12 slds-p-around_medium">
+			<p class="slds-m-bottom_small">
+				<canvas class="cnvinput" name="canvasItem" width="450px" height="300px"></canvas>
+			</p>
+		</div>
+		<template if:true={showSpinner}>
+			<div class="exampleHolder">
+				<lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+			</div>
+		</template>
+	</lightning-card>
+</template>

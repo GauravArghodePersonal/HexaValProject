@@ -1,0 +1,194 @@
+/* .sidebar {
+  height: 100%;
+  width: 50px;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+}
+
+.sidebar a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidebar a:hover {
+  color: #f1f1f1;
+}
+
+.sidebar .closebtn {
+  position: absolute;
+  top: 0;
+  right: 8px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+.openbtn {
+  font-size: 20px;
+  cursor: pointer;
+  background-color: #111;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+}
+
+.openbtn:hover {
+  background-color: #444;
+}
+
+.main {
+	transition: margin-left .5s;
+	padding: 16px;
+	position: relative;
+	height: 300px;
+} */
+
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+/* @media screen and (max-height: 450px) {
+  .sidebar {padding-top: 15px;}
+  .sidebar a {font-size: 18px;}
+} */
+.sidebar {
+  background-color: #f1f1f1;
+  height: 100%
+}
+
+.mySidebar {
+  transition: 0.4s;
+  /* position: fixed; */
+  height: 100%;
+}
+
+ul {
+  	/*list-style-type: none; */
+    margin: 0;
+    padding: 0;
+    width: 250px;
+    background-color: #f1f1f1;
+    position: absolute;	
+	  border-radius: 8px;
+    /* height: 100%; */
+    /* overflow: auto; */
+}
+
+ul > li:first-child {
+	border-radius: 13px 13px 0px 0px;
+	/* background-color: #555; */
+  	color: white;
+}
+
+ul > li:last-child {
+	border-radius: 0px 0px 13px 13px;
+	/* background-color: #555; */
+  color: white;
+}
+
+img {
+  /* display: block; */
+    color: #000;  
+    margin: 11px;
+    margin-left: 15px;
+  /* text-decoration: none; */
+}
+
+li a {
+  display: block;
+  color: #17344C;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  padding: 2px 0px;
+  text-decoration: none;
+}
+
+li a span {
+  display:inline-block;
+  vertical-align:middle;
+  /* line-height: 20px; */
+}
+
+li a.active {
+  background-color: #04AA6D;
+  color: white;
+}
+
+li a:hover:not(.active) {
+  background-color: #008080;
+  color: white;
+}
+
+.main {
+	transition: margin-left .5s;
+	/* padding: 15px 16px; */
+	padding: 30px 40px;
+  background-color: white;
+  min-height: 80vh;
+  /* margin-left:250px; */
+  /* height:3000px; */
+}
+
+.margin10px {
+  margin: 10px;
+}
+
+.leftPadding10px {
+  padding: 0px 0px 0px 10px;
+}
+
+.mobileView {
+  display: none;
+}
+
+.bottom button {
+  position: fixed;
+  right: 4%;
+  bottom: 7%;
+  z-index: 15;
+  color: white;
+  /* transform: rotate(360deg);
+  -webkit-transform: rotate(360deg);
+  -moz-transform: rotate(360deg);
+  -o-transform: rotate(360deg);
+  filter: progid: dximagetransform.microsoft.basicimage(rotation=3);
+  text-align: center;
+  text-decoration: none; */
+}
+.topBtn {
+  width: 35px;
+  height: 49px;
+}
+.topText {
+  display: flex;
+  position: absolute;
+  bottom: 15%;
+}
+.topsvg {
+  display: flex;
+  position: absolute;
+  top: 15%;
+}
+
+@media (max-width:600px) {
+  /* .w3-modal-content{margin:0 10px;width:auto!important}
+  .w3-modal{padding-top:30px}
+  .w3-dropdown-hover.w3-mobile .w3-dropdown-content,.w3-dropdown-click.w3-mobile .w3-dropdown-content{position:relative}	
+  .w3-hide-small{display:none!important}
+  .w3-mobile{display:block;width:100%!important}
+  .w3-bar-item.w3-mobile,.w3-dropdown-hover.w3-mobile,.w3-dropdown-click.w3-mobile{text-align:center}
+  .w3-dropdown-hover.w3-mobile,.w3-dropdown-hover.w3-mobile .w3-btn,.w3-dropdown-hover.w3-mobile .w3-button,.w3-dropdown-click.w3-mobile,.w3-dropdown-click.w3-mobile .w3-btn,.w3-dropdown-click.w3-mobile .w3-button{width:100%} */
+  .mySidebar{width:100%; position: unset; margin-bottom: 10px;}
+  .main{width:100%; margin: 0px; padding: 30px 3px;}
+  .nonMobileView{display: none;}
+  .mobileView{display: block; float: right;}
+  .mobileView img{margin: 17px}
+}

@@ -1,0 +1,20 @@
+<template>
+    <div class="slds-grid slds-wrap box">
+        <div class="slds-col slds-size_12-of-12">
+            <h1>Filters</h1>
+    
+            <hr style="clear: both;"/>
+
+            <lightning-record-edit-form
+                    object-api-name="Product2">
+                    <lightning-input-field field-name="Family"></lightning-input-field>
+                    <lightning-input-field field-name="Application__c"></lightning-input-field>
+                    <lightning-input-field field-name="Category__c"></lightning-input-field>
+                    <lightning-input-field field-name="Functionality__c"></lightning-input-field>
+                    <lightning-input-field field-name="Size__c"></lightning-input-field>
+                    <lightning-input-field field-name="Chemistry__c"></lightning-input-field>
+                    <lightning-input-field field-name="Form__c"></lightning-input-field>
+            </lightning-record-edit-form>
+        </div>
+    </div>
+</template>

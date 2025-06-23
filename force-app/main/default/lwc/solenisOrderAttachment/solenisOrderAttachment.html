@@ -1,0 +1,120 @@
+<template>
+    <div > 
+   <!--<table class="Main">
+        <tr>
+            <th>ORD Number</th>
+            <th>PO NUMBER</th>
+            <th>REQUESTED DELIVERY DATE</th>
+            <th>ESTIMATED SHIP DATE</th>
+            <th>SPECIAL INSTRUCTIONS</th>
+            <th></th>
+        </tr>   -->  
+        <div class="smalldeviceHidden">
+		<lightning-layout multiple-rows>
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="2" padding="around-small" >
+                <div class="slds-truncate">Ord Number</div>   
+            </lightning-layout-item>
+                <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="2" padding="around-small" >
+                    <div class="slds-truncate">SAP Ord Number</div>
+                </lightning-layout-item>
+                <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="1" padding="around-small" >
+                    <div class="slds-truncate">PO </br> Number</div>
+                </lightning-layout-item>
+                <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="2" padding="around-small" >
+                    <div class="slds-truncate">REQUESTED DELIVERY DATE</div>
+                </lightning-layout-item>
+                <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="2" padding="around-small" >
+                    <div class="slds-truncate">ESTIMATED SHIP DATE</div>
+                </lightning-layout-item>
+                <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="1" padding="around-small" >
+                    <div class="slds-truncate">SPECIAL </br> INSTRUCTIONS</div>
+                </lightning-layout-item>
+                <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="2" padding="around-small" >
+                    <div class="slds-truncate"></div>
+                </lightning-layout-item>
+
+        </lightning-layout>
+    </div>
+		<lightning-layout multiple-rows="false" >
+                                <template for:each={Insreorder} for:item="orList" for:index="index">
+      <!--  <template for:each={Insreorder} for:item="orList" for:index="index">-->
+            
+			<lightning-layout-item key={Insreorder.key} size="12" small-device-size="12" medium-device-size="12" large-device-size="2" padding="around-small" >
+                <div class="smalldevice"> Order Number</div>
+                    <lightning-formatted-url target="_blank" value= {orList.Nameurl} label= {orList.Name}></lightning-formatted-url><br/>
+                </lightning-layout-item>
+                <lightning-layout-item key={Insreorder.key} size="12" small-device-size="12" medium-device-size="12" large-device-size="2" padding="around-small" >
+                    <div class="smalldevice"> SAP Order Number</div>
+                    {orList.SAP_Order_Number__c}
+                </lightning-layout-item>
+                <lightning-layout-item key={Insreorder.key} size="12" small-device-size="12" medium-device-size="12" large-device-size="1" padding="around-small" >
+                    <div class="smalldevice"> PO Number</div>
+                    {orList.Customer_PO_Number__c}
+                </lightning-layout-item>
+                <lightning-layout-item key={Insreorder.key} size="12" small-device-size="12" medium-device-size="12" large-device-size="2" padding="around-small" >
+                    <div class="smalldevice">Requested Delivery Date</div>
+                    {orList.Requested_Delivery_Date__c}                    
+                </lightning-layout-item>
+                <lightning-layout-item key={Insreorder.key} size="12" small-device-size="12" medium-device-size="12" large-device-size="2" padding="around-small" >
+                    <div class="smalldevice">Estimated Ship Date</div>
+                    {orList.Estimated_Ship_Date__c}
+                </lightning-layout-item>
+                 <lightning-layout-item key={Insreorder.key} size="12" small-device-size="12" medium-device-size="12" large-device-size="1" padding="around-small" >
+                    <div class="smalldevice">Special Instruction</div>
+                    {orList.Special_Instructions__c}
+                   <!-- {orList.Id}-->
+                </lightning-layout-item>
+               <lightning-layout-item key={Insreorder.key} size="12" small-device-size="12" medium-device-size="12" large-device-size="2" padding="around-small" >
+                <div class="smalldevice">Attach PO</div>  
+                <c-solenis-file-uploader record-id={orList.Id}></c-solenis-file-uploader>
+                </lightning-layout-item>
+            
+           
+        </template>
+    </lightning-layout>
+</div>
+</template>
+
+
+<!-- 
+
+
+    <template>
+    <div > 
+    <table class="Main">
+        <tr>
+            <th>ORD Number</th>
+            <th>PO NUMBER</th>
+            <th>REQUESTED DELIVERY DATE</th>
+            <th>ESTIMATED SHIP DATE</th>
+            <th>SPECIAL INSTRUCTIONS</th>
+            <th></th>
+        </tr>    
+        <template for:each={Insreorder} for:item="orList" for:index="index">
+            <tr key={orList.Id}>
+                <td>
+                    <lightning-formatted-url target="_blank" value= {orList.Nameurl} label= {orList.Name}></lightning-formatted-url><br/>
+                </td>
+                <td>
+                    {orList.Customer_PO_Number__c}
+                </td>
+                <td>
+                    {orList.Requested_Delivery_Date__c}                    
+                </td>
+                <td>
+                    {orList.Estimated_Ship_Date__c}
+                </td>
+                <td>
+                    {orList.Special_Instructions__c}
+                   
+                </td>
+                <td>
+                    <c-solenis-file-uploader record-id={orList.Id}></c-solenis-file-uploader>
+                </td>
+            
+            </tr>
+        </template>
+    </table>
+</div>
+</template>
+-->

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>58.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Advic Product Promotions Grid</masterLabel>
+    <description>Takes an array of products from various sources and displays them as a grid</description>
+    <targets>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default">
+            <property type="String" label="Select source data type" name="sourceData" datasource="Product Expression Data (default),Parent Product,Product Id's,Product Codes,CategoryId"/>
+            <property type="String" label="Product Expression Data (default)" name="productExpressionData" default="{!Product.Details.id}"/>
+            <property type="String" label="Select the relationship to the parent product" name="relationshipType" datasource="ItemAdditional,ItemXsell,MigrationItem,ItemAlternative" default="ItemAdditional"/>
+            <property type="String" label="Id of the store" name="storeId"/>
+            <property type="String" label="Parent Product" name="parentProductId" editor="c/singleProductPicklistCPE"/>
+            <property type="String" label="Product Id's" name="productIds"/>
+            <property type="String" label="Product Codes" name="productCodes"/>
+            <property type="String" label="Category Id" name="categoryId" editor="c/categoryCPE"/>
+            <property type="String" label="Field to use as product product name" name="productName" editor="c/singleProductFieldPicklistCPE"/>
+            <property type="String" label="Fields to show for product" name="productFieldString" editor="c/productFieldsPicklistCPE"/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

@@ -1,0 +1,165 @@
+<apex:page standardController="Call_Report__c" extensions="EmailCallReport">
+
+    <apex:sectionHeader title="Email Call Report" description="Choose the Recipients to whom the Call Report has to be sent."/>
+ 
+    <apex:form >
+ 
+        <apex:pageBlock title="Email Call Report - Choose Recipients">
+ 
+            <apex:pageBlockButtons >
+  
+                <apex:commandButton value="Send" action="{!sendEmail}"/>
+    
+                <apex:commandButton value="Cancel" action="{!cancel}"/>
+    
+            </apex:pageBlockButtons>
+               
+            <div class="pbSubheader first tertiaryPalette">
+            
+                <span class="pbSubExtra">
+                
+                    <span class="requiredLegend">
+                    
+                        <span class="requiredExampleOuter">
+                        
+                            <span class="requiredExample">&nbsp;</span>
+                            
+                        </span>
+                        
+                        <span  class="requiredText"> = Required Information</span>
+                        
+                    </span>
+                    
+                </span>
+                
+                <h3>Choose Recipients
+                
+                    <span  class="titleSeparatingColon">:</span>
+                    
+                </h3>
+                
+            </div>
+            
+            <apex:pageBlockSection columns="1">
+            
+           
+                <apex:pageBlockSectionItem >
+    
+                    <apex:outputLabel value="Recipient Type"/>
+     
+                    <apex:outputPanel styleClass="requiredInput" layout="block">
+     
+                        <apex:outputPanel styleClass="requiredBlock" layout="block"/>
+     
+                        <apex:outputLabel value="Search: "/>
+         
+                        <apex:selectList value="{!recipientTypes}" size="1">
+      
+                            <apex:actionSupport event="onchange" action="{!retrieveAvblRec}" reRender="avblRecipientList, filterNameVar, errPanel1, errPanel2">
+                            
+                                <apex:param assignTo="{!filterNameVar}" value=""/>
+                                
+                            </apex:actionSupport>
+      
+                            <apex:selectOptions value="{!recipientTypeItems}"/> 
+      
+                        </apex:selectList> 
+                                   
+                        <apex:outputLabel value="for: "/>
+              
+                        <apex:inputText value="{!filterNameVar}" id="filterNameVar">
+        
+                            <apex:actionSupport event="onkeyup"  action="{!retrieveAvblRec}" reRender="avblRecipientList, errPanel1"/>
+        
+                        </apex:inputText> <br></br>
+                        
+                        <apex:outputPanel id="errPanel1">
+                                 
+                            <apex:outputLabel id="errLabel1" styleClass="errorMsg" rendered="{!errFlag1}" value="Your search returned more than 100 rows. Only the first 100 are displayed. Please refine search criteria."/>
+                            
+                        </apex:outputPanel>
+             
+                    </apex:outputPanel>
+     
+                </apex:pageBlockSectionItem> 
+               
+    
+                <apex:pageBlockSectionItem >
+                              
+                    <apex:outputLabel value=" Add Recipients"/>
+     
+                    <apex:outputPanel >
+        
+                        <table>
+                    
+                            <tr> <td> <apex:selectList value="{!avblRecipients}" size="14" multiselect="true" id="avblRecipientList">
+      
+                                          <apex:selectOptions value="{!avblRecipientItems}"/> 
+      
+                                      </apex:selectList> </td>
+                                
+                                 <td> <br></br> <br></br> <br></br> <br></br> <br></br>
+                            
+                                    &nbsp; &nbsp; &nbsp; <apex:outputLabel value="Add"/> <br></br>
+                            
+                                    &nbsp; &nbsp; &nbsp; <apex:commandLink id="addCmdLink" action="{!selectedRecipients}" reRender="avblRecipientList, selRecipientList, addCmdLink, errPanel4"><apex:image value="/s.gif" styleClass="rightArrowIcon"/></apex:commandLink> <br></br>
+                                
+                                    &nbsp; &nbsp; <apex:commandLink id="removeCmdLink" action="{!deselectedRecipients}" reRender="avblRecipientList, selRecipientList, removeCmdLink, filterNameVar, errPanel4"><apex:image value="/s.gif" styleClass="leftArrowIcon"/></apex:commandLink> <br></br>
+                                
+                                    &nbsp; <apex:outputLabel value="Remove"/> </td>
+                                
+                                  <td> <apex:selectList value="{!selRecipients}" size="14" multiselect="true" id="selRecipientList">
+      
+                                           <apex:selectOptions value="{!selRecipientItems}"/> 
+      
+                                       </apex:selectList> </td>
+                                
+                            </tr>
+                        
+                        </table>
+                        
+                        <apex:outputPanel id="errPanel2">
+                                 
+                            <apex:outputLabel id="errLabel2" styleClass="errorMsg" rendered="{!errFlag2}" value="Only Contacts with email addresses are displayed."/>
+                            
+                        </apex:outputPanel>
+                        
+                        <apex:outputPanel id="errPanel4">
+                                 
+                            <apex:outputLabel id="errLabel4" styleClass="errorMsg" rendered="{!errFlag4}"><strong>Error:</strong> You have added more than 50 recipients.</apex:outputLabel>
+                            
+                        </apex:outputPanel>
+                                                                                          
+                    </apex:outputPanel>
+                                   
+                </apex:pageBlockSectionItem>
+                
+                
+                You can enter up to five (5) email addresses to be notified. Please enter each email address in one line.           
+       
+                <apex:pageblocksectionItem >
+                
+                    <apex:outputLabel value="Additional Recipients"/>
+                        
+                    <apex:outputPanel >
+              
+                        <apex:inputTextarea rows="5" cols="50" value="{!addtnlEmails}"/> <br></br>
+                        
+                        <apex:outputPanel id="errPanel3">
+                                 
+                            <apex:outputLabel id="errLabel3" styleClass="errorMsg" rendered="{!errFlag3}"><strong>Error:</strong> Email addresses must be in valid email format.</apex:outputLabel>
+                            
+                        </apex:outputPanel>
+                        
+                    </apex:outputPanel>
+                    
+                </apex:pageblocksectionItem>
+                
+                     
+            </apex:pageBlockSection>
+ 
+        </apex:pageBlock>
+ 
+    </apex:form>
+  
+</apex:page>

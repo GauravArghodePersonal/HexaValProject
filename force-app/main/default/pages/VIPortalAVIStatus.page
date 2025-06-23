@@ -1,0 +1,38 @@
+<apex:page controller="FlintSiteHomeController" 
+    tabStyle="VI_AVI_Form__c" title="AVI Registration Form">
+    <apex:sectionHeader title="Authorized Valvoline Installer" subtitle="Registration Form" />
+    
+    <apex:form >
+        <apex:pageBlock title="Locations">
+            <apex:pageMessages />
+            
+         <!--   <apex:pageBlockTable value="{!locations}" var="item" rendered="{!locations.size > 0}">
+                <apex:column headerValue="Type">
+                    <apex:outputText value="{!item.acc.VI_Account_Type__c}" />
+                </apex:column>
+                <apex:column headerValue="Facility / Location">
+                    <apex:outputText value="{0} ({1}, {2}, {3})">
+                        <apex:param value="{!item.acc.Name}" />
+                        <apex:param value="{!item.acc.BillingStreet}" />
+                        <apex:param value="{!item.acc.BillingCity}" />
+                        <apex:param value="{!item.acc.BillingState}" />
+                    </apex:outputText>
+                </apex:column>
+                <apex:column headerValue="Status">
+                    <apex:outputText value="{!IF(ISBLANK(item.aviAppStatus), 'Not Applied', item.aviAppStatus)}" />
+                </apex:column>
+                <apex:column headerValue="Action">
+                    <apex:outputLink value="{!$Page.VIPortalAVIApplication}" rendered="{!ISBLANK(item.aviAppStatus)}">
+                        <apex:param name="id" value="{!item.acc.Id}" />
+                        <apex:param name="type" value="{!item.acc.VI_Account_Type__c}" />
+                        <apex:outputText value="Apply Now" />
+                    </apex:outputLink>
+                </apex:column>
+            </apex:pageBlockTable>
+            
+            <apex:outputPanel rendered="{!locations.size = 0}">
+                <p>There are no locations to display.</p>
+            </apex:outputPanel>-->
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

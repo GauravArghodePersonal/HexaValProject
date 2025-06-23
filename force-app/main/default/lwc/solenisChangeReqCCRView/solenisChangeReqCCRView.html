@@ -1,0 +1,125 @@
+<template>
+    <div>
+    <lightning-record-edit-form  record-id={recordId} object-api-name="Customer_Creation_Request__c"
+    onsuccess={handleSuccess} onsubmit ={handleSubmit} >
+    <lightning-card class="slds-card__header" title="Current Account Information" icon-name="action:preview">
+    </lightning-card>
+    <lightning-card class="slds-card__header" title="SAP Commmercial Information(Read Only)" icon-name="standard:account">
+    
+        <lightning-messages>
+        </lightning-messages>
+   
+        <lightning-output-field field-name="Region__c" value={accRegion} disabled="true">
+        </lightning-output-field>
+       
+        <lightning-input-field field-name="Company_Legal_Name__c" value={companyLegalName} disabled="true">
+        </lightning-input-field>
+        <lightning-input-field field-name="Name_2__c" value={SAP_Account_Name_2__c} disabled="true">
+        </lightning-input-field>
+        <lightning-input-field field-name="Name_3__c" value='' disabled="true">
+        </lightning-input-field>
+    
+        <lightning-output-field field-name="CCR_Sales_Organization__c" value={SAP_SalesOrg_Desc__c}>
+        </lightning-output-field>
+        <lightning-output-field field-name="CCR_DIst_Channel__c" value={SAP_DistChannel_Desc__c}>
+        </lightning-output-field> 
+        <lightning-output-field field-name="CCR_Division__c" value={SAP_DivisionCode_Desc__c}>
+        </lightning-output-field>
+        
+        <lightning-input-field field-name="CCR_Sales_District__c" value={SAP_SalesDistrict_Desc__c} disabled="true">
+        </lightning-input-field> 
+        <lightning-input-field field-name="CCR_Sales_Office__c" value={SAP_SalesOffice_Desc__c} disabled="true">
+        </lightning-input-field> 
+        <lightning-input-field field-name="Sales_Group__c" value={SAP_SalesGroup_Desc__c} disabled="true">
+        </lightning-input-field> 
+        <lightning-input-field field-name="CCR_Customer_Group__c" value={SAP_CustomerGroup_Desc__c} disabled="true">
+        </lightning-input-field> 
+        <lightning-input-field field-name="CCR_Customer_Group1__c" value={SAP_CustomerGroup_Desc1__c} disabled="true">
+        </lightning-input-field> 
+        <lightning-input-field field-name="CCR_Customer_Group2__c" value={SAP_CustomerGroup_Desc2__c} disabled="true">
+        </lightning-input-field> 
+        <!-- <lightning-input-field field-name="Customer_Group_3__c"  value={SAP_CustomerGroup_Desc3__c} disabled="true">
+        </lightning-input-field> -->
+        <lightning-input-field field-name="Incoterms__c" value={incotermconcad} disabled="true">
+        </lightning-input-field>
+        <lightning-input-field field-name="Incoterms_2__c" value={SAP_INCO_Terms2__c} disabled="true">
+        </lightning-input-field>
+        <lightning-input-field field-name="Currency__c" value={SAP_Currency__c} disabled="true">
+        </lightning-input-field> 
+    
+    
+    </lightning-card>
+    <lightning-card class="slds-card__header" title="Address Information(Read Only)" icon-name="standard:address">
+    
+    <lightning-input-field  field-name="BillingStreet__c" value={StreetFormulaFields__c} disabled="true">
+    </lightning-input-field>
+    <!-- <lightning-input-field  field-name="Street_1__c" value={SAP_StreetSuppl1__c}>
+    </lightning-input-field> -->
+    <lightning-input-field  field-name="Street_2__c" value={SAP_StreetSuppl1__c} disabled="true">
+    </lightning-input-field>
+    <lightning-input-field  field-name="Street_3__c" value={SAP_StreetSuppl2__c} disabled="true">
+    </lightning-input-field>
+    <lightning-input-field  field-name="House_Number1__c" value={SAP_House_Number__c} disabled="true">
+    </lightning-input-field>
+    <lightning-input-field  field-name="House_Number2__c" value={SAP_House_Number_2__c} disabled="true">
+    </lightning-input-field>
+    <lightning-input-field  field-name="PO_Box__c" value={BillingPostalCode} disabled="true">
+    </lightning-input-field>
+      
+    <lightning-input-field  field-name="City__c" value={BillingCity} disabled="true">
+    </lightning-input-field>
+    <div style="text-align:center; background-color:powderblue;">
+    <b>PO Box Address</b>
+</div>
+    <lightning-input-field  field-name="Postal_Code__c" value={V_PO_Box__c} disabled="true">
+    </lightning-input-field>
+    <!--SAP_Zip2 need to add in future-->
+    <lightning-input-field  field-name="PO_Box_postal_code__c" value=''  disabled="true">
+    </lightning-input-field>  
+    
+    <!-- <lightning-input-field  field-name="Country__c" value={BillingCountry}>
+    </lightning-input-field>
+    <lightning-input-field  field-name="State_Region__c" value={BillingState}>
+    </lightning-input-field> -->
+    <!--BillingStreet  BillingCity BillingPostalCode BillingCountry BillingState Postal_Code__c Acc_Country_Code__c Country__c Parent_Account__c HQAccount__c Owner.Name-->
+    
+    </lightning-card>
+    <!-- <lightning-card class="slds-card__header" title="Address Information(International Version)">
+        <lightning-input-field  field-name="IV_Street__c" value={BillingStreet}>
+        </lightning-input-field>
+        <lightning-input-field  field-name="IV_Street_1__c" value={SAP_StreetSuppl1__c}>
+        </lightning-input-field>
+        <lightning-input-field  field-name="IV_Street_2__c" value={SAP_StreetSuppl2__c}>
+        </lightning-input-field>
+        <lightning-input-field  field-name="IV_Street_3__c" value={SAP_StreetSuppl3__c}>
+        </lightning-input-field>
+        <lightning-input-field  field-name="IV_House_Number_1__c" value={SAP_House_Number__c}>
+        </lightning-input-field>
+        <lightning-input-field  field-name="IV_House_Number_2__c" value={SAP_House_Number_2__c}>
+        </lightning-input-field>
+        <lightning-input-field  field-name="IV_PO_Box__c" value={V_PO_Box__c}>
+        </lightning-input-field>
+        <lightning-input-field  field-name="PO_Box_postal_code__c">
+        </lightning-input-field>
+        <lightning-input-field  field-name="IV_City__c" value={BillingCity}>
+        </lightning-input-field>
+        <lightning-input-field  field-name="IV_Postal_Code__c" value={BillingPostalCode}>
+        </lightning-input-field>
+    </lightning-card> -->
+
+    <lightning-card class="slds-card__header" title="Account Relationship(Read)" icon-name="standard:event">
+    
+   <!--<lightning-input-field  field-name="Parent_Account__c">
+    </lightning-input-field>--> 
+    <lightning-input-field  field-name="Account_Owner__c" value={OwnerId} disabled="true">
+    </lightning-input-field>
+   <!-- <lightning-input-field  field-name="HQAccount__c" value={HQ_Account__r}>
+    </lightning-input-field>-->
+  
+    
+    <!--BillingStreet  BillingCity BillingPostalCode BillingCountry BillingState Postal_Code__c Acc_Country_Code__c Country__c Parent_Account__c HQAccount__c Owner.Name-->
+    </lightning-card>
+    
+    </lightning-record-edit-form>
+</div>
+    </template>

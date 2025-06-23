@@ -1,0 +1,51 @@
+ul, .myUL {
+  list-style-type: none;
+}
+
+.myUL {
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+}
+
+.box {
+  cursor: pointer;
+  -webkit-user-select: none; /* Safari 3.1+ */
+  -moz-user-select: none; /* Firefox 2+ */
+  -ms-user-select: none; /* IE 10+ */
+  user-select: none;
+  margin-right: 16px;
+  display: inline-flex;
+  width: 100%;
+}
+  
+.box::before {
+  content: "\1F4C2";
+  color: black;
+  display: inline-block;
+  margin-right: 6px;
+  font-size: 58px;
+}
+
+.box.shipTo::before {
+  content: "\1F4C4";
+  color: black;
+  display: inline-block;
+  margin-right: 6px;
+  font-size: 58px;
+  margin-top: auto;
+}
+
+.check-box::before {
+  content: "\1F4C1"; 
+  color: black;  
+}
+
+.nested {
+  display: none;
+  padding-left:78px;
+}
+
+.active {
+  display: block;
+}

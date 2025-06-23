@@ -1,0 +1,145 @@
+<template>
+    <!--<lightning-card title="Order Summary">-->
+        <lightning-card style="border: slategrey; padding-left: 100px; padding-right: 100px;">
+            <div class="slds-m-around_medium" style="padding-left: 50px; padding-right: 50px;">
+                <div class="header-column ">
+                    <img  src={brandLogo}
+                            class="product"
+                            alt="Logo" height='10%' width='10%'/>
+                </div>
+                <lightning-layout>
+                    
+                    <lightning-layout-item padding="around-small">
+                        <div class="header-column ">
+                            <p class="field-title" style="font-size: medium;">Hello {orderPlacedBy},</p>
+                        </div>
+                    </lightning-layout-item>
+                    <lightning-layout-item alignment-bump="left" padding="around-small">
+                        <div class="header-column ">
+                            <p class="field-title" title="PO Number">P.O Number</p>
+                            <p class="smalltext">{poNumber}</p>
+                        </div>
+                    </lightning-layout-item>
+                    <lightning-layout-item padding="around-small">
+                        <div class="header-column ">
+                            <p class="field-title" title="Order Status">Order Status</p>
+                            <p class="smalltext">In Progress</p>
+                        </div>
+                    </lightning-layout-item>
+                    <lightning-layout-item padding="around-small">
+                        <div class="header-column ">
+                            <p class="field-title" title="Order Number">Order Number</p>
+                            <p class="smalltext">{orderNumber}</p>
+                        </div>
+                    </lightning-layout-item>
+                    <lightning-layout-item padding="around-small">
+                        <div class="header-column ">
+                            <p class="field-title" title="Date Placed">Date Placed</p>
+                            <lightning-formatted-date-time class="smalltext" value={datePlaced}></lightning-formatted-date-time>
+                            <!--<p class="smalltext">{datePlaced}</p>-->
+                        </div>
+                    </lightning-layout-item>
+
+                    <lightning-layout-item padding="around-small">
+                        <div class="header-column slds-no-print">
+                            <lightning-button-icon icon-name="utility:print"  size="medium"  onclick={handlePDF}   variant="container" alternative-text="Print"      title="Print"></lightning-button-icon>
+                            
+                        </div>
+                    </lightning-layout-item>
+                    
+                </lightning-layout>
+
+                <hr size="1" width="100%" style="margin: revert;">
+                <h1 style="font-weight: bolder;font-size: x-large;">THANK YOU FOR YOUR ORDER!</h1>
+                </br>
+                <lightning-layout class="custom-box slds-box slds-p-around_medium " size="12" horizontal-align="spread">
+                    <lightning-layout-item padding="around-small">
+                        <div class="header-column ">
+                            <p class="field-title" title="Sold To">Sold To</p>
+                            <p class="smalltext">{soldToStreet}</p>
+                            <p class="smalltext">{soldToCity},{soldToState},{soldToCountry}</p>
+                            <p class="smalltext">{soldToPostalCode}</p>
+                        </div>
+                    </lightning-layout-item>
+                    <lightning-layout-item  padding="around-small">
+                        <div class="header-column ">
+                            <p class="field-title" title="Ship To">Ship To</p>
+                            <p class="smalltext">{ShippingStreet}</p>
+                            <p class="smalltext">{ShippingCity},{ShippingState},{ShippingCountry}</p>
+                            <p class="smalltext">{ShippingPostalCode}</p>
+                        </div>
+                    </lightning-layout-item>
+                    <lightning-layout-item padding="around-small">
+                        <div class="header-column ">
+                            <p class="field-title" title="Bill To">Bill To</p>
+                            <p class="smalltext">{BillingStreet}</p>
+                            <p class="smalltext">{BillingCity},{BillingState},{BillingCountry}</p>
+                            <p class="smalltext">{BillingPostalCode}</p>
+                        </div>
+                    </lightning-layout-item>
+                    
+                </lightning-layout>
+                <br/>
+                <lightning-layout class="custom-box slds-box slds-p-around_medium " size="12" horizontal-align="spread">
+                    <lightning-layout-item padding="around-small">
+                        <div class="header-column ">
+                            <p class="field-title" title="Shipping Method">Shipping Method - {deliveryInst}</p>
+                        </div>
+                    </lightning-layout-item>
+                </lightning-layout>
+                </br>
+                <template if:true={ordersItems}>
+                    <template for:each={ordersItems} for:item="orderItem">
+                        <c-b2b-order-summary-product-card key={orderItem} record-id={orderItem.Id} order-item={orderItem}
+                        effective-account-id={accountId}></c-b2b-order-summary-product-card>
+                    </template>
+                    <!--<div class="slds-grid slds-wrap">-->
+                        <!--
+                        <lightning-layout multiple-rows size="12" class="custom-box slds-box slds-p-around_medium " >
+                            <template for:each={orderLineDetails} for:item="order">
+
+                                <lightning-layout-item key={order.Id}  padding="around-small" size="2"  >
+                                    <div class="imgdiv"> <img if:true={order.productURL} src={order.productURL} class="product" alt="Product picture"/></div>
+                                </lightning-layout-item>
+                                <lightning-layout-item key={order.Id}  padding="around-small" size="4"  >
+                                    <span class="field-title " key={order.Id}>{order.Product2.Name}</span>
+                                    </br>
+                                    <span class="smalltext" key={order.Id}>{order.Product2.ProductCode}</span>
+                                </lightning-layout-item>
+                                <lightning-layout-item key={order.Id}  padding="around-small" size="2" >
+                                    <div class="field-title" key={order.Id}>QTY-{order.Quantity}</div>
+                                </lightning-layout-item>
+                                <lightning-layout-item key={order.Id} padding="around-small" size="2"  >
+                                    <div class="smalltext" key={order.Id}>{order.UnitPrice} USD</div>
+                                </lightning-layout-item>
+                                <lightning-layout-item key={order.Id}  padding="around-small" size="2"  >
+                                    <div class="verysmalltext" key={order.Id} style="text-align: right;">Total Price</div>
+                                    <div class="field-title header-column " key={order.Id} style="text-align: right;">{order.TotalPrice} USD</div>
+                                </lightning-layout-item>
+                            </template>
+                        </lightning-layout>
+                    </div>-->
+                </template>
+                <lightning-layout class="custom-box slds-box slds-p-around_medium " size="12" horizontal-align="spread">
+                    <lightning-layout-item padding="around-small" size="6">
+                        <div class="header-column ">
+                            <h1 style="font-weight: bolder;font-size: medium;">Total Cost</h1>
+                        </div>
+                    </lightning-layout-item>
+                    <lightning-layout-item padding="around-small" size="6">
+                        <div class="header-column ">
+                            <h1 style="font-weight: bolder;font-size: medium; text-align: right;">{totalAmount} USD</h1>
+                        </div>
+                    </lightning-layout-item>
+                    
+                </lightning-layout>
+                <lightning-layout-item padding="around-small" size="12">
+                    <div class="header-column slds-no-print ">
+                        <a href={homePath} style="font-weight: bold;font-size: inherit;color: blue;"><u>Continue Shopping</u> </a>
+                    </div>
+                </lightning-layout-item>
+            </div>       
+        </lightning-card>
+    <!--</lightning-card>-->
+       
+</template>

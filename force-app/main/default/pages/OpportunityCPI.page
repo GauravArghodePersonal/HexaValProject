@@ -1,0 +1,2 @@
+<apex:page id="thePage" standardController="Opportunity">
+</apex:page>

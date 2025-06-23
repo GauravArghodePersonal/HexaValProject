@@ -1,0 +1,234 @@
+<template>
+    <template if:true={displayLightningSpinner}>
+        <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+    </template>
+    <template if:true={displayNAColorant}>
+        <lightning-card class="slds-scrollable">
+            <h3 slot="title"></h3>
+
+            <lightning-record-edit-form object-api-name="Sample_Test_Information__c"
+                    record-type-id={recordTypeId}>
+                <lightning-messages></lightning-messages>
+                
+            <lightning-layout multiple-rows="true" horizontal-align="spread" vertical-align="start" class="slds-border_bottom">
+                <lightning-layout-item size="12" large-device-size="12" padding="around-small">
+                    <div class="slds-section slds-is-open">
+                        <h3 class="slds-section__title slds-theme_shade">
+                          <span class="slds-truncate slds-var-p-horizontal_small" title="Paper Colorants Laboratory Work Request Details">Paper Colorants Laboratory Work Request Details</span>
+                        </h3>
+                      </div>
+                </lightning-layout-item>
+              <!--  <lightning-layout-item size="3" large-device-size="3" padding="around-small">
+                    <span class="slds-text-heading_small">Requester Name</span>
+                </lightning-layout-item>
+                <lightning-layout-item size="3" large-device-size="3" padding="around-small">
+                        <span class="slds-text-heading_small">Customer Name</span>
+                </lightning-layout-item>-->
+                <!--<lightning-layout-item size="1" large-device-size="1" padding="around-small">
+                    <abbr title="required" class="slds-required">*</abbr>
+                    <span class="slds-text-heading_small">Requested Completed Date</span>
+                </lightning-layout-item>-->
+               <!-- <lightning-layout-item size="3" large-device-size="3" padding="around-small">
+                    <span class="slds-text-heading_small">Request Objectives and Instructions</span>
+                </lightning-layout-item>-->
+               
+
+              <!--  <lightning-layout-item size="3" large-device-size="3" padding="around-medium">
+                    <lightning-output-field field-name="LWR__c" value={RecordId} variant="label-inline" readonly> </lightning-output-field>
+                </lightning-layout-item> -->
+                <lightning-layout-item size="2" large-device-size="2" padding="around-small">
+                    <span class="slds-p-around_x-small">LWR :  {LWRNumber} </span>
+                </lightning-layout-item>
+
+               <!-- <lightning-layout-item size="3" large-device-size="3" padding="around-small">
+                    <lightning-output-field field-name="Requester_Name__c" variant="label-inline" readonly ></lightning-output-field>
+                </lightning-layout-item>-->
+                <lightning-layout-item size="3" large-device-size="3" padding="around-small">
+                    <span class="slds-var-p-around_x-small">Requester Name :  {currentUserName}</span>
+                </lightning-layout-item>
+
+                <!--<lightning-layout-item size="3" large-device-size="3" padding="around-small">
+                    <lightning-input-field field-name="Customer_Name__c" variant="label-inline" readonly></lightning-input-field>
+                </lightning-layout-item>-->
+                <lightning-layout-item size="4" large-device-size="4" padding="around-small">
+                    <span class="slds-var-p-around_x-small">Customer Name :  {CustomerName}</span>
+                </lightning-layout-item>
+                
+                <lightning-layout-item size="4" large-device-size="4" padding="around-small"></lightning-layout-item>
+            </br>
+                <!-- <lightning-layout-item size="1" large-device-size="1" padding="around-small">
+                    <lightning-input-field field-name="Requested_Completed_Date__c" variant="label-hidden"
+                        ></lightning-input-field>
+                </lightning-layout-item> -->
+                <lightning-layout-item size="12" large-device-size="12" padding="around-small">
+                    <lightning-input-field field-name="Request_Objectives_and_Instructions__c" variant="label-inline" required></lightning-input-field>
+                </lightning-layout-item>
+            </lightning-layout>
+        </br>
+        <!-- LIST OF SAMPLES SHIPPED TO PAPER COLORANTS LAB -->
+        <lightning-layout multiple-rows="true" horizontal-align="spread" vertical-align="start" class="slds-border_bottom">
+          <!--  <lightning-layout-item size="12" large-device-size="12" padding="around-small">
+                <div class="slds-section slds-is-open">
+                    <h3 class="slds-section__title slds-theme_shade">
+                      <span class="slds-truncate slds-var-p-horizontal_small" title="List Of Samples Shipped To Paper Colorants Lab">List Of Samples Shipped To Paper Colorants Lab</span>
+                    </h3>
+                  </div>
+            </lightning-layout-item>
+
+            <lightning-layout-item size="1" large-device-size="1" padding="around-small">
+                <lightning-formatted-number value="1"></lightning-formatted-number>
+            </lightning-layout-item> 
+            <lightning-layout-item size="4" large-device-size="4" padding="around-small"> 
+                <lightning-input-field field-name="Sample_1__c" variant="label-inline" required ></lightning-input-field>                   
+            </lightning-layout-item>
+            <lightning-layout-item size="4" large-device-size="4" padding="around-small"></lightning-layout-item>
+            <lightning-layout-item size="3" large-device-size="3" padding="around-small"></lightning-layout-item>
+
+            <lightning-layout-item size="1" large-device-size="1" padding="around-small">
+                <lightning-formatted-number value="2"></lightning-formatted-number>
+            </lightning-layout-item> 
+            <lightning-layout-item size="4" large-device-size="4" padding="around-small" > 
+                <lightning-input-field field-name="Sample_2__c" variant="label-inline" required></lightning-input-field>                   
+            </lightning-layout-item>
+            <lightning-layout-item size="4" large-device-size="4" padding="around-small"></lightning-layout-item>
+            <lightning-layout-item size="3" large-device-size="3" padding="around-small"></lightning-layout-item>
+
+            <lightning-layout-item size="1" large-device-size="1" padding="around-small">
+                <lightning-formatted-number value="3"></lightning-formatted-number>
+            </lightning-layout-item> 
+            <lightning-layout-item size="4" large-device-size="4" padding="around-small" > 
+                <lightning-input-field field-name="Sample_3__c" variant="label-inline" required ></lightning-input-field>                   
+            </lightning-layout-item>
+            <lightning-layout-item size="4" large-device-size="4" padding="around-small"></lightning-layout-item>
+            <lightning-layout-item size="3" large-device-size="3" padding="around-small"></lightning-layout-item>-->
+       
+            <lightning-layout-item size="6" large-device-size="6" padding="around-small"> 
+                <lightning-input-field field-name="List_of_Colorants_to_be_used__c" variant="label-inline" required></lightning-input-field>                   
+            </lightning-layout-item>
+            <!--<lightning-layout-item size="4" large-device-size="4" padding="around-small"></lightning-layout-item>
+            <lightning-layout-item size="4" large-device-size="4" padding="around-small"></lightning-layout-item>-->
+
+            <lightning-layout-item size="6" large-device-size="6" padding="around-small"> 
+                <lightning-input-field field-name="Furnish__c" variant="label-inline" required></lightning-input-field>                   
+            </lightning-layout-item>
+           <!-- <lightning-layout-item size="4" large-device-size="4" padding="around-small"></lightning-layout-item>
+            <lightning-layout-item size="4" large-device-size="4" padding="around-small"></lightning-layout-item>-->
+
+            <lightning-layout-item size="6" large-device-size="6" padding="around-small"> 
+                <lightning-input-field field-name="Filler_Type_and_Amount__c" variant="label-inline" required ></lightning-input-field>                   
+            </lightning-layout-item>
+           <!-- <lightning-layout-item size="4" large-device-size="4" padding="around-small"></lightning-layout-item>
+            <lightning-layout-item size="4" large-device-size="4" padding="around-small"></lightning-layout-item>-->
+
+            <lightning-layout-item size="6" large-device-size="6" padding="around-small"> 
+                <lightning-input-field field-name="Other_Additives_to_be_Used__c" variant="label-inline" required></lightning-input-field>                   
+            </lightning-layout-item>
+           <!-- <lightning-layout-item size="4" large-device-size="4" padding="around-small"></lightning-layout-item>
+            <lightning-layout-item size="4" large-device-size="4" padding="around-small"></lightning-layout-item> -->
+
+            <lightning-layout-item size="6" large-device-size="6" padding="around-small"> 
+                <lightning-input-field field-name="Light_Source_Match_Conditions__c" variant="label-inline" required></lightning-input-field>                   
+            </lightning-layout-item>
+           <!-- <lightning-layout-item size="4" large-device-size="4" padding="around-small"></lightning-layout-item>
+            <lightning-layout-item size="4" large-device-size="4" padding="around-small"></lightning-layout-item>-->
+            <lightning-layout-item size="6" large-device-size="6" padding="around-small"></lightning-layout-item>
+           
+            <lightning-layout-item size="4" large-device-size="4" padding="around-small"> 
+                <lightning-input-field field-name="List_of_Samples_Shipped_to_Colorants_Lab__c"
+                    variant="label-inline" required></lightning-input-field>
+            </lightning-layout-item>
+
+            <lightning-layout-item size="4" large-device-size="4" padding="around-small"> 
+                <lightning-input-field field-name="Colorant_Requirements__c"
+                    variant="label-inline" required></lightning-input-field>
+            </lightning-layout-item>
+
+            <lightning-layout-item size="4" large-device-size="4" padding="around-small"> 
+                <lightning-input-field field-name="Lab_Test_Data_Requested__c"
+                    variant="label-inline" required></lightning-input-field>
+            </lightning-layout-item>
+            
+           <!-- <lightning-layout-item size="4" large-device-size="4" padding="around-small"> 
+                <lightning-input-field field-name="Pre_58_or_FDA__c"
+                    variant="label-inline" required></lightning-input-field>
+            </lightning-layout-item>
+            <lightning-layout-item size="3" large-device-size="3" padding="around-small"> 
+                <lightning-input-field field-name="Prop_65__c"
+                    variant="label-inline" required></lightning-input-field>
+            </lightning-layout-item> -->
+        </lightning-layout>
+
+        </br>
+        <!-- Additional Testing -->
+        <lightning-layout multiple-rows="true" horizontal-align="spread" vertical-align="start" class="slds-border_bottom">
+            <lightning-layout-item size="12" large-device-size="12" padding="around-small">
+                <div class="slds-section slds-is-open">
+                    <h3 class="slds-section__title slds-theme_shade">
+                      <span class="slds-truncate slds-var-p-horizontal_small" title="Additional Testing">Additional Testing</span>
+                    </h3>
+                  </div>
+            </lightning-layout-item>
+
+            <lightning-layout-item size="6" large-device-size="6" padding="around-small"> 
+                <lightning-input-field field-name="Lightfastness__c" variant="label-inline" ></lightning-input-field>                   
+            </lightning-layout-item>
+            <lightning-layout-item size="6" large-device-size="6" padding="around-small"></lightning-layout-item>
+
+            <lightning-layout-item size="6" large-device-size="6" padding="around-small"> 
+                <lightning-input-field data-id="BleedfastnessOther" field-name="Bleedfastness__c"
+                    variant="label-inline" ></lightning-input-field>
+            </lightning-layout-item>
+           <!-- <template if:true={displayBleedfastnessOther}> -->
+            <lightning-layout-item size="6" large-device-size="6" padding="around-small">
+                <lightning-input-field field-name="Bleedfastness_Other__c" variant="label-inline" ></lightning-input-field> 
+            </lightning-layout-item>
+            <!--</template>-->
+            <lightning-layout-item size="6" large-device-size="6" padding="around-small"> 
+                <lightning-input-field data-id="BleachabilityOther" field-name="Bleachability__c"
+                    variant="label-inline" ></lightning-input-field>
+            </lightning-layout-item>
+            <!--<template if:true={displayBleachabilityOther}>-->
+            <lightning-layout-item size="6" large-device-size="6" padding="around-small">
+                <lightning-input-field field-name="Bleachability_Other__c" variant="label-inline" ></lightning-input-field> 
+            </lightning-layout-item>
+          <!--  </template> -->
+            <lightning-layout-item size="6" large-device-size="6" padding="around-small"> 
+                <lightning-input-field field-name="Deliverables__c" variant="label-inline" required></lightning-input-field>                   
+            </lightning-layout-item>
+            <lightning-layout-item size="6" large-device-size="6" padding="around-small"></lightning-layout-item>
+
+           <!-- <lightning-layout-item size="6" large-device-size="6" padding="around-small"> 
+                <lightning-input-field field-name="Shipping_Address_and_Contract_Information__c" variant="label-inline" ></lightning-input-field>                   
+            </lightning-layout-item>
+            <lightning-layout-item size="6" large-device-size="6" padding="around-small"></lightning-layout-item>-->
+
+        </lightning-layout>
+
+        <!-- Hidden Informaiton -->
+        <lightning-layout>                    
+            <lightning-layout-item size="6" large-device-size="6">
+                <lightning-input-field field-name="LWR__c" value={lwrRecordId}
+                    class="slds-hidden"></lightning-input-field>
+            </lightning-layout-item>
+            <lightning-layout-item size="6" large-device-size="6">
+                <lightning-input-field field-name="RecordTypeId" value={recordTypeId}
+                    class="slds-hidden"></lightning-input-field>
+            </lightning-layout-item>
+        </lightning-layout>
+
+        </br>
+        <lightning-layout>
+            <div class="slds-align_absolute-center">
+                <lightning-button variant="neutral" label="Cancel" name="cancel" onclick={handleClose}
+                    class="slds-p-around_x-small"></lightning-button>
+                <lightning-button variant="neutral" label="Back to Form Selection" name="back"
+                    onclick={handleBack} class="slds-p-around_x-small"></lightning-button>
+                <lightning-button variant="brand" onclick={handleCreate} name="save" label="Save"
+                    class="slds-p-around_x-small"></lightning-button>
+            </div>
+        </lightning-layout>          
+
+            </lightning-record-edit-form>
+        </lightning-card> 
+    </template>
+    </template>

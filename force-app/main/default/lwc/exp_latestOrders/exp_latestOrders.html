@@ -1,0 +1,80 @@
+<template>
+	<article>
+		<div class="slds-card__header slds-grid">
+			<header class="slds-media slds-media_center slds-has-flexi-truncate">
+				<div class="slds-media__figure">
+					<span class="slds-icon_container" title="Latest Orders">
+          	<svg width="33" height="32" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path d="M0.413562 0.826591H5.24868L9.50524 19.4646V21.3657C9.50524 21.8615 9.71193 22.3161 10.0838 22.6883C10.4144 22.9777 10.8275 23.1429 11.2821 23.1429L26.8619 23.1426C27.1098 23.1426 27.2753 22.9774 27.2753 22.7292C27.2753 22.4813 27.1101 22.3158 26.8619 22.3158L11.2821 22.3161C11.0342 22.3161 10.8275 22.2334 10.6623 22.0682C10.4556 21.903 10.3729 21.6548 10.3729 21.3657V19.4234H27.7297C28.1843 19.4234 28.515 18.8861 28.5562 18.473L32.6888 6.65377C32.6888 6.61254 32.73 6.57103 32.73 6.52981C32.73 6.15794 32.4821 5.78609 31.9036 5.78609L7.23203 5.7858L5.99219 0.330644C5.95096 0.123956 5.7855 0 5.57881 0L0.413376 0.000288266C0.165466 0.000288266 0 0.165466 0 0.413665C0 0.661288 0.165466 0.826754 0.413376 0.826754L0.413562 0.826591ZM31.7799 6.61206L27.73 18.266C27.73 18.3072 27.6888 18.3487 27.6888 18.3899C27.6888 18.4311 27.6476 18.5551 27.6061 18.5966H10.1666L7.43898 6.6121L31.7799 6.61206Z" fill="#17344C"/>
+				<path d="M15.1696 28.5982C15.1696 27.0278 13.8886 25.7882 12.3596 25.7882C10.7891 25.7882 9.54956 27.0692 9.54956 28.5982C9.54956 30.1687 10.8306 31.4082 12.3596 31.4082C13.8883 31.4082 15.1696 30.1272 15.1696 28.5982ZM10.3342 28.5982C10.3342 27.4823 11.2434 26.6147 12.3178 26.6147C13.3922 26.6147 14.3014 27.5238 14.3014 28.5982C14.3017 29.6726 13.4337 30.5818 12.3181 30.5818C11.2022 30.5818 10.3342 29.6726 10.3342 28.5982Z" fill="#17344C"/>
+				<path d="M26.7389 28.5982C26.7389 27.0278 25.4579 25.7882 23.9289 25.7882C22.3584 25.7882 21.1189 27.0692 21.1189 28.5982C21.1189 30.1687 22.3999 31.4082 23.9289 31.4082C25.4579 31.4082 26.7389 30.1272 26.7389 28.5982ZM21.9038 28.5982C21.9038 27.4823 22.813 26.6147 23.8874 26.6147C24.9618 26.6147 25.8709 27.5238 25.8709 28.5982C25.8712 29.6726 25.0032 30.5818 23.8874 30.5818C22.7718 30.5818 21.9038 29.6726 21.9038 28.5982Z" fill="#17344C"/>
+				<path d="M12.8101 10.7453H26.8609C27.1088 10.7453 27.2743 10.5802 27.2743 10.332C27.2743 10.084 27.1091 9.91858 26.8609 9.91858L12.8101 9.91887C12.5622 9.91887 12.3967 10.084 12.3967 10.3322C12.3967 10.5802 12.5622 10.7453 12.8101 10.7453Z" fill="#17344C"/>
+				<path d="M12.8101 15.2909H25.6211C25.869 15.2909 26.0345 15.1257 26.0345 14.8775C26.0345 14.6296 25.8693 14.4641 25.6211 14.4641L12.8101 14.4644C12.5622 14.4644 12.3967 14.6296 12.3967 14.8778C12.3967 15.1254 12.5622 15.2909 12.8101 15.2909Z" fill="#17344C"/>
+			</svg>
+
+          <span class="slds-assistive-text">Latest Orders</span>
+					</span>
+				</div>
+				<div class="slds-media__body">
+					<h2 class="slds-card__header-title exp_heading">
+						Latest Orders
+					</h2>
+				</div>
+			</header>
+		</div>
+		<div class="slds-card__body slds-card__body_inner">
+			<div class="exp_border"> </div>
+			<template for:each={orderShowList} for:item="order">
+				<div key={order.id}>
+					<br/>
+					<div>
+						<div class="slds-grid slds-wrap">
+							<div class="slds-col slds-size_1-of-12">
+								<!--<span><lightning-icon icon-name="standard:shift" size="x-small"></lightning-icon></span>-->
+								<lightning-icon icon-name="utility:chevronright" size="x-small"></lightning-icon>
+
+
+							</div>
+							<div class="slds-col slds-size_11-of-12">
+								<div class="slds-grid slds-wrap slds-gutters">
+									<div
+										class="slds-col slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_6-of-12">
+										<div class="exp_myText">Order Number - <a class="exp_myURL" href={order.orderUrl}
+												target="_blank">{order.sapOrderNumber}</a></div>
+									</div>
+									<div
+										class="slds-col slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_6-of-12">
+										<div class="exp_myText">Date Placed - {order.effectivedate}</div>
+									</div>
+									<div
+										class="slds-col slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_6-of-12">
+										<div class="exp_myText">P.O. Number - {order.poNumber}</div>
+									</div>
+									<div
+										class="slds-col slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_6-of-12">
+										<div class="exp_myText">Order Status - {order.status}</div>
+									</div>
+									<div
+										class="slds-col slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_6-of-12">
+										<div class="exp_myURL"><a class="exp_myURL" href={order.orderUrl}
+												target="_blank">View Order ></a>
+											<!--<lightning-formatted-url  value="www.salesforce.com" label="View Order >" tooltip="View Order" target="_blank"></lightning-formatted-url>-->
+										</div>
+									</div>
+									<div
+										class="slds-col slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_6-of-12">
+										<div class="exp_myText">Ship TO Number - {order.ShiptoNumber}</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<br/>
+            </div>
+			</template>
+			<br/><br/>
+			<lightning-button variant="netural" label="View All Orders" title="View All Orders"
+				onclick={handleViewAllClick} class="slds-m-left_x-small button"></lightning-button>
+		</div>
+	</article>
+</template>

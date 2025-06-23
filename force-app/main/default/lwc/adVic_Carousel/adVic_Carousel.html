@@ -1,0 +1,49 @@
+<template>
+    <div class="hero-container" style={componentHeightStyle} swipe>
+        <div class="carousel-slider">
+            <template for:each={carouselImages} for:item="img" for:index="index">
+                <div class="slide" 
+                    data-key={index} 
+                    key={img.src} 
+                    style={img.style}
+                    onmousedown={handleSwipeStart}
+                    ontouchstart={handleSwipeStart}
+                    onmouseup={handleSwipeEnd}
+                    ontouchend={handleSwipeEnd}>
+                </div>
+            </template>
+        </div>
+        <div class="hero-content" style={currentImage.divPosition}>
+            <div class="text-container" style={currentImage.textAlign}>
+                <h1 style={currentImage.h1Style}>{currentImage.header}</h1>
+                <h2 style={currentImage.h2Style}>{currentImage.subheader}</h2>
+            </div>
+            <template if:true={hasCurrentButtonText}>
+                <div class="button-container" style={currentImage.buttonAlign}>
+                    <button class="slds-button slds-button_brand" style={currentImage.buttonStyle} onclick={navigateToLink} data-link={currentImage.buttonLink}>
+                        {currentImage.buttonText}
+                    </button>
+                </div>
+            </template>
+        </div>
+        <template if:false={hideBecauseMobile}>
+            <div class="controls">
+                <button class="slds-button slds-button_icon slds-button_icon-small slds-button_icon-inverse" title="Left" onclick={onLeft}>
+                    <svg class="button_icon">
+                        <use xlink:href={leftButton}></use>
+                    </svg>
+                </button>
+                <button class="slds-button slds-button_icon slds-button_icon-small slds-button_icon-inverse" title="Pause" onclick={onPause}>
+                    <svg class="button_icon">
+                        <use xlink:href={pauseButton}></use>
+                    </svg>
+                </button>
+                <button class="slds-button slds-button_icon slds-button_icon-small slds-button_icon-inverse" title="Right" onclick={onRight}>
+                    <svg class="button_icon">
+                        <use xlink:href={rightButton}></use>
+                    </svg>
+                </button>
+            </div>
+        </template>
+    </div>
+</template>

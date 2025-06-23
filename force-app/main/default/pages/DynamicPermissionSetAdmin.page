@@ -1,0 +1,98 @@
+<apex:page controller="DynamicPermissionSetAdminController">
+
+	<apex:includeScript value="{!URLFOR($Resource.jQuery1x,'jQuery/jquery-1.8.0.min.js')}" />
+	<apex:includeScript value="{!URLFOR($Resource.jQuery1x,'jQuery/jquery-ui-1.8.20.custom.min.js')}" />
+	<apex:includeScript value="{!URLFOR($Resource.jQuery1x,'jQueryPlugins/blockUI/jquery.blockUI.js')}" />
+
+	<style type="text/css">body{background:#F8F8F8;}</style>
+
+	<script>
+		if (!window.console) window.console = {};	
+		if (!window.console.log) window.console.log = function () { };
+	</script>
+
+	<script language="javascript">
+	    var j$= jQuery.noConflict();
+	    j$.fn.exists = function(){return this.length>0;}
+	    
+        j$(document).ready(function(){
+            applyJQueryStyling();
+        });
+        
+        function applyJQueryStyling() {
+        }
+        
+        function RunButDoNotApplyChanges(id) {
+        	runButDoNotApplyChangesActionFunction(id);
+        }
+        
+        function RunAndApplyChanges(id) {
+        	var areYouSure = confirm("Permission Set Changes will be applied to users, Are you sure that you want to do this?");
+      		if (areYouSure) {
+	        	runAndApplyChangesActionFunction(id);
+	        }
+        }
+        
+	</script>
+
+	<apex:Form >
+
+		<apex:actionRegion >
+	
+			<apex:actionFunction name="runButDoNotApplyChangesActionFunction"
+				action="{!runButDoNotApplyChangesHandler}"
+				status="processingStatus"
+				rerender="existingDynamicPermissionSetsPageBlock"
+				oncomplete="applyJQueryStyling();">
+				<apex:param name="permissionSetIdfromPage" assignTo="{!permissionSetId}" value="" />			
+			</apex:actionFunction>
+		
+			<apex:actionFunction name="runAndApplyChangesActionFunction"
+				action="{!runAndApplyChangesHandler}"
+				status="processingStatus"
+				rerender="existingDynamicPermissionSetsPageBlock"
+				oncomplete="applyJQueryStyling();">
+				<apex:param name="permissionSetIdfromPage" assignTo="{!permissionSetId}" value="" />			
+			</apex:actionFunction>
+		
+		    <apex:pageBlock id="existingDynamicPermissionSetsPageBlock" title="Existing Dynamic Permission Sets">
+		        <apex:pageBlockTable value="{!dynamicPermissionSets}" var="item">
+		        
+		            <apex:column value="{!item.Permission_Set_Name__c}"/>
+		             
+					<apex:column headerValue="Actions">
+						<apex:outputPanel layout="block">
+							<input type="button" value="Run, But Do Not Apply Changes" onclick="RunButDoNotApplyChanges('{!item.Permission_Set_Id__c}');" />
+							<input type="button" value="Run And Apply Changes" onclick="RunAndApplyChanges('{!item.Permission_Set_Id__c}');" />
+						</apex:outputPanel>
+					</apex:column>
+
+<!-- 
+							<apex:image id="loadingImage" styleClass="hideMe"
+								value="{!URLFOR($Resource.AccountRollupResources, 'images/spin_24x24_loading.gif')}"
+								width="24" height="24" />
+ -->
+ 								
+					<apex:actionStatus startText="(processing...)" stopText="(done)" id="processingStatus"/>
+
+		        </apex:pageBlockTable> 
+		        
+				<apex:actionStatus id="processingStatus">
+        			<apex:facet name="start">
+        				<BR/>
+        				<BR/>
+							<apex:image id="loadingImage"
+									value="{!URLFOR($Resource.AccountRollupResources, 'images/spin_24x24_loading.gif')}"
+									width="200" height="200" />
+					</apex:facet>
+        			<apex:facet name="stop">
+				        <apex:outputText escape="false" value="{!results}"/>
+					</apex:facet>
+				</apex:actionStatus>    
+		        
+		        
+		    </apex:pageBlock>
+	    
+	    </apex:actionRegion>
+	</apex:Form>     
+</apex:page>

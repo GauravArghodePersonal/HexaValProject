@@ -1,0 +1,29 @@
+<template>
+    <div class="slds-grid slds-wrap">
+        <div class="slds-col slds-size_6-of-12">
+            <span>
+                <h1 class="slds-p-left_small slds-p-bottom_small centertext">Reports</h1>
+                <template for:each={reports} for:item="report">
+                    <p key={report.Id} class="slds-p-left_small slds-p-bottom_small">
+                        <svg class="slds-button__icon" aria-hidden="true">
+                            <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#service_report"></use>
+                        </svg>
+                        <span class="slds-assistive-text">Report</span>
+                        <a href={report.redirectUrl} target="_blank" class="slds-p-left_small centertext"
+                            data-id={report.Id} title={report.Name} onclick={handleClick}>{report.Name}</a>
+                    </p>
+                </template>
+            </span>
+        </div>
+        <div class="slds-col slds-size_6-of-12">
+            <span>
+                <h1 class="slds-p-left_small slds-p-bottom_small centertext">Dashboards</h1>
+                <template for:each={dashboards} for:item="dashboard">
+                    <p key={dashboard.Id} class="slds-p-left_small slds-p-bottom_small">
+                        <a class="centertext" data-id={dashboard.Id} onclick={handleClickDashboard}>{dashboard.Title}</a>
+                    </p>
+                </template>
+            </span>
+        </div>
+    </div>
+</template>

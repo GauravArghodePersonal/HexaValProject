@@ -1,0 +1,7 @@
+<apex:page StandardController="case">
+ 
+    <apex:pageMessage rendered="{!(case.Type__c == 'Bulk Tank')}" 
+        severity="Info" strength="3" 
+        summary="If tank costs are greater than $3,000 you will be required to complete the Capital Equipment Request (CER) form in the N.A. AHWT Equipment database and obtain DM approval before tank can be ordered." />
+
+</apex:page>

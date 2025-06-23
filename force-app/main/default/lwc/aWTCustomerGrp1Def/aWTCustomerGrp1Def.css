@@ -1,0 +1,37 @@
+h1 {
+    color: rgb(0, 112, 210);
+}
+p {
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+    color: rgb(62, 62, 60);
+}
+.app {
+    background-color: #fafaf9;
+}
+.col_div{
+    margin-top: 10px;
+}
+.c_col{
+    text-align: center;
+}
+.c_col_head{
+    text-align: center;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 18px;
+    font-weight: bold;
+    color: #FFFFFF;
+}
+.c_border{
+}
+.slds-gutters div{
+    padding: 10px;
+}
+.c_num {
+    background-color: #fafaf9;
+    overflow: none;
+    height: 12%;
+}
+.c_dum {
+    overflow: none;
+    height: 12%;
+}

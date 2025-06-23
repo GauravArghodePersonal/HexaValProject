@@ -1,0 +1,212 @@
+<apex:page controller="Sample_Request_Controller" id="thePage" sidebar="false" 
+           tabStyle="Sample_Request__c" action="{!cancelMaterials_init}" lightningStylesheets="true">
+
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-1.6.2.min.js')}" />
+
+    <apex:stylesheet value="{!$Resource.SampleRequestStyles}" />
+
+    <apex:outputPanel styleClass="thePanel">
+
+    <apex:form id="theForm">
+        
+        <apex:pageMessages id="msgs" escape="false"/>
+
+<!--
+        <center>
+            <apex:commandButton action="{!cancel}" value="Go back" immediate="true" />
+        </center><br/>
+-->
+
+        <apex:pageBlock title="Sample Information" mode="edit">
+            <apex:include pageName="Sample_Request_Page_1H"/>
+        </apex:pageBlock>
+                    
+        <apex:pageBlock mode="edit">
+        
+            <apex:facet name="header">
+                <apex:outputPanel layout="block">
+                <table class="bold">
+                
+                    <tr class="pbtr1">
+                        <td class="pbtd11">Sample Materials</td>
+                        <td class="left" style="vertical-align: middle;">
+                        <apex:actionStatus id="astat1">
+                            <apex:facet name="start">
+                                <apex:outputText styleClass="bold" value=" Please wait ...">
+                                    <apex:image value="{!$Resource.spinner}"/>
+                                </apex:outputText>
+                            </apex:facet>
+                            <apex:facet name="stop"><apex:outputPanel styleClass="nowrap"> 
+                                <apex:commandButton rendered="{!cancelMaterials_init}" 
+                                                    action="{!cancelMaterials_review}"
+                                                    value="Cancel Materials" 
+                                                    rerender="theForm" status="astat1"/>
+                                <apex:outputPanel rendered="{!cancelMaterials_review}">
+                                <apex:commandButton action="{!cancelMaterials_goback}"
+                                                    value="Go back" 
+                                                    rerender="theForm" status="astat1"/>&nbsp;
+                                <b>Review and Confirm to Cancel Materials</b>&nbsp;
+                                <apex:commandButton action="{!cancelMaterials}"
+                                                    value="Cancel Materials" 
+                                                    rerender="theForm" status="astat1"/>
+                                </apex:outputPanel>
+                            </apex:outputPanel></apex:facet>
+                        </apex:actionStatus>
+                        </td>
+                    </tr>
+                    
+                </table>
+                </apex:outputPanel>
+            </apex:facet>
+
+            <apex:pageBlockTable id="MaterialGrid" value="{!materials}" var="m" width="100%">
+                <apex:column headerClass="right" styleClass="right" width="20px">
+                    <apex:facet name="header">#</apex:facet>
+                    <apex:outputText value="{!m.recNum}"/>
+                </apex:column>
+
+                <apex:column headerClass="chkbx" styleClass="chkbx" width="20px">
+                    <apex:facet name="header">
+                        <apex:inputCheckbox styleClass="allcb1" value="{!allMats}"
+                            onclick="onClick_AllChkbox('rowcb1', this);"/>
+                    </apex:facet>
+                    <apex:outputPanel >
+                    <apex:inputCheckbox styleClass="rowcb1" 
+                        rendered="{!!m.cancelled}" value="{!m.selected}"
+                        onclick="onClick_RowChkbox('rowcb1', 'allcb1');"/>
+                    </apex:outputPanel>
+                </apex:column>
+
+                <apex:column >
+                    <apex:facet name="header">Material Name</apex:facet>
+                    <apex:outputPanel styleClass="matName">
+                        <apex:outputField value="{!m.sm.name}"/>
+                    </apex:outputPanel>
+                </apex:column>
+
+                <apex:column width="50px">
+                    <apex:facet name="header">Special<br/>Size?</apex:facet>
+                    <apex:outputField value="{!m.sm.Special_Size__c}"/>
+                </apex:column>
+
+                <apex:column >
+                    <apex:facet name="header">Sample<br/>UOM</apex:facet>
+                    <apex:outputPanel styleClass="matUom">
+                        <apex:outputPanel rendered="{!m.sm.Special_Size__c}">
+                            <apex:outputField value="{!m.sm.Sample_Size__c}" />&nbsp;
+                        </apex:outputPanel>
+                        <apex:outputField value="{!m.sm.Sample_UOM__c}"/>
+                    </apex:outputPanel>
+                </apex:column>
+
+                <apex:column >
+                    <apex:facet name="header">Sample<br/>Quantity</apex:facet>
+                    <apex:outputField value="{!m.sm.Sample_Quantity__c}"/>
+                </apex:column>
+
+                <apex:column >
+                    <apex:facet name="header">Date<br/>Required</apex:facet>
+                    <apex:outputField value="{!m.sm.Date_Required_By__c}"/>
+                </apex:column>
+
+                <apex:column >
+                    <apex:facet name="header">Lot<br/>Number</apex:facet>
+                    <apex:outputField value="{!m.sm.Lot_Numbers__c}"/>
+                </apex:column>
+
+                <apex:column >
+                    <apex:facet name="header">Notes</apex:facet>
+                    <apex:outputPanel >
+                    <apex:inputField value="{!m.sm.Notes__c}" 
+                                     rendered="{!!m.cancelled}" styleClass="notes2" />
+                    <apex:outputField value="{!m.sm.Notes__c}" 
+                                      rendered="{!m.cancelled}"/>
+                    </apex:outputPanel>
+                </apex:column>
+
+                <apex:column >
+                    <apex:facet name="header">Status</apex:facet>
+                    <apex:outputField value="{!m.sm.Record_Status__c}"/>
+                </apex:column>
+            </apex:pageBlockTable>
+            
+        </apex:pageBlock>
+
+<!--        
+        <center>
+            <apex:commandButton action="{!cancel}" value="Go back" immediate="true" />
+        </center><br/>
+-->        
+    </apex:form>
+    
+    </apex:outputPanel>
+
+    <script type="text/javascript">
+        var $j = jQuery.noConflict();
+        
+        function onClick_AllChkbox(rowCbClass, allChkbox) {
+            $j("."+rowCbClass).each(function() {
+                if (this.disabled == false) {
+                    this.checked = allChkbox.checked;
+                }
+            });
+        }
+
+        function onClick_RowChkbox(rowCbClass, allCbClass) {
+            var allChkbox = $j("."+allCbClass).get(0);
+            allChkbox.checked = true;
+            $j("."+rowCbClass).each(function() {
+                if (!this.checked) {
+                    allChkbox.checked = false;
+                    return false;
+                }
+            });
+        }
+
+        function setfocus(fid) {
+            var fld = document.getElementById(fid);
+            if (fld != null) {fld.focus();}
+        }
+
+    </script>
+
+    <style>
+        .thePanel input[type="checkbox"] {margin-left: 0;}
+        .tbl {border-spacing: 0; border-collapse: collapse; width: 100%;}
+        .tbl td {padding: 4px; vertical-align: top; width: 16%; white-space: nowrap;}
+        .tbl td.lbl, .lbl {color: #4a4a56; font-weight: bold; text-align: right;}
+        .tbl td.fld, .fld {width: 15em;}
+        .tbl td.fld2, .fld2 {width: 5em;}
+        .tbl td a.error {border: 0px !important;}
+        .tbl td a.fld {border: 0px;}
+        .tbl td.msg, .msg {background-color: #ffc; color: blue; font-weight: bold; text-align: center;}
+        .tbl td .chkbx {margin-left: 0px; padding-left: 0px; width: 10px;}
+        .txt1 {width: 15em;}
+        .txta {height: 50px; width: 100%;}
+        .w100 {width: 100%;}
+        .chkbx {text-align: center; width: 20px;}
+        .bold {font-weight: bold;}
+        .boldblue {color: blue; font-weight: bold;}
+        .center {text-align: center;}
+        .left {text-align: left;}
+        .right {text-align: right;}
+        .nowrap {white-space: nowrap;}
+        .reqd {color: red;}
+        .error {background-color: #ffc; border: 1px solid !important;}
+        .onfocus {border: 2px solid #7f9db9;}
+        .onblur {border: 1px solid #7f9db9;}
+        .matName {white-space: nowrap; width: 200px;}
+        .matNotes {white-space: nowrap; padding: 12px; width: 100%;}
+        .matUom {white-space: nowrap; width: 300px;}
+        .invfld1 {width: 200px;}
+        .notes2 {width: 260px;}
+        .pbtr1 {background-color: #f8f8f8; text-align: center;}
+        .pbtd11 {font-weight: bold; padding: 12px; text-align: left; 
+                 white-space: nowrap; width: 19%;}
+        .p5acol1 {color: #4a4a56 !important; font-size: 91%; font-weight: bold; 
+                  text-align: right; white-space: nowrap; min-width: 130px;}
+        .p5acol2 {font-size: 91%; text-align: left; white-space: nowrap; min-width: 200px;}
+        .pageid {font-size: 70%; float: right;}
+        .no-title .ui-dialog-titlebar {display: none;}
+    </style>
+</apex:page>

@@ -1,0 +1,16 @@
+<template>
+    <div class="slds-grid slds-wrap">
+        <div class="slds-col slds-size_12-of-12" style="text-align: center;">
+            <lightning-button-group>
+                <lightning-button-icon icon-name="utility:chevronleft" variant="border-filled"
+                    alternative-text="PREVIOUS" title="PREVIOUS" onclick={handlePrevious}
+                    disabled={disableleftarrow}></lightning-button-icon>
+                <template for:each={pageList} for:item="p" for:index="index">
+                    <lightning-button key={p} label={p} onclick={handleClick} data-index={index}></lightning-button>
+                </template>
+                <lightning-button-icon icon-name="utility:chevronright" variant="border-filled" alternative-text="NEXT"
+                    title="NEXT" onclick={handleNext} disabled={disablerightarrow}></lightning-button-icon>
+            </lightning-button-group>
+        </div>
+    </div>
+</template>

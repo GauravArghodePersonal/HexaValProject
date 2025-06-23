@@ -1,0 +1,95 @@
+.outer{
+    border-radius:20px;
+    padding: 2px 20px;
+    border: 1px solid #075500;
+    background-color: #ffffff;
+    margin-top: 5px;
+    background-image: linear-gradient(to right, #f9fef9, #b1eb8d);
+    width: 100%;
+}
+.inner{
+    width: calc(100% + 39px);
+    margin-left: -19.5px;
+    margin-top: -1px;
+    border-top-right-radius: 100px;
+    border-top-left-radius: 100px;
+    padding-left: 20px;
+    color: #ffffff;
+    background-image: linear-gradient(to top, #125301,#00b627);
+    text-align: center;
+}
+.tableOne{
+    width: 100%;;
+}
+.current-account{
+    background-color: #b2ffa7;
+}
+.outer-current{
+    border-radius:20px;
+    padding: 2px 20px;
+    border: 1px solid #075500;
+    margin-top: 5px;
+    background-color: #b1eb8d;
+    width: 140%;
+}
+.arrow::before {
+  content: "\FFEB";
+  color: #075500;
+  display: inline-block;
+  margin-top: -12px;
+  margin-right: 6px;
+  font-size: 48px;
+}
+.arrow {
+  text-decoration: none;
+}
+.check::before {
+  content: "\2713";
+  color: #075500;
+  display: inline-block;
+  margin-right: 6px;
+  font-size: 30px;
+}
+.check {
+  text-decoration: none;
+}
+.outer-current-checkbox::before{
+    content: "\2705";
+    font-size: 20px;
+}
+.inner a{
+    color: #ffffff;
+}
+table {
+  table-layout: fixed;
+  border-radius: 5px !important;
+  border-collapse: collapse !important;
+  border: none !important;
+  margin: 2px 0px;
+}
+table th,
+table td {
+  border: none !important
+
+}
+table th:first-child {
+  border-radius: 5px 0 0 0 !important;
+}
+table th:last-child {
+  border-radius: 0 5px 0 0 !important;
+}
+table tr:last-child td:first-child {
+    border-radius: 0 0 0 5px !important;
+}
+table tr:last-child td:last-child {
+    border-radius: 0 0 5px 0 !important;
+}
+table tr:hover td {
+  background-color: rgba(255, 255, 255, 0) !important
+}
+.data-title {
+  width: 100px;
+}
+.current-file tr td {
+  color: red !important;
+}
